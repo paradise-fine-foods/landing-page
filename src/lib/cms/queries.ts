@@ -44,6 +44,7 @@ const localizeBrand = (brand: DemoBrand, locale: Locale): Brand => ({
   description: brand.description[locale],
   origin: brand.origin[locale],
   image: localizeImage(brand.image, locale),
+  accent: brand.accent,
 });
 
 const localizeProduct = (product: DemoProduct, locale: Locale): Product => {

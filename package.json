@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && bun tests/verify-built-cms-assets.ts && bun tests/verify-built-3d-stage.ts && bun tests/verify-built-catalog.ts",
+    "build": "astro build && bun tests/verify-built-cms-assets.ts && bun tests/verify-built-3d-stage.ts && bun tests/verify-built-catalog.ts && bun tests/verify-built-brands.ts",
     "check": "astro check",
     "test": "bun test",
     "preview": "astro preview",

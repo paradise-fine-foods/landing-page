@@ -25,6 +25,7 @@ export interface Brand {
   description: string;
   origin: string;
   image: ImageAsset;
+  accent: string;
 }
 
 export interface ProductStorage {

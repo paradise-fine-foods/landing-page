@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths, InferGetStaticParamsType, InferGetStaticPropsType } from 'astro';
+import BrandDetail from '../../../components/brands/BrandDetail.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { brandDetailPath, buildBrandRouteMaps, findBrandRoute } from '../../../lib/brands/routes';
+import { getBrands, getProducts } from '../../../lib/cms/queries';
+import { localizedPath } from '../../../lib/i18n/routes';
+import { ui } from '../../../lib/i18n/ui';
+
+export const getStaticPaths = (async () => {
+  const [brands, vietnameseBrands] = await Promise.all([getBrands('en'), getBrands('vi')]);
+  const routeMaps = buildBrandRouteMaps(brands, vietnameseBrands);
+
+  return Promise.all(brands.map(async (brand) => {
+    const pathname = brandDetailPath('en', brand);
+    return {
+      params: { slug: brand.slug },
+      props: {
+        brand,
+        products: await getProducts('en', { brand: [brand.id] }),
+        pathname,
+        alternatePath: findBrandRoute(routeMaps, pathname, 'vi') ?? localizedPath('vi', 'brands'),
+      },
+    };
+  }));
+}) satisfies GetStaticPaths;
+
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { brand, products, pathname, alternatePath } = Astro.props as Props;
+const slug: Params['slug'] = Astro.params.slug;
+void slug;
+const locale = 'en';
+const copy = ui[locale];
+---
+
+<SiteLayout {locale} title={`${brand.name} | ${copy.siteName}`} description={brand.description} {pathname} {alternatePath} siteName={copy.siteName} demoNotice={copy.demoNotice} image={brand.image.src}>
+  <div class="brand-page container section-space">
+    <Breadcrumbs label={copy.brand.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.brands, href: localizedPath(locale, 'brands') }, { label: brand.name }]} />
+    <BrandDetail {brand} {products} {locale} {copy} />
+  </div>
+</SiteLayout>
+
+<style>.brand-page { min-inline-size: 0; }</style>

@@ -1,6 +1,7 @@
 import type { Locale } from './types';
 
 export interface UiCopy {
+  siteName: string;
   languageName: string;
   skipToContent: string;
   demoNotice: string;
@@ -109,6 +110,7 @@ export interface UiCopy {
     products: string;
     backToBrands: string;
     breadcrumb: string;
+    demoNotice: string;
   };
   form: {
     eyebrow: string;
@@ -155,6 +157,7 @@ export interface UiCopy {
 
 export const ui: Record<Locale, UiCopy> = {
   en: {
+    siteName: 'Paradise Fine Foods Demo',
     languageName: 'English',
     skipToContent: 'Skip to main content',
     demoNotice: 'Client-review demo — product names, specifications, claims, and imagery are fictional.',
@@ -184,13 +187,14 @@ export const ui: Record<Locale, UiCopy> = {
     },
     catalog: { eyebrow: 'Demo catalog', title: 'Professional ingredients', description: 'Search and filter a representative bilingual product range.', searchLabel: 'Search products', searchPlaceholder: 'Search by name or application', categoryLabel: 'Category', brandLabel: 'Brand', applicationLabel: 'Application', allCategories: 'All categories', allBrands: 'All brands', allApplications: 'All applications', clearFilters: 'Clear filters', resetFilters: 'Reset filters', resultSingular: 'product found', resultPlural: 'products found', noResultsTitle: 'No products match these filters', noResultsDescription: 'Try a broader search or reset the filters to see the full demo range.', noScript: 'Interactive filtering requires JavaScript, but the full catalog remains visible below.' },
     product: { viewDetails: 'View product', productDetails: 'Product details', origin: 'Origin', category: 'Category', packFormat: 'Pack format', storage: 'Storage', applications: 'Applications', applicationNames: { lamination: 'Lamination', viennoiserie: 'Viennoiserie', whipping: 'Whipping', sauces: 'Sauces', tiramisu: 'Tiramisu', desserts: 'Desserts', cheesecake: 'Cheesecake', spreads: 'Spreads', pizza: 'Pizza', baking: 'Baking', cooking: 'Cooking' }, benefits: 'Professional benefits', audience: 'Suitable for', enquire: 'Enquire about this product', relatedTitle: 'Related products', backToProducts: 'Back to products', breadcrumb: 'Product breadcrumb' },
-    brand: { eyebrow: 'Our brands', title: 'Ingredient makers with a point of view', description: 'Explore representative producer stories and product families.', viewBrand: 'View brand', origin: 'Origin', story: 'Brand story', categories: 'Categories', products: 'Products from this brand', backToBrands: 'Back to brands', breadcrumb: 'Brand breadcrumb' },
+    brand: { eyebrow: 'Our brands', title: 'Ingredient makers with a point of view', description: 'Explore representative producer stories and product families.', viewBrand: 'View brand', origin: 'Origin', story: 'Brand story', categories: 'Categories', products: 'Products from this brand', backToBrands: 'Back to brands', breadcrumb: 'Brand breadcrumb', demoNotice: 'Review-only story: this brand identity, origin, imagery, and product relationship are fictional.' },
     form: { eyebrow: 'Sales enquiry', title: 'Tell us what you need', description: 'Share your ingredient requirements and we will prepare a useful follow-up.', requiredNote: 'Fields marked with an asterisk are required.', required: 'Required', name: 'Name', company: 'Company', email: 'Email', phone: 'Phone', interest: 'Area of interest', interestPlaceholder: 'Choose an area of interest', message: 'How can we help?', consent: 'I agree that this demo may process my details to show the enquiry experience.', submit: 'Send enquiry', submitting: 'Sending…', demoDelivery: 'Demo only: this form does not send an email or create a CRM record.' },
     status: { formError: 'Please correct the highlighted fields.', successTitle: 'Thank you for your enquiry', successMessage: 'Your demo enquiry has been recorded for this review session.', reference: 'Reference', modelLoading: 'Loading interactive product view…', modelUnavailable: 'The interactive view is unavailable. The product preview remains available.' },
     validation: { nameRequired: 'Enter your name.', emailRequired: 'Enter your email address.', emailInvalid: 'Enter a valid email address.', interestRequired: 'Choose an area of interest.', messageRequired: 'Tell us how we can help.', consentRequired: 'Confirm your consent to continue.' },
     notFound: { eyebrow: '404', title: 'This page could not be found', description: 'The address may have changed, or the page may not be part of this demo.', homeLink: 'Go to English home', productsLink: 'Browse English products' },
   },
   vi: {
+    siteName: 'Thực Phẩm Paradise Bản Mẫu',
     languageName: 'Tiếng Việt',
     skipToContent: 'Chuyển đến nội dung chính',
     demoNotice: 'Bản demo duyệt với khách hàng — tên, thông số, tuyên bố và hình ảnh sản phẩm đều là nội dung hư cấu.',
@@ -220,7 +224,7 @@ export const ui: Record<Locale, UiCopy> = {
     },
     catalog: { eyebrow: 'Danh mục demo', title: 'Nguyên liệu chuyên nghiệp', description: 'Tìm kiếm và lọc danh mục sản phẩm song ngữ đại diện.', searchLabel: 'Tìm sản phẩm', searchPlaceholder: 'Tìm theo tên hoặc ứng dụng', categoryLabel: 'Danh mục', brandLabel: 'Thương hiệu', applicationLabel: 'Ứng dụng', allCategories: 'Tất cả danh mục', allBrands: 'Tất cả thương hiệu', allApplications: 'Tất cả ứng dụng', clearFilters: 'Xóa bộ lọc', resetFilters: 'Đặt lại bộ lọc', resultSingular: 'sản phẩm được tìm thấy', resultPlural: 'sản phẩm được tìm thấy', noResultsTitle: 'Không có sản phẩm phù hợp', noResultsDescription: 'Hãy thử từ khóa rộng hơn hoặc đặt lại bộ lọc để xem toàn bộ danh mục demo.', noScript: 'Bộ lọc tương tác cần JavaScript, nhưng toàn bộ danh mục vẫn hiển thị bên dưới.' },
     product: { viewDetails: 'Xem sản phẩm', productDetails: 'Chi tiết sản phẩm', origin: 'Xuất xứ', category: 'Danh mục', packFormat: 'Quy cách', storage: 'Bảo quản', applications: 'Ứng dụng', applicationNames: { lamination: 'Cán lớp', viennoiserie: 'Bánh viennoiserie', whipping: 'Đánh bông', sauces: 'Xốt', tiramisu: 'Tiramisu', desserts: 'Món tráng miệng', cheesecake: 'Bánh phô mai', spreads: 'Món phết', pizza: 'Pizza', baking: 'Làm bánh', cooking: 'Nấu ăn' }, benefits: 'Lợi ích chuyên nghiệp', audience: 'Phù hợp với', enquire: 'Yêu cầu tư vấn sản phẩm', relatedTitle: 'Sản phẩm liên quan', backToProducts: 'Quay lại sản phẩm', breadcrumb: 'Đường dẫn sản phẩm' },
-    brand: { eyebrow: 'Thương hiệu', title: 'Những nhà sản xuất nguyên liệu giàu bản sắc', description: 'Khám phá câu chuyện nhà sản xuất và các dòng sản phẩm đại diện.', viewBrand: 'Xem thương hiệu', origin: 'Xuất xứ', story: 'Câu chuyện thương hiệu', categories: 'Danh mục', products: 'Sản phẩm từ thương hiệu này', backToBrands: 'Quay lại thương hiệu', breadcrumb: 'Đường dẫn thương hiệu' },
+    brand: { eyebrow: 'Thương hiệu', title: 'Những nhà sản xuất nguyên liệu giàu bản sắc', description: 'Khám phá câu chuyện nhà sản xuất và các dòng sản phẩm đại diện.', viewBrand: 'Xem thương hiệu', origin: 'Xuất xứ', story: 'Câu chuyện thương hiệu', categories: 'Danh mục', products: 'Sản phẩm từ thương hiệu này', backToBrands: 'Quay lại thương hiệu', breadcrumb: 'Đường dẫn thương hiệu', demoNotice: 'Câu chuyện chỉ để duyệt: nhận diện, xuất xứ, hình ảnh và mối quan hệ sản phẩm của thương hiệu này đều là hư cấu.' },
     form: { eyebrow: 'Yêu cầu tư vấn', title: 'Chia sẻ nhu cầu của bạn', description: 'Hãy cho chúng tôi biết yêu cầu nguyên liệu để chuẩn bị phản hồi hữu ích.', requiredNote: 'Các trường có dấu sao là bắt buộc.', required: 'Bắt buộc', name: 'Họ và tên', company: 'Công ty', email: 'Email', phone: 'Điện thoại', interest: 'Lĩnh vực quan tâm', interestPlaceholder: 'Chọn lĩnh vực quan tâm', message: 'Chúng tôi có thể hỗ trợ gì?', consent: 'Tôi đồng ý để bản demo xử lý thông tin nhằm minh họa trải nghiệm gửi yêu cầu.', submit: 'Gửi yêu cầu', submitting: 'Đang gửi…', demoDelivery: 'Chỉ là demo: biểu mẫu này không gửi email hoặc tạo hồ sơ CRM.' },
     status: { formError: 'Vui lòng sửa các trường được đánh dấu.', successTitle: 'Cảm ơn yêu cầu của bạn', successMessage: 'Yêu cầu demo đã được ghi nhận cho phiên duyệt này.', reference: 'Mã tham chiếu', modelLoading: 'Đang tải chế độ xem sản phẩm tương tác…', modelUnavailable: 'Chế độ xem tương tác hiện không khả dụng. Hình xem trước sản phẩm vẫn được giữ lại.' },
     validation: { nameRequired: 'Vui lòng nhập họ và tên.', emailRequired: 'Vui lòng nhập địa chỉ email.', emailInvalid: 'Vui lòng nhập địa chỉ email hợp lệ.', interestRequired: 'Vui lòng chọn lĩnh vực quan tâm.', messageRequired: 'Vui lòng cho biết chúng tôi có thể hỗ trợ gì.', consentRequired: 'Vui lòng xác nhận đồng ý để tiếp tục.' },
