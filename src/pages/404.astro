@@ -1,0 +1,91 @@
+---
+import '@fontsource/newsreader/500.css';
+import '@fontsource/be-vietnam-pro/400.css';
+import '@fontsource/be-vietnam-pro/500.css';
+import '../styles/tokens.css';
+import '../styles/typography.css';
+import '../styles/global.css';
+
+const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinefoods.com');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Page not found · Không tìm thấy trang | Paradise Fine Foods Demo</title>
+    <meta name="description" content="Choose the English or Vietnamese Paradise Fine Foods demo after reaching an unavailable page." />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={canonical} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content · Chuyển đến nội dung</a>
+    <header class="not-found-header">
+      <a href="/en/" aria-label="Paradise Fine Foods Demo — English home">
+        <span aria-hidden="true">PFF</span>
+        Paradise Fine Foods Demo
+      </a>
+      <p>Client review · Bản duyệt khách hàng</p>
+    </header>
+
+    <main id="main-content" class="not-found">
+      <div class="not-found__code" aria-hidden="true">
+        <span>Route</span>
+        <strong>404</strong>
+        <span>No locale assumed</span>
+      </div>
+
+      <div class="not-found__content">
+        <section lang="en" aria-labelledby="not-found-en">
+          <p class="eyebrow">Page unavailable</p>
+          <h1 id="not-found-en">This page could not be found</h1>
+          <p>The address may have changed, or this page may not be part of the client-review demo. Choose a clear English destination below.</p>
+          <nav aria-label="English destinations">
+            <a class="not-found__primary" href="/en/">English home <span aria-hidden="true">→</span></a>
+            <a href="/en/products/">Browse English products</a>
+          </nav>
+        </section>
+
+        <section lang="vi" aria-labelledby="not-found-vi">
+          <p class="eyebrow">Trang không khả dụng</p>
+          <h2 id="not-found-vi">Không tìm thấy trang này</h2>
+          <p>Địa chỉ có thể đã thay đổi hoặc trang này chưa nằm trong phạm vi bản demo dành cho khách hàng duyệt. Vui lòng chọn điểm đến tiếng Việt bên dưới.</p>
+          <nav aria-label="Điểm đến tiếng Việt">
+            <a class="not-found__primary" href="/vi/">Trang chủ tiếng Việt <span aria-hidden="true">→</span></a>
+            <a href="/vi/san-pham/">Xem sản phẩm tiếng Việt</a>
+          </nav>
+        </section>
+      </div>
+    </main>
+
+    <footer class="not-found-footer">
+      <p>Review-only fictional content · Nội dung hư cấu chỉ dùng để duyệt</p>
+      <p>Paradise Fine Foods / Cold-Chain Atelier</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  body { background: var(--color-milk-paper); color: var(--color-carbon); min-block-size: 100vh; }
+  .not-found-header, .not-found-footer { align-items: center; display: flex; font-size: var(--text-xs); justify-content: space-between; letter-spacing: var(--tracking-label); margin-inline: auto; max-inline-size: var(--container-max); padding: var(--space-4) var(--container-inline); text-transform: uppercase; }
+  .not-found-header { border-bottom: 1px solid var(--color-stainless); }
+  .not-found-header a { align-items: center; color: inherit; display: flex; font-weight: 600; gap: var(--space-3); text-decoration: none; }
+  .not-found-header a span { background: var(--color-cold-chain-blue); color: var(--color-paper-white); display: grid; font-size: 0.62rem; letter-spacing: 0.08em; min-block-size: 2.5rem; min-inline-size: 2.5rem; place-items: center; }
+  .not-found { display: grid; grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 2.2fr); margin-inline: auto; max-inline-size: var(--container-max); min-block-size: calc(100vh - 11rem); padding-inline: var(--container-inline); }
+  .not-found__code { align-content: center; background: var(--color-cold-chain-blue); color: var(--color-paper-white); display: grid; padding: clamp(var(--space-6), 6vw, var(--space-9)); }
+  .not-found__code strong { color: var(--color-cultured-butter); font-family: var(--font-display); font-size: clamp(6rem, 14vw, 12rem); font-weight: 500; letter-spacing: -0.07em; line-height: 0.85; margin-inline-start: -0.07em; }
+  .not-found__code span { font-size: 0.65rem; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .not-found__content { align-content: center; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .not-found__content section { display: flex; flex-direction: column; min-inline-size: 0; padding: clamp(var(--space-6), 5vw, var(--space-9)); }
+  .not-found__content section + section { border-inline-start: 1px solid var(--color-stainless); }
+  .not-found__content h1, .not-found__content h2 { font-size: clamp(2.4rem, 5vw, 4.7rem); margin-block: var(--space-4); overflow-wrap: anywhere; }
+  .not-found__content section > p:not(.eyebrow) { max-inline-size: 34rem; }
+  .not-found__content nav { border-top: 1px solid var(--color-stainless); display: grid; gap: var(--space-3); margin-block-start: auto; padding-block-start: var(--space-6); }
+  .not-found__content nav a { color: var(--color-cold-chain-blue); font-weight: 500; inline-size: fit-content; text-underline-offset: 0.25em; }
+  .not-found__content .not-found__primary { align-items: center; background: var(--color-cold-chain-blue); color: var(--color-paper-white); display: flex; inline-size: 100%; justify-content: space-between; min-block-size: 3rem; padding-inline: var(--space-4); text-decoration: none; }
+  .not-found-footer { border-top: 1px solid var(--color-stainless); }
+  @media (max-width: 58rem) { .not-found { grid-template-columns: 1fr; padding-inline: 0; } .not-found__code { min-block-size: 16rem; } .not-found__code strong { font-size: clamp(5rem, 22vw, 9rem); } }
+  @media (max-width: 40rem) { .not-found-header p, .not-found-footer p + p { display: none; } .not-found__content { grid-template-columns: 1fr; } .not-found__content section + section { border-block-start: 1px solid var(--color-stainless); border-inline-start: 0; } .not-found__content nav { margin-block-start: var(--space-6); } }
+</style>
