@@ -33,6 +33,9 @@ export interface UiCopy {
     packFormat: string;
     storage: string;
     interactionPrompt: string;
+    stageAccessibleLabel: string;
+    stageReadyStatus: string;
+    stageFallbackStatus: string;
     stageFallback: string;
     stageCode: string;
   };
@@ -158,7 +161,7 @@ export const ui: Record<Locale, UiCopy> = {
     demoNoticeLabel: 'Review / 00',
     header: { navigation: 'Primary navigation', menuOpen: 'Open menu', menuClose: 'Close menu', home: 'Home', products: 'Products', brands: 'Brands', contact: 'Contact', language: 'Tiếng Việt' },
     footer: { tagline: 'Exceptional ingredients, handled with care.', navigation: 'Explore', contact: 'Contact', legal: 'Demo content for review only.', copyright: 'Paradise Fine Foods. All rights reserved.' },
-    hero: { eyebrow: 'Cold-chain ingredients', title: 'Exceptional ingredients. Delivered with confidence.', description: 'A review-ready showcase of specialty dairy and professional ingredients, supported by careful handling and responsive service.', primaryCta: 'Explore products', secondaryCta: 'Start an enquiry', brand: 'Brand', origin: 'Origin', packFormat: 'Pack format', storage: 'Storage', interactionPrompt: 'Interact with the 3D product package', stageFallback: 'Product package preview', stageCode: 'PFF / CHILLED 02—06' },
+    hero: { eyebrow: 'Cold-chain ingredients', title: 'Exceptional ingredients. Delivered with confidence.', description: 'A review-ready showcase of specialty dairy and professional ingredients, supported by careful handling and responsive service.', primaryCta: 'Explore products', secondaryCta: 'Start an enquiry', brand: 'Brand', origin: 'Origin', packFormat: 'Pack format', storage: 'Storage', interactionPrompt: 'Interact with the 3D product package', stageAccessibleLabel: 'Interactive 3D product package', stageReadyStatus: '3D preview ready.', stageFallbackStatus: 'The interactive view is unavailable. The image preview remains available.', stageFallback: 'Product package preview', stageCode: 'PFF / CHILLED 02—06' },
     home: {
       credibilityTitle: 'Built for dependable ingredient sourcing',
       operationalPillars: [
@@ -194,7 +197,7 @@ export const ui: Record<Locale, UiCopy> = {
     demoNoticeLabel: 'Duyệt / 00',
     header: { navigation: 'Điều hướng chính', menuOpen: 'Mở menu', menuClose: 'Đóng menu', home: 'Trang chủ', products: 'Sản phẩm', brands: 'Thương hiệu', contact: 'Liên hệ', language: 'English' },
     footer: { tagline: 'Nguyên liệu tuyển chọn, được chăm chút cẩn thận.', navigation: 'Khám phá', contact: 'Liên hệ', legal: 'Nội dung demo chỉ dùng để duyệt.', copyright: 'Paradise Fine Foods. Bảo lưu mọi quyền.' },
-    hero: { eyebrow: 'Nguyên liệu chuỗi lạnh', title: 'Nguyên liệu tuyển chọn. Giao hàng trọn niềm tin.', description: 'Không gian giới thiệu sẵn sàng để duyệt về nguyên liệu sữa đặc tuyển và nguyên liệu chuyên nghiệp, cùng quy trình bảo quản cẩn thận và dịch vụ linh hoạt.', primaryCta: 'Khám phá sản phẩm', secondaryCta: 'Gửi yêu cầu', brand: 'Thương hiệu', origin: 'Xuất xứ', packFormat: 'Quy cách', storage: 'Bảo quản', interactionPrompt: 'Tương tác với bao bì sản phẩm 3D', stageFallback: 'Hình xem trước bao bì sản phẩm', stageCode: 'PFF / LẠNH 02—06' },
+    hero: { eyebrow: 'Nguyên liệu chuỗi lạnh', title: 'Nguyên liệu tuyển chọn. Giao hàng trọn niềm tin.', description: 'Không gian giới thiệu sẵn sàng để duyệt về nguyên liệu sữa đặc tuyển và nguyên liệu chuyên nghiệp, cùng quy trình bảo quản cẩn thận và dịch vụ linh hoạt.', primaryCta: 'Khám phá sản phẩm', secondaryCta: 'Gửi yêu cầu', brand: 'Thương hiệu', origin: 'Xuất xứ', packFormat: 'Quy cách', storage: 'Bảo quản', interactionPrompt: 'Tương tác với bao bì sản phẩm 3D', stageAccessibleLabel: 'Bao bì sản phẩm 3D tương tác', stageReadyStatus: 'Bản xem 3D đã sẵn sàng.', stageFallbackStatus: 'Chế độ xem tương tác hiện không khả dụng. Hình ảnh xem trước vẫn sẵn sàng.', stageFallback: 'Hình xem trước bao bì sản phẩm', stageCode: 'PFF / LẠNH 02—06' },
     home: {
       credibilityTitle: 'Nền tảng tìm nguồn nguyên liệu đáng tin cậy',
       operationalPillars: [

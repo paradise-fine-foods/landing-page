@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Temporary Paradise product package mobile preview</title>
+  <desc id="desc">An abstract cream-colored chilled dairy package composed for a tall blue and yellow editorial stage.</desc>
+  <rect width="800" height="1000" fill="#f6f3ea"/>
+  <path d="M0 760 800 610v390H0Z" fill="#d9e5e8"/>
+  <path d="M580 0h220v570l-155 42-65-132Z" fill="#123c56"/>
+  <circle cx="125" cy="150" r="82" fill="#f2d464"/>
+  <ellipse cx="405" cy="835" rx="250" ry="50" fill="#123c56" opacity=".18"/>
+  <g transform="translate(145 115) scale(.92)">
+    <path d="m100 52 337 39 75 92-33 550-370 16-75-82Z" fill="#fffdf7" stroke="#26383f" stroke-width="5"/>
+    <path d="m100 52 337 39 75 92-368-12Z" fill="#e8e2d1" stroke="#26383f" stroke-width="5"/>
+    <path d="m144 171 368 12-33 550-370 16Z" fill="#fffaf0" stroke="#26383f" stroke-width="5"/>
+    <path d="m144 171 368 12-7 126-369-9Z" fill="#f2d464"/>
+    <path d="m132 379 360 7-4 64-360-4Z" fill="#123c56"/>
+    <text x="309" y="252" fill="#26383f" font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle" letter-spacing="7">PARADISE</text>
+    <text x="307" y="421" fill="#fffdf7" font-family="Arial, sans-serif" font-size="23" text-anchor="middle" letter-spacing="4">CULTURED BUTTER</text>
+    <text x="307" y="510" fill="#26383f" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" letter-spacing="3">TEMPORARY REVIEW PACK</text>
+    <path d="M228 575h160M228 608h160M258 641h100" stroke="#9aa7aa" stroke-width="6"/>
+  </g>
+  <text x="42" y="954" fill="#26383f" font-family="Arial, sans-serif" font-size="15" letter-spacing="3">POSTER-FIRST PRODUCT VIEW / DEMO ASSET</text>
+</svg>

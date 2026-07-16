@@ -23,9 +23,10 @@ interface Props {
   image?: string;
   siteName: string;
   demoNotice: string;
+  preloadImages?: Array<{ href: string; media?: string }>;
 }
 
-const { locale, title, description, pathname, alternatePath, image, siteName, demoNotice } = Astro.props;
+const { locale, title, description, pathname, alternatePath, image, siteName, demoNotice, preloadImages = [] } = Astro.props;
 const meta = buildMeta({
   site: Astro.site ?? 'https://demo.paradisefinefoods.com',
   locale,
@@ -46,6 +47,9 @@ const meta = buildMeta({
     <title>{meta.title}</title>
     <meta name="description" content={meta.description} />
     <link rel="canonical" href={meta.canonical} />
+    {preloadImages.map(({ href, media }) => (
+      <link rel="preload" as="image" href={href} media={media} fetchpriority="high" />
+    ))}
     {meta.alternates.map(({ locale: alternateLocale, href }) => (
       <link rel="alternate" hreflang={alternateLocale} href={href} />
     ))}

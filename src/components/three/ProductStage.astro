@@ -1,40 +1,56 @@
 ---
-import type { Locale } from '../../lib/i18n/types';
-
 interface Props {
-  locale: Locale;
   modelSrc: string;
   posterSrc: string;
+  mobilePosterSrc: string;
   alt: string;
   interactionPrompt: string;
+  accessibleLabel: string;
+  readyStatus: string;
+  fallbackStatus: string;
 }
 
-const { locale, modelSrc, posterSrc, alt, interactionPrompt } = Astro.props;
-const statusCopy = locale === 'vi'
-  ? { ready: 'Bản xem 3D đã sẵn sàng.', fallback: 'Hình ảnh xem trước vẫn sẵn sàng.' }
-  : { ready: '3D preview ready.', fallback: 'The image preview remains available.' };
+const {
+  modelSrc,
+  posterSrc,
+  mobilePosterSrc,
+  alt,
+  interactionPrompt,
+  accessibleLabel,
+  readyStatus,
+  fallbackStatus,
+} = Astro.props;
+const statusId = 'featured-product-stage-status';
 ---
 
 <product-stage
   class="product-stage"
   data-model-src={modelSrc}
-  data-ready-status={statusCopy.ready}
-  data-error-status={statusCopy.fallback}
+  data-ready-status={readyStatus}
+  data-error-status={fallbackStatus}
+  role="group"
+  aria-label={accessibleLabel}
+  aria-describedby={statusId}
   tabindex="0"
 >
-  <img
-    class="product-stage__poster"
-    src={posterSrc}
-    width="1200"
-    height="1000"
-    alt={alt}
-    fetchpriority="high"
-  />
-  <canvas class="product-stage__canvas" role="img" aria-label={alt}></canvas>
-  <span class="product-stage__status" role="status" aria-live="polite">{interactionPrompt}</span>
+  <picture class="product-stage__poster">
+    <source media="(max-width: 36rem)" srcset={mobilePosterSrc} width="800" height="1000" />
+    <img
+      src={posterSrc}
+      width="1600"
+      height="1000"
+      alt={alt}
+      loading="eager"
+      decoding="sync"
+      fetchpriority="high"
+    />
+  </picture>
+  <canvas class="product-stage__canvas" role="presentation" aria-hidden="true"></canvas>
+  <span id={statusId} class="product-stage__status" role="status" aria-live="polite">{interactionPrompt}</span>
 </product-stage>
 
 <script>
+  import { installStageActivation, type StageActivationController } from '../../lib/three/activation';
   import { shouldEnhance3D } from '../../lib/three/enhancement';
 
   const hasWebGL = () => {
@@ -56,10 +72,9 @@ const statusCopy = locale === 'vi'
   class ProductStageElement extends HTMLElement {
     #connected = false;
     #started = false;
-    #observer?: IntersectionObserver;
+    #activation?: StageActivationController;
     #viewer?: { dispose: () => void };
     #session = 0;
-    #activate = () => void this.#enhance();
 
     connectedCallback() {
       if (this.#connected) return;
@@ -70,51 +85,54 @@ const statusCopy = locale === 'vi'
         reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
         webglAvailable: hasWebGL(),
       });
-
       if (!eligible) return;
 
-      this.addEventListener('focusin', this.#activate);
-      this.addEventListener('pointerenter', this.#activate);
-      this.addEventListener('pointerdown', this.#activate);
+      const createObserver = 'IntersectionObserver' in window
+        ? (onIntersection: (isIntersecting: boolean) => void) => {
+            const observer = new IntersectionObserver((entries) => {
+              onIntersection(entries.some(({ isIntersecting }) => isIntersecting));
+            }, { rootMargin: '0px' });
+            return {
+              observe: (target: EventTarget) => observer.observe(target as Element),
+              disconnect: () => observer.disconnect(),
+            };
+          }
+        : undefined;
 
-      if ('IntersectionObserver' in window) {
-        this.#observer = new IntersectionObserver((entries) => {
-          if (session === this.#session && entries.some(({ isIntersecting }) => isIntersecting)) this.#activate();
-        }, { rootMargin: '0px' });
-        this.#observer.observe(this);
-      }
+      this.#activation = installStageActivation({
+        target: this,
+        createObserver,
+        activate: () => {
+          if (this.#connected && session === this.#session) void this.#enhance();
+        },
+      });
     }
 
     disconnectedCallback() {
       this.#connected = false;
       this.#session += 1;
-      this.#removeActivationHooks();
+      this.#activation?.dispose();
+      this.#activation = undefined;
       this.#viewer?.dispose();
       this.#viewer = undefined;
       this.#started = false;
       delete this.dataset.ready;
-    }
-
-    #removeActivationHooks() {
-      this.removeEventListener('focusin', this.#activate);
-      this.removeEventListener('pointerenter', this.#activate);
-      this.removeEventListener('pointerdown', this.#activate);
-      this.#observer?.disconnect();
-      this.#observer = undefined;
+      this.removeAttribute('aria-busy');
     }
 
     #fail(status: HTMLElement) {
       delete this.dataset.ready;
       this.dataset.failed = 'true';
+      this.setAttribute('aria-busy', 'false');
       status.textContent = this.dataset.errorStatus ?? '';
     }
 
     async #enhance() {
       if (this.#started) return;
       this.#started = true;
-      this.#removeActivationHooks();
+      this.#activation = undefined;
+      this.setAttribute('aria-busy', 'true');
       const session = this.#session;
-
       const canvas = this.querySelector<HTMLCanvasElement>('.product-stage__canvas');
       const status = this.querySelector<HTMLElement>('[role="status"]');
       const modelSrc = this.dataset.modelSrc;
@@ -130,6 +148,7 @@ const statusCopy = locale === 'vi'
             if (!this.#connected || session !== this.#session) return;
             delete this.dataset.failed;
             this.dataset.ready = 'true';
+            this.setAttribute('aria-busy', 'false');
             status.textContent = this.dataset.readyStatus ?? '';
           },
           onError: () => {
@@ -146,14 +165,15 @@ const statusCopy = locale === 'vi'
 </script>
 
 <style>
-  .product-stage { background: var(--color-paper-white); block-size: 100%; display: grid; inline-size: 100%; isolation: isolate; min-block-size: 0; overflow: hidden; position: relative; }
-  .product-stage__poster, .product-stage__canvas { block-size: 100%; grid-area: 1 / 1; inline-size: 100%; object-fit: cover; }
+  .product-stage { aspect-ratio: 16 / 10; background: var(--color-paper-white); display: grid; inline-size: 100%; isolation: isolate; overflow: hidden; position: relative; }
+  .product-stage__poster, .product-stage__poster img, .product-stage__canvas { block-size: 100%; grid-area: 1 / 1; inline-size: 100%; }
   .product-stage__poster { z-index: 1; }
+  .product-stage__poster img { object-fit: cover; }
   .product-stage__canvas { cursor: grab; opacity: 0; pointer-events: none; touch-action: pan-y; transition: opacity 240ms ease; z-index: 2; }
   .product-stage__canvas:active { cursor: grabbing; }
   .product-stage[data-ready='true'] .product-stage__canvas { opacity: 1; pointer-events: auto; }
-  .product-stage[data-ready='true'] .product-stage__poster { opacity: 0; }
   .product-stage__status { background: color-mix(in srgb, var(--color-paper-white) 92%, transparent); border: 1px solid var(--color-stainless); inset-block-end: var(--space-3); inset-inline-start: var(--space-3); max-inline-size: calc(100% - 2 * var(--space-3)); padding: var(--space-2) var(--space-3); position: absolute; z-index: 3; }
   .product-stage[data-ready='true'] .product-stage__status { opacity: 0; pointer-events: none; }
+  @media (max-width: 36rem) { .product-stage { aspect-ratio: 4 / 5; } }
   @media (prefers-reduced-motion: reduce) { .product-stage__canvas { transition: none; } }
 </style>

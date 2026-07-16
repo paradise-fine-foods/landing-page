@@ -49,7 +49,7 @@ const metadata = [
   .hero h1 { font-size: clamp(3rem, 5.5vw, 5.8rem); max-inline-size: 9.5ch; }
   .hero__description { max-inline-size: 34rem; }
   .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-block-start: var(--space-3); }
-  .hero__stage { background: var(--color-paper-white); border-inline: 1px solid var(--color-stainless); display: grid; grid-template-rows: auto 1fr; min-block-size: 36rem; overflow: hidden; position: relative; }
+  .hero__stage { align-self: end; background: var(--color-paper-white); border-inline: 1px solid var(--color-stainless); display: grid; grid-template-rows: auto auto; overflow: hidden; position: relative; }
   .hero__stage::after { background: var(--color-cultured-butter); block-size: 0.5rem; content: ''; inline-size: 28%; inset-block-end: 0; inset-inline-end: 0; position: absolute; }
   .hero__stage-label { border-bottom: 1px solid var(--color-stainless); display: flex; font-size: 0.64rem; justify-content: space-between; letter-spacing: var(--tracking-label); padding: var(--space-3); text-transform: uppercase; }
   .hero__stage-fallback { display: grid; place-items: center; }
@@ -58,6 +58,6 @@ const metadata = [
   .hero__rail dt { color: var(--color-stainless); font-size: 0.58rem; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .hero__rail dd { font-size: 0.72rem; line-height: 1.4; margin-block-start: var(--space-1); overflow-wrap: anywhere; }
   :global(.hero-stage-image) { block-size: 100%; inline-size: 100%; object-fit: cover; }
-  @media (max-width: 64rem) { .hero__grid { grid-template-columns: 1fr; } .hero__copy { padding-inline-end: 0; } .hero__stage { min-block-size: 30rem; } .hero__rail { grid-column: 1; grid-row: auto; } }
-  @media (max-width: 36rem) { .hero__grid { inline-size: 100%; } .hero__copy { padding-inline: var(--container-inline); } .hero__stage { border-inline: 0; min-block-size: 24rem; } .hero__rail { grid-template-columns: 1fr 1fr; } .hero__actions { align-items: stretch; flex-direction: column; } }
+  @media (max-width: 64rem) { .hero__grid { grid-template-columns: 1fr; } .hero__copy { padding-inline-end: 0; } .hero__rail { grid-column: 1; grid-row: auto; } }
+  @media (max-width: 36rem) { .hero__grid { inline-size: 100%; } .hero__copy { padding-inline: var(--container-inline); } .hero__stage { border-inline: 0; } .hero__rail { grid-template-columns: 1fr 1fr; } .hero__actions { align-items: stretch; flex-direction: column; } }
 </style>

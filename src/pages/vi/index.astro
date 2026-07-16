@@ -9,7 +9,8 @@ import ServiceProof from '../../components/sections/ServiceProof.astro';
 import ChannelPathways from '../../components/sections/ChannelPathways.astro';
 import FinalCta from '../../components/sections/FinalCta.astro';
 import ProductStage from '../../components/three/ProductStage.astro';
-import heroPosterSrc from '../../assets/demo/hero-poster.svg?no-inline';
+import heroPosterDesktopSrc from '../../assets/demo/hero-poster-desktop.svg?no-inline';
+import heroPosterMobileSrc from '../../assets/demo/hero-poster-mobile.svg?no-inline';
 import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getProducts } from '../../lib/cms/queries';
 import { counterpartPath, localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
@@ -38,9 +39,9 @@ const channels = [
 ];
 ---
 
-<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={featured.hero.image.src}>
+<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={featured.hero.image.src} preloadImages={[{ href: heroPosterDesktopSrc, media: '(min-width: 36.001rem)' }, { href: heroPosterMobileSrc, media: '(max-width: 36rem)' }]}>
   <Hero copy={copy.hero} product={featured.hero.product} {productsPath} {contactPath}>
-    <ProductStage slot="stage" {locale} modelSrc="/models/demo-package.glb" posterSrc={heroPosterSrc} alt={featured.hero.image.alt} interactionPrompt={copy.hero.interactionPrompt} />
+    <ProductStage slot="stage" modelSrc="/models/demo-package.glb" posterSrc={heroPosterDesktopSrc} mobilePosterSrc={heroPosterMobileSrc} alt={featured.hero.image.alt} interactionPrompt={copy.hero.interactionPrompt} accessibleLabel={copy.hero.stageAccessibleLabel} readyStatus={copy.hero.stageReadyStatus} fallbackStatus={copy.hero.stageFallbackStatus} />
   </Hero>
   <CredibilityStrip title={copy.home.credibilityTitle} pillars={copy.home.operationalPillars} />
   <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {categoryCounts} productLabel={copy.home.categoryProductLabel} {productsPath} />

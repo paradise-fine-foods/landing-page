@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1000" role="img" aria-labelledby="title desc">
-  <title id="title">Temporary Paradise product package preview</title>
-  <desc id="desc">An abstract cream-colored chilled dairy package on a blue and yellow editorial stage.</desc>
-  <rect width="1200" height="1000" fill="#f6f3ea"/>
-  <path d="M0 720 1200 560v440H0Z" fill="#d9e5e8"/>
-  <path d="M835 0h365v620L965 661 835 512Z" fill="#123c56"/>
-  <circle cx="182" cy="176" r="112" fill="#f2d464"/>
-  <ellipse cx="587" cy="806" rx="300" ry="62" fill="#123c56" opacity=".18"/>
-  <g transform="translate(350 120)">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Temporary Paradise product package desktop preview</title>
+  <desc id="desc">An abstract cream-colored chilled dairy package on a wide blue and yellow editorial stage.</desc>
+  <rect width="1600" height="1000" fill="#f6f3ea"/>
+  <path d="M0 760 1600 520v480H0Z" fill="#d9e5e8"/>
+  <path d="M1190 0h410v650l-280 50-130-180Z" fill="#123c56"/>
+  <circle cx="255" cy="190" r="126" fill="#f2d464"/>
+  <ellipse cx="825" cy="826" rx="350" ry="62" fill="#123c56" opacity=".18"/>
+  <g transform="translate(575 105)">
     <path d="m100 52 337 39 75 92-33 550-370 16-75-82Z" fill="#fffdf7" stroke="#26383f" stroke-width="5"/>
     <path d="m100 52 337 39 75 92-368-12Z" fill="#e8e2d1" stroke="#26383f" stroke-width="5"/>
     <path d="m144 171 368 12-33 550-370 16Z" fill="#fffaf0" stroke="#26383f" stroke-width="5"/>
@@ -17,5 +17,5 @@
     <text x="307" y="510" fill="#26383f" font-family="Arial, sans-serif" font-size="18" text-anchor="middle" letter-spacing="3">TEMPORARY REVIEW PACK</text>
     <path d="M228 575h160M228 608h160M258 641h100" stroke="#9aa7aa" stroke-width="6"/>
   </g>
-  <text x="54" y="944" fill="#26383f" font-family="Arial, sans-serif" font-size="19" letter-spacing="5">POSTER-FIRST PRODUCT VIEW / DEMO ASSET</text>
+  <text x="60" y="944" fill="#26383f" font-family="Arial, sans-serif" font-size="19" letter-spacing="5">POSTER-FIRST PRODUCT VIEW / DEMO ASSET</text>
 </svg>
