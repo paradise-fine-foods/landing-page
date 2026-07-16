@@ -1,0 +1,136 @@
+---
+import type { Locale } from '../../lib/i18n/types';
+
+interface Props {
+  locale: Locale;
+  modelSrc: string;
+  posterSrc: string;
+  alt: string;
+  interactionPrompt: string;
+}
+
+const { locale, modelSrc, posterSrc, alt, interactionPrompt } = Astro.props;
+const statusCopy = locale === 'vi'
+  ? { ready: 'Bản xem 3D đã sẵn sàng.', fallback: 'Hình ảnh xem trước vẫn sẵn sàng.' }
+  : { ready: '3D preview ready.', fallback: 'The image preview remains available.' };
+---
+
+<product-stage
+  class="product-stage"
+  data-model-src={modelSrc}
+  data-ready-status={statusCopy.ready}
+  data-error-status={statusCopy.fallback}
+  tabindex="0"
+>
+  <img
+    class="product-stage__poster"
+    src={posterSrc}
+    width="1200"
+    height="1000"
+    alt={alt}
+    fetchpriority="high"
+  />
+  <model-viewer class="product-stage__model" alt={alt}></model-viewer>
+  <span class="product-stage__status" role="status" aria-live="polite">{interactionPrompt}</span>
+</product-stage>
+
+<script>
+  import { shouldEnhance3D } from '../../lib/three/enhancement';
+
+  let modelViewerRuntime: Promise<unknown> | undefined;
+
+  const hasWebGL = () => {
+    try {
+      const canvas = document.createElement('canvas');
+      return Boolean(
+        canvas.getContext('webgl2')
+        ?? canvas.getContext('webgl')
+        ?? canvas.getContext('experimental-webgl'),
+      );
+    } catch {
+      return false;
+    }
+  };
+
+  class ProductStageElement extends HTMLElement {
+    #started = false;
+    #observer?: IntersectionObserver;
+
+    connectedCallback() {
+      const eligible = shouldEnhance3D({
+        saveData: navigator.connection?.saveData === true,
+        reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+        webglAvailable: hasWebGL(),
+      });
+
+      if (!eligible) return;
+
+      const activate = () => void this.#enhance();
+      this.addEventListener('focusin', activate, { once: true });
+      this.addEventListener('pointerenter', activate, { once: true });
+      this.addEventListener('pointerdown', activate, { once: true });
+
+      if ('IntersectionObserver' in window) {
+        this.#observer = new IntersectionObserver((entries) => {
+          if (entries.some(({ isIntersecting }) => isIntersecting)) activate();
+        }, { rootMargin: '160px' });
+        this.#observer.observe(this);
+      }
+    }
+
+    disconnectedCallback() {
+      this.#observer?.disconnect();
+    }
+
+    async #enhance() {
+      if (this.#started) return;
+      this.#started = true;
+      this.#observer?.disconnect();
+
+      const viewer = this.querySelector('model-viewer');
+      const status = this.querySelector<HTMLElement>('[role="status"]');
+      const modelSrc = this.dataset.modelSrc;
+      if (!viewer || !status || !modelSrc) return;
+
+      viewer.addEventListener('load', () => {
+        this.dataset.ready = 'true';
+        status.textContent = this.dataset.readyStatus ?? '';
+      }, { once: true });
+      viewer.addEventListener('error', () => {
+        this.dataset.failed = 'true';
+        status.textContent = this.dataset.errorStatus ?? '';
+      }, { once: true });
+
+      try {
+        modelViewerRuntime ??= import('@google/model-viewer');
+        await modelViewerRuntime;
+        viewer.setAttribute('camera-controls', '');
+        viewer.setAttribute('touch-action', 'pan-y');
+        viewer.setAttribute('interaction-prompt', 'none');
+        viewer.setAttribute('camera-orbit', '0deg 75deg 110%');
+        viewer.setAttribute('min-camera-orbit', '-18deg 65deg 105%');
+        viewer.setAttribute('max-camera-orbit', '18deg 85deg 120%');
+        viewer.setAttribute('src', modelSrc);
+      } catch {
+        this.dataset.failed = 'true';
+        status.textContent = this.dataset.errorStatus ?? '';
+      }
+    }
+  }
+
+  if (!customElements.get('product-stage')) {
+    customElements.define('product-stage', ProductStageElement);
+  }
+</script>
+
+<style>
+  .product-stage { background: var(--color-paper-white); block-size: 100%; display: grid; inline-size: 100%; isolation: isolate; min-block-size: 0; overflow: hidden; position: relative; }
+  .product-stage__poster, .product-stage__model { block-size: 100%; grid-area: 1 / 1; inline-size: 100%; object-fit: cover; }
+  .product-stage__poster { z-index: 1; }
+  .product-stage__model { opacity: 0; pointer-events: none; transition: opacity 240ms ease; z-index: 2; }
+  .product-stage[data-ready='true'] .product-stage__model { opacity: 1; pointer-events: auto; }
+  .product-stage[data-ready='true'] .product-stage__poster { opacity: 0; }
+  .product-stage__status { background: color-mix(in srgb, var(--color-paper-white) 92%, transparent); border: 1px solid var(--color-stainless); inset-block-end: var(--space-3); inset-inline-start: var(--space-3); max-inline-size: calc(100% - 2 * var(--space-3)); padding: var(--space-2) var(--space-3); position: absolute; z-index: 3; }
+  .product-stage[data-ready='true'] .product-stage__status { opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { .product-stage__model { transition: none; } }
+</style>
