@@ -20,12 +20,20 @@ for (const locale of ['en', 'vi'] as const) {
   const posterTag = picture?.match(/<img\b[^>]*>/)?.[0];
   const canvasTag = html.match(/<canvas\b[^>]*class="product-stage__canvas"[^>]*>/)?.[0];
 
-  if (!stageTag
-    || attribute(stageTag, 'role') !== 'group'
-    || !attribute(stageTag, 'aria-label')
-    || !attribute(stageTag, 'aria-describedby')
-    || attribute(stageTag, 'tabindex') !== '0') {
-    throw new Error(`${locale}: focusable stage lacks its localized accessible group contract`);
+  if (!stageTag) throw new Error(`${locale}: product stage is missing`);
+  for (const deadFallbackAttribute of ['role', 'aria-label', 'aria-describedby', 'tabindex', 'aria-busy']) {
+    if (attribute(stageTag, deadFallbackAttribute) !== undefined) {
+      throw new Error(`${locale}: SSR fallback has dead interactive attribute ${deadFallbackAttribute}`);
+    }
+  }
+  if (!attribute(stageTag, 'data-accessible-label') || !attribute(stageTag, 'data-interaction-prompt')) {
+    throw new Error(`${locale}: localized eligible-state copy is not available to progressive enhancement`);
+  }
+  const statusMatch = html.match(/<span\b[^>]*role="status"[^>]*>([^<]*)<\/span>/);
+  if (!statusMatch
+    || statusMatch[1] !== attribute(stageTag, 'data-error-status')
+    || statusMatch[1] === attribute(stageTag, 'data-interaction-prompt')) {
+    throw new Error(`${locale}: SSR status must describe the static fallback, not unavailable interaction`);
   }
   if (!picture || !sourceTag || !posterTag) {
     throw new Error(`${locale}: responsive authored poster picture is missing`);

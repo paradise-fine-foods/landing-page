@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Texture } from 'three';
 import { installStageActivation } from '../src/lib/three/activation';
 import { shouldEnhance3D } from '../src/lib/three/enhancement';
+import { restoreStageFallback, upgradeStageInteraction } from '../src/lib/three/stage-state';
 import {
   MAX_ROTATION_DEGREES,
   MODEL_LOAD_DEADLINE_MS,
@@ -12,6 +13,7 @@ import {
 } from '../src/lib/three/viewer';
 
 const stageSource = readFileSync(resolve(import.meta.dir, '../src/components/three/ProductStage.astro'), 'utf8');
+const viewerSource = readFileSync(resolve(import.meta.dir, '../src/lib/three/viewer.ts'), 'utf8');
 
 test.each([
   [{ saveData: false, reducedMotion: false, webglAvailable: true }, true],
@@ -63,6 +65,43 @@ describe('stage activation', () => {
     target.dispatchEvent(new Event(eventName));
     expect(activations).toBe(1);
     expect(disconnects).toBe(1);
+  });
+});
+
+describe('stage accessibility state', () => {
+  test('upgrades only an eligible fallback and restores a noninteractive failure state', () => {
+    const attributes = new Map<string, string>();
+    const target = {
+      dataset: {} as Record<string, string | undefined>,
+      setAttribute: (name: string, value: string) => attributes.set(name, value),
+      removeAttribute: (name: string) => attributes.delete(name),
+    };
+    const status = { textContent: 'Image preview remains available.' };
+
+    expect(attributes.has('tabindex')).toBe(false);
+    expect(attributes.has('role')).toBe(false);
+    upgradeStageInteraction(target, status, {
+      accessibleLabel: 'Interactive package',
+      interactionPrompt: 'Interact with the package',
+      statusId: 'stage-status',
+    });
+    expect(attributes.get('role')).toBe('group');
+    expect(attributes.get('aria-label')).toBe('Interactive package');
+    expect(attributes.get('aria-describedby')).toBe('stage-status');
+    expect(attributes.get('tabindex')).toBe('0');
+    expect(status.textContent).toBe('Interact with the package');
+    expect(target.dataset.eligible).toBe('true');
+
+    target.dataset.ready = 'true';
+    restoreStageFallback(target, status, 'Image preview remains available.', true);
+    expect(attributes.has('role')).toBe(false);
+    expect(attributes.has('aria-label')).toBe(false);
+    expect(attributes.has('aria-describedby')).toBe(false);
+    expect(attributes.has('tabindex')).toBe(false);
+    expect(status.textContent).toBe('Image preview remains available.');
+    expect(target.dataset.ready).toBeUndefined();
+    expect(target.dataset.eligible).toBeUndefined();
+    expect(target.dataset.failed).toBe('true');
   });
 });
 
@@ -136,12 +175,12 @@ function trackedModel() {
   return { root, counts };
 }
 
-function viewerHarness() {
+function viewerHarness(overrides: Partial<ViewerDependencies> = {}) {
   const canvas = new FakeCanvas();
   const request = deferred<{ ok: boolean; arrayBuffer: () => Promise<ArrayBuffer> }>();
-  const rendererCounts = { render: 0, dispose: 0, forceContextLoss: 0 };
+  const rendererCounts = { render: 0, dispose: 0, forceContextLoss: 0, clearColor: undefined as [number, number] | undefined };
   const renderer = {
-    setClearColor: () => {},
+    setClearColor: (color: number, alpha: number) => { rendererCounts.clearColor = [color, alpha]; },
     setPixelRatio: () => {},
     setSize: () => {},
     render: () => rendererCounts.render += 1,
@@ -157,6 +196,7 @@ function viewerHarness() {
   let deadlineMilliseconds = 0;
   let deadlineClears = 0;
   let resizeDisconnects = 0;
+  const trackedAbortController = new AbortController();
   let nextFrame = 1;
   const frames = new Map<number, FrameRequestCallback>();
   const dependencies: Partial<ViewerDependencies> = {
@@ -169,6 +209,7 @@ function viewerHarness() {
       },
     }),
     createResizeObserver: () => ({ observe: () => {}, disconnect: () => resizeDisconnects += 1 }),
+    createAbortController: () => trackedAbortController,
     fetchModel: (_url, { signal }) => {
       fetchCalls += 1;
       fetchSignal = signal;
@@ -191,13 +232,16 @@ function viewerHarness() {
   };
 
   const errors = { count: 0 };
-  const ready = { count: 0 };
+  const ready = { count: 0, renderCount: 0 };
   const controller = mountProductViewer({
     canvas: canvas as unknown as HTMLCanvasElement,
     modelSrc: '/models/demo.glb',
-    onReady: () => ready.count += 1,
+    onReady: () => {
+      ready.count += 1;
+      ready.renderCount = rendererCounts.render;
+    },
     onError: () => errors.count += 1,
-  }, dependencies);
+  }, { ...dependencies, ...overrides });
 
   return {
     canvas, request, controller, errors, ready, rendererCounts, frames,
@@ -210,6 +254,7 @@ function viewerHarness() {
     get deadlineMilliseconds() { return deadlineMilliseconds; },
     get deadlineClears() { return deadlineClears; },
     get resizeDisconnects() { return resizeDisconnects; },
+    get abortSignal() { return trackedAbortController.signal; },
   };
 }
 
@@ -220,6 +265,57 @@ async function reachParse(harness: ReturnType<typeof viewerHarness>) {
 }
 
 describe('viewer lifecycle', () => {
+  test('uses an opaque milk-paper clear and renders a frame before revealing ready state', async () => {
+    const harness = viewerHarness();
+    expect(viewerSource).toContain('alpha: false');
+    expect(harness.rendererCounts.clearColor).toEqual([0xf7f8f4, 1]);
+    await reachParse(harness);
+    harness.parseLoad?.({ scene: trackedModel().root });
+    expect(harness.ready.count).toBe(1);
+    expect(harness.ready.renderCount).toBeGreaterThanOrEqual(1);
+    harness.controller.dispose();
+  });
+
+  test('transactionally disposes the renderer when setup throws before observer creation', () => {
+    const harness = viewerHarness({ createLoader: () => { throw new Error('loader setup failed'); } });
+    expect(harness.errors.count).toBe(1);
+    expect(harness.rendererCounts.dispose).toBe(1);
+    expect(harness.rendererCounts.forceContextLoss).toBe(1);
+    expect(harness.resizeDisconnects).toBe(0);
+    expect(harness.canvas.listenerAdds.size).toBe(0);
+    harness.controller.dispose();
+    expect(harness.rendererCounts.dispose).toBe(1);
+  });
+
+  test('transactionally clears timer, observer, listeners, RAF, abort, and renderer after fetch throws', () => {
+    const harness = viewerHarness({ fetchModel: () => { throw new Error('fetch setup failed'); } });
+    expect(harness.errors.count).toBe(1);
+    expect(harness.abortSignal.aborted).toBe(true);
+    expect(harness.resizeDisconnects).toBe(1);
+    expect(harness.frames.size).toBe(0);
+    expect(harness.fetchCalls).toBe(0);
+    expect(harness.deadlineClears).toBe(1);
+    expect(harness.rendererCounts.dispose).toBe(1);
+    expect(harness.rendererCounts.forceContextLoss).toBe(1);
+    for (const eventName of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'webglcontextlost']) {
+      expect(harness.canvas.listenerAdds.get(eventName)).toBe(1);
+      expect(harness.canvas.listenerRemoves.get(eventName)).toBe(1);
+    }
+    harness.controller.dispose();
+    expect(harness.rendererCounts.dispose).toBe(1);
+  });
+
+  test('transactionally cleans partial setup when deadline creation itself throws', () => {
+    const harness = viewerHarness({ setDeadline: () => { throw new Error('deadline setup failed'); } });
+    expect(harness.errors.count).toBe(1);
+    expect(harness.abortSignal.aborted).toBe(true);
+    expect(harness.resizeDisconnects).toBe(1);
+    expect(harness.frames.size).toBe(0);
+    expect(harness.fetchCalls).toBe(0);
+    expect(harness.rendererCounts.dispose).toBe(1);
+    expect(harness.rendererCounts.forceContextLoss).toBe(1);
+  });
+
   test('aborts at five seconds, cleans once, ignores late success, and never retries', async () => {
     const harness = viewerHarness();
     expect(harness.deadlineMilliseconds).toBe(MODEL_LOAD_DEADLINE_MS);
@@ -328,4 +424,7 @@ test('component keeps runtime/model deferred and uses an actual viewport boundar
   expect(stageSource).not.toContain("import('@google/model-viewer')");
   expect(stageSource).not.toMatch(/<model-viewer\b/);
   expect(stageSource).toContain('data-model-src={modelSrc}');
+  expect(stageSource).toContain("upgradeStageInteraction(this, status");
+  expect(stageSource).toContain("restoreStageFallback(this, status");
+  expect(stageSource).toContain(".product-stage[data-ready='true'] .product-stage__poster { opacity: 0; }");
 });

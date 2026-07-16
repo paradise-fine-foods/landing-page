@@ -77,7 +77,7 @@ type RenderableObject = Object3D & {
 const defaultDependencies: ViewerDependencies = {
   createRenderer: (canvas) => new WebGLRenderer({
     canvas,
-    alpha: true,
+    alpha: false,
     antialias: true,
     powerPreference: 'high-performance',
   }),
@@ -123,32 +123,24 @@ export function mountProductViewer(
   dependencyOverrides: Partial<ViewerDependencies> = {},
 ): ViewerController {
   const dependencies = { ...defaultDependencies, ...dependencyOverrides };
-  const renderer = dependencies.createRenderer(canvas);
-  const loader = dependencies.createLoader();
-  const abortController = dependencies.createAbortController();
-  const scene = new Scene();
-  const camera = new PerspectiveCamera(34, 1, 0.01, 100);
+  let renderer: RendererLike | undefined;
+  let loader: LoaderLike | undefined;
+  let abortController: AbortController | undefined;
+  let resizeObserver: ResizeObserverLike | undefined;
+  let scene: Scene | undefined;
+  let camera: PerspectiveCamera | undefined;
   const modelBounds = new Box3();
   const modelSize = new Vector3();
   const modelCenter = new Vector3();
   let model: Object3D | undefined;
   let disposed = false;
   let errorReported = false;
+  let listenersAttached = false;
   let renderFrame = 0;
   let deadline: ReturnType<typeof setTimeout> | undefined;
   let pointerId: number | undefined;
   let pointerStartX = 0;
   let rotationStart = 0;
-
-  canvas.style.touchAction = 'pan-y';
-  renderer.setClearColor(0xffffff, 0);
-  scene.add(new AmbientLight(0xffffff, 1.8));
-  const keyLight = new DirectionalLight(0xffffff, 3.6);
-  keyLight.position.set(3, 4, 5);
-  scene.add(keyLight);
-  const fillLight = new DirectionalLight(0xcfe3ef, 1.2);
-  fillLight.position.set(-4, 1, 2);
-  scene.add(fillLight);
 
   function clearLoadDeadline() {
     if (deadline === undefined) return;
@@ -166,22 +158,25 @@ export function mountProductViewer(
     if (disposed) return;
     disposed = true;
     clearLoadDeadline();
-    abortController.abort();
-    resizeObserver.disconnect();
+    abortController?.abort();
+    resizeObserver?.disconnect();
     releasePointerCapture();
-    canvas.removeEventListener('pointerdown', onPointerDown);
-    canvas.removeEventListener('pointermove', onPointerMove);
-    canvas.removeEventListener('pointerup', endPointer);
-    canvas.removeEventListener('pointercancel', endPointer);
-    canvas.removeEventListener('webglcontextlost', onContextLost);
+    if (listenersAttached) {
+      canvas.removeEventListener('pointerdown', onPointerDown);
+      canvas.removeEventListener('pointermove', onPointerMove);
+      canvas.removeEventListener('pointerup', endPointer);
+      canvas.removeEventListener('pointercancel', endPointer);
+      canvas.removeEventListener('webglcontextlost', onContextLost);
+      listenersAttached = false;
+    }
     if (renderFrame) dependencies.cancelFrame(renderFrame);
     renderFrame = 0;
     if (model) {
       disposeObject(model);
       model = undefined;
     }
-    renderer.dispose();
-    if (releaseContext) renderer.forceContextLoss();
+    renderer?.dispose();
+    if (releaseContext) renderer?.forceContextLoss();
   }
 
   function fail(releaseContext = true) {
@@ -200,7 +195,7 @@ export function mountProductViewer(
     if (disposed || renderFrame) return;
     renderFrame = dependencies.requestFrame(() => {
       renderFrame = 0;
-      if (!disposed) renderer.render(scene, camera);
+      if (!disposed && renderer && scene && camera) renderer.render(scene, camera);
     });
   }
 
@@ -208,6 +203,7 @@ export function mountProductViewer(
     if (disposed) return;
     const { width, height } = canvas.getBoundingClientRect();
     if (width <= 0 || height <= 0) return;
+    if (!renderer || !camera) return;
     renderer.setPixelRatio(Math.min(dependencies.devicePixelRatio(), MAX_DEVICE_PIXEL_RATIO));
     renderer.setSize(Math.round(width), Math.round(height), false);
     camera.aspect = width / height;
@@ -241,56 +237,86 @@ export function mountProductViewer(
     fail(false);
   }
 
-  const resizeObserver = dependencies.createResizeObserver(resize);
-  resizeObserver.observe(canvas);
-  canvas.addEventListener('pointerdown', onPointerDown);
-  canvas.addEventListener('pointermove', onPointerMove);
-  canvas.addEventListener('pointerup', endPointer);
-  canvas.addEventListener('pointercancel', endPointer);
-  canvas.addEventListener('webglcontextlost', onContextLost);
+  const controller = { dispose: () => dispose() };
 
-  resize();
-  deadline = dependencies.setDeadline(() => {
-    deadline = undefined;
+  try {
+    renderer = dependencies.createRenderer(canvas);
+    renderer.setClearColor(0xf7f8f4, 1);
+    loader = dependencies.createLoader();
+    abortController = dependencies.createAbortController();
+    scene = new Scene();
+    camera = new PerspectiveCamera(34, 1, 0.01, 100);
+    canvas.style.touchAction = 'pan-y';
+    scene.add(new AmbientLight(0xffffff, 1.8));
+    const keyLight = new DirectionalLight(0xffffff, 3.6);
+    keyLight.position.set(3, 4, 5);
+    scene.add(keyLight);
+    const fillLight = new DirectionalLight(0xcfe3ef, 1.2);
+    fillLight.position.set(-4, 1, 2);
+    scene.add(fillLight);
+
+    resizeObserver = dependencies.createResizeObserver(resize);
+    resizeObserver.observe(canvas);
+    listenersAttached = true;
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', endPointer);
+    canvas.addEventListener('pointercancel', endPointer);
+    canvas.addEventListener('webglcontextlost', onContextLost);
+
+    resize();
+    const createdDeadline = dependencies.setDeadline(() => {
+      deadline = undefined;
+      fail();
+    }, MODEL_LOAD_DEADLINE_MS);
+    if (disposed) dependencies.clearDeadline(createdDeadline);
+    else deadline = createdDeadline;
+    if (disposed) return controller;
+
+    const modelRequest = dependencies.fetchModel(modelSrc, { signal: abortController.signal });
+    void modelRequest
+      .then((response) => {
+        if (!response.ok) throw new Error('Model request failed');
+        return response.arrayBuffer();
+      })
+      .then((buffer) => {
+        if (disposed || !loader) return;
+        loader.parse(
+          buffer,
+          dependencies.resolveModelBasePath(modelSrc),
+          ({ scene: loadedModel }) => {
+            if (disposed || !renderer || !scene || !camera) {
+              disposeObject(loadedModel);
+              return;
+            }
+
+            try {
+              clearLoadDeadline();
+              model = loadedModel;
+              modelBounds.setFromObject(model).getSize(modelSize);
+              modelBounds.getCenter(modelCenter);
+              model.position.sub(modelCenter);
+              const maxDimension = Math.max(modelSize.x, modelSize.y, modelSize.z, 0.01);
+              const distance = maxDimension / (2 * Math.tan(camera.fov * Math.PI / 360)) * 1.35;
+              camera.near = Math.max(distance / 100, 0.01);
+              camera.far = distance * 100;
+              camera.position.set(0, maxDimension * 0.08, distance);
+              camera.lookAt(0, 0, 0);
+              camera.updateProjectionMatrix();
+              scene.add(model);
+              renderer.render(scene, camera);
+              onReady();
+            } catch {
+              fail();
+            }
+          },
+          () => fail(),
+        );
+      })
+      .catch(() => fail());
+  } catch {
     fail();
-  }, MODEL_LOAD_DEADLINE_MS);
+  }
 
-  void dependencies.fetchModel(modelSrc, { signal: abortController.signal })
-    .then((response) => {
-      if (!response.ok) throw new Error('Model request failed');
-      return response.arrayBuffer();
-    })
-    .then((buffer) => {
-      if (disposed) return;
-      loader.parse(
-        buffer,
-        dependencies.resolveModelBasePath(modelSrc),
-        ({ scene: loadedModel }) => {
-          if (disposed) {
-            disposeObject(loadedModel);
-            return;
-          }
-
-          clearLoadDeadline();
-          model = loadedModel;
-          modelBounds.setFromObject(model).getSize(modelSize);
-          modelBounds.getCenter(modelCenter);
-          model.position.sub(modelCenter);
-          const maxDimension = Math.max(modelSize.x, modelSize.y, modelSize.z, 0.01);
-          const distance = maxDimension / (2 * Math.tan(camera.fov * Math.PI / 360)) * 1.35;
-          camera.near = Math.max(distance / 100, 0.01);
-          camera.far = distance * 100;
-          camera.position.set(0, maxDimension * 0.08, distance);
-          camera.lookAt(0, 0, 0);
-          camera.updateProjectionMatrix();
-          scene.add(model);
-          requestRender();
-          onReady();
-        },
-        () => fail(),
-      );
-    })
-    .catch(() => fail());
-
-  return { dispose };
+  return controller;
 }

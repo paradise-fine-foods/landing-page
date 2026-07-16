@@ -28,10 +28,8 @@ const statusId = 'featured-product-stage-status';
   data-model-src={modelSrc}
   data-ready-status={readyStatus}
   data-error-status={fallbackStatus}
-  role="group"
-  aria-label={accessibleLabel}
-  aria-describedby={statusId}
-  tabindex="0"
+  data-interaction-prompt={interactionPrompt}
+  data-accessible-label={accessibleLabel}
 >
   <picture class="product-stage__poster">
     <source media="(max-width: 36rem)" srcset={mobilePosterSrc} width="800" height="1000" />
@@ -46,12 +44,13 @@ const statusId = 'featured-product-stage-status';
     />
   </picture>
   <canvas class="product-stage__canvas" role="presentation" aria-hidden="true"></canvas>
-  <span id={statusId} class="product-stage__status" role="status" aria-live="polite">{interactionPrompt}</span>
+  <span id={statusId} class="product-stage__status" role="status" aria-live="polite">{fallbackStatus}</span>
 </product-stage>
 
 <script>
   import { installStageActivation, type StageActivationController } from '../../lib/three/activation';
   import { shouldEnhance3D } from '../../lib/three/enhancement';
+  import { restoreStageFallback, upgradeStageInteraction } from '../../lib/three/stage-state';
 
   const hasWebGL = () => {
     try {
@@ -86,6 +85,14 @@ const statusId = 'featured-product-stage-status';
         webglAvailable: hasWebGL(),
       });
       if (!eligible) return;
+      const status = this.querySelector<HTMLElement>('[role="status"]');
+      if (!status) return;
+
+      upgradeStageInteraction(this, status, {
+        accessibleLabel: this.dataset.accessibleLabel ?? '',
+        interactionPrompt: this.dataset.interactionPrompt ?? '',
+        statusId: status.id,
+      });
 
       const createObserver = 'IntersectionObserver' in window
         ? (onIntersection: (isIntersecting: boolean) => void) => {
@@ -99,13 +106,17 @@ const statusId = 'featured-product-stage-status';
           }
         : undefined;
 
-      this.#activation = installStageActivation({
-        target: this,
-        createObserver,
-        activate: () => {
-          if (this.#connected && session === this.#session) void this.#enhance();
-        },
-      });
+      try {
+        this.#activation = installStageActivation({
+          target: this,
+          createObserver,
+          activate: () => {
+            if (this.#connected && session === this.#session) void this.#enhance();
+          },
+        });
+      } catch {
+        this.#fail(status);
+      }
     }
 
     disconnectedCallback() {
@@ -116,15 +127,14 @@ const statusId = 'featured-product-stage-status';
       this.#viewer?.dispose();
       this.#viewer = undefined;
       this.#started = false;
-      delete this.dataset.ready;
-      this.removeAttribute('aria-busy');
+      const status = this.querySelector<HTMLElement>('[role="status"]') ?? undefined;
+      restoreStageFallback(this, status, this.dataset.errorStatus ?? '', false);
     }
 
     #fail(status: HTMLElement) {
-      delete this.dataset.ready;
-      this.dataset.failed = 'true';
-      this.setAttribute('aria-busy', 'false');
-      status.textContent = this.dataset.errorStatus ?? '';
+      this.#activation?.dispose();
+      this.#activation = undefined;
+      restoreStageFallback(this, status, this.dataset.errorStatus ?? '', true);
     }
 
     async #enhance() {
@@ -136,7 +146,11 @@ const statusId = 'featured-product-stage-status';
       const canvas = this.querySelector<HTMLCanvasElement>('.product-stage__canvas');
       const status = this.querySelector<HTMLElement>('[role="status"]');
       const modelSrc = this.dataset.modelSrc;
-      if (!canvas || !status || !modelSrc) return;
+      if (!status) return;
+      if (!canvas || !modelSrc) {
+        this.#fail(status);
+        return;
+      }
 
       try {
         const { mountProductViewer } = await import('../../lib/three/viewer');
@@ -167,13 +181,14 @@ const statusId = 'featured-product-stage-status';
 <style>
   .product-stage { aspect-ratio: 16 / 10; background: var(--color-paper-white); display: grid; inline-size: 100%; isolation: isolate; overflow: hidden; position: relative; }
   .product-stage__poster, .product-stage__poster img, .product-stage__canvas { block-size: 100%; grid-area: 1 / 1; inline-size: 100%; }
-  .product-stage__poster { z-index: 1; }
+  .product-stage__poster { opacity: 1; transition: opacity 240ms ease; z-index: 1; }
   .product-stage__poster img { object-fit: cover; }
   .product-stage__canvas { cursor: grab; opacity: 0; pointer-events: none; touch-action: pan-y; transition: opacity 240ms ease; z-index: 2; }
   .product-stage__canvas:active { cursor: grabbing; }
   .product-stage[data-ready='true'] .product-stage__canvas { opacity: 1; pointer-events: auto; }
+  .product-stage[data-ready='true'] .product-stage__poster { opacity: 0; }
   .product-stage__status { background: color-mix(in srgb, var(--color-paper-white) 92%, transparent); border: 1px solid var(--color-stainless); inset-block-end: var(--space-3); inset-inline-start: var(--space-3); max-inline-size: calc(100% - 2 * var(--space-3)); padding: var(--space-2) var(--space-3); position: absolute; z-index: 3; }
   .product-stage[data-ready='true'] .product-stage__status { opacity: 0; pointer-events: none; }
   @media (max-width: 36rem) { .product-stage { aspect-ratio: 4 / 5; } }
-  @media (prefers-reduced-motion: reduce) { .product-stage__canvas { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .product-stage__poster, .product-stage__canvas { transition: none; } }
 </style>
