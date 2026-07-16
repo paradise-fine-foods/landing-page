@@ -1,5 +1,8 @@
 import type { LocalizedSlug, LocalizedText } from './types';
 
+const productStageSrc = new URL('../../assets/demo/product-stage.svg', import.meta.url).href;
+const editorialTableSrc = new URL('../../assets/demo/editorial-table.svg', import.meta.url).href;
+
 interface DemoImageAsset {
   src: string;
   width: number;
@@ -43,14 +46,14 @@ export interface DemoProduct {
 }
 
 const productImage = (en: string, vi: string): DemoImageAsset => ({
-  src: '/src/assets/demo/product-stage.svg',
+  src: productStageSrc,
   width: 1200,
   height: 900,
   alt: { en, vi },
 });
 
 const editorialImage = (en: string, vi: string): DemoImageAsset => ({
-  src: '/src/assets/demo/editorial-table.svg',
+  src: editorialTableSrc,
   width: 1600,
   height: 1000,
   alt: { en, vi },

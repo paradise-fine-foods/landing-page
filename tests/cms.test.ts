@@ -59,4 +59,25 @@ describe('CMS adapter', () => {
     expect(first[0]).not.toBe(second[0]);
     expect(first[0].benefits).not.toBe(second[0].benefits);
   });
+
+  test('returns build-resolvable local SVG image sources', async () => {
+    const products = await getProducts('en');
+    const categories = await getCategories('en');
+    const brands = await getBrands('en');
+    const featured = await getFeaturedContent('en');
+    const imageSources = [
+      ...products.map((product) => product.image.src),
+      ...categories.map((category) => category.image.src),
+      ...brands.map((brand) => brand.image.src),
+      featured.hero.image.src,
+      featured.editorial.image.src,
+    ];
+
+    expect(imageSources.every((source) => !source.startsWith('/src/'))).toBe(true);
+    expect(
+      imageSources.every((source) =>
+        /(?:product-stage|editorial-table)\.svg(?:\?.*)?$/.test(source),
+      ),
+    ).toBe(true);
+  });
 });

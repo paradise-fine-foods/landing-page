@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
   <title id="title">Abstract product stage</title>
   <desc id="desc">Original geometric demo artwork in cream, burgundy, and warm grey.</desc>
-  <rect width="1200" height="900" fill="#f4efe5"/>
-  <circle cx="950" cy="170" r="220" fill="#d7b9a6" opacity=".62"/>
-  <path d="M0 625C220 545 432 560 634 650c186 83 369 75 566-23v273H0Z" fill="#6b2537"/>
-  <ellipse cx="590" cy="665" rx="290" ry="72" fill="#241e1d" opacity=".18"/>
-  <rect x="370" y="244" width="440" height="408" rx="32" fill="#fffaf0"/>
-  <path d="M370 480h440v172H370Z" fill="#c99b6b"/>
-  <path d="M430 316h320M430 372h220" stroke="#6b2537" stroke-width="18" stroke-linecap="round" opacity=".72"/>
+  <rect width="1200" height="900" fill="#F7F8F4"/>
+  <circle cx="950" cy="170" r="220" fill="#F2C14E" opacity=".62"/>
+  <path d="M0 625C220 545 432 560 634 650c186 83 369 75 566-23v273H0Z" fill="#123C69"/>
+  <ellipse cx="590" cy="665" rx="290" ry="72" fill="#172127" opacity=".18"/>
+  <rect x="370" y="244" width="440" height="408" rx="32" fill="#FFFFFF"/>
+  <path d="M370 480h440v172H370Z" fill="#A9B4B8"/>
+  <path d="M430 316h320M430 372h220" stroke="#7D2C3B" stroke-width="18" stroke-linecap="round" opacity=".72"/>
 </svg>
