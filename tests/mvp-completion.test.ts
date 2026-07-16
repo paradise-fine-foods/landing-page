@@ -26,6 +26,65 @@ const stringsBelow = (value: unknown): string[] => {
   return [];
 };
 
+interface UiLeaf {
+  path: string;
+  value: string;
+}
+
+const uiLeavesBelow = (value: unknown, path: string): UiLeaf[] => {
+  if (typeof value === 'string') return [{ path, value }];
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) => uiLeavesBelow(item, `${path}.${index}`));
+  }
+  if (value && typeof value === 'object') {
+    return Object.entries(value).flatMap(([key, item]) => uiLeavesBelow(item, `${path}.${key}`));
+  }
+  return [];
+};
+
+const uiOwnershipRows = (ledger: string) => {
+  const manifest = ledger.match(/<!-- ui-ownership:start -->([\s\S]*?)<!-- ui-ownership:end -->/)?.[1] ?? '';
+  return manifest.split('\n').flatMap((line) => {
+    const match = line.match(/^\|\s*`(ui\.[^`]+)`\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|$/);
+    return match ? [{ pattern: match[1], owner: match[2], input: match[3], acceptance: match[4] }] : [];
+  });
+};
+
+const matchesUiFamily = (path: string, pattern: string): boolean => {
+  const patternSegments = pattern.split('.');
+  const pathSegments = path.split('.');
+  return patternSegments.length === pathSegments.length
+    && patternSegments.every((segment, index) => segment === '*' || segment === pathSegments[index]);
+};
+
+const runtimeUrlSources = [
+  'astro.config.mjs',
+  'src/lib/cms/demo-data.ts',
+  'src/layouts/SiteLayout.astro',
+  'src/pages/404.astro',
+  'src/pages/en/index.astro',
+  'src/pages/vi/index.astro',
+  'src/components/sections/CategoryDiscovery.astro',
+  'src/components/catalog/ProductDetail.astro',
+  'public/models/README.md',
+] as const;
+
+const discoverTemporaryUrls = (): string[] => {
+  const discovered = new Set<string>();
+  for (const path of runtimeUrlSources) {
+    const content = source(path).replace(/^\s*\/\/.*$/gm, '');
+    for (const [url] of content.matchAll(/(?:https?:\/\/|mailto:|tel:)[^\s"'`<>]+/g)) discovered.add(url);
+    for (const [, url] of content.matchAll(/["'`](\/models\/[^\s"'`$}]+)["'`]/g)) discovered.add(url);
+    for (const [, parameter] of content.matchAll(/\?(category|product)=\$\{[^}\r\n]+\}/g)) {
+      discovered.add(`?${parameter}={value}`);
+    }
+    for (const [, parameter, value] of content.matchAll(/\?(category|interest|product)=([a-z0-9-]+)/g)) {
+      discovered.add(`?${parameter}=${value}`);
+    }
+  }
+  return [...discovered].sort();
+};
+
 const discoveredMedia = [
   ...filesBelow('src/assets/demo'),
   ...filesBelow('public/models'),
@@ -89,15 +148,21 @@ describe('client-review MVP completion contracts', () => {
       },
     });
     expect([...new Set(authoritativeFixtureValues)].filter((value) => !ledger.includes(value))).toEqual([]);
-    expect(Object.keys(ui.en).filter((family) => !ledger.includes(`ui.*.${family}`))).toEqual([]);
-    for (const requiredBoundary of [
-      'src/lib/cms/demo-data.ts',
-      'src/lib/enquiry/submit.ts',
-      'https://demo.paradisefinefoods.com',
-      '/models/demo-package.glb',
-      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BoxTextured/glTF-Binary/BoxTextured.glb',
-      'https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/LICENSE.md',
-    ]) expect(ledger).toContain(`\`${requiredBoundary}\``);
+    const uiLeaves = uiLeavesBelow(ui, 'ui');
+    const ownershipRows = uiOwnershipRows(ledger);
+    expect(uiLeaves.length).toBeGreaterThan(290);
+    expect(uiLeaves.filter(({ value }) => value.length === 0)).toEqual([]);
+    expect(ownershipRows.length).toBeGreaterThan(0);
+    expect(ownershipRows.filter(({ owner, input, acceptance }) => !owner || !input || !acceptance)).toEqual([]);
+    expect(uiLeaves.flatMap(({ path }) => {
+      const matches = ownershipRows.filter(({ pattern }) => matchesUiFamily(path, pattern));
+      return matches.length === 1 ? [] : [{ path, matches: matches.map(({ pattern }) => pattern) }];
+    })).toEqual([]);
+    expect(ownershipRows.filter(({ pattern }) => !uiLeaves.some(({ path }) => matchesUiFamily(path, pattern)))).toEqual([]);
+
+    expect(runtimeUrlSources.filter((file) => !ledger.includes(`\`${file}\``))).toEqual([]);
+    expect(discoverTemporaryUrls().filter((url) => !ledger.includes(`\`${url}\``))).toEqual([]);
+    expect(ledger).toContain('`src/lib/enquiry/submit.ts`');
     for (const responsibility of ['Production owner', 'Source/input', 'Acceptance']) {
       expect(ledger).toContain(responsibility);
     }

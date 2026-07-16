@@ -82,6 +82,37 @@ All exact fixture values above share the product/data, brand/partnership, market
 
 `src/lib/cms/demo-data.ts` contains the review-only site names/descriptions/notices plus hero and editorial copy. `src/lib/i18n/ui.ts` contains every English/Vietnamese interface string. The following inventory names every copy family and the business content it exposes.
 
+### Parseable UI ownership manifest
+
+The test suite recursively discovers every leaf below `ui.en` and `ui.vi`. In the manifest below, `*` matches exactly one dot-delimited path segment. Direct fields and nested fields therefore use separate rows. Every discovered leaf must match exactly one row; overlapping, stale, or missing families fail the ledger test. Each row governs both the English and Vietnamese value at that path.
+
+<!-- ui-ownership:start -->
+| UI path family | Production owner | Required production input | Acceptance |
+|---|---|---|---|
+| `ui.*.siteName` | Paradise brand owner and legal reviewer | Approved legal display name for each locale | Both locale values match the signed identity approval |
+| `ui.*.languageName` | Localization owner and UX content owner | Approved endonym for each supported language | Switcher names are linguistically approved and unambiguous |
+| `ui.*.skipToContent` | Accessibility owner and localization owner | Approved skip-link instruction in each locale | Keyboard and screen-reader review confirms purpose and pronunciation |
+| `ui.*.demoNotice` | Legal reviewer and release owner | Current review or production content-status statement | Notice truthfully reflects release state in both locales |
+| `ui.*.demoNoticeLabel` | Legal reviewer and UX content owner | Approved compact status label | Label remains understandable with the full notice and is locale-correct |
+| `ui.*.header.*` | Digital product owner and UX content owner | Approved information architecture and navigation labels | Every header control and destination is localized and link-tested |
+| `ui.*.footer.*` | Brand owner and legal reviewer | Approved footer tagline, navigation, legal and copyright copy | Brand and legal owners approve both locales and generated footer links pass |
+| `ui.*.hero.*` | Business owner, legal reviewer and marketing owner | Substantiated proposition, temperature scope, CTAs and accessible 3D state copy | Every claim has evidence and all visual and assistive states pass bilingual review |
+| `ui.*.home.*` | Marketing owner and business owner | Approved direct homepage headings, descriptions, labels and CTAs | Direct homepage copy is proofed in both locales and matches the approved page narrative |
+| `ui.*.home.operationalPillars.*.*` | Operations owner and legal reviewer | Current portfolio, handling, channel-support and coverage evidence | Each pillar title and description maps to approved operational evidence |
+| `ui.*.home.channels.*.*` | Channel sales owners and legal reviewer | Approved retail, HORECA, bakery and e-commerce offer sheets | Every channel label and statement is approved by its owner in both locales |
+| `ui.*.catalog.*` | Product data owner and UX content owner | Approved catalog terminology, filter labels and result or empty-state copy | Search and filter language is complete, locale-correct and behavior-tested |
+| `ui.*.product.*` | Product data owner, producer and legal reviewer | Approved product metadata labels, audience, benefit and enquiry terminology | Direct product UI fields match the verified catalog schema in both locales |
+| `ui.*.product.applicationNames.*` | Product taxonomy owner and localization owner | Approved localized name for every stable application key | No raw or missing application key renders and both locale mappings are approved |
+| `ui.*.brand.*` | Partnership owner, brand owner and legal reviewer | Approved producer-story, origin, category and relationship terminology | Partner and legal review approve every direct brand-page field |
+| `ui.*.form.*` | Sales operations, privacy owner and UX content owner | Production data-flow map, field labels, consent, delivery and error-state copy | Direct form copy passes privacy, bilingual and accessible-form review |
+| `ui.*.form.interestOptions.*` | Channel sales owner and CRM data owner | Approved interest taxonomy and production CRM mapping | Every stable option maps exactly to an approved CRM value and localized label |
+| `ui.*.status.*` | UX content owner and sales operations | Approved loading, success, failure and reference-state messages | Messages are accurate, non-alarming, privacy-safe and announced accessibly |
+| `ui.*.validation.*` | Privacy owner, localization owner and UX content owner | Approved field validation rules and localized remediation text | Every validation outcome identifies a remedy without exposing submitted data |
+| `ui.*.notFound.*` | Digital owner and UX content owner | Approved locale-specific recovery labels and explanations | Both locale copy sets are proofed and every recovery destination resolves |
+<!-- ui-ownership:end -->
+
+The ownership manifest above is the authoritative responsibility mapping. The summary table below describes the content purpose and replacement gate at a higher level; it is not used to infer coverage.
+
 | Copy family | Review-only content inventory | Production owner | Source/input | Acceptance |
 |---|---|---|---|---|
 | `ui.*.siteName`, `ui.*.languageName`, `ui.*.skipToContent`, `ui.*.demoNotice`, `ui.*.demoNoticeLabel` | Localized site identity, language names, skip-link copy and persistent client-review notice/label | Brand/legal + UX/content | Approved company identity, language terminology, accessibility copy and release-status notice | Exact bilingual proof approval; skip links remain descriptive; production release state is accurate |
@@ -96,7 +127,7 @@ All exact fixture values above share the product/data, brand/partnership, market
 | `ui.*.catalog`, `ui.*.product`, `ui.*.brand` | All catalog labels, search/filter/empty states, application names, metadata labels, benefit/audience/enquiry labels, producer-story labels and fiction notes | Product/data owner + UX/content | Final taxonomy, localized vocabulary, product/brand editorial policy | Every key has approved EN/VI text; no raw key or missing value renders |
 | `ui.*.form`, `ui.*.status`, `ui.*.validation` | All field labels/options, required/consent/privacy statements, no-delivery notices, submission/error/success messages and reference label | Sales operations + privacy/legal + UX/content | Production data-flow map, consent basis, retention text, error states and localized copy | Privacy approval and end-to-end accessibility/delivery QA pass |
 | `ui.*.header`, `ui.*.footer`, `ui.*.notFound` | Navigation, language, footer tagline/legal/copyright and locale-specific missing-page labels | Brand/legal + UX/content | Approved information architecture, legal footer and bilingual copy | Link crawl, language proof and legal approval pass |
-| `src/pages/404.astro` | Self-contained bilingual missing-page title, explanations, review label and direct destinations | UX/content + digital owner | Approved bilingual 404 copy and route inventory | English/Vietnamese proof; all four direct links return 200; no locale guessing |
+| `src/pages/404.astro` | English-only title and metadata with bilingual visible recovery headings, explanations, review labels and direct destinations | UX/content + digital owner | Approved English metadata, bilingual visible 404 copy and route inventory | English metadata and English/Vietnamese visible copy are proofed; all four direct links return 200; no locale guessing |
 
 ## Contact details and enquiry delivery
 
@@ -126,14 +157,18 @@ The temporary GLB provenance is recorded in `public/models/README.md`: KhronosGr
 
 ## Demo origins, URLs and route inputs
 
+### Authoritative URL discovery scope
+
+The ledger test scans only the following runtime, configuration, fixture and provenance sources: `astro.config.mjs`, `src/lib/cms/demo-data.ts`, `src/layouts/SiteLayout.astro`, `src/pages/404.astro`, `src/pages/en/index.astro`, `src/pages/vi/index.astro`, `src/components/sections/CategoryDiscovery.astro`, `src/components/catalog/ProductDetail.astro`, and `public/models/README.md`. It discovers external `https`, `mailto`, and `tel` values; `/models/` public assets; exact contextual query values; and dynamic category/product query templates normalized to `{value}`. Source comment-only URLs are removed before scanning, so Astro documentation links and other documentation-only destinations are outside this runtime/provenance inventory. Media paths are independently discovered from the asset directories documented above.
+
 | URL/input | Review-only use | Production owner | Source/input | Acceptance |
 |---|---|---|---|---|
 | `https://demo.paradisefinefoods.com` | `astro.config.mjs` site origin and canonical/Open Graph base; duplicated only as a defensive fallback in `src/layouts/SiteLayout.astro` and `src/pages/404.astro` | Digital owner | Final HTTPS production hostname and environment/deployment configuration | Deployment crawl confirms the expected host in every canonical/Open Graph URL; demo hostname is absent from production output |
 | `/models/demo-package.glb` | Public model URL consumed by both localized homepages | Creative/3D owner | CMS/CDN URL or versioned production public asset | URL returns the approved GLB with correct caching/content type; failure fallback still passes |
 | `/en/`, `/vi/`, `/en/products/`, `/vi/san-pham/` | Direct bilingual recovery URLs on the 404 | Digital owner + content owner | Approved localized route map | All links return 200 and remain correct in deployed base-path configuration |
-| `?category={localized-category-slug}` | Category discovery URL state | Product/data owner | Stable localized category slug inventory | Each generated link filters to a non-empty intended set; invalid input degrades to full catalog |
+| `?category={value}` | Dynamic category discovery URL pattern whose value is the exact localized category slug | Product/data owner | Stable localized category slug inventory | Each generated link filters to a non-empty intended set; invalid input degrades to full catalog |
 | `?interest=retail`, `?interest=horeca`, `?interest=bakery`, `?interest=ecommerce` | Homepage channel-to-enquiry paths in both locales | Channel sales owners | Approved interest taxonomy and CRM mapping | Each value preselects the intended localized option and reaches the production field mapping |
-| `?product={product-id}` | Product-detail-to-enquiry context; IDs are the six product IDs listed above | Product/data owner + sales operations | Stable CMS product identifier and production endpoint mapping | Known IDs preselect correctly; unknown values are ignored; submitted context reaches the approved system |
+| `?product={value}` | Dynamic product-detail-to-enquiry pattern whose value is one of the six stable product IDs listed above | Product/data owner + sales operations | Stable CMS product identifier and production endpoint mapping | Known IDs preselect correctly; unknown values are ignored; submitted context reaches the approved system |
 
 SVG namespace URLs and Astro/documentation links are technical identifiers, not business destinations. The external Khronos source/license URLs are provenance records and must remain with the temporary model until that model is removed.
 
@@ -141,7 +176,7 @@ SVG namespace URLs and Astro/documentation links are technical identifiers, not 
 
 - Replace the local default CMS data behind the stable query functions; do not bind page components to a CMS SDK.
 - Reconcile this ledger against the final CMS export so every stable record, string family, visual and URL has an owner and approval record.
-- Replace all four authored demo SVGs and the GLB/poster set with approved, rights-cleared media.
+- Replace all four authored demo SVGs and the GLB/poster set with approved, rights-cleared media; replace or remove the Astro starter `public/favicon.svg` and `public/favicon.ico` so no default artwork ships.
 - Connect `submitEnquiry()` to reviewed delivery and remove success-only demo behavior after privacy/security acceptance.
 - Set the final site origin, crawl every generated route, and verify canonicals, locale alternates, internal links and redirects.
 - Obtain explicit English/Vietnamese business, legal, product, partnership, creative, privacy and accessibility approvals before launch.
