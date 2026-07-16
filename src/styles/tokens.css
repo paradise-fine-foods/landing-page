@@ -1,0 +1,47 @@
+:root {
+  --color-milk-paper: #f7f8f4;
+  --color-cold-chain-blue: #123c69;
+  --color-carbon: #172127;
+  --color-stainless: #a9b4b8;
+  --color-cultured-butter: #f2c14e;
+  --color-bordeaux: #7d2c3b;
+  --color-paper-white: #ffffff;
+  --color-success: #356146;
+  --color-error: #9a3f38;
+
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+
+  --container-inline: clamp(1rem, 4vw, 4rem);
+  --container-max: 80rem;
+  --measure: 68ch;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.125rem, 1.5vw, 1.25rem);
+  --text-xl: clamp(1.5rem, 2.5vw, 2rem);
+  --text-2xl: clamp(2rem, 5vw, 4rem);
+  --text-hero: clamp(2.75rem, 7vw, 6.5rem);
+
+  --leading-tight: 0.98;
+  --leading-heading: 1.1;
+  --leading-body: 1.65;
+  --tracking-label: 0.08em;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.75rem;
+  --focus-ring: 0 0 0 3px var(--color-cultured-butter);
+  --transition-fast: 140ms ease;
+  --transition-base: 220ms ease;
+}

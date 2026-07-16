@@ -1,0 +1,58 @@
+---
+import '@fontsource/newsreader/500.css';
+import '@fontsource/newsreader/600.css';
+import '@fontsource/be-vietnam-pro/400.css';
+import '@fontsource/be-vietnam-pro/500.css';
+import '@fontsource/be-vietnam-pro/600.css';
+import '../styles/tokens.css';
+import '../styles/typography.css';
+import '../styles/global.css';
+import { ui } from '../lib/i18n/ui';
+import type { Locale } from '../lib/i18n/types';
+import { buildMeta } from '../lib/seo/meta';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  pathname: string;
+  alternatePath?: string;
+  image?: string;
+}
+
+const { locale, title, description, pathname, alternatePath, image } = Astro.props;
+const meta = buildMeta({
+  site: Astro.site ?? 'https://demo.paradisefinefoods.com',
+  locale,
+  title,
+  description,
+  pathname,
+  alternatePath,
+  image,
+});
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
+    <link rel="canonical" href={meta.canonical} />
+    {meta.alternates.map(({ locale: alternateLocale, href }) => (
+      <link rel="alternate" hreflang={alternateLocale} href={href} />
+    ))}
+    <meta property="og:type" content={meta.openGraph.type} />
+    <meta property="og:locale" content={meta.openGraph.locale} />
+    <meta property="og:title" content={meta.openGraph.title} />
+    <meta property="og:description" content={meta.openGraph.description} />
+    <meta property="og:url" content={meta.openGraph.url} />
+    {meta.openGraph.image && <meta property="og:image" content={meta.openGraph.image} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">{ui[locale].skipToContent}</a>
+    <slot />
+  </body>
+</html>
