@@ -8,6 +8,12 @@ describe('enquiry rendering contract', () => {
     const source = await read('../src/components/forms/EnquiryForm.astro');
     expect(source).toContain("from '../../lib/cms/queries'");
     expect(source).toContain('novalidate');
+    expect(source).toMatch(/<button[^>]*type="submit"[^>]*disabled/);
+    expect(source).toContain('initializeEnquiryForm');
+    expect(source).toContain("removeAttribute('aria-invalid')");
+    expect(source).toContain("setAttribute('aria-invalid', 'true')");
+    expect(source).toContain('reference.textContent = result.reference');
+    expect(source).toContain('successHeading.focus()');
     expect(source).toContain('role="status"');
     expect(source).toContain('aria-live="polite"');
     for (const name of ['name', 'email', 'interest', 'message', 'consent']) {

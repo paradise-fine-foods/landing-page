@@ -1,6 +1,10 @@
 import { describe, expect, test } from 'bun:test';
 import { EnquiryValidationError, type EnquiryInput } from '../src/lib/enquiry/types';
-import { selectKnownProductId, transitionEnquiryState } from '../src/lib/enquiry/form-state';
+import {
+  collectEnquiryInput,
+  initializeEnquiryForm,
+  type EnquiryFormView,
+} from '../src/lib/enquiry/controller';
 import { createEnquirySubmitter } from '../src/lib/enquiry/submit';
 import { validateEnquiry } from '../src/lib/enquiry/validation';
 
@@ -105,18 +109,127 @@ describe('demo enquiry submission', () => {
   });
 });
 
-describe('enquiry form state', () => {
-  test('preselects only an exact known product ID', () => {
-    const known = ['butter-sheet-pro', 'whipping-cream'];
-    expect(selectKnownProductId('butter-sheet-pro', known)).toBe('butter-sheet-pro');
-    expect(selectKnownProductId('BUTTER-SHEET-PRO', known)).toBeUndefined();
-    expect(selectKnownProductId(null, known)).toBeUndefined();
+class FakeView implements EnquiryFormView {
+  events: string[] = [];
+  handler?: () => Promise<void>;
+  enabled = false;
+  values = new FormData();
+  fieldErrors: Record<string, string> = {};
+  statuses: string[] = [];
+  successReference?: string;
+  selectedProduct?: string;
+
+  installSubmitHandler(handler: () => Promise<void>) { this.events.push('listen'); this.handler = handler; }
+  enableSubmit() { this.events.push('enable'); this.enabled = true; }
+  setBusy(value: boolean) { this.events.push(value ? 'busy' : 'ready'); this.enabled = !value; }
+  readFormData() { return this.values; }
+  clearErrors() { this.events.push('clear'); this.fieldErrors = {}; }
+  showFieldErrors(errors: Record<string, string>) { this.events.push('errors'); this.fieldErrors = { ...errors }; }
+  focusFirstInvalid() { this.events.push('focus-invalid'); }
+  showStatus(message: string) { this.statuses.push(message); }
+  showSuccess(result: { reference: string }) { this.events.push('success'); this.successReference = result.reference; }
+  selectProduct(productId: string) { this.events.push(`select:${productId}`); this.selectedProduct = productId; }
+}
+
+const fillFormData = (consent: boolean, productId = '') => {
+  const data = new FormData();
+  data.set('name', ' Linh ');
+  data.set('company', ' Atelier ');
+  data.set('email', ' linh@example.com ');
+  data.set('phone', ' 0900 ');
+  data.set('interest', ' horeca ');
+  data.set('message', ' Details please ');
+  if (consent) data.set('consent', 'on');
+  if (productId) data.set('productId', productId);
+  return data;
+};
+
+describe('enquiry form controller', () => {
+  test('collects FormData including unchecked/checked consent and optional product', () => {
+    const unchecked = collectEnquiryInput('en', fillFormData(false));
+    expect(unchecked.consent).toBe(false);
+    expect('productId' in unchecked).toBe(false);
+    expect(collectEnquiryInput('vi', fillFormData(true, 'butter-sheet-pro'))).toMatchObject({ locale: 'vi', consent: true, productId: 'butter-sheet-pro' });
   });
 
-  test('models idle, submitting, error, and success transitions', () => {
-    const idle = { phase: 'idle' as const };
-    expect(transitionEnquiryState(idle, { type: 'submit' })).toEqual({ phase: 'submitting' });
-    expect(transitionEnquiryState({ phase: 'submitting' }, { type: 'invalid', errors: { email: 'Bad email' } })).toEqual({ phase: 'error', errors: { email: 'Bad email' } });
-    expect(transitionEnquiryState({ phase: 'submitting' }, { type: 'succeed', reference: 'PFF-1' })).toEqual({ phase: 'success', reference: 'PFF-1' });
+  test('installs prevention listener before enabling and strictly preselects known product', () => {
+    const view = new FakeView();
+    initializeEnquiryForm(view, async () => ({ ok: true, reference: 'PFF-1', message: '', receivedAt: '', demo: true }), {
+      locale: 'en', knownProductIds: ['butter-sheet-pro'], requestedProductId: 'butter-sheet-pro', submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
+    });
+    expect(view.events).toEqual(['listen', 'select:butter-sheet-pro', 'enable']);
+
+    const unknown = new FakeView();
+    initializeEnquiryForm(unknown, async () => ({ ok: true, reference: 'PFF-1', message: '', receivedAt: '', demo: true }), {
+      locale: 'en', knownProductIds: ['butter-sheet-pro'], requestedProductId: 'BUTTER-SHEET-PRO', submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
+    });
+    expect(unknown.selectedProduct).toBeUndefined();
+  });
+
+  test('keeps submission disabled if initialization fails after listener installation', () => {
+    const view = new FakeView();
+    view.selectProduct = () => { view.events.push('select-failed'); throw new Error('broken select'); };
+    expect(() => initializeEnquiryForm(view, async () => ({ ok: true, reference: 'PFF-1', message: '', receivedAt: '', demo: true }), {
+      locale: 'en', knownProductIds: ['butter-sheet-pro'], requestedProductId: 'butter-sheet-pro', submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
+    })).toThrow('broken select');
+    expect(view.events).toEqual(['listen', 'select-failed']);
+    expect(view.enabled).toBe(false);
+  });
+
+  test('synchronously guards duplicate in-flight submissions and safely renders success', async () => {
+    const view = new FakeView();
+    view.values = fillFormData(true, 'butter-sheet-pro');
+    let resolve!: (value: { ok: true; reference: string; message: string; receivedAt: string; demo: true }) => void;
+    let calls = 0;
+    const pending = new Promise<{ ok: true; reference: string; message: string; receivedAt: string; demo: true }>((done) => { resolve = done; });
+    initializeEnquiryForm(view, async () => { calls += 1; return pending; }, {
+      locale: 'en', knownProductIds: [], requestedProductId: null, submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
+    });
+
+    const first = view.handler!();
+    const duplicate = view.handler!();
+    expect(calls).toBe(1);
+    resolve({ ok: true, reference: '<img src=x>', message: '', receivedAt: '', demo: true });
+    await Promise.all([first, duplicate]);
+    expect(view.successReference).toBe('<img src=x>');
+    expect(view.events).toContain('success');
+    expect(view.events.at(-1)).toBe('ready');
+  });
+
+  test('clears old errors, shows keyed validation errors, focuses, preserves values, and recovers', async () => {
+    const view = new FakeView();
+    view.values = fillFormData(false);
+    const before = [...view.values.entries()];
+    initializeEnquiryForm(view, async () => { throw new EnquiryValidationError({ email: 'Bad email', consent: 'Consent required' }); }, {
+      locale: 'en', knownProductIds: [], requestedProductId: null, submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
+    });
+    await view.handler!();
+    expect(view.events).toEqual(['listen', 'enable', 'clear', 'busy', 'errors', 'focus-invalid', 'ready']);
+    expect(view.fieldErrors).toEqual({ email: 'Bad email', consent: 'Consent required' });
+    expect(view.statuses).toEqual(['Sending', 'Fix fields']);
+    expect([...view.values.entries()]).toEqual(before);
+    expect(view.enabled).toBe(true);
+  });
+
+  test('uses only localized generic copy, preserves values, and allows retry', async () => {
+    const view = new FakeView();
+    view.values = fillFormData(true);
+    const before = [...view.values.entries()];
+    let calls = 0;
+    initializeEnquiryForm(view, async () => {
+      calls += 1;
+      if (calls === 1) throw new Error('PII linh@example.com');
+      return { ok: true, reference: 'PFF-SAFE', message: '', receivedAt: '', demo: true };
+    }, {
+      locale: 'en', knownProductIds: [], requestedProductId: null, submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Safe generic message',
+    });
+    await view.handler!();
+    expect(view.statuses).toEqual(['Sending', 'Safe generic message']);
+    expect(JSON.stringify(view.statuses)).not.toContain('linh@example.com');
+    expect([...view.values.entries()]).toEqual(before);
+    expect(view.enabled).toBe(true);
+    await view.handler!();
+    expect(calls).toBe(2);
+    expect(view.successReference).toBe('PFF-SAFE');
   });
 });

@@ -24,7 +24,13 @@ for (const page of pages) {
     if (!html.includes(`value="${productId}"`)) throw new Error(`${page.file}: missing product ${productId}`);
   }
 
-  if (/<form\b[^>]*\baction=/i.test(html)) throw new Error(`${page.file}: must not expose a delivery endpoint`);
+  const formTag = html.match(/<form\b[^>]*data-enquiry-form[^>]*>/i)?.[0];
+  if (!formTag) throw new Error(`${page.file}: missing enquiry form`);
+  if (/\baction\s*=/i.test(formTag)) throw new Error(`${page.file}: must not expose an explicit delivery endpoint`);
+  const submitTags = [...html.matchAll(/<button\b[^>]*type="submit"[^>]*>/gi)].map(([tag]) => tag);
+  if (submitTags.length !== 1 || submitTags.some((tag) => !/\bdisabled(?:\s|>|=)/i.test(tag))) {
+    throw new Error(`${page.file}: server-rendered submission must remain inert until enhancement initializes`);
+  }
   if (/\b(?:undefined|file:\/\/\/)|(?:src|href)="[^"]*src\/assets/i.test(html)) throw new Error(`${page.file}: contains invalid generated output`);
   if (/demo-data|mailto:|fetch\s*\(/i.test(html)) throw new Error(`${page.file}: leaks fixtures or an external delivery mechanism`);
 }

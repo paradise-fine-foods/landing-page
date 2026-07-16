@@ -82,7 +82,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
       </div>
 
       <div class="enquiry-form__actions">
-        <button type="submit" data-enquiry-submit data-idle-label={formCopy.submit}>{formCopy.submit}</button>
+        <button type="submit" data-enquiry-submit data-idle-label={formCopy.submit} disabled>{formCopy.submit}</button>
         <div class="enquiry-form__status" role="status" aria-live="polite" aria-atomic="true" data-enquiry-status></div>
       </div>
     </form>
@@ -99,14 +99,9 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
 </section>
 
 <script>
-  import { EnquiryValidationError, submitEnquiry, type EnquiryInput } from '../../lib/cms/queries';
-  import { selectKnownProductId } from '../../lib/enquiry/form-state';
+  import { submitEnquiry } from '../../lib/cms/queries';
+  import { initializeEnquiryForm, type EnquiryFormView } from '../../lib/enquiry/controller';
   import type { Locale } from '../../lib/i18n/types';
-
-  const valueOf = (data: FormData, name: string): string => {
-    const value = data.get(name);
-    return typeof value === 'string' ? value : '';
-  };
 
   for (const root of document.querySelectorAll<HTMLElement>('[data-enquiry-root]')) {
     const form = root.querySelector<HTMLFormElement>('[data-enquiry-form]');
@@ -118,70 +113,75 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
     const product = root.querySelector<HTMLSelectElement>('[data-product-select]');
     if (!form || !submit || !status || !success || !successHeading || !reference || !product) continue;
 
-    let knownProductIds: string[] = [];
     try {
       const parsed = JSON.parse(root.dataset.knownProducts ?? '[]');
-      if (Array.isArray(parsed)) knownProductIds = parsed.filter((value): value is string => typeof value === 'string');
-    } catch {
-      knownProductIds = [];
-    }
-    const selectedProduct = selectKnownProductId(new URL(window.location.href).searchParams.get('product'), knownProductIds);
-    if (selectedProduct) product.value = selectedProduct;
-
-    const clearErrors = () => {
-      for (const error of root.querySelectorAll<HTMLElement>('[data-error-for]')) error.textContent = '';
-      for (const control of form.elements) {
-        if (control instanceof HTMLElement) control.removeAttribute('aria-invalid');
+      if (!Array.isArray(parsed)) continue;
+      const knownProductIds = parsed.filter((value): value is string => typeof value === 'string');
+      const errorNodes = new Map<string, HTMLElement>();
+      for (const node of root.querySelectorAll<HTMLElement>('[data-error-for]')) {
+        const name = node.dataset.errorFor;
+        if (name) errorNodes.set(name, node);
       }
-    };
+      const requiredErrorNames = ['name', 'email', 'interest', 'message', 'consent'];
+      const controlNames = ['name', 'company', 'email', 'phone', 'interest', 'productId', 'message', 'consent'];
+      if (requiredErrorNames.some((name) => !errorNodes.has(name))) continue;
+      if (controlNames.some((name) => !(form.elements.namedItem(name) instanceof HTMLElement))) continue;
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      clearErrors();
-      status.textContent = root.dataset.submitting ?? '';
-      submit.disabled = true;
-      submit.textContent = root.dataset.submitting ?? submit.dataset.idleLabel ?? '';
-
-      const data = new FormData(form);
-      const productId = valueOf(data, 'productId');
-      const input: EnquiryInput = {
-        locale: root.dataset.locale as Locale,
-        name: valueOf(data, 'name'),
-        company: valueOf(data, 'company'),
-        email: valueOf(data, 'email'),
-        phone: valueOf(data, 'phone'),
-        interest: valueOf(data, 'interest'),
-        message: valueOf(data, 'message'),
-        consent: data.get('consent') === 'on',
-        ...(productId ? { productId } : {}),
-      };
-
-      try {
-        const result = await submitEnquiry(input);
-        form.hidden = true;
-        status.textContent = '';
-        reference.textContent = result.reference;
-        success.hidden = false;
-        successHeading.focus();
-      } catch (error) {
-        if (error instanceof EnquiryValidationError) {
-          for (const [name, message] of Object.entries(error.errors)) {
-            const errorNode = root.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      const view: EnquiryFormView = {
+        installSubmitHandler(handler) {
+          form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            void handler();
+          });
+        },
+        enableSubmit() {
+          submit.disabled = false;
+          root.dataset.enhanced = 'true';
+        },
+        setBusy(isBusy) {
+          submit.disabled = isBusy;
+          submit.textContent = isBusy
+            ? root.dataset.submitting ?? ''
+            : submit.dataset.idleLabel ?? '';
+        },
+        readFormData: () => new FormData(form),
+        clearErrors() {
+          for (const node of errorNodes.values()) node.textContent = '';
+          for (const control of form.elements) {
+            if (control instanceof HTMLElement) control.removeAttribute('aria-invalid');
+          }
+        },
+        showFieldErrors(errors) {
+          for (const [name, message] of Object.entries(errors)) {
+            const node = errorNodes.get(name);
             const control = form.elements.namedItem(name);
-            if (errorNode) errorNode.textContent = message ?? '';
+            if (node) node.textContent = message ?? '';
             if (control instanceof HTMLElement) control.setAttribute('aria-invalid', 'true');
           }
-          status.textContent = root.dataset.formError ?? '';
-          const firstInvalid = form.querySelector<HTMLElement>('[aria-invalid="true"]');
-          firstInvalid?.focus();
-        } else {
-          status.textContent = root.dataset.unexpectedError ?? '';
-        }
-      } finally {
-        submit.disabled = false;
-        submit.textContent = submit.dataset.idleLabel ?? '';
-      }
-    });
+        },
+        focusFirstInvalid: () => form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(),
+        showStatus(message) { status.textContent = message; },
+        showSuccess(result) {
+          form.hidden = true;
+          status.textContent = '';
+          reference.textContent = result.reference;
+          success.hidden = false;
+          successHeading.focus();
+        },
+        selectProduct(productId) { product.value = productId; },
+      };
+
+      initializeEnquiryForm(view, submitEnquiry, {
+        locale: root.dataset.locale as Locale,
+        knownProductIds,
+        requestedProductId: new URL(window.location.href).searchParams.get('product'),
+        submitting: root.dataset.submitting ?? '',
+        formError: root.dataset.formError ?? '',
+        unexpectedError: root.dataset.unexpectedError ?? '',
+      });
+    } catch {
+      // The server-rendered control stays disabled when enhancement cannot initialize.
+    }
   }
 </script>
 
