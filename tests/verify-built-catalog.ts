@@ -8,6 +8,9 @@ const productCards = (html: string) =>
   [...html.matchAll(/<article class="product-card"[^>]*>[\s\S]*?<\/article>/g)].map(
     ([card]) => card,
   );
+const queryValues = (html: string, parameter: string): string[] =>
+  [...html.matchAll(new RegExp(`href="([^"]+[?&]${parameter}=([^"]+))"`, 'g'))]
+    .map(([, , value]) => decodeURIComponent(value.replace(/&amp;.*/, '')));
 
 for (const [locale, path] of [
   ['en', 'en/products'],
@@ -19,6 +22,18 @@ for (const [locale, path] of [
   assert.ok(html.indexOf('<h1') < html.indexOf('<h2'), `${locale} catalog must start at h1`);
   assert.ok(cards.every((card) => card.includes('<h2')), `${locale} catalog cards must use h2`);
   assert.ok(cards.every((card) => !card.includes('<h3')), `${locale} catalog cards must not skip to h3`);
+
+  const homepage = built(locale);
+  const requestedCategories = queryValues(homepage, 'category');
+  const renderedOptions = [...html.matchAll(/<option\b[^>]*value="([^"]+)"[^>]*data-category-slug="([^"]+)"[^>]*>/g)]
+    .map(([, id, slug]) => ({ id, slug }));
+  assert.ok(requestedCategories.length > 0, `${locale} homepage must emit category query links`);
+  assert.deepEqual(
+    new Set(requestedCategories),
+    new Set(renderedOptions.map(({ slug }) => slug)),
+    `${locale} homepage category queries must exactly map to rendered category options`,
+  );
+  assert.ok(renderedOptions.every(({ id }) => id.length > 0), `${locale} category query options must map to stable IDs`);
 }
 
 const viCatalog = built('vi/san-pham');

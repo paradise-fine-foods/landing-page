@@ -24,7 +24,7 @@ const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSing
     <label for="catalog-category">{copy.categoryLabel}</label>
     <select id="catalog-category" data-filter-category>
       <option value="">{copy.allCategories}</option>
-      {categories.map((category) => <option value={category.id}>{category.name}</option>)}
+      {categories.map((category) => <option value={category.id} data-category-slug={category.slug}>{category.name}</option>)}
     </select>
   </div>
   <div class="catalog-filters__select">
@@ -56,7 +56,7 @@ const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSing
 <noscript><p class="catalog-filters__noscript">{copy.noScript}</p></noscript>
 
 <script>
-  import { deriveCatalogState, type CatalogFilterRecord } from '../../lib/catalog/catalog-state';
+  import { deriveCatalogState, initializeCatalogCategory, type CatalogFilterRecord } from '../../lib/catalog/catalog-state';
 
   const catalogs = document.querySelectorAll<HTMLElement>('[data-catalog]');
   for (const catalog of catalogs) {
@@ -92,6 +92,15 @@ const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSing
       resultCount.textContent = `${state.count} ${label ?? ''}`;
       emptyState.hidden = !state.empty;
     };
+
+    const categoryOptions = [...category.options].flatMap((option) => {
+      const slug = option.dataset.categorySlug;
+      return slug ? [{ id: option.value, slug }] : [];
+    });
+    initializeCatalogCategory({
+      selectCategory(categoryId) { category.value = categoryId; },
+      update,
+    }, new URL(window.location.href).searchParams.get('category'), categoryOptions);
 
     search.addEventListener('input', update);
     category.addEventListener('change', update);

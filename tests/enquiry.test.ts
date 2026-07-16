@@ -118,6 +118,7 @@ class FakeView implements EnquiryFormView {
   statuses: string[] = [];
   successReference?: string;
   selectedProduct?: string;
+  selectedInterest?: string;
 
   installSubmitHandler(handler: () => Promise<void>) { this.events.push('listen'); this.handler = handler; }
   enableSubmit() { this.events.push('enable'); this.enabled = true; }
@@ -129,6 +130,7 @@ class FakeView implements EnquiryFormView {
   showStatus(message: string) { this.statuses.push(message); }
   showSuccess(result: { reference: string }) { this.events.push('success'); this.successReference = result.reference; }
   selectProduct(productId: string) { this.events.push(`select:${productId}`); this.selectedProduct = productId; }
+  selectInterest(interest: string) { this.events.push(`interest:${interest}`); this.selectedInterest = interest; }
 }
 
 const fillFormData = (consent: boolean, productId = '') => {
@@ -145,6 +147,13 @@ const fillFormData = (consent: boolean, productId = '') => {
 };
 
 describe('enquiry form controller', () => {
+  test('strictly selects only an exact rendered interest option', async () => {
+    const controller = await import('../src/lib/enquiry/controller');
+    expect(controller.selectKnownInterest('horeca', ['retail', 'horeca'])).toBe('horeca');
+    expect(controller.selectKnownInterest('HORECA', ['retail', 'horeca'])).toBeUndefined();
+    expect(controller.selectKnownInterest(null, ['retail', 'horeca'])).toBeUndefined();
+  });
+
   test('collects FormData including unchecked/checked consent and optional product', () => {
     const unchecked = collectEnquiryInput('en', fillFormData(false));
     expect(unchecked.consent).toBe(false);
@@ -155,15 +164,16 @@ describe('enquiry form controller', () => {
   test('installs prevention listener before enabling and strictly preselects known product', () => {
     const view = new FakeView();
     initializeEnquiryForm(view, async () => ({ ok: true, reference: 'PFF-1', message: '', receivedAt: '', demo: true }), {
-      locale: 'en', knownProductIds: ['butter-sheet-pro'], requestedProductId: 'butter-sheet-pro', submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
+      locale: 'en', knownProductIds: ['butter-sheet-pro'], requestedProductId: 'butter-sheet-pro', knownInterestValues: ['retail', 'horeca'], requestedInterest: 'horeca', submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
     });
-    expect(view.events).toEqual(['listen', 'select:butter-sheet-pro', 'enable']);
+    expect(view.events).toEqual(['listen', 'select:butter-sheet-pro', 'interest:horeca', 'enable']);
 
     const unknown = new FakeView();
     initializeEnquiryForm(unknown, async () => ({ ok: true, reference: 'PFF-1', message: '', receivedAt: '', demo: true }), {
-      locale: 'en', knownProductIds: ['butter-sheet-pro'], requestedProductId: 'BUTTER-SHEET-PRO', submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
+      locale: 'en', knownProductIds: ['butter-sheet-pro'], requestedProductId: 'BUTTER-SHEET-PRO', knownInterestValues: ['retail', 'horeca'], requestedInterest: 'HORECA', submitting: 'Sending', formError: 'Fix fields', unexpectedError: 'Try again',
     });
     expect(unknown.selectedProduct).toBeUndefined();
+    expect(unknown.selectedInterest).toBeUndefined();
   });
 
   test('keeps submission disabled if initialization fails after listener installation', () => {

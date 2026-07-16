@@ -111,7 +111,8 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
     const successHeading = root.querySelector<HTMLElement>('[data-enquiry-success-heading]');
     const reference = root.querySelector<HTMLElement>('[data-enquiry-reference]');
     const product = root.querySelector<HTMLSelectElement>('[data-product-select]');
-    if (!form || !submit || !status || !success || !successHeading || !reference || !product) continue;
+    const interest = form?.elements.namedItem('interest');
+    if (!form || !submit || !status || !success || !successHeading || !reference || !product || !(interest instanceof HTMLSelectElement)) continue;
 
     try {
       const parsed = JSON.parse(root.dataset.knownProducts ?? '[]');
@@ -169,12 +170,17 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
           successHeading.focus();
         },
         selectProduct(productId) { product.value = productId; },
+        selectInterest(value) { interest.value = value; },
       };
+
+      const searchParams = new URL(window.location.href).searchParams;
 
       initializeEnquiryForm(view, submitEnquiry, {
         locale: root.dataset.locale as Locale,
         knownProductIds,
-        requestedProductId: new URL(window.location.href).searchParams.get('product'),
+        requestedProductId: searchParams.get('product'),
+        knownInterestValues: [...interest.options].map(({ value }) => value).filter(Boolean),
+        requestedInterest: searchParams.get('interest'),
         submitting: root.dataset.submitting ?? '',
         formError: root.dataset.formError ?? '',
         unexpectedError: root.dataset.unexpectedError ?? '',

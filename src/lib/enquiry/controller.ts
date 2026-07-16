@@ -12,12 +12,15 @@ export interface EnquiryFormView {
   showStatus(message: string): void;
   showSuccess(result: EnquirySuccess): void;
   selectProduct(productId: string): void;
+  selectInterest(interest: string): void;
 }
 
 interface EnquiryControllerOptions {
   locale: Locale;
   knownProductIds: readonly string[];
   requestedProductId: string | null;
+  knownInterestValues?: readonly string[];
+  requestedInterest?: string | null;
   submitting: string;
   formError: string;
   unexpectedError: string;
@@ -49,6 +52,13 @@ export const selectKnownProductId = (
   candidate: string | null,
   knownProductIds: readonly string[],
 ): string | undefined => candidate !== null && knownProductIds.includes(candidate)
+  ? candidate
+  : undefined;
+
+export const selectKnownInterest = (
+  candidate: string | null,
+  knownInterestValues: readonly string[],
+): string | undefined => candidate !== null && knownInterestValues.includes(candidate)
   ? candidate
   : undefined;
 
@@ -85,5 +95,10 @@ export const initializeEnquiryForm = (
 
   const selectedProduct = selectKnownProductId(options.requestedProductId, options.knownProductIds);
   if (selectedProduct) view.selectProduct(selectedProduct);
+  const selectedInterest = selectKnownInterest(
+    options.requestedInterest ?? null,
+    options.knownInterestValues ?? [],
+  );
+  if (selectedInterest) view.selectInterest(selectedInterest);
   view.enableSubmit();
 };

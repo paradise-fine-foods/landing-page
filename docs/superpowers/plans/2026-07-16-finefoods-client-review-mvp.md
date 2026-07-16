@@ -630,7 +630,7 @@ Using the in-app browser, inspect at desktop and `390px` mobile widths:
 /en/products/cultured-butter-sheet/
 /vi/san-pham/bo-lat-mau/
 /en/brands/maison-laitiere/
-/vi/thuong-hieu/nha-sua-mau/
+/vi/thuong-hieu/nha-sua-maison/
 /en/contact/
 /vi/lien-he/
 /404.html

@@ -7,6 +7,7 @@ const pages = [
 
 for (const page of pages) {
   const html = await Bun.file(page.file).text();
+  const homepage = await Bun.file(`dist/${page.locale}/index.html`).text();
   const productIds = (await getProducts(page.locale)).map(({ id }) => id);
 
   if (!html.includes(`<html lang="${page.locale}">`)) throw new Error(`${page.file}: missing locale lang`);
@@ -22,6 +23,15 @@ for (const page of pages) {
   }
   for (const productId of productIds) {
     if (!html.includes(`value="${productId}"`)) throw new Error(`${page.file}: missing product ${productId}`);
+  }
+  const requestedInterests = [...homepage.matchAll(/href="[^"]+[?&]interest=([^"]+)"/g)]
+    .map(([, value]) => decodeURIComponent(value.replace(/&amp;.*/, '')));
+  const renderedInterests = [...html.matchAll(/<option\b[^>]*value="([^"]+)"[^>]*>/g)]
+    .map(([, value]) => value)
+    .filter((value) => ['retail', 'horeca', 'bakery', 'ecommerce', 'other'].includes(value));
+  if (requestedInterests.length === 0) throw new Error(`${page.file}: homepage emits no interest query links`);
+  if (requestedInterests.some((value) => !renderedInterests.includes(value))) {
+    throw new Error(`${page.file}: homepage interest query does not map to an exact rendered option`);
   }
 
   const formTag = html.match(/<form\b[^>]*data-enquiry-form[^>]*>/i)?.[0];

@@ -1,24 +1,38 @@
 import { describe, expect, test } from 'bun:test';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { demoBrands, demoCategories, demoProducts } from '../src/lib/cms/demo-data';
+import {
+  demoBrands,
+  demoCategories,
+  demoFeaturedContent,
+  demoGlobalSettings,
+  demoProducts,
+} from '../src/lib/cms/demo-data';
+import { ui } from '../src/lib/i18n/ui';
 
 const root = join(import.meta.dir, '..');
 const source = (path: string) => readFileSync(join(root, path), 'utf8');
 
-const stableInventory = {
-  products: demoProducts.map(({ id }) => id),
-  brands: demoBrands.map(({ id }) => id),
-  categories: demoCategories.map(({ id }) => id),
-  assets: [
-    'src/assets/demo/editorial-table.svg',
-    'src/assets/demo/hero-poster-desktop.svg',
-    'src/assets/demo/hero-poster-mobile.svg',
-    'src/assets/demo/product-stage.svg',
-    'public/models/demo-package.glb',
-    'public/models/README.md',
-  ],
+const filesBelow = (directory: string): string[] => readdirSync(join(root, directory), { withFileTypes: true })
+  .flatMap((entry) => {
+    const path = `${directory}/${entry.name}`;
+    return entry.isDirectory() ? filesBelow(path) : [path];
+  });
+
+const stringsBelow = (value: unknown): string[] => {
+  if (typeof value === 'string') return [value];
+  if (Array.isArray(value)) return value.flatMap(stringsBelow);
+  if (value && typeof value === 'object') return Object.values(value).flatMap(stringsBelow);
+  return [];
 };
+
+const discoveredMedia = [
+  ...filesBelow('src/assets/demo'),
+  ...filesBelow('public/models'),
+  ...readdirSync(join(root, 'public'), { withFileTypes: true })
+    .filter((entry) => entry.isFile() && /(?:demo|favicon)/i.test(entry.name))
+    .map((entry) => `public/${entry.name}`),
+];
 
 describe('client-review MVP completion contracts', () => {
   test('ships a self-contained bilingual 404 with direct locale choices', () => {
@@ -35,6 +49,14 @@ describe('client-review MVP completion contracts', () => {
       expect(page).toContain(`href="${href}"`);
     }
     expect(page).not.toMatch(/Astro\.redirect|navigator\.language|<script/);
+    expect(page).toContain('<title>Page not found | Paradise Fine Foods Demo</title>');
+    expect(page).not.toMatch(/<title>[^<]*[À-ỹĐđ]/u);
+    for (const phrase of ['Chuyển đến nội dung', 'Bản duyệt khách hàng', 'Nội dung hư cấu chỉ dùng để duyệt']) {
+      expect(page).toContain(`<span lang="vi">${phrase}</span>`);
+    }
+    expect(page).toContain('.not-found__link');
+    expect(page.match(/class="[^"]*not-found__link/g)).toHaveLength(5);
+    expect(page).toContain('min-block-size: 2.75rem');
   });
 
   test('maintains a comprehensive production replacement ledger', () => {
@@ -42,20 +64,51 @@ describe('client-review MVP completion contracts', () => {
     expect(existsSync(path)).toBe(true);
     const ledger = source('docs/demo-content.md');
 
-    for (const group of Object.values(stableInventory)) {
-      for (const item of group) expect(ledger).toContain(`\`${item}\``);
+    expect(discoveredMedia.filter((item) => !ledger.includes(`\`${item}\``))).toEqual([]);
+    for (const id of [...demoProducts, ...demoBrands, ...demoCategories].map(({ id }) => id)) {
+      expect(ledger).toContain(`\`${id}\``);
     }
+    const authoritativeFixtureValues = stringsBelow({
+      categories: demoCategories.map(({ id, slug, name, description }) => ({ id, slug, name, description })),
+      brands: demoBrands.map(({ id, slug, name, description, origin, accent }) => ({ id, slug, name, description, origin, accent })),
+      products: demoProducts.map(({ id, slug, name, description, brandId, categoryIds, origin, applications, audienceChannels, packFormat, storage, benefits }) => ({ id, slug, name, description, brandId, categoryIds, origin, applications, audienceChannels, packFormat, storage, benefits })),
+      global: demoGlobalSettings,
+      featured: {
+        hero: {
+          eyebrow: demoFeaturedContent.hero.eyebrow,
+          title: demoFeaturedContent.hero.title,
+          body: demoFeaturedContent.hero.body,
+          productId: demoFeaturedContent.hero.productId,
+          alt: demoFeaturedContent.hero.image.alt,
+        },
+        editorial: {
+          title: demoFeaturedContent.editorial.title,
+          body: demoFeaturedContent.editorial.body,
+          alt: demoFeaturedContent.editorial.image.alt,
+        },
+      },
+    });
+    expect([...new Set(authoritativeFixtureValues)].filter((value) => !ledger.includes(value))).toEqual([]);
+    expect(Object.keys(ui.en).filter((family) => !ledger.includes(`ui.*.${family}`))).toEqual([]);
     for (const requiredBoundary of [
       'src/lib/cms/demo-data.ts',
       'src/lib/enquiry/submit.ts',
       'https://demo.paradisefinefoods.com',
       '/models/demo-package.glb',
+      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BoxTextured/glTF-Binary/BoxTextured.glb',
+      'https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/LICENSE.md',
     ]) expect(ledger).toContain(`\`${requiredBoundary}\``);
     for (const responsibility of ['Production owner', 'Source/input', 'Acceptance']) {
       expect(ledger).toContain(responsibility);
     }
     expect(ledger).toMatch(/no business claims (?:in this MVP )?are verified/i);
     expect(ledger).toMatch(/does not (?:send|deliver).*(?:email|CRM)/i);
+  });
+
+  test('keeps the browser checklist on the generated Vietnamese brand route', () => {
+    const plan = source('docs/superpowers/plans/2026-07-16-finefoods-client-review-mvp.md');
+    expect(plan).toContain('/vi/thuong-hieu/nha-sua-maison/');
+    expect(plan).not.toContain('/vi/thuong-hieu/nha-sua-mau/');
   });
 
   test('wires a generated-output verifier into every production build', () => {

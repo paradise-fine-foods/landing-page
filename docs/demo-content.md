@@ -4,7 +4,7 @@
 
 **Scope:** the complete client-review MVP as implemented on 2026-07-16
 
-**Authoritative implementation sources:** `src/lib/cms/demo-data.ts`, `src/lib/i18n/ui.ts`, `src/lib/enquiry/submit.ts`, `src/assets/demo/`, `public/models/`, and `astro.config.mjs`
+**Authoritative implementation sources:** `src/lib/cms/demo-data.ts`, `src/lib/i18n/ui.ts`, `src/lib/enquiry/submit.ts`, `src/assets/demo/`, `public/models/`, top-level `public/` favicon files, and `astro.config.mjs`
 
 No business claims in this MVP are verified. Every product, brand, category relationship, origin, specification, operational statement, service promise, contact prompt, and visual is fictional or review-only until the acceptance requirement in this ledger is met. Nothing here is launch approval.
 
@@ -53,12 +53,38 @@ Every product also contains fictional localized descriptions and alt text, categ
 | `mozzarella-shred` | “Mozzarella Demo Shred” / “Mozzarella sợi mẫu”; slugs `mozzarella-shred` / `mozzarella-soi-mau`; Formagerie Nord; cheese; fictional northern origin; demo 2 kg bag; 2–6 °C; pizza/baking; hotel/restaurant/catering; fictional melt claim | Product/data owner + producer | Same complete product package as above | Same product acceptance gate as above |
 | `unsalted-butter-block` | “Unsalted Butter Demo Block” / “Bơ nhạt khối mẫu”; slugs `unsalted-butter-block` / `bo-nhat-khoi-mau`; Maison Laitière; butter; fictional European origin; demo 1 kg block; 2–6 °C; baking/cooking; bakery/hotel/restaurant/catering; fictional versatile-use claim | Product/data owner + producer | Same complete product package as above | Same product acceptance gate as above |
 
+### Exact fixture copy and specification manifest
+
+This manifest duplicates every review-only CMS fixture value that is not already exact in the tables above. It is intentionally machine-checked against `src/lib/cms/demo-data.ts`; adding or changing a fixture value requires updating this ledger and its replacement responsibility.
+
+| Record | Exact English fixture values | Exact Vietnamese fixture values |
+|---|---|---|
+| Category `butter` | “Demo butter formats for professional kitchens.” | “Các định dạng bơ minh họa cho bếp chuyên nghiệp.” |
+| Category `cream` | “Demo cream products for culinary preparation.” | “Sản phẩm kem sữa minh họa cho chế biến ẩm thực.” |
+| Category `cheese` | “Demo cheese formats for foodservice teams.” | “Các định dạng phô mai minh họa cho đội ngũ dịch vụ ăn uống.” |
+| Category `pastry` | “Demo ingredients selected for pastry workflows.” | “Nguyên liệu minh họa dành cho quy trình bánh ngọt.” |
+| Brand `maison-laitiere` | “A fictional review-only dairy house.”; “Fictional European origin” | “Thương hiệu sữa hư cấu chỉ dùng để duyệt nội dung.”; “Nguồn gốc châu Âu hư cấu” |
+| Brand `atelier-creme` | “A fictional review-only cream specialist.”; “Fictional alpine origin” | “Chuyên gia kem sữa hư cấu chỉ dùng để duyệt nội dung.”; “Nguồn gốc vùng núi hư cấu” |
+| Brand `formagerie-nord` | “A fictional review-only cheese workshop.”; “Fictional northern origin” | “Xưởng phô mai hư cấu chỉ dùng để duyệt nội dung.”; “Nguồn gốc phương bắc hư cấu” |
+| Product `cultured-butter-sheet` | “A fictional butter sheet created to demonstrate a pastry catalog.”; “Demo 1 kg sheet”; “Keep chilled”; “2–6 °C (demo)”; “Fictional handling benefit”; “Review-only pastry claim” | “Bơ lát hư cấu dùng để minh họa danh mục nguyên liệu bánh.”; “Tấm mẫu 1 kg”; “Bảo quản lạnh”; “Lợi ích thao tác hư cấu”; “Tuyên bố bánh ngọt chỉ để duyệt” |
+| Product `whipping-cream-35` | “Fictional cream for menu concept review.”; “Demo 1 L carton”; “Keep chilled”; “2–6 °C (demo)”; “Fictional stable-whip claim” | “Kem sữa hư cấu để duyệt ý tưởng thực đơn.”; “Hộp mẫu 1 L”; “Bảo quản lạnh”; “Tuyên bố độ bông ổn định hư cấu” |
+| Product `mascarpone-tub` | “Fictional mascarpone for dessert concept review.”; “Demo 500 g tub”; “Keep chilled”; “2–6 °C (demo)”; “Fictional creamy-texture claim” | “Mascarpone hư cấu để duyệt ý tưởng món tráng miệng.”; “Hộp mẫu 500 g”; “Bảo quản lạnh”; “Tuyên bố kết cấu mịn hư cấu” |
+| Product `cream-cheese-block` | “Fictional cream cheese for kitchen planning.”; “Demo 1 kg block”; “Keep chilled”; “2–6 °C (demo)”; “Fictional blending claim” | “Phô mai kem hư cấu để lập kế hoạch bếp.”; “Khối mẫu 1 kg”; “Bảo quản lạnh”; “Tuyên bố phối trộn hư cấu” |
+| Product `mozzarella-shred` | “Fictional shredded cheese for menu prototyping.”; “Demo 2 kg bag”; “Keep chilled”; “2–6 °C (demo)”; “Fictional melt claim” | “Phô mai sợi hư cấu để tạo mẫu thực đơn.”; “Túi mẫu 2 kg”; “Bảo quản lạnh”; “Tuyên bố độ tan chảy hư cấu” |
+| Product `unsalted-butter-block` | “Fictional unsalted butter for culinary review.”; “Demo 1 kg block”; “Keep chilled”; “2–6 °C (demo)”; “Fictional versatile-use claim” | “Bơ nhạt hư cấu để duyệt ứng dụng ẩm thực.”; “Khối mẫu 1 kg”; “Bảo quản lạnh”; “Tuyên bố đa dụng hư cấu” |
+| Global settings | “A review-only showcase for professional foodservice ingredients.”; “Review-only fictional content: all names, specifications, claims, and imagery are fictional.” | “Trang giới thiệu chỉ để duyệt cho nguyên liệu dịch vụ ăn uống chuyên nghiệp.”; “Nội dung hư cấu chỉ để duyệt: mọi tên gọi, thông số, tuyên bố và hình ảnh đều là hư cấu.” |
+| Featured hero | “Pastry demo selection”; “Ingredients shaped for thoughtful menus”; “Explore fictional products prepared for design review.”; “Fictional featured butter presentation” | “Bộ sưu tập bánh mẫu”; “Nguyên liệu cho thực đơn chỉn chu”; “Khám phá sản phẩm hư cấu được chuẩn bị để duyệt thiết kế.”; “Trình bày bơ nổi bật hư cấu” |
+| Featured editorial | “Built around the professional table”; “Original demo imagery and copy for stakeholder review.”; “Abstract professional kitchen still life” | “Được xây dựng quanh bàn bếp chuyên nghiệp”; “Hình ảnh và nội dung mẫu nguyên bản để các bên liên quan duyệt.”; “Tĩnh vật bếp chuyên nghiệp trừu tượng” |
+
+All exact fixture values above share the product/data, brand/partnership, marketing, creative and legal owners defined by their corresponding inventory tables. Their source/input is the approved localized CMS export plus substantiating producer/operations material; acceptance requires field-by-field reconciliation and named approval in both locales.
+
 ## Global, marketing and interface copy
 
 `src/lib/cms/demo-data.ts` contains the review-only site names/descriptions/notices plus hero and editorial copy. `src/lib/i18n/ui.ts` contains every English/Vietnamese interface string. The following inventory names every copy family and the business content it exposes.
 
 | Copy family | Review-only content inventory | Production owner | Source/input | Acceptance |
 |---|---|---|---|---|
+| `ui.*.siteName`, `ui.*.languageName`, `ui.*.skipToContent`, `ui.*.demoNotice`, `ui.*.demoNoticeLabel` | Localized site identity, language names, skip-link copy and persistent client-review notice/label | Brand/legal + UX/content | Approved company identity, language terminology, accessibility copy and release-status notice | Exact bilingual proof approval; skip links remain descriptive; production release state is accurate |
 | `demoGlobalSettings` | “Paradise Fine Foods Demo” / “Thực Phẩm Paradise Bản Mẫu”, review-only foodservice description and fiction notice | Brand owner + legal reviewer | Approved company naming, site description and mandatory demo/production notices | Exact bilingual proof approval and metadata review |
 | `demoFeaturedContent.hero` | Pastry-demo eyebrow, “Ingredients shaped for thoughtful menus”, Vietnamese equivalent, design-review body, featured product relationship and image alt | Marketing owner + product owner | Approved campaign/editorial copy, featured record and licensed visual | Both locales approved; relationship exists in CMS; metadata and alt QA pass |
 | `demoFeaturedContent.editorial` | “Built around the professional table”, Vietnamese equivalent, stakeholder-review body and still-life alt | Marketing owner + creative owner | Approved editorial story and licensed visual | Bilingual editorial and rights approval |
@@ -93,8 +119,10 @@ No office address, business email address or telephone number is published in th
 | `src/assets/demo/hero-poster-mobile.svg` | Original 800×1000 narrow hero fallback | Creative owner | Approved mobile art direction matching desktop poster and GLB | 390 px visual/overflow review, alt relationship, rights and performance QA pass |
 | `public/models/demo-package.glb` | Temporary Khronos BoxTextured sample loaded from `/models/demo-package.glb` | Creative/3D owner + rights reviewer | Approved optimized Paradise package GLB, texture sources, license/ownership and poster pairing | Visual accuracy, ≤180 KB compressed lazy runtime budget, fallback, reduced-motion, data-saving, WebGL failure and rights QA pass |
 | `public/models/README.md` | Provenance record for the temporary GLB | Rights reviewer | Upstream source and license are already recorded; replace with the production asset provenance record | Production source, author, ownership/license, export settings and approval date are documented |
+| `public/favicon.svg` | Unmodified Astro starter mark shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Approved Paradise monogram/favicon SVG, source artwork, author and usage rights | Default Astro artwork is absent; brand owner approves the mark; light/dark and small-size legibility QA pass |
+| `public/favicon.ico` | Unmodified Astro starter icon shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Multi-size ICO export of the approved Paradise favicon and its source artwork | Default Astro artwork is absent; icon matches approved SVG and renders clearly at browser favicon sizes |
 
-The temporary GLB provenance is recorded in `public/models/README.md`: KhronosGroup glTF-Sample-Assets, BoxTextured GLB, retrieved 2026-07-16, with its upstream license URL. The model and both posters must be replaced as one approved visual set.
+The temporary GLB provenance is recorded in `public/models/README.md`: KhronosGroup glTF-Sample-Assets, BoxTextured GLB, retrieved 2026-07-16 from `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BoxTextured/glTF-Binary/BoxTextured.glb`, under the upstream license at `https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/LICENSE.md`. The model and both posters must be replaced as one approved visual set.
 
 ## Demo origins, URLs and route inputs
 

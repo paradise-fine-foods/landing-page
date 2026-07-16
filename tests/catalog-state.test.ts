@@ -24,6 +24,25 @@ const records = [
 ] as const;
 
 describe('catalog DOM state', () => {
+  test('initializes an exact localized category query and applies the resulting state once', async () => {
+    const catalogState = await import('../src/lib/catalog/catalog-state');
+    const calls: string[] = [];
+    const view = {
+      selectCategory: (id: string) => { calls.push(`select:${id}`); },
+      update: () => { calls.push('update'); },
+    };
+    const options = [
+      { id: 'butter', slug: 'bo' },
+      { id: 'cream', slug: 'kem-sua' },
+    ];
+
+    expect(catalogState.initializeCatalogCategory(view, 'bo', options)).toBe(true);
+    expect(calls).toEqual(['select:butter', 'update']);
+    expect(catalogState.initializeCatalogCategory(view, 'BO', options)).toBe(false);
+    expect(catalogState.initializeCatalogCategory(view, null, options)).toBe(false);
+    expect(calls).toEqual(['select:butter', 'update']);
+  });
+
   test('normalizes diacritics and combines populated controls with AND semantics', () => {
     expect(
       deriveCatalogState(records, {
