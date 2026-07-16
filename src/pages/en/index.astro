@@ -23,19 +23,28 @@ const [settings, featured, categories, products, brands] = await Promise.all([
 const copy = ui[locale];
 const productsPath = localizedPath(locale, 'products');
 const contactPath = localizedPath(locale, 'contact');
-const credibilityItems = [featured.hero.product.origin, featured.hero.product.packFormat, `${featured.hero.product.storage.label} · ${featured.hero.product.storage.temperature}`];
-const channels = [copy.home.retail, copy.home.horeca, copy.home.bakery, copy.home.ecommerce].map((label) => ({ label, href: contactPath }));
+const categoryCounts = Object.fromEntries(categories.map((category) => [category.id, products.filter((product) => product.categories.some(({ id }) => id === category.id)).length]));
+const selectedBrand = brands.find(({ id }) => id === featured.hero.product.brand.id) ?? brands[0];
+if (!selectedBrand) throw new Error('Featured brand is required');
+const selectedBrandProducts = products.filter((product) => product.brand.id === selectedBrand.id).slice(0, 3);
+const remainingBrands = brands.filter(({ id }) => id !== selectedBrand.id);
+const channels = [
+  { ...copy.home.channels.retail, href: `${contactPath}?interest=retail` },
+  { ...copy.home.channels.horeca, href: `${contactPath}?interest=horeca` },
+  { ...copy.home.channels.bakery, href: `${contactPath}?interest=bakery` },
+  { ...copy.home.channels.ecommerce, href: `${contactPath}?interest=ecommerce` },
+];
 ---
 
 <SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={featured.hero.image.src}>
   <Hero copy={copy.hero} product={featured.hero.product} {productsPath} {contactPath}>
     <img slot="stage" class="hero-stage-image" src={featured.hero.image.src} width={featured.hero.image.width} height={featured.hero.image.height} alt={featured.hero.image.alt} fetchpriority="high" />
   </Hero>
-  <CredibilityStrip title={copy.home.credibilityTitle} items={credibilityItems} />
-  <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {productsPath} />
+  <CredibilityStrip title={copy.home.credibilityTitle} pillars={copy.home.operationalPillars} />
+  <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {categoryCounts} productLabel={copy.home.categoryProductLabel} {productsPath} />
   <FeaturedProducts eyebrow={copy.home.featuredProductsEyebrow} title={copy.home.featuredProductsTitle} products={products.filter((product) => product.featured)} locale={locale} />
-  <FeaturedBrands eyebrow={copy.home.featuredBrandsEyebrow} title={copy.home.featuredBrandsTitle} {brands} locale={locale} />
-  <ServiceProof eyebrow={copy.home.serviceEyebrow} title={copy.home.serviceTitle} description={copy.home.serviceDescription} editorial={featured.editorial} />
+  <FeaturedBrands eyebrow={copy.home.featuredBrandsEyebrow} title={copy.home.featuredBrandsTitle} {selectedBrand} {selectedBrandProducts} {remainingBrands} locale={locale} />
+  <ServiceProof eyebrow={copy.home.serviceEyebrow} title={copy.home.serviceTitle} description={copy.home.serviceDescription} temperatureLabel={copy.home.serviceTemperatureLabel} pillars={copy.home.operationalPillars} editorial={featured.editorial} />
   <ChannelPathways eyebrow={copy.home.channelsEyebrow} title={copy.home.channelsTitle} {channels} />
-  <FinalCta title={copy.home.finalCtaTitle} description={copy.home.finalCtaDescription} button={copy.home.finalCtaButton} href={contactPath} />
+  <FinalCta title={copy.home.finalCtaTitle} description={copy.home.finalCtaDescription} button={copy.home.finalCtaButton} label={copy.home.finalCtaLabel} href={contactPath} />
 </SiteLayout>

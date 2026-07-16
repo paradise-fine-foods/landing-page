@@ -1,21 +1,25 @@
 ---
 import type { FeaturedContent } from '../../lib/cms/types';
 
-interface Props { eyebrow: string; title: string; description: string; editorial: FeaturedContent['editorial'] }
-const { eyebrow, title, description, editorial } = Astro.props;
+interface Pillar { title: string; description: string }
+interface Props { eyebrow: string; title: string; description: string; temperatureLabel: string; pillars: Pillar[]; editorial: FeaturedContent['editorial'] }
+const { eyebrow, title, description, temperatureLabel, pillars, editorial } = Astro.props;
 ---
 
 <section class="service-proof section-space" aria-labelledby="service-title">
   <div class="container service-proof__grid">
     <div class="service-proof__image">
       <img src={editorial.image.src} width={editorial.image.width} height={editorial.image.height} alt={editorial.image.alt} loading="lazy" />
-      <span aria-hidden="true">2—6 °C / CONTROLLED</span>
+      <span>{temperatureLabel}</span>
     </div>
     <div class="service-proof__copy">
       <p class="eyebrow">{eyebrow}</p>
       <h2 id="service-title">{title}</h2>
       <p>{description}</p>
       <div class="service-proof__note"><strong>{editorial.title}</strong><p>{editorial.body}</p></div>
+      <ol class="service-proof__pillars">
+        {pillars.map(({ title: pillarTitle, description: pillarDescription }) => <li><strong>{pillarTitle}</strong><p>{pillarDescription}</p></li>)}
+      </ol>
     </div>
   </div>
 </section>
@@ -26,10 +30,16 @@ const { eyebrow, title, description, editorial } = Astro.props;
   .service-proof__image { background: var(--color-paper-white); position: relative; }
   .service-proof__image img { inline-size: 100%; }
   .service-proof__image span { background: var(--color-cultured-butter); color: var(--color-carbon); font-size: 0.62rem; inset-block-end: 0; inset-inline-end: 0; letter-spacing: var(--tracking-label); padding: var(--space-2) var(--space-3); position: absolute; }
-  .service-proof .eyebrow { color: var(--color-cultured-butter); }
+  .service-proof .eyebrow { color: var(--color-stainless); }
   .service-proof__copy { display: grid; gap: var(--space-5); }
   .service-proof__note { border-top: 1px solid var(--color-stainless); display: grid; gap: var(--space-2); margin-block-start: var(--space-5); padding-block-start: var(--space-4); }
   .service-proof__note strong { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 500; }
   .service-proof__note p { color: var(--color-stainless); font-size: var(--text-sm); }
+  .service-proof__pillars { border-top: 1px solid var(--color-stainless); display: grid; grid-template-columns: 1fr 1fr; list-style: none; }
+  .service-proof__pillars li { border-bottom: 1px solid color-mix(in srgb, var(--color-stainless) 50%, transparent); padding: var(--space-4) var(--space-4) var(--space-4) 0; }
+  .service-proof__pillars li:nth-child(even) { border-inline-start: 1px solid color-mix(in srgb, var(--color-stainless) 50%, transparent); padding-inline-start: var(--space-4); }
+  .service-proof__pillars strong { display: block; font-size: var(--text-sm); margin-block-end: var(--space-2); }
+  .service-proof__pillars p { color: var(--color-stainless); font-size: var(--text-xs); line-height: 1.55; }
   @media (max-width: 48rem) { .service-proof__grid { grid-template-columns: 1fr; } }
+  @media (max-width: 30rem) { .service-proof__pillars { grid-template-columns: 1fr; } .service-proof__pillars li:nth-child(even) { border-inline-start: 0; padding-inline-start: 0; } }
 </style>

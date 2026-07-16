@@ -1,20 +1,21 @@
 ---
-interface Props { title: string; items: string[] }
-const { title, items } = Astro.props;
+interface Pillar { title: string; description: string }
+interface Props { title: string; pillars: Pillar[] }
+const { title, pillars } = Astro.props;
 ---
 
 <section class="credibility" aria-labelledby="credibility-title">
   <div class="container credibility__grid">
     <h2 id="credibility-title">{title}</h2>
-    <ul>{items.map((item) => <li>{item}</li>)}</ul>
+    <ul>{pillars.map(({ title: pillarTitle }) => <li>{pillarTitle}</li>)}</ul>
   </div>
 </section>
 
 <style>
   .credibility { background: var(--color-cold-chain-blue); color: var(--color-paper-white); padding-block: var(--space-5); }
-  .credibility__grid { align-items: center; display: grid; gap: var(--space-5); grid-template-columns: 1.3fr 2fr; }
+  .credibility__grid { align-items: center; display: grid; gap: var(--space-5); grid-template-columns: 1fr 3fr; }
   .credibility h2 { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600; }
-  .credibility ul { display: grid; grid-template-columns: repeat(3, 1fr); list-style: none; }
+  .credibility ul { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; }
   .credibility li { border-inline-start: 1px solid color-mix(in srgb, var(--color-paper-white) 42%, transparent); font-size: var(--text-xs); padding-inline: var(--space-4); }
   @media (max-width: 44rem) { .credibility__grid { grid-template-columns: 1fr; } .credibility ul { grid-template-columns: 1fr; } .credibility li { border-block-start: 1px solid color-mix(in srgb, var(--color-paper-white) 42%, transparent); border-inline-start: 0; padding-block: var(--space-2); padding-inline: 0; } }
 </style>

@@ -58,7 +58,7 @@ const meta = buildMeta({
   </head>
   <body>
     <a class="skip-link" href="#main-content">{ui[locale].skipToContent}</a>
-    <DemoNotice copy={demoNotice} />
+    <DemoNotice copy={demoNotice} label={ui[locale].demoNoticeLabel} />
     <Header {locale} {siteName} currentPath={pathname} alternatePath={alternatePath ?? `/${locale}/`} />
     <main id="main-content">
       <slot />

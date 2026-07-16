@@ -1,5 +1,5 @@
 ---
-interface Channel { label: string; href: string }
+interface Channel { label: string; description: string; href: string }
 interface Props { eyebrow: string; title: string; channels: Channel[] }
 const { eyebrow, title, channels } = Astro.props;
 ---
@@ -8,8 +8,8 @@ const { eyebrow, title, channels } = Astro.props;
   <div class="container channel-pathways__grid">
     <div><p class="eyebrow">{eyebrow}</p><h2 id="channels-title">{title}</h2></div>
     <div class="channel-pathways__links">
-      {channels.map(({ label, href }, index) => (
-        <a href={href}><span>{String(index + 1).padStart(2, '0')}</span><strong>{label}</strong><b aria-hidden="true">→</b></a>
+      {channels.map(({ label, description, href }, index) => (
+        <a href={href}><span>{String(index + 1).padStart(2, '0')}</span><strong>{label}</strong><p>{description}</p><b aria-hidden="true">→</b></a>
       ))}
     </div>
   </div>
@@ -20,9 +20,11 @@ const { eyebrow, title, channels } = Astro.props;
   .channel-pathways__grid > div:first-child { position: sticky; top: var(--space-6); }
   .channel-pathways__grid h2 { margin-block-start: var(--space-4); }
   .channel-pathways__links { border-top: 1px solid var(--color-carbon); }
-  .channel-pathways__links a { align-items: center; border-bottom: 1px solid var(--color-stainless); color: var(--color-carbon); display: grid; gap: var(--space-4); grid-template-columns: auto 1fr auto; min-block-size: 7rem; text-decoration: none; transition: padding-inline var(--transition-fast); }
+  .channel-pathways__links a { align-items: center; border-bottom: 1px solid var(--color-stainless); color: var(--color-carbon); display: grid; gap: var(--space-4); grid-template-columns: auto minmax(9rem, 0.8fr) minmax(14rem, 1.2fr) auto; min-block-size: 8rem; text-decoration: none; transition: padding-inline var(--transition-fast); }
   .channel-pathways__links a:hover { padding-inline: var(--space-3); }
   .channel-pathways__links span { color: var(--color-cold-chain-blue); font-size: var(--text-xs); }
   .channel-pathways__links strong { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 500; }
+  .channel-pathways__links p { font-size: var(--text-sm); line-height: 1.55; }
   @media (max-width: 46rem) { .channel-pathways__grid { grid-template-columns: 1fr; } .channel-pathways__grid > div:first-child { position: static; } }
+  @media (max-width: 34rem) { .channel-pathways__links a { align-items: start; grid-template-columns: auto 1fr auto; padding-block: var(--space-4); } .channel-pathways__links p { grid-column: 2 / -1; } }
 </style>

@@ -1,10 +1,10 @@
 ---
-interface Props { copy: string }
-const { copy } = Astro.props;
+interface Props { copy: string; label: string }
+const { copy, label } = Astro.props;
 ---
 
 <aside class="demo-notice" aria-label={copy}>
-  <p class="container"><span aria-hidden="true">Review / 00</span>{copy}</p>
+  <p class="container"><span aria-hidden="true">{label}</span>{copy}</p>
 </aside>
 
 <style>

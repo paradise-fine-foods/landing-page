@@ -1,19 +1,56 @@
 ---
-import type { Brand } from '../../lib/cms/types';
+import type { Brand, Product } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
+import { localizedPath } from '../../lib/i18n/routes';
+import { ui } from '../../lib/i18n/ui';
 import BrandCard from '../brands/BrandCard.astro';
 
-interface Props { eyebrow: string; title: string; brands: Brand[]; locale: Locale }
-const { eyebrow, title, brands, locale } = Astro.props;
+interface Props { eyebrow: string; title: string; selectedBrand: Brand; selectedBrandProducts: Product[]; remainingBrands: Brand[]; locale: Locale }
+const { eyebrow, title, selectedBrand, selectedBrandProducts, remainingBrands, locale } = Astro.props;
+const brandHref = `${localizedPath(locale, 'brands')}${selectedBrand.slug}/`;
+const productBase = localizedPath(locale, 'products');
+const copy = ui[locale];
 ---
 
 <section class="featured-brands section-space" aria-labelledby="featured-brands-title">
   <div class="container section-heading">
     <p class="eyebrow">{eyebrow}</p><h2 id="featured-brands-title">{title}</h2>
   </div>
-  <div class="container">
-    {brands.map((brand, index) => <BrandCard {brand} {locale} index={index + 1} />)}
+  <div class="container featured-brands__story">
+    <div class="featured-brands__portrait">
+      <img src={selectedBrand.image.src} width={selectedBrand.image.width} height={selectedBrand.image.height} alt={selectedBrand.image.alt} loading="lazy" />
+      <div class="featured-brands__mark" aria-hidden="true">{selectedBrand.name}</div>
+    </div>
+    <div class="featured-brands__copy">
+      <p class="eyebrow">{copy.brand.story}</p>
+      <h3>{selectedBrand.name}</h3>
+      <p class="featured-brands__origin">{copy.brand.origin} — {selectedBrand.origin}</p>
+      <p>{selectedBrand.description}</p>
+      <div class="featured-brands__products">
+        <p>{copy.brand.products}</p>
+        {selectedBrandProducts.map((product) => <a href={`${productBase}${product.slug}/`}>{product.name}<span aria-hidden="true">→</span></a>)}
+      </div>
+      <a class="featured-brands__cta" href={brandHref}>{copy.brand.viewBrand}<span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+  <div class="container featured-brands__secondary">
+    {remainingBrands.map((brand, index) => <BrandCard {brand} {locale} index={index + 2} />)}
   </div>
 </section>
 
-<style>.featured-brands { background: var(--color-paper-white); }</style>
+<style>
+  .featured-brands { background: var(--color-paper-white); }
+  .featured-brands__story { border-block: 1px solid var(--color-carbon); display: grid; grid-template-columns: minmax(0, 7fr) minmax(20rem, 5fr); }
+  .featured-brands__portrait { min-block-size: 34rem; overflow: hidden; position: relative; }
+  .featured-brands__portrait img { block-size: 100%; inline-size: 100%; object-fit: cover; }
+  .featured-brands__mark { background: var(--color-paper-white); border: 1px solid var(--color-carbon); bottom: var(--space-5); font-family: var(--font-display); font-size: var(--text-xl); inset-inline-start: var(--space-5); max-inline-size: calc(100% - 3rem); padding: var(--space-3) var(--space-5); position: absolute; }
+  .featured-brands__copy { border-inline-start: 1px solid var(--color-stainless); display: flex; flex-direction: column; gap: var(--space-4); padding: clamp(var(--space-5), 5vw, var(--space-8)); }
+  .featured-brands__copy h3 { font-size: var(--text-2xl); }
+  .featured-brands__origin { color: var(--color-cold-chain-blue); font-size: var(--text-xs); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .featured-brands__products { border-top: 1px solid var(--color-stainless); display: grid; margin-block-start: auto; padding-block-start: var(--space-4); }
+  .featured-brands__products p { font-size: var(--text-xs); font-weight: 600; letter-spacing: var(--tracking-label); margin-block-end: var(--space-2); text-transform: uppercase; }
+  .featured-brands__products a, .featured-brands__cta { align-items: center; border-bottom: 1px solid var(--color-stainless); color: var(--color-carbon); display: flex; font-size: var(--text-sm); justify-content: space-between; padding-block: var(--space-2); text-decoration: none; }
+  .featured-brands__cta { border: 0; font-weight: 600; margin-block-start: var(--space-3); }
+  .featured-brands__secondary { margin-block-start: var(--space-6); }
+  @media (max-width: 50rem) { .featured-brands__story { grid-template-columns: 1fr; } .featured-brands__portrait { min-block-size: 24rem; } .featured-brands__copy { border-block-start: 1px solid var(--color-stainless); border-inline-start: 0; } }
+</style>

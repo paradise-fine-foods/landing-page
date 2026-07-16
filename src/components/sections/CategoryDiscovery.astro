@@ -1,23 +1,30 @@
 ---
 import type { Category } from '../../lib/cms/types';
 
-interface Props { eyebrow: string; title: string; description: string; categories: Category[]; productsPath: string }
-const { eyebrow, title, description, categories, productsPath } = Astro.props;
+interface Props { eyebrow: string; title: string; description: string; categories: Category[]; categoryCounts: Record<string, number>; productLabel: string; productsPath: string }
+const { eyebrow, title, description, categories, categoryCounts, productLabel, productsPath } = Astro.props;
+const [feature, ...supporting] = categories;
 ---
 
 <section class="category-discovery section-space" aria-labelledby="category-title">
   <div class="container category-discovery__heading">
     <p class="eyebrow">{eyebrow}</p><h2 id="category-title">{title}</h2><p>{description}</p>
   </div>
-  <div class="container category-discovery__list">
-    {categories.map((category, index) => (
-      <a href={`${productsPath}?category=${category.slug}`}>
-        <span>{String(index + 1).padStart(2, '0')}</span>
-        <strong>{category.name}</strong>
-        <small>{category.description}</small>
-        <b aria-hidden="true">↗</b>
+  <div class="container category-discovery__grid">
+    {feature && (
+      <a class="category-discovery__feature" href={`${productsPath}?category=${feature.slug}`}>
+        <img src={feature.image.src} width={feature.image.width} height={feature.image.height} alt={feature.image.alt} loading="lazy" />
+        <div><span>01</span><strong>{feature.name}</strong><small>{feature.description}</small><em>{categoryCounts[feature.id]} {productLabel}</em></div>
       </a>
-    ))}
+    )}
+    <div class="category-discovery__supporting">
+      {supporting.map((category, index) => (
+        <a href={`${productsPath}?category=${category.slug}`}>
+          <img src={category.image.src} width={category.image.width} height={category.image.height} alt="" loading="lazy" />
+          <div><span>{String(index + 2).padStart(2, '0')}</span><strong>{category.name}</strong><small>{categoryCounts[category.id]} {productLabel}</small></div>
+        </a>
+      ))}
+    </div>
   </div>
 </section>
 
@@ -25,12 +32,23 @@ const { eyebrow, title, description, categories, productsPath } = Astro.props;
   .category-discovery { background: var(--color-paper-white); }
   .category-discovery__heading { display: grid; gap: var(--space-5); grid-template-columns: 1fr 2fr 2fr; margin-block-end: var(--space-7); }
   .category-discovery__heading p:last-child { max-inline-size: var(--measure); }
-  .category-discovery__list { border-top: 1px solid var(--color-carbon); display: grid; grid-template-columns: repeat(4, 1fr); }
-  .category-discovery__list a { color: var(--color-carbon); display: grid; gap: var(--space-5); min-block-size: 18rem; padding: var(--space-4); position: relative; text-decoration: none; transition: background-color var(--transition-fast); }
-  .category-discovery__list a + a { border-inline-start: 1px solid var(--color-stainless); }
-  .category-discovery__list a:hover { background: var(--color-milk-paper); }
-  .category-discovery__list span, .category-discovery__list small { font-size: var(--text-xs); }
-  .category-discovery__list strong { align-self: end; font-family: var(--font-display); font-size: var(--text-xl); font-weight: 500; }
-  .category-discovery__list b { inset-block-start: var(--space-4); inset-inline-end: var(--space-4); position: absolute; }
-  @media (max-width: 50rem) { .category-discovery__heading { grid-template-columns: 1fr; } .category-discovery__list { grid-template-columns: 1fr 1fr; } .category-discovery__list a { min-block-size: 13rem; } .category-discovery__list a:nth-child(odd) { border-inline-start: 0; } .category-discovery__list a:nth-child(n+3) { border-top: 1px solid var(--color-stainless); } }
+  .category-discovery__grid { border-top: 1px solid var(--color-carbon); display: grid; grid-template-columns: minmax(0, 7fr) minmax(18rem, 5fr); }
+  .category-discovery__grid a { color: var(--color-carbon); text-decoration: none; }
+  .category-discovery__feature { border-inline-end: 1px solid var(--color-stainless); display: grid; grid-template-rows: minmax(23rem, 1fr) auto; }
+  .category-discovery__feature img { block-size: 100%; inline-size: 100%; object-fit: cover; }
+  .category-discovery__feature div { display: grid; gap: var(--space-3); grid-template-columns: auto 1fr auto; padding: var(--space-5); }
+  .category-discovery__feature strong { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 500; }
+  .category-discovery__feature small { grid-column: 2; max-inline-size: 40rem; }
+  .category-discovery__feature em { align-self: start; font-size: var(--text-xs); font-style: normal; text-transform: uppercase; }
+  .category-discovery__supporting { display: grid; grid-template-columns: 1.15fr 0.85fr; }
+  .category-discovery__supporting a { display: grid; grid-template-rows: minmax(8rem, 1fr) auto; min-block-size: 16rem; }
+  .category-discovery__supporting a:first-child { border-bottom: 1px solid var(--color-stainless); grid-column: 1 / -1; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
+  .category-discovery__supporting a:last-child { border-inline-start: 1px solid var(--color-stainless); }
+  .category-discovery__supporting img { block-size: 100%; inline-size: 100%; object-fit: cover; }
+  .category-discovery__supporting div { display: grid; gap: var(--space-2); padding: var(--space-4); }
+  .category-discovery__supporting strong { align-self: end; font-family: var(--font-display); font-size: var(--text-xl); font-weight: 500; }
+  .category-discovery__grid span, .category-discovery__grid small { font-size: var(--text-xs); }
+  .category-discovery__grid a:hover { background: var(--color-milk-paper); }
+  @media (max-width: 50rem) { .category-discovery__heading, .category-discovery__grid { grid-template-columns: 1fr; } .category-discovery__feature { border-block-end: 1px solid var(--color-stainless); border-inline-end: 0; grid-template-rows: minmax(18rem, 60vw) auto; } }
+  @media (max-width: 34rem) { .category-discovery__supporting { grid-template-columns: 1fr; } .category-discovery__supporting a, .category-discovery__supporting a:first-child { border-bottom: 1px solid var(--color-stainless); grid-column: auto; grid-template-columns: 1fr; grid-template-rows: 12rem auto; } .category-discovery__supporting a:last-child { border-inline-start: 0; } .category-discovery__feature div { grid-template-columns: auto 1fr; } .category-discovery__feature em { grid-column: 2; } }
 </style>
