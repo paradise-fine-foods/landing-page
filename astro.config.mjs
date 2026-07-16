@@ -5,6 +5,13 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
   site: 'https://demo.paradisefinefoods.com',
   output: 'static',
+  redirects: {
+    '/vi/san-pham': '/vi/products',
+    '/vi/san-pham/[slug]': '/vi/products/[slug]',
+    '/vi/thuong-hieu': '/vi/brands',
+    '/vi/thuong-hieu/[slug]': '/vi/brands/[slug]',
+    '/vi/lien-he': '/vi/contact',
+  },
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'vi'],

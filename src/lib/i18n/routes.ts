@@ -2,7 +2,7 @@ import type { Locale, RouteKey } from './types';
 
 export const routeSegments: Record<Locale, Record<RouteKey, string>> = {
   en: { home: '', products: 'products', brands: 'brands', contact: 'contact' },
-  vi: { home: '', products: 'san-pham', brands: 'thuong-hieu', contact: 'lien-he' },
+  vi: { home: '', products: 'products', brands: 'brands', contact: 'contact' },
 };
 
 export type CounterpartMap = Record<Locale, string>;

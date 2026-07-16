@@ -14,7 +14,7 @@ const queryValues = (html: string, parameter: string): string[] =>
 
 for (const [locale, path] of [
   ['en', 'en/products'],
-  ['vi', 'vi/san-pham'],
+  ['vi', 'vi/products'],
 ] as const) {
   const html = built(path);
   const cards = productCards(html);
@@ -36,7 +36,7 @@ for (const [locale, path] of [
   assert.ok(renderedOptions.every(({ id }) => id.length > 0), `${locale} category query options must map to stable IDs`);
 }
 
-const viCatalog = built('vi/san-pham');
+const viCatalog = built('vi/products');
 assert.match(
   viCatalog,
   /data-product-id="cultured-butter-sheet"[^>]*data-search="[^"]*lamination[^"]*Cán lớp[^"]*"/,
@@ -47,7 +47,7 @@ for (const [label, path] of [
   ['English homepage', 'en'],
   ['Vietnamese homepage', 'vi'],
   ['English detail', 'en/products/cultured-butter-sheet'],
-  ['Vietnamese detail', 'vi/san-pham/bo-lat-mau'],
+  ['Vietnamese detail', 'vi/products/bo-lat-mau'],
 ] as const) {
   const cards = productCards(built(path));
   assert.ok(cards.length > 0, `${label} must contain product cards`);

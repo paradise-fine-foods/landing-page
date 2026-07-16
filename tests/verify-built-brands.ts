@@ -18,17 +18,17 @@ const expectedBrands = [
   {
     id: 'maison-laitiere',
     en: { slug: 'maison-laitiere', path: '/en/brands/maison-laitiere/' },
-    vi: { slug: 'nha-sua-maison', path: '/vi/thuong-hieu/nha-sua-maison/' },
+    vi: { slug: 'nha-sua-maison', path: '/vi/brands/nha-sua-maison/' },
   },
   {
     id: 'atelier-creme',
     en: { slug: 'atelier-creme', path: '/en/brands/atelier-creme/' },
-    vi: { slug: 'xuong-kem', path: '/vi/thuong-hieu/xuong-kem/' },
+    vi: { slug: 'xuong-kem', path: '/vi/brands/xuong-kem/' },
   },
   {
     id: 'formagerie-nord',
     en: { slug: 'formagerie-nord', path: '/en/brands/formagerie-nord/' },
-    vi: { slug: 'xuong-pho-mai-bac', path: '/vi/thuong-hieu/xuong-pho-mai-bac/' },
+    vi: { slug: 'xuong-pho-mai-bac', path: '/vi/brands/xuong-pho-mai-bac/' },
   },
 ] as const;
 
@@ -36,8 +36,8 @@ const [englishBrands, vietnameseBrands] = await Promise.all([getBrands('en'), ge
 const vietnameseById = new Map(vietnameseBrands.map((brand) => [brand.id, brand]));
 
 for (const [locale, indexPath, counterpartPath] of [
-  ['en', '/en/brands/', '/vi/thuong-hieu/'],
-  ['vi', '/vi/thuong-hieu/', '/en/brands/'],
+  ['en', '/en/brands/', '/vi/brands/'],
+  ['vi', '/vi/brands/', '/en/brands/'],
 ] as const) {
   const html = built(withoutTrailingSlash(indexPath));
   assertMeta(html, indexPath, counterpartPath);
@@ -67,7 +67,7 @@ for (const expected of expectedBrands) {
     assert.ok(html.includes(brand.description), `${locale} detail must render its localized story`);
     assert.ok(html.includes('brand-detail__notice'), `${locale} detail must render its demo notice`);
     for (const product of products) {
-      const productRoot = locale === 'en' ? '/en/products/' : '/vi/san-pham/';
+      const productRoot = locale === 'en' ? '/en/products/' : '/vi/products/';
       assert.ok(html.includes(`href="${productRoot}${product.slug}/"`), `${locale} detail must link ${product.id}`);
     }
     assert.doesNotMatch(html, /\bundefined\b|file:\/\/\/|src\/assets\/|demo-data/);

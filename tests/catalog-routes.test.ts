@@ -23,7 +23,7 @@ describe('localized product routes', () => {
       english.map((product) => `/en/products/${product.slug}/`),
     );
     expect(vietnamese.map((product) => productDetailPath('vi', product))).toEqual(
-      vietnamese.map((product) => `/vi/san-pham/${product.slug}/`),
+      vietnamese.map((product) => `/vi/products/${product.slug}/`),
     );
   });
 
@@ -74,8 +74,8 @@ describe('localized product routes', () => {
     const routeFiles = [
       'src/pages/en/products/index.astro',
       'src/pages/en/products/[slug].astro',
-      'src/pages/vi/san-pham/index.astro',
-      'src/pages/vi/san-pham/[slug].astro',
+      'src/pages/vi/products/index.astro',
+      'src/pages/vi/products/[slug].astro',
     ].map(source);
 
     for (const route of routeFiles) {

@@ -104,7 +104,7 @@ describe('client-review MVP completion contracts', () => {
     expect(page).toContain('<h1');
     expect(page).toContain('Không tìm thấy trang này');
     expect(page).toContain('This page could not be found');
-    for (const href of ['/en/', '/en/products/', '/vi/', '/vi/san-pham/']) {
+    for (const href of ['/en/', '/en/products/', '/vi/', '/vi/products/']) {
       expect(page).toContain(`href="${href}"`);
     }
     expect(page).not.toMatch(/Astro\.redirect|navigator\.language|<script/);
@@ -172,8 +172,8 @@ describe('client-review MVP completion contracts', () => {
 
   test('keeps the browser checklist on the generated Vietnamese brand route', () => {
     const plan = source('docs/superpowers/plans/2026-07-16-finefoods-client-review-mvp.md');
-    expect(plan).toContain('/vi/thuong-hieu/nha-sua-maison/');
-    expect(plan).not.toContain('/vi/thuong-hieu/nha-sua-mau/');
+    expect(plan).toContain('/vi/brands/nha-sua-maison/');
+    expect(plan).not.toContain('/vi/brands/nha-sua-mau/');
   });
 
   test('wires a generated-output verifier into every production build', () => {

@@ -27,7 +27,7 @@ describe('enquiry rendering contract', () => {
   test('localized routes render the shared form through CMS queries', async () => {
     const [english, vietnamese] = await Promise.all([
       read('../src/pages/en/contact.astro'),
-      read('../src/pages/vi/lien-he.astro'),
+      read('../src/pages/vi/contact.astro'),
     ]);
     for (const source of [english, vietnamese]) {
       expect(source).toContain('getProducts');

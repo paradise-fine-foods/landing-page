@@ -15,7 +15,7 @@ const required = [
   'href="/en/"',
   'href="/en/products/"',
   'href="/vi/"',
-  'href="/vi/san-pham/"',
+  'href="/vi/products/"',
 ];
 
 for (const value of required) {

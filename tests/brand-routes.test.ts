@@ -46,14 +46,14 @@ describe('localized brand routes', () => {
     expect(maps).toHaveLength(3);
     expect(maps).toEqual(expectedBrands.map(({ en, vi }) => ({
       en: `/en/brands/${en}/`,
-      vi: `/vi/thuong-hieu/${vi}/`,
+      vi: `/vi/brands/${vi}/`,
     })));
     for (const map of maps) {
       expect(findBrandRoute(maps, map.en, 'vi')).toBe(map.vi);
       expect(findBrandRoute(maps, map.vi, 'en')).toBe(map.en);
     }
     expect(brandDetailPath('en', english[0]!)).toBe(`/en/brands/${english[0]!.slug}/`);
-    expect(brandDetailPath('vi', vietnamese[0]!)).toBe(`/vi/thuong-hieu/${vietnamese[0]!.slug}/`);
+    expect(brandDetailPath('vi', vietnamese[0]!)).toBe(`/vi/brands/${vietnamese[0]!.slug}/`);
   });
 
   test('does not invent routes or records for unknown slugs', async () => {
@@ -61,7 +61,7 @@ describe('localized brand routes', () => {
     expect(await getBrandBySlug('vi', 'khong-co-thuong-hieu')).toBeUndefined();
     const maps = buildBrandRouteMaps(await getBrands('en'), await getBrands('vi'));
     expect(findBrandRoute(maps, '/en/brands/not-a-brand/', 'vi')).toBeUndefined();
-    expect(findBrandRoute(maps, '/vi/thuong-hieu/khong-co-thuong-hieu/', 'en')).toBeUndefined();
+    expect(findBrandRoute(maps, '/vi/brands/khong-co-thuong-hieu/', 'en')).toBeUndefined();
   });
 
   test('normalizes CMS accents to a closed, injection-safe token set', async () => {
@@ -81,8 +81,8 @@ describe('localized brand routes', () => {
     const routes = [
       'src/pages/en/brands/index.astro',
       'src/pages/en/brands/[slug].astro',
-      'src/pages/vi/thuong-hieu/index.astro',
-      'src/pages/vi/thuong-hieu/[slug].astro',
+      'src/pages/vi/brands/index.astro',
+      'src/pages/vi/brands/[slug].astro',
     ].map(source);
 
     for (const route of routes) {
@@ -102,8 +102,8 @@ describe('localized brand routes', () => {
     const routeSources = [
       source('src/pages/en/brands/index.astro'),
       source('src/pages/en/brands/[slug].astro'),
-      source('src/pages/vi/thuong-hieu/index.astro'),
-      source('src/pages/vi/thuong-hieu/[slug].astro'),
+      source('src/pages/vi/brands/index.astro'),
+      source('src/pages/vi/brands/[slug].astro'),
     ].join('\n');
 
     expect(detail).toContain('copy.brand.demoNotice');

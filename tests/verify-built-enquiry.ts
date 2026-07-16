@@ -2,7 +2,7 @@ import { getProducts } from '../src/lib/cms/queries';
 
 const pages = [
   { locale: 'en' as const, file: 'dist/en/contact/index.html', path: '/en/contact/' },
-  { locale: 'vi' as const, file: 'dist/vi/lien-he/index.html', path: '/vi/lien-he/' },
+  { locale: 'vi' as const, file: 'dist/vi/contact/index.html', path: '/vi/contact/' },
 ];
 
 for (const page of pages) {

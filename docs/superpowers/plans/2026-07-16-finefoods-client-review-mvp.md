@@ -626,13 +626,13 @@ Using the in-app browser, inspect at desktop and `390px` mobile widths:
 /en/
 /vi/
 /en/products/
-/vi/san-pham/
+/vi/products/
 /en/products/cultured-butter-sheet/
-/vi/san-pham/bo-lat-mau/
+/vi/products/bo-lat-mau/
 /en/brands/maison-laitiere/
-/vi/thuong-hieu/nha-sua-maison/
+/vi/brands/nha-sua-maison/
 /en/contact/
-/vi/lien-he/
+/vi/contact/
 /404.html
 ```
 
