@@ -1,7 +1,6 @@
 import type { LocalizedSlug, LocalizedText } from './types';
-
-const productStageSrc = new URL('../../assets/demo/product-stage.svg', import.meta.url).href;
-const editorialTableSrc = new URL('../../assets/demo/editorial-table.svg', import.meta.url).href;
+import editorialTableSrc from '../../assets/demo/editorial-table.svg?no-inline';
+import productStageSrc from '../../assets/demo/product-stage.svg?no-inline';
 
 interface DemoImageAsset {
   src: string;
