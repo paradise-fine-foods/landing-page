@@ -1,6 +1,6 @@
 ## Development
 
-Start dev server in background:
+Background dev server:
 
 ```
 astro dev --background
