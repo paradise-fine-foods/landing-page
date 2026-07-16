@@ -38,8 +38,7 @@ img,
 picture,
 svg,
 video,
-canvas,
-model-viewer {
+canvas {
   display: block;
   max-inline-size: 100%;
 }
