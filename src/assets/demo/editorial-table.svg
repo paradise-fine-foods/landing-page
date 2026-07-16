@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Abstract editorial table</title>
+  <desc id="desc">Original still-life demo artwork with simple kitchen forms and no branding.</desc>
+  <rect width="1600" height="1000" fill="#e8dfd0"/>
+  <rect y="610" width="1600" height="390" fill="#a98a6a"/>
+  <path d="M176 610V248h280v362M262 248V136h108v112" fill="#f8f1e7" stroke="#6b2537" stroke-width="22"/>
+  <ellipse cx="826" cy="628" rx="330" ry="98" fill="#f7efe1"/>
+  <ellipse cx="826" cy="600" rx="220" ry="60" fill="#d4ad72"/>
+  <path d="M1170 610c0-178 70-296 157-296s157 118 157 296Z" fill="#6b2537"/>
+  <circle cx="1327" cy="298" r="42" fill="#d7b9a6"/>
+</svg>
