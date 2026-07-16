@@ -6,6 +6,6 @@
   <path d="M176 610V248h280v362M262 248V136h108v112" fill="#FFFFFF" stroke="#123C69" stroke-width="22"/>
   <ellipse cx="826" cy="628" rx="330" ry="98" fill="#FFFFFF"/>
   <ellipse cx="826" cy="600" rx="220" ry="60" fill="#F2C14E"/>
-  <path d="M1170 610c0-178 70-296 157-296s157 118 157 296Z" fill="#356146"/>
-  <circle cx="1327" cy="298" r="42" fill="#9A3F38"/>
+  <path d="M1170 610c0-178 70-296 157-296s157 118 157 296Z" fill="#123C69"/>
+  <circle cx="1327" cy="298" r="42" fill="#F2C14E"/>
 </svg>
