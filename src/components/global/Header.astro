@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import paradiseLogo from '../../assets/brand/paradise-fine-foods-logo.png';
 import type { Locale } from '../../lib/i18n/types';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
@@ -24,8 +26,7 @@ const links = [
 <header class="site-header" data-header>
   <div class="site-header__bar container">
     <a class="wordmark" href={localizedPath(locale, 'home')} aria-label={siteName}>
-      <span>Paradise</span>
-      <small>Fine Foods</small>
+      <Image src={paradiseLogo} alt="" loading="eager" />
     </a>
     <button
       class="menu-toggle"
@@ -85,8 +86,8 @@ const links = [
 
 <style>
   .site-header {
-    background: color-mix(in srgb, var(--color-milk-paper) 94%, transparent);
-    border-bottom: 1px solid var(--color-stainless);
+    background: color-mix(in srgb, var(--color-rice-paper) 94%, transparent);
+    border-bottom: 1px solid var(--color-mist-blue);
     position: relative;
     z-index: 20;
   }
@@ -95,21 +96,16 @@ const links = [
     align-items: center;
     display: grid;
     grid-template-columns: minmax(10rem, 1fr) auto;
-    min-block-size: 5.25rem;
+    min-block-size: 6rem;
   }
 
   .wordmark {
-    color: var(--color-carbon);
     display: inline-flex;
-    flex-direction: column;
     inline-size: max-content;
-    letter-spacing: -0.025em;
-    line-height: 0.85;
     text-decoration: none;
   }
 
-  .wordmark span { font-family: var(--font-display); font-size: 1.7rem; }
-  .wordmark small { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.21em; margin-inline-start: 0.15rem; text-transform: uppercase; }
+  .wordmark img { block-size: auto; inline-size: 5.75rem; }
 
   .primary-nav,
   .primary-nav ul {
@@ -117,16 +113,16 @@ const links = [
     display: flex;
   }
 
-  .primary-nav { gap: var(--space-6); }
+  .primary-nav { font-family: var(--font-body); gap: var(--space-6); }
   .primary-nav ul { gap: var(--space-5); list-style: none; }
-  .primary-nav a { color: var(--color-carbon); font-size: var(--text-sm); font-weight: 500; text-decoration: none; }
-  .primary-nav a:hover { color: var(--color-cold-chain-blue); }
+  .primary-nav a { color: var(--color-deep-herb); font-size: var(--text-sm); font-weight: 500; text-decoration: none; }
+  .primary-nav a:hover { color: var(--color-paradise-blue); }
 
   .menu-toggle,
   .noscript-nav { display: none; }
 
   @media (max-width: 48rem) {
-    .site-header__bar { min-block-size: 4.5rem; }
+    .site-header__bar { min-block-size: 5.5rem; }
     .site-header--enhanced .menu-toggle {
       align-items: center;
       background: transparent;
@@ -139,8 +135,8 @@ const links = [
     .menu-toggle__mark { border-block: 1px solid currentColor; block-size: 0.45rem; inline-size: 1.15rem; }
     .site-header--enhanced .primary-nav {
       align-items: stretch;
-      background: var(--color-milk-paper);
-      border-top: 1px solid var(--color-stainless);
+      background: var(--color-rice-paper);
+      border-top: 1px solid var(--color-mist-blue);
       display: none;
       grid-column: 1 / -1;
       inset-inline: 0;
@@ -150,7 +146,7 @@ const links = [
     }
     .site-header--enhanced .primary-nav[data-open='true'] { display: grid; gap: var(--space-4); }
     .site-header--enhanced .primary-nav ul { align-items: stretch; flex-direction: column; gap: 0; }
-    .site-header--enhanced .primary-nav li { border-bottom: 1px solid var(--color-stainless); }
+    .site-header--enhanced .primary-nav li { border-bottom: 1px solid var(--color-mist-blue); }
     .site-header--enhanced .primary-nav li a { display: block; font-family: var(--font-body); font-size: var(--text-lg); font-weight: 600; padding-block: var(--space-3); }
   }
 </style>

@@ -140,6 +140,14 @@ No office address, business email address or telephone number is published in th
 | `src/lib/enquiry/submit.ts` | Sales operations + engineering + privacy owner | Authenticated production endpoint, request/response contract, spam protection, retry/failure policy, audit/retention policy and monitored destination | Staging delivery reaches the approved owner; failure is observable; security/privacy/accessibility reviews pass; `demo` behavior is removed |
 | Contact details (currently absent) | Paradise business owner + legal | Verified office names/addresses, service regions, monitored email and phone details | Owner confirms current details; legal/privacy approve publication; link and call tests pass |
 
+## Paradise identity asset
+
+The review build self-hosts the authentic Paradise Fine Foods full logo rather than a redrawn or typeset substitute. The asset was retrieved from the Paradise Fine Foods website at `https://paradisefinefoods.com/wp-content/uploads/2021/03/paradisefinefoods-full-logo.png` and stored at `src/assets/brand/paradise-fine-foods-logo.png`. Its inclusion does not change this site's demo-only status; production use still requires named approval.
+
+| Asset | Demo-only status | Production owner | Source/input | Acceptance |
+|---|---|---|---|---|
+| `src/assets/brand/paradise-fine-foods-logo.png` | Authentic self-hosted full logo used only in the client-review demo | Paradise brand owner and legal reviewer | Current Paradise source PNG, master identity artwork, usage guidance and confirmation that this export is approved for the production web property | Brand and legal owners approve the exact file, placement, sizing, accessible naming and production usage in both localized experiences |
+
 ## Authored demo media and temporary 3D
 
 | Asset | Review-only role | Production owner | Source/input | Acceptance |
@@ -175,6 +183,7 @@ SVG namespace URLs and Astro/documentation links are technical identifiers, not 
 ## Production cutover checklist
 
 - Replace the local default CMS data behind the stable query functions; do not bind page components to a CMS SDK.
+- Obtain named brand and legal approval for the self-hosted Paradise logo before production release.
 - Reconcile this ledger against the final CMS export so every stable record, string family, visual and URL has an owner and approval record.
 - Replace all four authored demo SVGs and the GLB/poster set with approved, rights-cleared media; replace or remove the Astro starter `public/favicon.svg` and `public/favicon.ico` so no default artwork ships.
 - Connect `submitEnquiry()` to reviewed delivery and remove success-only demo behavior after privacy/security acceptance.

@@ -5,8 +5,8 @@
 }
 
 html {
-  background: var(--color-milk-paper);
-  color: var(--color-carbon);
+  background: var(--color-rice-paper);
+  color: var(--color-deep-herb);
   overflow-x: clip;
   scroll-behavior: smooth;
 }
@@ -57,7 +57,7 @@ a {
 }
 
 a {
-  color: var(--color-cold-chain-blue);
+  color: var(--color-paradise-blue);
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.2em;
 }
@@ -69,13 +69,13 @@ a:hover {
 :focus-visible {
   border-radius: var(--radius-sm);
   box-shadow: var(--focus-ring);
-  outline: 2px solid var(--color-carbon);
+  outline: 2px solid var(--color-deep-herb);
   outline-offset: 3px;
 }
 
 ::selection {
-  background: var(--color-cultured-butter);
-  color: var(--color-carbon);
+  background: var(--color-paradise-green);
+  color: var(--color-deep-herb);
 }
 
 .container {

@@ -1,16 +1,26 @@
 :root {
-  --color-milk-paper: #f7f8f4;
-  --color-cold-chain-blue: #123c69;
-  --color-carbon: #172127;
-  --color-stainless: #a9b4b8;
-  --color-cultured-butter: #f2c14e;
-  --color-bordeaux: #7d2c3b;
+  --color-paradise-orange: #e46f2c;
+  --color-paradise-tangerine: #fa6c47;
+  --color-paradise-blue: #0796d2;
+  --color-paradise-green: #94c11f;
+  --color-paradise-coral: #d94d55;
+  --color-rice-paper: #fbfaf5;
   --color-paper-white: #ffffff;
-  --color-success: #356146;
-  --color-error: #9a3f38;
+  --color-deep-herb: #28342b;
+  --color-mist-blue: #e8f6fa;
+
+  /* Compatibility aliases for sections scheduled for later redesign tasks. */
+  --color-milk-paper: var(--color-rice-paper);
+  --color-cold-chain-blue: var(--color-paradise-blue);
+  --color-carbon: var(--color-deep-herb);
+  --color-stainless: var(--color-mist-blue);
+  --color-cultured-butter: var(--color-paradise-green);
+  --color-bordeaux: var(--color-paradise-coral);
+  --color-success: var(--color-paradise-green);
+  --color-error: var(--color-paradise-coral);
 
   --font-display: 'Newsreader', Georgia, serif;
-  --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -41,7 +51,8 @@
 
   --radius-sm: 0.25rem;
   --radius-md: 0.75rem;
-  --focus-ring: 0 0 0 3px var(--color-cultured-butter);
+  --shape-drop: 62% 38% 55% 45% / 48% 58% 42% 52%;
+  --focus-ring: 0 0 0 3px var(--color-paradise-tangerine);
   --transition-fast: 140ms ease;
   --transition-base: 220ms ease;
 }

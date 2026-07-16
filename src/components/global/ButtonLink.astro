@@ -16,7 +16,7 @@ const { href, variant = 'primary', class: className } = Astro.props;
 <style>
   .button-link {
     align-items: center;
-    border: 1px solid var(--color-carbon);
+    border: 1px solid var(--color-deep-herb);
     display: inline-flex;
     font-size: var(--text-sm);
     font-weight: 600;
@@ -34,20 +34,22 @@ const { href, variant = 'primary', class: className } = Astro.props;
   }
 
   .button-link--primary {
-    background: var(--color-carbon);
+    background: var(--color-paradise-orange);
+    border-color: var(--color-paradise-orange);
     color: var(--color-paper-white);
   }
 
   .button-link--primary:hover {
-    background: var(--color-cold-chain-blue);
+    background: var(--color-paradise-tangerine);
+    border-color: var(--color-paradise-tangerine);
   }
 
   .button-link--secondary {
     background: transparent;
-    color: var(--color-carbon);
+    color: var(--color-deep-herb);
   }
 
   .button-link--secondary:hover {
-    background: var(--color-paper-white);
+    background: var(--color-mist-blue);
   }
 </style>
