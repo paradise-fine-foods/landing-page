@@ -1,6 +1,10 @@
 import { describe, expect, test } from 'bun:test';
 
 import { deriveCatalogState } from '../src/lib/catalog/catalog-state';
+import { buildProductSearchText, filterProducts } from '../src/lib/catalog/filter-products';
+import { getProducts } from '../src/lib/cms/queries';
+import type { ProductQuery } from '../src/lib/cms/types';
+import { ui } from '../src/lib/i18n/ui';
 
 const records = [
   {
@@ -29,6 +33,76 @@ describe('catalog DOM state', () => {
         application: 'lamination',
       }),
     ).toEqual({ visibleIds: ['butter'], count: 1, empty: false });
+  });
+
+  test('folds Vietnamese Đ/đ so ASCII search finds displayed text', () => {
+    expect(
+      deriveCatalogState(
+        [{ id: 'whipping', search: 'Đánh bông', categories: [], brand: '', applications: [] }],
+        { search: 'danh' },
+      ),
+    ).toEqual({ visibleIds: ['whipping'], count: 1, empty: false });
+  });
+
+  test('finds Vietnamese products by accented and ASCII localized application labels', async () => {
+    const products = await getProducts('vi');
+    const records = products.map((product) => ({
+      id: product.id,
+      search: buildProductSearchText(product, ui.vi.product.applicationNames),
+      categories: product.categories.map(({ id }) => id),
+      brand: product.brand.id,
+      applications: product.applications,
+    }));
+
+    for (const search of ['cán lớp', 'can lop']) {
+      expect(deriveCatalogState(records, { search }).visibleIds).toContain(
+        'cultured-butter-sheet',
+      );
+    }
+  });
+
+  test('matches filterProducts for scalar and multi-value filters', async () => {
+    const products = await getProducts('en');
+    const records = products.map((product) => ({
+      id: product.id,
+      search: buildProductSearchText(product, ui.en.product.applicationNames),
+      categories: product.categories.map(({ id }) => id),
+      brand: product.brand.id,
+      applications: product.applications,
+    }));
+    const cases = [
+      {},
+      { search: 'cream' },
+      { brand: ['maison-laitiere', 'atelier-creme'] },
+      { category: ['butter', 'cream'], application: ['lamination', 'whipping'] },
+      {
+        search: 'cream',
+        brand: ['formagerie-nord', 'atelier-creme'],
+        category: ['cheese', 'cream'],
+        application: ['whipping', 'cheesecake'],
+      },
+      { search: 'not-present', brand: ['maison-laitiere', 'atelier-creme'] },
+    ] satisfies ProductQuery[];
+
+    for (const query of cases) {
+      expect(deriveCatalogState(records, query).visibleIds).toEqual(
+        filterProducts(products, query).map(({ id }) => id),
+      );
+    }
+
+    expect(
+      deriveCatalogState(records, {
+        brand: 'atelier-creme',
+        category: 'cream',
+        application: 'whipping',
+      }).visibleIds,
+    ).toEqual(
+      filterProducts(products, {
+        brand: ['atelier-creme'],
+        category: ['cream'],
+        application: ['whipping'],
+      }).map(({ id }) => id),
+    );
   });
 
   test('reports an empty state for incompatible controls', () => {

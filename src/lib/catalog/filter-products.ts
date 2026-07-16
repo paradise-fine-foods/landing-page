@@ -1,34 +1,73 @@
 import type { Product, ProductQuery } from '../cms/types';
 
 export const normalizeCatalogText = (value: string) =>
-  value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[Đđ]/g, (letter) => (letter === 'Đ' ? 'D' : 'd'))
+    .toLocaleLowerCase();
 
-const hasAny = (values: string[], selected?: string[]) =>
-  !selected?.length || selected.some((selection) => values.includes(selection));
+export type CatalogFilterValue = string | readonly string[];
 
-export const filterProducts = (products: Product[], query: ProductQuery = {}): Product[] => {
-  const search = query.search?.trim();
+export interface CatalogFilterInput {
+  search?: string;
+  category?: CatalogFilterValue;
+  brand?: CatalogFilterValue;
+  application?: CatalogFilterValue;
+}
 
-  return products.filter((product) => {
-    const searchable = [
-      product.name,
-      product.description,
-      product.brand.name,
-      product.origin,
-      ...product.categories.map((category) => category.name),
-      ...product.applications,
-      ...product.benefits,
-    ];
+export interface CatalogFilterProjection {
+  search: string;
+  categories: readonly string[];
+  brand: string;
+  applications: readonly string[];
+}
 
-    const matchesSearch =
-      !search || normalizeCatalogText(searchable.join(' ')).includes(normalizeCatalogText(search));
-    const matchesCategory = hasAny(
-      product.categories.map((category) => category.id),
-      query.category,
-    );
-    const matchesBrand = hasAny([product.brand.id], query.brand);
-    const matchesApplication = hasAny(product.applications, query.application);
+const selectedValues = (selected?: CatalogFilterValue) =>
+  (Array.isArray(selected) ? selected : selected ? [selected] : []).filter(Boolean);
 
-    return matchesSearch && matchesCategory && matchesBrand && matchesApplication;
-  });
+const hasAny = (values: readonly string[], selected?: CatalogFilterValue) => {
+  const selections = selectedValues(selected);
+  return selections.length === 0 || selections.some((selection) => values.includes(selection));
 };
+
+export const matchesCatalogFilters = (
+  record: CatalogFilterProjection,
+  query: CatalogFilterInput = {},
+) => {
+  const search = query.search?.trim();
+  return (
+    (!search || normalizeCatalogText(record.search).includes(normalizeCatalogText(search))) &&
+    hasAny(record.categories, query.category) &&
+    hasAny([record.brand], query.brand) &&
+    hasAny(record.applications, query.application)
+  );
+};
+
+export const buildProductSearchText = (
+  product: Product,
+  applicationNames: Readonly<Record<string, string>> = {},
+) =>
+  [
+    product.name,
+    product.description,
+    product.brand.name,
+    product.origin,
+    ...product.categories.map((category) => category.name),
+    ...product.applications,
+    ...product.applications.map((application) => applicationNames[application]).filter(Boolean),
+    ...product.benefits,
+  ].join(' ');
+
+export const filterProducts = (products: Product[], query: ProductQuery = {}): Product[] =>
+  products.filter((product) =>
+    matchesCatalogFilters(
+      {
+        search: buildProductSearchText(product),
+        categories: product.categories.map((category) => category.id),
+        brand: product.brand.id,
+        applications: product.applications,
+      },
+      query,
+    ),
+  );

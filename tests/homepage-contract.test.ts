@@ -42,11 +42,13 @@ describe('reviewed homepage contracts', () => {
 
   test('product cards use a square stage and buyer metadata', () => {
     const component = source('src/components/catalog/ProductCard.astro');
+    const metadata = source('src/lib/catalog/product-card.ts');
     expect(component).toContain('aspect-ratio: 1 / 1');
     expect(component).toContain('product.packFormat');
     expect(component).toContain('product.origin');
-    expect(component).toContain('product.categories[0]');
-    expect(component).toContain('product.applications[0]');
+    expect(component).toContain('getProductCardMetadata');
+    expect(metadata).toContain('product.categories[0]');
+    expect(metadata).toContain('product.applications[0]');
     expect(component).not.toContain('{product.description}');
   });
 

@@ -1,12 +1,15 @@
 ---
 import type { Product } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
+import { getProductCardMetadata } from '../../lib/catalog/product-card';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
 
-interface Props { product: Product; locale: Locale }
-const { product, locale } = Astro.props;
+interface Props { product: Product; locale: Locale; headingLevel?: 'h2' | 'h3' }
+const { product, locale, headingLevel = 'h3' } = Astro.props;
 const href = `${localizedPath(locale, 'products')}${product.slug}/`;
+const Heading = headingLevel;
+const categoryApplications = getProductCardMetadata(product, ui[locale].product.applicationNames);
 ---
 
 <article class="product-card">
@@ -17,9 +20,9 @@ const href = `${localizedPath(locale, 'products')}${product.slug}/`;
     <span>{product.brand.name}</span>
     <span>{product.packFormat}</span>
   </div>
-  <h3><a href={href}>{product.name}</a></h3>
+  <Heading><a href={href}>{product.name}</a></Heading>
   <dl class="product-card__specs">
-    <div><dt>{ui[locale].product.category}</dt><dd>{product.categories[0]?.name} · {ui[locale].product.applicationNames[product.applications[0] ?? '']}</dd></div>
+    {categoryApplications.length > 0 && <div><dt>{ui[locale].product.category}</dt><dd>{categoryApplications.join(' · ')}</dd></div>}
     <div><dt>{ui[locale].product.origin}</dt><dd>{product.origin}</dd></div>
     <div><dt>{ui[locale].product.storage}</dt><dd>{product.storage.label} · {product.storage.temperature}</dd></div>
   </dl>
@@ -32,8 +35,8 @@ const href = `${localizedPath(locale, 'products')}${product.slug}/`;
   .product-card__image img { block-size: 100%; inline-size: 100%; object-fit: cover; transition: transform var(--transition-base); }
   .product-card:hover .product-card__image img { transform: scale(1.018); }
   .product-card__meta { color: var(--color-cold-chain-blue); display: flex; font-size: 0.68rem; font-weight: 600; justify-content: space-between; letter-spacing: 0.05em; text-transform: uppercase; }
-  .product-card h3 { font-size: clamp(1.45rem, 2vw, 1.9rem); }
-  .product-card h3 a { color: var(--color-carbon); text-decoration: none; }
+  .product-card :is(h2, h3) { font-size: clamp(1.45rem, 2vw, 1.9rem); }
+  .product-card :is(h2, h3) a { color: var(--color-carbon); text-decoration: none; }
   .product-card__specs { border-top: 1px solid var(--color-stainless); margin: 0; }
   .product-card__specs div { display: grid; gap: var(--space-3); grid-template-columns: 5.5rem 1fr; padding-block: var(--space-2); }
   .product-card__specs dt { color: var(--color-cold-chain-blue); font-size: 0.63rem; letter-spacing: 0.04em; text-transform: uppercase; }

@@ -30,7 +30,7 @@ const applications = [...new Set(products.flatMap(({ applications }) => applicat
       <p>{copy.catalog.description}</p>
     </header>
     <CatalogFilters {categories} {brands} {applications} applicationNames={copy.product.applicationNames} copy={copy.catalog} initialCount={products.length} />
-    <ProductGrid {products} {locale} copy={copy.catalog} />
+    <ProductGrid {products} {locale} copy={copy.catalog} cardHeadingLevel="h2" />
   </div>
 </SiteLayout>
 
