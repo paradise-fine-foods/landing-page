@@ -1,0 +1,156 @@
+---
+import type { Locale } from '../../lib/i18n/types';
+import { localizedPath } from '../../lib/i18n/routes';
+import { ui } from '../../lib/i18n/ui';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+  siteName: string;
+  currentPath: string;
+  alternatePath: string;
+}
+
+const { locale, siteName, currentPath, alternatePath } = Astro.props;
+const copy = ui[locale].header;
+const targetLocales: Record<Locale, Locale> = { en: 'vi', vi: 'en' };
+const links = [
+  { href: localizedPath(locale, 'products'), label: copy.products },
+  { href: localizedPath(locale, 'brands'), label: copy.brands },
+  { href: localizedPath(locale, 'contact'), label: copy.contact },
+];
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__bar container">
+    <a class="wordmark" href={localizedPath(locale, 'home')} aria-label={siteName}>
+      <span>Paradise</span>
+      <small>Fine Foods</small>
+    </a>
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="primary-navigation"
+      data-menu-toggle
+      data-open-label={copy.menuOpen}
+      data-close-label={copy.menuClose}
+    >
+      <span data-menu-label>{copy.menuOpen}</span>
+      <span class="menu-toggle__mark" aria-hidden="true"></span>
+    </button>
+    <nav id="primary-navigation" class="primary-nav" aria-label={copy.navigation} data-navigation>
+      <ul>
+        {links.map(({ href, label }) => <li><a href={href}>{label}</a></li>)}
+      </ul>
+      <LanguageSwitcher {locale} {currentPath} {alternatePath} />
+    </nav>
+    <noscript>
+      <style is:inline>
+        .site-header .primary-nav { display: none !important; }
+        .site-header .noscript-nav { display: flex !important; flex-wrap: wrap; gap: 1rem; grid-column: 1 / -1; padding-block-end: 1rem; }
+      </style>
+      <nav class="noscript-nav" aria-label={copy.navigation}>
+        {links.map(({ href, label }) => <a href={href}>{label}</a>)}
+        <a href={alternatePath} hreflang={targetLocales[locale]}>{copy.language}</a>
+      </nav>
+    </noscript>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const navigation = header?.querySelector<HTMLElement>('[data-navigation]');
+  const label = toggle?.querySelector<HTMLElement>('[data-menu-label]');
+
+  if (header && toggle && navigation && label) {
+    header.classList.add('site-header--enhanced');
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      navigation.dataset.open = String(open);
+      label.textContent = open ? toggle.dataset.closeLabel ?? '' : toggle.dataset.openLabel ?? '';
+    };
+
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .site-header {
+    background: color-mix(in srgb, var(--color-milk-paper) 94%, transparent);
+    border-bottom: 1px solid var(--color-stainless);
+    position: relative;
+    z-index: 20;
+  }
+
+  .site-header__bar {
+    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(10rem, 1fr) auto;
+    min-block-size: 5.25rem;
+  }
+
+  .wordmark {
+    color: var(--color-carbon);
+    display: inline-flex;
+    flex-direction: column;
+    inline-size: max-content;
+    letter-spacing: -0.025em;
+    line-height: 0.85;
+    text-decoration: none;
+  }
+
+  .wordmark span { font-family: var(--font-display); font-size: 1.7rem; }
+  .wordmark small { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.21em; margin-inline-start: 0.15rem; text-transform: uppercase; }
+
+  .primary-nav,
+  .primary-nav ul {
+    align-items: center;
+    display: flex;
+  }
+
+  .primary-nav { gap: var(--space-6); }
+  .primary-nav ul { gap: var(--space-5); list-style: none; }
+  .primary-nav a { color: var(--color-carbon); font-size: var(--text-sm); font-weight: 500; text-decoration: none; }
+  .primary-nav a:hover { color: var(--color-cold-chain-blue); }
+
+  .menu-toggle,
+  .noscript-nav { display: none; }
+
+  @media (max-width: 48rem) {
+    .site-header__bar { min-block-size: 4.5rem; }
+    .site-header--enhanced .menu-toggle {
+      align-items: center;
+      background: transparent;
+      border: 0;
+      display: flex;
+      gap: var(--space-3);
+      min-block-size: 2.75rem;
+      padding: 0;
+    }
+    .menu-toggle__mark { border-block: 1px solid currentColor; block-size: 0.45rem; inline-size: 1.15rem; }
+    .site-header--enhanced .primary-nav {
+      align-items: stretch;
+      background: var(--color-milk-paper);
+      border-top: 1px solid var(--color-stainless);
+      display: none;
+      grid-column: 1 / -1;
+      inset-inline: 0;
+      padding: var(--space-5) var(--container-inline) var(--space-6);
+      position: absolute;
+      top: 100%;
+    }
+    .site-header--enhanced .primary-nav[data-open='true'] { display: grid; gap: var(--space-4); }
+    .site-header--enhanced .primary-nav ul { align-items: stretch; flex-direction: column; gap: 0; }
+    .site-header--enhanced .primary-nav li { border-bottom: 1px solid var(--color-stainless); }
+    .site-header--enhanced .primary-nav li a { display: block; font-family: var(--font-display); font-size: var(--text-xl); padding-block: var(--space-3); }
+  }
+</style>

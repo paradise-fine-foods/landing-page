@@ -1,0 +1,41 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Hero from '../../components/sections/Hero.astro';
+import CredibilityStrip from '../../components/sections/CredibilityStrip.astro';
+import CategoryDiscovery from '../../components/sections/CategoryDiscovery.astro';
+import FeaturedProducts from '../../components/sections/FeaturedProducts.astro';
+import FeaturedBrands from '../../components/sections/FeaturedBrands.astro';
+import ServiceProof from '../../components/sections/ServiceProof.astro';
+import ChannelPathways from '../../components/sections/ChannelPathways.astro';
+import FinalCta from '../../components/sections/FinalCta.astro';
+import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getProducts } from '../../lib/cms/queries';
+import { counterpartPath, localizedPath } from '../../lib/i18n/routes';
+import { ui } from '../../lib/i18n/ui';
+
+const locale = 'vi';
+const pathname = '/vi/';
+const routePairs = [{ en: '/en/', vi: '/vi/' }] as const;
+const alternatePath = counterpartPath(pathname, 'en', routePairs);
+const [settings, featured, categories, products, brands] = await Promise.all([
+  getGlobalSettings(locale), getFeaturedContent(locale), getCategories(locale),
+  getProducts(locale, {}), getBrands(locale),
+]);
+const copy = ui[locale];
+const productsPath = localizedPath(locale, 'products');
+const contactPath = localizedPath(locale, 'contact');
+const credibilityItems = [featured.hero.product.origin, featured.hero.product.packFormat, `${featured.hero.product.storage.label} · ${featured.hero.product.storage.temperature}`];
+const channels = [copy.home.retail, copy.home.horeca, copy.home.bakery, copy.home.ecommerce].map((label) => ({ label, href: contactPath }));
+---
+
+<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={featured.hero.image.src}>
+  <Hero copy={copy.hero} product={featured.hero.product} {productsPath} {contactPath}>
+    <img slot="stage" class="hero-stage-image" src={featured.hero.image.src} width={featured.hero.image.width} height={featured.hero.image.height} alt={featured.hero.image.alt} fetchpriority="high" />
+  </Hero>
+  <CredibilityStrip title={copy.home.credibilityTitle} items={credibilityItems} />
+  <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {productsPath} />
+  <FeaturedProducts eyebrow={copy.home.featuredProductsEyebrow} title={copy.home.featuredProductsTitle} products={products.filter((product) => product.featured)} locale={locale} />
+  <FeaturedBrands eyebrow={copy.home.featuredBrandsEyebrow} title={copy.home.featuredBrandsTitle} {brands} locale={locale} />
+  <ServiceProof eyebrow={copy.home.serviceEyebrow} title={copy.home.serviceTitle} description={copy.home.serviceDescription} editorial={featured.editorial} />
+  <ChannelPathways eyebrow={copy.home.channelsEyebrow} title={copy.home.channelsTitle} {channels} />
+  <FinalCta title={copy.home.finalCtaTitle} description={copy.home.finalCtaDescription} button={copy.home.finalCtaButton} href={contactPath} />
+</SiteLayout>

@@ -1,0 +1,37 @@
+---
+interface Props { copy: string }
+const { copy } = Astro.props;
+---
+
+<aside class="demo-notice" aria-label={copy}>
+  <p class="container"><span aria-hidden="true">Review / 00</span>{copy}</p>
+</aside>
+
+<style>
+  .demo-notice {
+    background: var(--color-carbon);
+    color: var(--color-milk-paper);
+    font-size: 0.6875rem;
+    letter-spacing: 0.035em;
+  }
+
+  .demo-notice p {
+    align-items: center;
+    display: flex;
+    gap: var(--space-5);
+    justify-content: center;
+    min-block-size: 1.9rem;
+    padding-block: var(--space-1);
+    text-align: center;
+  }
+
+  .demo-notice span {
+    color: var(--color-cultured-butter);
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 40rem) {
+    .demo-notice span { display: none; }
+  }
+</style>

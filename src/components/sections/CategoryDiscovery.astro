@@ -1,0 +1,36 @@
+---
+import type { Category } from '../../lib/cms/types';
+
+interface Props { eyebrow: string; title: string; description: string; categories: Category[]; productsPath: string }
+const { eyebrow, title, description, categories, productsPath } = Astro.props;
+---
+
+<section class="category-discovery section-space" aria-labelledby="category-title">
+  <div class="container category-discovery__heading">
+    <p class="eyebrow">{eyebrow}</p><h2 id="category-title">{title}</h2><p>{description}</p>
+  </div>
+  <div class="container category-discovery__list">
+    {categories.map((category, index) => (
+      <a href={`${productsPath}?category=${category.slug}`}>
+        <span>{String(index + 1).padStart(2, '0')}</span>
+        <strong>{category.name}</strong>
+        <small>{category.description}</small>
+        <b aria-hidden="true">↗</b>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .category-discovery { background: var(--color-paper-white); }
+  .category-discovery__heading { display: grid; gap: var(--space-5); grid-template-columns: 1fr 2fr 2fr; margin-block-end: var(--space-7); }
+  .category-discovery__heading p:last-child { max-inline-size: var(--measure); }
+  .category-discovery__list { border-top: 1px solid var(--color-carbon); display: grid; grid-template-columns: repeat(4, 1fr); }
+  .category-discovery__list a { color: var(--color-carbon); display: grid; gap: var(--space-5); min-block-size: 18rem; padding: var(--space-4); position: relative; text-decoration: none; transition: background-color var(--transition-fast); }
+  .category-discovery__list a + a { border-inline-start: 1px solid var(--color-stainless); }
+  .category-discovery__list a:hover { background: var(--color-milk-paper); }
+  .category-discovery__list span, .category-discovery__list small { font-size: var(--text-xs); }
+  .category-discovery__list strong { align-self: end; font-family: var(--font-display); font-size: var(--text-xl); font-weight: 500; }
+  .category-discovery__list b { inset-block-start: var(--space-4); inset-inline-end: var(--space-4); position: absolute; }
+  @media (max-width: 50rem) { .category-discovery__heading { grid-template-columns: 1fr; } .category-discovery__list { grid-template-columns: 1fr 1fr; } .category-discovery__list a { min-block-size: 13rem; } .category-discovery__list a:nth-child(odd) { border-inline-start: 0; } .category-discovery__list a:nth-child(n+3) { border-top: 1px solid var(--color-stainless); } }
+</style>

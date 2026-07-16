@@ -1,0 +1,44 @@
+---
+import { ui } from '../../lib/i18n/ui';
+import type { Locale } from '../../lib/i18n/types';
+
+interface Props {
+  currentPath: string;
+  alternatePath: string;
+  locale: Locale;
+}
+
+const { currentPath, alternatePath, locale } = Astro.props;
+const targetLocales: Record<Locale, Locale> = { en: 'vi', vi: 'en' };
+const targetLocale = targetLocales[locale];
+---
+
+<a
+  class="language-switcher"
+  href={alternatePath}
+  hreflang={targetLocale}
+  lang={targetLocale}
+  data-current-path={currentPath}
+>
+  <span aria-hidden="true">{targetLocale.toUpperCase()}</span>
+  {ui[locale].header.language}
+</a>
+
+<style>
+  .language-switcher {
+    align-items: center;
+    color: inherit;
+    display: inline-flex;
+    font-size: var(--text-sm);
+    gap: var(--space-2);
+    min-block-size: 2.75rem;
+    text-decoration: none;
+  }
+
+  .language-switcher span {
+    border: 1px solid currentColor;
+    font-size: 0.625rem;
+    line-height: 1;
+    padding: 0.28rem;
+  }
+</style>

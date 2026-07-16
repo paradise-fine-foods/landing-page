@@ -1,0 +1,35 @@
+---
+import type { Product } from '../../lib/cms/types';
+import type { Locale } from '../../lib/i18n/types';
+import { localizedPath } from '../../lib/i18n/routes';
+import { ui } from '../../lib/i18n/ui';
+
+interface Props { product: Product; locale: Locale }
+const { product, locale } = Astro.props;
+const href = `${localizedPath(locale, 'products')}${product.slug}/`;
+---
+
+<article class="product-card">
+  <a class="product-card__image" href={href} tabindex="-1" aria-hidden="true">
+    <img src={product.image.src} width={product.image.width} height={product.image.height} alt="" loading="lazy" />
+  </a>
+  <div class="product-card__meta">
+    <span>{product.brand.name}</span>
+    <span>{product.storage.temperature}</span>
+  </div>
+  <h3><a href={href}>{product.name}</a></h3>
+  <p>{product.description}</p>
+  <a class="product-card__link" href={href}>{ui[locale].product.viewDetails}<span aria-hidden="true">→</span></a>
+</article>
+
+<style>
+  .product-card { border-top: 1px solid var(--color-stainless); display: grid; gap: var(--space-3); padding-block-start: var(--space-3); }
+  .product-card__image { aspect-ratio: 4 / 3; background: var(--color-paper-white); display: block; overflow: hidden; }
+  .product-card__image img { block-size: 100%; inline-size: 100%; object-fit: cover; transition: transform var(--transition-base); }
+  .product-card:hover .product-card__image img { transform: scale(1.018); }
+  .product-card__meta { color: var(--color-cold-chain-blue); display: flex; font-size: 0.68rem; font-weight: 600; justify-content: space-between; letter-spacing: 0.05em; text-transform: uppercase; }
+  .product-card h3 { font-size: clamp(1.45rem, 2vw, 1.9rem); }
+  .product-card h3 a { color: var(--color-carbon); text-decoration: none; }
+  .product-card p { color: color-mix(in srgb, var(--color-carbon) 76%, transparent); font-size: var(--text-sm); }
+  .product-card__link { align-items: center; color: var(--color-carbon); display: flex; font-size: var(--text-sm); font-weight: 600; justify-content: space-between; margin-block-start: auto; padding-block-start: var(--space-2); text-decoration: none; }
+</style>

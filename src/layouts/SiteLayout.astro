@@ -10,6 +10,9 @@ import '../styles/global.css';
 import { ui } from '../lib/i18n/ui';
 import type { Locale } from '../lib/i18n/types';
 import { buildMeta } from '../lib/seo/meta';
+import DemoNotice from '../components/global/DemoNotice.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
 
 interface Props {
   locale: Locale;
@@ -18,9 +21,11 @@ interface Props {
   pathname: string;
   alternatePath?: string;
   image?: string;
+  siteName: string;
+  demoNotice: string;
 }
 
-const { locale, title, description, pathname, alternatePath, image } = Astro.props;
+const { locale, title, description, pathname, alternatePath, image, siteName, demoNotice } = Astro.props;
 const meta = buildMeta({
   site: Astro.site ?? 'https://demo.paradisefinefoods.com',
   locale,
@@ -53,6 +58,11 @@ const meta = buildMeta({
   </head>
   <body>
     <a class="skip-link" href="#main-content">{ui[locale].skipToContent}</a>
-    <slot />
+    <DemoNotice copy={demoNotice} />
+    <Header {locale} {siteName} currentPath={pathname} alternatePath={alternatePath ?? `/${locale}/`} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer {locale} {siteName} />
   </body>
 </html>

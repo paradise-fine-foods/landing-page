@@ -1,0 +1,63 @@
+---
+import type { Product } from '../../lib/cms/types';
+import type { UiCopy } from '../../lib/i18n/ui';
+import ButtonLink from '../global/ButtonLink.astro';
+
+interface Props {
+  copy: UiCopy['hero'];
+  product: Product;
+  productsPath: string;
+  contactPath: string;
+}
+
+const { copy, product, productsPath, contactPath } = Astro.props;
+const metadata = [
+  { label: copy.brand, value: product.brand.name },
+  { label: copy.origin, value: product.origin },
+  { label: copy.packFormat, value: product.packFormat },
+  { label: copy.storage, value: `${product.storage.label} · ${product.storage.temperature}` },
+];
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__grid container">
+    <div class="hero__copy">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1 id="hero-title">{copy.title}</h1>
+      <p class="hero__description">{copy.description}</p>
+      <div class="hero__actions">
+        <ButtonLink href={productsPath}>{copy.primaryCta}</ButtonLink>
+        <ButtonLink href={contactPath} variant="secondary">{copy.secondaryCta}</ButtonLink>
+      </div>
+    </div>
+    <div class="hero__stage">
+      <div class="hero__stage-label"><span>PFF / COLD 02—06</span><span>{copy.interactionPrompt}</span></div>
+      <slot name="stage">
+        <div class="hero__stage-fallback">{copy.stageFallback}</div>
+      </slot>
+    </div>
+    <dl class="hero__rail">
+      {metadata.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .hero { border-bottom: 1px solid var(--color-stainless); overflow: hidden; }
+  .hero__grid { display: grid; grid-template-columns: minmax(18rem, 5fr) minmax(25rem, 7fr); min-block-size: min(47rem, calc(100vh - 7.15rem)); }
+  .hero__copy { align-self: center; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-8) clamp(var(--space-6), 5vw, var(--space-9)) var(--space-8) 0; }
+  .hero h1 { font-size: clamp(3rem, 5.5vw, 5.8rem); max-inline-size: 9.5ch; }
+  .hero__description { max-inline-size: 34rem; }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-block-start: var(--space-3); }
+  .hero__stage { background: var(--color-paper-white); border-inline: 1px solid var(--color-stainless); display: grid; grid-template-rows: auto 1fr; min-block-size: 36rem; overflow: hidden; position: relative; }
+  .hero__stage::after { background: var(--color-cultured-butter); block-size: 0.5rem; content: ''; inline-size: 28%; inset-block-end: 0; inset-inline-end: 0; position: absolute; }
+  .hero__stage-label { border-bottom: 1px solid var(--color-stainless); display: flex; font-size: 0.64rem; justify-content: space-between; letter-spacing: var(--tracking-label); padding: var(--space-3); text-transform: uppercase; }
+  .hero__stage-fallback { display: grid; place-items: center; }
+  .hero__rail { align-self: end; background: var(--color-carbon); color: var(--color-milk-paper); display: grid; grid-column: 2; grid-row: 1; grid-template-columns: repeat(4, 1fr); margin: 0; z-index: 2; }
+  .hero__rail div { border-inline-start: 1px solid color-mix(in srgb, var(--color-stainless) 48%, transparent); min-inline-size: 0; padding: var(--space-3); }
+  .hero__rail dt { color: var(--color-stainless); font-size: 0.58rem; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .hero__rail dd { font-size: 0.72rem; line-height: 1.4; margin-block-start: var(--space-1); overflow-wrap: anywhere; }
+  :global(.hero-stage-image) { block-size: 100%; inline-size: 100%; object-fit: cover; }
+  @media (max-width: 64rem) { .hero__grid { grid-template-columns: 1fr; } .hero__copy { padding-inline-end: 0; } .hero__stage { min-block-size: 30rem; } .hero__rail { grid-column: 1; grid-row: auto; } }
+  @media (max-width: 36rem) { .hero__grid { inline-size: 100%; } .hero__copy { padding-inline: var(--container-inline); } .hero__stage { border-inline: 0; min-block-size: 24rem; } .hero__rail { grid-template-columns: 1fr 1fr; } .hero__actions { align-items: stretch; flex-direction: column; } }
+</style>

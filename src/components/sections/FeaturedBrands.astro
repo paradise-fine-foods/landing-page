@@ -1,0 +1,19 @@
+---
+import type { Brand } from '../../lib/cms/types';
+import type { Locale } from '../../lib/i18n/types';
+import BrandCard from '../brands/BrandCard.astro';
+
+interface Props { eyebrow: string; title: string; brands: Brand[]; locale: Locale }
+const { eyebrow, title, brands, locale } = Astro.props;
+---
+
+<section class="featured-brands section-space" aria-labelledby="featured-brands-title">
+  <div class="container section-heading">
+    <p class="eyebrow">{eyebrow}</p><h2 id="featured-brands-title">{title}</h2>
+  </div>
+  <div class="container">
+    {brands.map((brand, index) => <BrandCard {brand} {locale} index={index + 1} />)}
+  </div>
+</section>
+
+<style>.featured-brands { background: var(--color-paper-white); }</style>
