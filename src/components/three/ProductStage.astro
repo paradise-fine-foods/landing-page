@@ -187,6 +187,8 @@ const statusId = 'featured-product-stage-status';
   .product-stage__canvas:active { cursor: grabbing; }
   .product-stage[data-ready='true'] .product-stage__canvas { opacity: 1; pointer-events: auto; }
   .product-stage[data-ready='true'] .product-stage__poster { opacity: 0; }
+  .product-stage[data-failed='true'] .product-stage__poster { opacity: 1; transition: none; }
+  .product-stage[data-failed='true'] .product-stage__canvas { opacity: 0; pointer-events: none; transition: none; }
   .product-stage__status { background: color-mix(in srgb, var(--color-paper-white) 92%, transparent); border: 1px solid var(--color-stainless); inset-block-end: var(--space-3); inset-inline-start: var(--space-3); max-inline-size: calc(100% - 2 * var(--space-3)); padding: var(--space-2) var(--space-3); position: absolute; z-index: 3; }
   .product-stage[data-ready='true'] .product-stage__status { opacity: 0; pointer-events: none; }
   @media (max-width: 36rem) { .product-stage { aspect-ratio: 4 / 5; } }

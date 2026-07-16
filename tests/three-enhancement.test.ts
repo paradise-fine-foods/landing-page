@@ -69,7 +69,7 @@ describe('stage activation', () => {
 });
 
 describe('stage accessibility state', () => {
-  test('upgrades only an eligible fallback and restores a noninteractive failure state', () => {
+  test('restores an immediate noninteractive fallback from ready context-loss state', () => {
     const attributes = new Map<string, string>();
     const target = {
       dataset: {} as Record<string, string | undefined>,
@@ -102,6 +102,8 @@ describe('stage accessibility state', () => {
     expect(target.dataset.ready).toBeUndefined();
     expect(target.dataset.eligible).toBeUndefined();
     expect(target.dataset.failed).toBe('true');
+    expect(stageSource).toContain(".product-stage[data-failed='true'] .product-stage__poster { opacity: 1; transition: none; }");
+    expect(stageSource).toContain(".product-stage[data-failed='true'] .product-stage__canvas { opacity: 0; pointer-events: none; transition: none; }");
   });
 });
 
