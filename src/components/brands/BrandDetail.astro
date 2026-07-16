@@ -1,5 +1,5 @@
 ---
-import type { Brand, Product } from '../../lib/cms/types';
+import type { Brand, BrandAccent, Product } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import ProductCard from '../catalog/ProductCard.astro';
@@ -15,9 +15,14 @@ const { brand, products, locale, copy } = Astro.props;
 const categories = [...new Map(
   products.flatMap(({ categories }) => categories).map((category) => [category.id, category]),
 ).values()];
+const accentClasses: Record<BrandAccent, string> = {
+  butter: 'brand-detail--butter',
+  bordeaux: 'brand-detail--bordeaux',
+  'cold-chain': 'brand-detail--cold-chain',
+};
 ---
 
-<article class="brand-detail" style={`--brand-accent: ${brand.accent}`}>
+<article class:list={['brand-detail', accentClasses[brand.accent]]}>
   <header class="brand-detail__hero">
     <div class="brand-detail__identity">
       <p class="brand-detail__eyebrow">{copy.brand.eyebrow}</p>
@@ -69,6 +74,9 @@ const categories = [...new Map(
 
 <style>
   .brand-detail { min-inline-size: 0; }
+  .brand-detail--butter { --brand-accent: var(--color-cultured-butter); }
+  .brand-detail--bordeaux { --brand-accent: var(--color-bordeaux); }
+  .brand-detail--cold-chain { --brand-accent: var(--color-cold-chain-blue); }
   .brand-detail__hero { display: grid; gap: clamp(var(--space-6), 7vw, var(--space-9)); grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); padding-block: var(--space-7) var(--space-9); }
   .brand-detail__identity { align-content: center; display: grid; gap: var(--space-5); }
   .brand-detail__eyebrow, .brand-detail__label { color: var(--color-cold-chain-blue); font-size: var(--text-xs); font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }

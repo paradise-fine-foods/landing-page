@@ -1,4 +1,4 @@
-import type { LocalizedSlug, LocalizedText } from './types';
+import type { BrandAccent, LocalizedSlug, LocalizedText } from './types';
 import editorialTableSrc from '../../assets/demo/editorial-table.svg?no-inline';
 import productStageSrc from '../../assets/demo/product-stage.svg?no-inline';
 
@@ -25,7 +25,7 @@ export interface DemoBrand {
   origin: LocalizedText;
   image: DemoImageAsset;
   /** Review-only decorative accent. It must never carry text or interaction state. */
-  accent: string;
+  accent: BrandAccent;
 }
 
 export interface DemoProduct {
@@ -108,7 +108,7 @@ export const demoCategories: DemoCategory[] = [
 export const demoBrands: DemoBrand[] = [
   {
     id: 'maison-laitiere',
-    accent: '#f2c14e',
+    accent: 'butter',
     slug: { en: 'maison-laitiere', vi: 'nha-sua-maison' },
     name: { en: 'Maison Laitière', vi: 'Nhà Sữa Maison' },
     description: {
@@ -120,7 +120,7 @@ export const demoBrands: DemoBrand[] = [
   },
   {
     id: 'atelier-creme',
-    accent: '#7d2c3b',
+    accent: 'bordeaux',
     slug: { en: 'atelier-creme', vi: 'xuong-kem' },
     name: { en: 'Atelier Crème', vi: 'Xưởng Kem' },
     description: {
@@ -132,7 +132,7 @@ export const demoBrands: DemoBrand[] = [
   },
   {
     id: 'formagerie-nord',
-    accent: '#123c69',
+    accent: 'cold-chain',
     slug: { en: 'formagerie-nord', vi: 'xuong-pho-mai-bac' },
     name: { en: 'Formagerie Nord', vi: 'Xưởng Phô Mai Bắc' },
     description: {

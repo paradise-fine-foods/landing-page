@@ -2,7 +2,8 @@ import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getBrandBySlug, getBrands } from '../src/lib/cms/queries';
+import { getBrandBySlug, getBrands, normalizeBrandAccent } from '../src/lib/cms/queries';
+import { brandAccentTokens } from '../src/lib/cms/types';
 import {
   brandDetailPath,
   buildBrandRouteMaps,
@@ -11,13 +12,22 @@ import {
 
 const root = join(import.meta.dir, '..');
 const source = (path: string) => readFileSync(join(root, path), 'utf8');
+const expectedBrands = [
+  { id: 'maison-laitiere', en: 'maison-laitiere', vi: 'nha-sua-maison' },
+  { id: 'atelier-creme', en: 'atelier-creme', vi: 'xuong-kem' },
+  { id: 'formagerie-nord', en: 'formagerie-nord', vi: 'xuong-pho-mai-bac' },
+] as const;
 
 describe('localized brand routes', () => {
   test('resolves all localized slugs to the same three stable records', async () => {
     const [english, vietnamese] = await Promise.all([getBrands('en'), getBrands('vi')]);
 
-    expect(english).toHaveLength(3);
-    expect(vietnamese.map(({ id }) => id)).toEqual(english.map(({ id }) => id));
+    expect(english.map(({ id, slug }) => ({ id, slug }))).toEqual(
+      expectedBrands.map(({ id, en: slug }) => ({ id, slug })),
+    );
+    expect(vietnamese.map(({ id, slug }) => ({ id, slug }))).toEqual(
+      expectedBrands.map(({ id, vi: slug }) => ({ id, slug })),
+    );
 
     for (const brand of english) {
       expect(brand.slug).toBeTruthy();
@@ -34,6 +44,10 @@ describe('localized brand routes', () => {
     const maps = buildBrandRouteMaps(english, vietnamese);
 
     expect(maps).toHaveLength(3);
+    expect(maps).toEqual(expectedBrands.map(({ en, vi }) => ({
+      en: `/en/brands/${en}/`,
+      vi: `/vi/thuong-hieu/${vi}/`,
+    })));
     for (const map of maps) {
       expect(findBrandRoute(maps, map.en, 'vi')).toBe(map.vi);
       expect(findBrandRoute(maps, map.vi, 'en')).toBe(map.en);
@@ -44,7 +58,23 @@ describe('localized brand routes', () => {
 
   test('does not invent routes or records for unknown slugs', async () => {
     expect(await getBrandBySlug('en', 'not-a-brand')).toBeUndefined();
-    expect(findBrandRoute([], '/en/brands/not-a-brand/', 'vi')).toBeUndefined();
+    expect(await getBrandBySlug('vi', 'khong-co-thuong-hieu')).toBeUndefined();
+    const maps = buildBrandRouteMaps(await getBrands('en'), await getBrands('vi'));
+    expect(findBrandRoute(maps, '/en/brands/not-a-brand/', 'vi')).toBeUndefined();
+    expect(findBrandRoute(maps, '/vi/thuong-hieu/khong-co-thuong-hieu/', 'en')).toBeUndefined();
+  });
+
+  test('normalizes CMS accents to a closed, injection-safe token set', async () => {
+    expect(brandAccentTokens).toEqual(['butter', 'bordeaux', 'cold-chain']);
+    for (const token of brandAccentTokens) expect(normalizeBrandAccent(token)).toBe(token);
+    for (const unsafe of ['#fff; color:red', '', 'unknown', undefined, null, 42, {}]) {
+      expect(normalizeBrandAccent(unsafe)).toBe('butter');
+    }
+
+    const first = await getBrands('en');
+    const second = await getBrands('en');
+    expect(first.map(({ accent }) => accent)).toEqual(['butter', 'bordeaux', 'cold-chain']);
+    expect(first.every((brand, index) => brand !== second[index])).toBe(true);
   });
 
   test('keeps routes behind typed CMS queries and normalized static props', () => {
@@ -79,6 +109,8 @@ describe('localized brand routes', () => {
     expect(detail).toContain('copy.brand.demoNotice');
     expect(detail).toContain('headingLevel="h3"');
     expect(detail).toContain('<h1>{brand.name}</h1>');
+    expect(detail).toContain('accentClasses[brand.accent]');
+    expect(detail).not.toMatch(/style=\{`[^`]*brand\.accent|--brand-accent:\s*\$\{/);
     expect(routeSources.match(/headingLevel="h2"/g)).toHaveLength(2);
     expect(routeSources).not.toMatch(/locale\s*===|locale\s*\?/);
   });

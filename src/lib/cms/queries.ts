@@ -12,6 +12,7 @@ import {
 } from './demo-data';
 import type {
   Brand,
+  BrandAccent,
   Category,
   FeaturedContent,
   GlobalSettings,
@@ -19,8 +20,16 @@ import type {
   Product,
   ProductQuery,
 } from './types';
+import { brandAccentTokens } from './types';
 
 type DemoImage = DemoProduct['image'];
+
+const defaultBrandAccent: BrandAccent = 'butter';
+
+export const normalizeBrandAccent = (value: unknown): BrandAccent =>
+  typeof value === 'string' && brandAccentTokens.includes(value as BrandAccent)
+    ? value as BrandAccent
+    : defaultBrandAccent;
 
 const localizeImage = (image: DemoImage, locale: Locale): ImageAsset => ({
   src: image.src,
@@ -44,7 +53,7 @@ const localizeBrand = (brand: DemoBrand, locale: Locale): Brand => ({
   description: brand.description[locale],
   origin: brand.origin[locale],
   image: localizeImage(brand.image, locale),
-  accent: brand.accent,
+  accent: normalizeBrandAccent(brand.accent),
 });
 
 const localizeProduct = (product: DemoProduct, locale: Locale): Product => {

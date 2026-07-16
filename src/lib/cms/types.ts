@@ -1,5 +1,8 @@
 import type { Locale } from '../i18n/types';
 
+export const brandAccentTokens = ['butter', 'bordeaux', 'cold-chain'] as const;
+export type BrandAccent = (typeof brandAccentTokens)[number];
+
 export type LocalizedText = Record<Locale, string>;
 export type LocalizedSlug = Record<Locale, string>;
 
@@ -25,7 +28,7 @@ export interface Brand {
   description: string;
   origin: string;
   image: ImageAsset;
-  accent: string;
+  accent: BrandAccent;
 }
 
 export interface ProductStorage {
