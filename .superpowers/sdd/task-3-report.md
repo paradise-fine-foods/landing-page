@@ -4,7 +4,7 @@
 
 DONE_WITH_CONCERNS
 
-The bilingual global shell and complete homepage composition are implemented. Tests and Astro diagnostics are clean. Static build completes and emits `/en/`, `/vi/`, and the configured `/` redirect to `/en/`. One Astro 7.0.9 framework warning and one inherited Task 2 asset-path defect remain documented below.
+The bilingual global shell and complete homepage composition are implemented. Tests and Astro diagnostics are clean. Static build completes and emits `/en/`, `/vi/`, and the configured `/` redirect to `/en/`. One accepted Astro 7.0.9 framework warning remains documented below; the inherited Task 2 asset-path defect was repaired and re-verified at `c29ac7bdd2dd976ab0e789e038bfe697e0a0b1cb`.
 
 ## Implementation
 
@@ -152,4 +152,44 @@ Modified:
 ## Concerns
 
 1. Astro 7.0.9 generates the correct default-locale redirect but warns about the internally duplicated `/` fallback route. The parent explicitly directed retaining default Astro i18n behavior, not suppressing the warning, and not switching to manual or explicit redirect logic.
-2. Inherited Task 2 CMS demo asset URLs serialize into generated pages as `file:///E:/works/Freelancing/finefoods/dist/assets/demo/*.svg`, and those assets are not emitted there. This is rooted in Task 2's `new URL(..., import.meta.url).href` implementation. Task 3 did not modify Task 2 data or interfaces; the controller will reopen Task 2 before Task 3 review.
+
+The former Task 2 CMS asset concern is resolved. Commit `c29ac7bdd2dd976ab0e789e038bfe697e0a0b1cb` now emits browser-safe hashed asset URLs and their referenced files.
+
+## Cross-task asset resolution verification
+
+Re-verification against `c29ac7bdd2dd976ab0e789e038bfe697e0a0b1cb` required no Task 3 source changes.
+
+Fresh command evidence:
+
+```text
+bun test: 19 pass, 0 fail, 57 expect() calls
+bun run check: 0 errors, 0 warnings, 0 hints across 34 files
+bun run build: exit 0; /en/index.html, /vi/index.html, and /index.html generated
+```
+
+Generated HTML audit:
+
+```text
+EN lang/title/main: true / true / 1
+VI lang/title/main: true / true / 1
+EN file: URLs / /src/ URLs: 0 / 0
+VI file: URLs / /src/ URLs: 0 / 0
+Hashed product-stage URL present: true
+Hashed editorial-table URL present: true
+Referenced hashed asset files: 2 present, 0 missing
+Root targets /en/: true
+Root canonicalizes to https://demo.paradisefinefoods.com/en/: true
+```
+
+Exact generated asset URLs:
+
+```text
+/_astro/product-stage.9p79snic.svg
+/_astro/editorial-table.Ca3d8R-8.svg
+```
+
+The only remaining build concern is the accepted Astro 7.0.9 warning:
+
+```text
+[WARN] [build] Could not render `` from route `/` as it conflicts with higher priority route `/`.
+```
