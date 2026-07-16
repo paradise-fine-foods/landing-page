@@ -21,6 +21,9 @@ import type {
   ProductQuery,
 } from './types';
 import { brandAccentTokens } from './types';
+export { submitEnquiry } from '../enquiry/submit';
+export { EnquiryValidationError } from '../enquiry/types';
+export type { EnquiryErrors, EnquiryInput, EnquirySuccess } from '../enquiry/types';
 
 type DemoImage = DemoProduct['image'];
 

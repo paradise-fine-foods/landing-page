@@ -1,0 +1,21 @@
+---
+import EnquiryForm from '../../components/forms/EnquiryForm.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getGlobalSettings, getProducts } from '../../lib/cms/queries';
+import { localizedPath } from '../../lib/i18n/routes';
+import { ui } from '../../lib/i18n/ui';
+
+const locale = 'en';
+const pathname = localizedPath(locale, 'contact');
+const alternatePath = localizedPath('vi', 'contact');
+const [settings, products] = await Promise.all([getGlobalSettings(locale), getProducts(locale)]);
+const copy = ui[locale];
+---
+
+<SiteLayout {locale} title={`${copy.form.title} | ${settings.siteName}`} description={copy.form.description} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice}>
+  <div class="contact-page container section-space">
+    <Breadcrumbs label={copy.header.contact} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.contact }]} />
+    <EnquiryForm {locale} {products} {copy} />
+  </div>
+</SiteLayout>

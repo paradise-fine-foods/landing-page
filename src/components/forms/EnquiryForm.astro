@@ -1,0 +1,227 @@
+---
+import type { Product } from '../../lib/cms/types';
+import type { UiCopy } from '../../lib/i18n/ui';
+import type { Locale } from '../../lib/i18n/types';
+
+interface Props {
+  locale: Locale;
+  products: Product[];
+  copy: UiCopy;
+}
+
+const { locale, products, copy } = Astro.props;
+const formCopy = copy.form;
+const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
+---
+
+<section class="enquiry" aria-labelledby="enquiry-title" data-enquiry-root data-locale={locale} data-known-products={JSON.stringify(products.map(({ id }) => id))} data-submitting={formCopy.submitting} data-form-error={copy.status.formError} data-unexpected-error={formCopy.unexpectedError}>
+  <div class="enquiry__intro">
+    <p class="enquiry__eyebrow">{formCopy.eyebrow}</p>
+    <h1 id="enquiry-title">{formCopy.title}</h1>
+    <p class="enquiry__description">{formCopy.description}</p>
+    <div class="enquiry__ledger" aria-hidden="true">
+      <span>PFF / ENQ</span>
+      <span>01—07</span>
+    </div>
+  </div>
+
+  <div class="enquiry__panel">
+    <p id="enquiry-required-note" class="enquiry__required">{requiredDescription}</p>
+    <p class="enquiry__demo-note">{formCopy.demoDelivery}</p>
+
+    <form class="enquiry-form" data-enquiry-form novalidate>
+      <div class="field">
+        <label for="enquiry-name">{formCopy.name} <span aria-hidden="true">*</span></label>
+        <input id="enquiry-name" name="name" type="text" autocomplete="name" aria-required="true" aria-describedby="enquiry-required-note enquiry-name-error" />
+        <p id="enquiry-name-error" class="field__error" data-error-for="name"></p>
+      </div>
+
+      <div class="field">
+        <label for="enquiry-company">{formCopy.company}</label>
+        <input id="enquiry-company" name="company" type="text" autocomplete="organization" />
+      </div>
+
+      <div class="field">
+        <label for="enquiry-email">{formCopy.email} <span aria-hidden="true">*</span></label>
+        <input id="enquiry-email" name="email" type="email" inputmode="email" autocomplete="email" aria-required="true" aria-describedby="enquiry-required-note enquiry-email-error" />
+        <p id="enquiry-email-error" class="field__error" data-error-for="email"></p>
+      </div>
+
+      <div class="field">
+        <label for="enquiry-phone">{formCopy.phone}</label>
+        <input id="enquiry-phone" name="phone" type="tel" autocomplete="tel" />
+      </div>
+
+      <div class="field field--wide">
+        <label for="enquiry-interest">{formCopy.interest} <span aria-hidden="true">*</span></label>
+        <select id="enquiry-interest" name="interest" aria-required="true" aria-describedby="enquiry-required-note enquiry-interest-error">
+          <option value="">{formCopy.interestPlaceholder}</option>
+          {Object.entries(formCopy.interestOptions).map(([value, label]) => <option {value}>{label}</option>)}
+        </select>
+        <p id="enquiry-interest-error" class="field__error" data-error-for="interest"></p>
+      </div>
+
+      <div class="field field--wide">
+        <label for="enquiry-product">{formCopy.product}</label>
+        <select id="enquiry-product" name="productId" data-product-select>
+          <option value="">{formCopy.productPlaceholder}</option>
+          {products.map((product) => <option value={product.id}>{product.name} — {product.packFormat}</option>)}
+        </select>
+      </div>
+
+      <div class="field field--wide">
+        <label for="enquiry-message">{formCopy.message} <span aria-hidden="true">*</span></label>
+        <textarea id="enquiry-message" name="message" rows="6" aria-required="true" aria-describedby="enquiry-required-note enquiry-message-error"></textarea>
+        <p id="enquiry-message-error" class="field__error" data-error-for="message"></p>
+      </div>
+
+      <div class="field field--wide field--consent">
+        <input id="enquiry-consent" name="consent" type="checkbox" aria-required="true" aria-describedby="enquiry-required-note enquiry-consent-error" />
+        <label for="enquiry-consent">{formCopy.consent} <span aria-hidden="true">*</span></label>
+        <p id="enquiry-consent-error" class="field__error" data-error-for="consent"></p>
+      </div>
+
+      <div class="enquiry-form__actions">
+        <button type="submit" data-enquiry-submit data-idle-label={formCopy.submit}>{formCopy.submit}</button>
+        <div class="enquiry-form__status" role="status" aria-live="polite" aria-atomic="true" data-enquiry-status></div>
+      </div>
+    </form>
+
+    <section class="enquiry-success" data-enquiry-success hidden>
+      <p class="enquiry-success__mark" aria-hidden="true">✓</p>
+      <h2 tabindex="-1" data-enquiry-success-heading>{copy.status.successTitle}</h2>
+      <p>{copy.status.successMessage}</p>
+      <p>{copy.status.reference}: <strong data-enquiry-reference></strong></p>
+    </section>
+
+    <noscript><p class="enquiry__noscript">{formCopy.noScript}</p></noscript>
+  </div>
+</section>
+
+<script>
+  import { EnquiryValidationError, submitEnquiry, type EnquiryInput } from '../../lib/cms/queries';
+  import { selectKnownProductId } from '../../lib/enquiry/form-state';
+  import type { Locale } from '../../lib/i18n/types';
+
+  const valueOf = (data: FormData, name: string): string => {
+    const value = data.get(name);
+    return typeof value === 'string' ? value : '';
+  };
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-enquiry-root]')) {
+    const form = root.querySelector<HTMLFormElement>('[data-enquiry-form]');
+    const submit = root.querySelector<HTMLButtonElement>('[data-enquiry-submit]');
+    const status = root.querySelector<HTMLElement>('[data-enquiry-status]');
+    const success = root.querySelector<HTMLElement>('[data-enquiry-success]');
+    const successHeading = root.querySelector<HTMLElement>('[data-enquiry-success-heading]');
+    const reference = root.querySelector<HTMLElement>('[data-enquiry-reference]');
+    const product = root.querySelector<HTMLSelectElement>('[data-product-select]');
+    if (!form || !submit || !status || !success || !successHeading || !reference || !product) continue;
+
+    let knownProductIds: string[] = [];
+    try {
+      const parsed = JSON.parse(root.dataset.knownProducts ?? '[]');
+      if (Array.isArray(parsed)) knownProductIds = parsed.filter((value): value is string => typeof value === 'string');
+    } catch {
+      knownProductIds = [];
+    }
+    const selectedProduct = selectKnownProductId(new URL(window.location.href).searchParams.get('product'), knownProductIds);
+    if (selectedProduct) product.value = selectedProduct;
+
+    const clearErrors = () => {
+      for (const error of root.querySelectorAll<HTMLElement>('[data-error-for]')) error.textContent = '';
+      for (const control of form.elements) {
+        if (control instanceof HTMLElement) control.removeAttribute('aria-invalid');
+      }
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      clearErrors();
+      status.textContent = root.dataset.submitting ?? '';
+      submit.disabled = true;
+      submit.textContent = root.dataset.submitting ?? submit.dataset.idleLabel ?? '';
+
+      const data = new FormData(form);
+      const productId = valueOf(data, 'productId');
+      const input: EnquiryInput = {
+        locale: root.dataset.locale as Locale,
+        name: valueOf(data, 'name'),
+        company: valueOf(data, 'company'),
+        email: valueOf(data, 'email'),
+        phone: valueOf(data, 'phone'),
+        interest: valueOf(data, 'interest'),
+        message: valueOf(data, 'message'),
+        consent: data.get('consent') === 'on',
+        ...(productId ? { productId } : {}),
+      };
+
+      try {
+        const result = await submitEnquiry(input);
+        form.hidden = true;
+        status.textContent = '';
+        reference.textContent = result.reference;
+        success.hidden = false;
+        successHeading.focus();
+      } catch (error) {
+        if (error instanceof EnquiryValidationError) {
+          for (const [name, message] of Object.entries(error.errors)) {
+            const errorNode = root.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+            const control = form.elements.namedItem(name);
+            if (errorNode) errorNode.textContent = message ?? '';
+            if (control instanceof HTMLElement) control.setAttribute('aria-invalid', 'true');
+          }
+          status.textContent = root.dataset.formError ?? '';
+          const firstInvalid = form.querySelector<HTMLElement>('[aria-invalid="true"]');
+          firstInvalid?.focus();
+        } else {
+          status.textContent = root.dataset.unexpectedError ?? '';
+        }
+      } finally {
+        submit.disabled = false;
+        submit.textContent = submit.dataset.idleLabel ?? '';
+      }
+    });
+  }
+</script>
+
+<style>
+  .enquiry { display: grid; gap: clamp(var(--space-7), 8vw, 8rem); grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr); min-inline-size: 0; padding-block: var(--space-8); }
+  .enquiry__intro { align-self: start; display: grid; gap: var(--space-5); position: sticky; top: var(--space-6); }
+  .enquiry__eyebrow { color: var(--color-cold-chain-blue); font-size: var(--text-xs); font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .enquiry h1 { font-size: var(--text-hero); max-inline-size: 9ch; }
+  .enquiry__description { font-size: var(--text-lg); max-inline-size: 34rem; }
+  .enquiry__ledger { border-block: 1px solid var(--color-stainless); color: var(--color-cold-chain-blue); display: flex; font-size: var(--text-xs); font-weight: 600; justify-content: space-between; letter-spacing: var(--tracking-label); padding-block: var(--space-3); }
+  .enquiry__panel { background: var(--color-paper-white); border-block-start: 0.3rem solid var(--color-cold-chain-blue); padding: clamp(var(--space-5), 5vw, var(--space-8)); }
+  .enquiry__required, .enquiry__demo-note, .enquiry__noscript { font-size: var(--text-sm); }
+  .enquiry__demo-note, .enquiry__noscript { border-inline-start: 0.25rem solid var(--color-cultured-butter); margin-block: var(--space-4) var(--space-6); padding: var(--space-3) var(--space-4); }
+  .enquiry-form { display: grid; gap: var(--space-5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .field { min-inline-size: 0; }
+  .field--wide, .enquiry-form__actions { grid-column: 1 / -1; }
+  .field label { color: var(--color-carbon); display: inline-block; font-size: var(--text-sm); font-weight: 600; margin-block-end: var(--space-2); }
+  .field input:not([type='checkbox']), .field select, .field textarea { background: var(--color-milk-paper); border: 1px solid var(--color-stainless); border-radius: 0; color: var(--color-carbon); inline-size: 100%; min-block-size: 3rem; padding: var(--space-3); }
+  .field textarea { min-block-size: 9rem; resize: vertical; }
+  .field [aria-invalid='true'] { border-color: var(--color-error); border-width: 2px; }
+  .field__error { color: var(--color-error); font-size: var(--text-sm); min-block-size: 1.4em; padding-block-start: var(--space-1); }
+  .field--consent { display: grid; gap: var(--space-2) var(--space-3); grid-template-columns: 1.25rem minmax(0, 1fr); }
+  .field--consent input { block-size: 1.25rem; inline-size: 1.25rem; margin: 0.15rem 0 0; }
+  .field--consent label { margin: 0; }
+  .field--consent .field__error { grid-column: 2; }
+  .enquiry-form__actions { align-items: center; border-block-start: 1px solid var(--color-stainless); display: grid; gap: var(--space-4); grid-template-columns: max-content minmax(0, 1fr); padding-block-start: var(--space-5); }
+  .enquiry-form__actions button { background: var(--color-cold-chain-blue); border: 1px solid var(--color-cold-chain-blue); color: var(--color-paper-white); cursor: pointer; font-weight: 600; min-block-size: 3rem; padding-inline: var(--space-5); }
+  .enquiry-form__actions button:disabled { cursor: wait; opacity: 0.65; }
+  .enquiry-form__status { color: var(--color-error); font-size: var(--text-sm); font-weight: 600; min-block-size: 1.5em; }
+  .enquiry-success { border: 1px solid var(--color-success); padding: var(--space-7); }
+  .enquiry-success__mark { color: var(--color-success); font-size: var(--text-2xl); }
+  .enquiry-success h2 { font-size: var(--text-2xl); margin-block: var(--space-3); }
+  .enquiry-success p + p { margin-block-start: var(--space-3); }
+  @media (max-width: 48rem) {
+    .enquiry { grid-template-columns: minmax(0, 1fr); }
+    .enquiry__intro { position: static; }
+  }
+  @media (max-width: 32rem) {
+    .enquiry-form { grid-template-columns: minmax(0, 1fr); }
+    .field, .field--wide, .enquiry-form__actions { grid-column: 1; }
+    .enquiry-form__actions { align-items: stretch; grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
