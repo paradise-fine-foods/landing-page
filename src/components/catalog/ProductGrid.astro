@@ -1,0 +1,47 @@
+---
+import type { Product } from '../../lib/cms/types';
+import type { Locale } from '../../lib/i18n/types';
+import type { UiCopy } from '../../lib/i18n/ui';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: Product[];
+  locale: Locale;
+  copy: UiCopy['catalog'];
+  showEmptyState?: boolean;
+}
+
+const { products, locale, copy, showEmptyState = true } = Astro.props;
+---
+
+<div class="product-grid">
+  {products.map((product) => (
+    <div
+      data-product-card
+      data-product-id={product.id}
+      data-search={[product.name, product.description, product.brand.name, product.origin, ...product.categories.map(({ name }) => name), ...product.applications, ...product.benefits].join(' ')}
+      data-categories={JSON.stringify(product.categories.map(({ id }) => id))}
+      data-brand={product.brand.id}
+      data-applications={JSON.stringify(product.applications)}
+    >
+      <ProductCard {product} {locale} />
+    </div>
+  ))}
+</div>
+{showEmptyState && (
+  <section class="catalog-empty" data-empty-state hidden aria-labelledby="catalog-empty-title">
+    <h2 id="catalog-empty-title">{copy.noResultsTitle}</h2>
+    <p>{copy.noResultsDescription}</p>
+    <button type="button" data-reset-filters>{copy.resetFilters}</button>
+  </section>
+)}
+
+<style>
+  .product-grid { display: grid; gap: clamp(var(--space-6), 4vw, var(--space-8)) var(--space-5); grid-template-columns: repeat(3, minmax(0, 1fr)); padding-block: var(--space-7); }
+  .catalog-empty { border-block: 1px solid var(--color-stainless); padding-block: var(--space-8); text-align: center; }
+  .catalog-empty h2 { font-size: var(--text-xl); }
+  .catalog-empty p { margin: var(--space-3) auto var(--space-5); max-inline-size: var(--measure); }
+  .catalog-empty button { background: var(--color-carbon); border: 1px solid var(--color-carbon); color: var(--color-paper-white); cursor: pointer; min-block-size: 2.75rem; padding: var(--space-3) var(--space-5); }
+  @media (max-width: 52rem) { .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 36rem) { .product-grid { grid-template-columns: minmax(0, 1fr); } }
+</style>

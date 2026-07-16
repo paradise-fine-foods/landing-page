@@ -1,0 +1,44 @@
+---
+import CatalogFilters from '../../../components/catalog/CatalogFilters.astro';
+import ProductGrid from '../../../components/catalog/ProductGrid.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { getBrands, getCategories, getGlobalSettings, getProducts } from '../../../lib/cms/queries';
+import { localizedPath } from '../../../lib/i18n/routes';
+import { ui } from '../../../lib/i18n/ui';
+
+const locale = 'vi';
+const pathname = localizedPath(locale, 'products');
+const alternatePath = localizedPath('en', 'products');
+const [settings, products, categories, brands] = await Promise.all([
+  getGlobalSettings(locale),
+  getProducts(locale),
+  getCategories(locale),
+  getBrands(locale),
+]);
+const copy = ui[locale];
+const applications = [...new Set(products.flatMap(({ applications }) => applications))].sort();
+---
+
+<SiteLayout {locale} title={`${copy.catalog.title} | ${settings.siteName}`} description={copy.catalog.description} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice}>
+  <div class="catalog-page container section-space" data-catalog>
+    <Breadcrumbs label={copy.product.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.products }]} />
+    <header class="catalog-page__intro">
+      <p>{copy.catalog.eyebrow}</p>
+      <h1>{copy.catalog.title}</h1>
+      <div aria-hidden="true"></div>
+      <p>{copy.catalog.description}</p>
+    </header>
+    <CatalogFilters {categories} {brands} {applications} applicationNames={copy.product.applicationNames} copy={copy.catalog} initialCount={products.length} />
+    <ProductGrid {products} {locale} copy={copy.catalog} />
+  </div>
+</SiteLayout>
+
+<style>
+  .catalog-page { min-inline-size: 0; }
+  .catalog-page__intro { display: grid; gap: var(--space-5); grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr); padding-block: var(--space-6) var(--space-8); }
+  .catalog-page__intro > p:first-child { color: var(--color-cold-chain-blue); font-size: var(--text-xs); font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .catalog-page__intro h1 { font-size: var(--text-hero); max-inline-size: 12ch; }
+  .catalog-page__intro > p:last-child { font-size: var(--text-lg); max-inline-size: var(--measure); }
+  @media (max-width: 42rem) { .catalog-page__intro { grid-template-columns: minmax(0, 1fr); } .catalog-page__intro > div { display: none; } }
+</style>

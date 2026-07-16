@@ -1,6 +1,6 @@
 import type { Product, ProductQuery } from '../cms/types';
 
-const normalize = (value: string) =>
+export const normalizeCatalogText = (value: string) =>
   value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
 
 const hasAny = (values: string[], selected?: string[]) =>
@@ -21,7 +21,7 @@ export const filterProducts = (products: Product[], query: ProductQuery = {}): P
     ];
 
     const matchesSearch =
-      !search || normalize(searchable.join(' ')).includes(normalize(search));
+      !search || normalizeCatalogText(searchable.join(' ')).includes(normalizeCatalogText(search));
     const matchesCategory = hasAny(
       product.categories.map((category) => category.id),
       query.category,
