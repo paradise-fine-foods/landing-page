@@ -315,7 +315,7 @@ git commit -m "feat: add CMS-neutral demo catalog"
 - Create: `src/components/catalog/ProductCard.astro`
 - Create: `src/components/brands/BrandCard.astro`
 - Modify: `src/layouts/SiteLayout.astro`
-- Replace: `src/pages/index.astro`
+- Delete: `src/pages/index.astro` (Astro i18n configuration owns the root redirect)
 - Create: `src/pages/en/index.astro`
 - Create: `src/pages/vi/index.astro`
 
@@ -323,17 +323,11 @@ git commit -m "feat: add CMS-neutral demo catalog"
 - Consumes: `getGlobalSettings()`, `getFeaturedContent()`, `getCategories()`, locale UI copy, and `counterpartPath()` with page-provided route pairs.
 - Produces: shared site shell and complete server-rendered homepages; `Hero.astro` exposes a named `stage` slot used by Task 4.
 
-- [ ] **Step 1: Replace the starter page and build shared shell components**
+- [ ] **Step 1: Remove the duplicate root page and build shared shell components**
 
 `SiteLayout` composes `DemoNotice`, `Header`, `<main id="main-content">`, and `Footer`. The demo notice is concise and visually quiet. Header uses a native button with `aria-expanded`/`aria-controls`; a small inline module toggles only the mobile disclosure and closes it on Escape. Without JavaScript, primary links remain visible through a `<noscript>` fallback.
 
-Replace the starter root page with an explicit static redirect:
-
-```astro
----
-return Astro.redirect('/en/', 302);
----
-```
+Delete `src/pages/index.astro`. The existing Astro i18n configuration (`prefixDefaultLocale: true`, `redirectToDefaultLocale: true`) generates the required `/` to `/en/` redirect. Do not add a second redirect page or middleware redirect.
 
 The language switcher receives `currentPath`, `alternatePath`, and `locale`, exposes the target language name (`Tiếng Việt` or `English`), and uses `hreflang`. Each route supplies its known alternate; static index routes use fixed pairs, while detail routes derive the counterpart by matching stable record IDs across locale queries.
 
