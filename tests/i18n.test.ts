@@ -1,6 +1,7 @@
 /// <reference types="bun" />
 
 import { describe, expect, test } from 'bun:test';
+import { ui } from '../src/lib/i18n/ui';
 import { counterpartPath, localizedPath } from '../src/lib/i18n/routes';
 import { buildMeta } from '../src/lib/seo/meta';
 
@@ -18,6 +19,12 @@ describe('localized routes', () => {
   test('falls back to the target locale home', () => {
     expect(counterpartPath('/en/unknown/', 'vi', [])).toBe('/vi/');
   });
+});
+
+test('catalog includes distinct localized no-JavaScript guidance', () => {
+  expect(ui.en.catalog.noScript.length).toBeGreaterThan(0);
+  expect(ui.vi.catalog.noScript.length).toBeGreaterThan(0);
+  expect(ui.en.catalog.noScript).not.toBe(ui.vi.catalog.noScript);
 });
 
 test('buildMeta returns canonical and reciprocal alternates', () => {
