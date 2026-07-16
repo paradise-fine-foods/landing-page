@@ -4,9 +4,9 @@
 
 **Goal:** Build a bilingual, production-quality Astro vertical slice that lets the client finalize the Cold-Chain Atelier visual direction, responsive styling, motion, representative catalog UX, and demo enquiry flow.
 
-**Architecture:** Astro statically generates every included route from typed vendor-neutral query functions. The default CMS adapter returns localized demo records, while small browser scripts progressively enhance navigation, filtering, enquiry submission, and a poster-backed `<model-viewer>` hero. Page components never import fixtures or vendor-specific response shapes.
+**Architecture:** Astro statically generates every included route from typed vendor-neutral query functions. The default CMS adapter returns localized demo records, while small browser scripts progressively enhance navigation, filtering, enquiry submission, and a poster-backed direct Three.js hero. Page components never import fixtures or vendor-specific response shapes.
 
-**Tech Stack:** Astro 7, strict TypeScript, Bun test runner, CSS custom properties, `@google/model-viewer`, `@fontsource/newsreader`, `@fontsource/be-vietnam-pro`, Astro `<Image />`, static `getStaticPaths()` routes.
+**Tech Stack:** Astro 7, strict TypeScript, Bun test runner, CSS custom properties, `three` with `GLTFLoader`, `@fontsource/newsreader`, `@fontsource/be-vietnam-pro`, Astro `<Image />`, static `getStaticPaths()` routes.
 
 ## Global Constraints
 
@@ -29,14 +29,14 @@
 - Use Astro `i18n` configuration with `prefixDefaultLocale: true` and `redirectToDefaultLocale: true`: <https://docs.astro.build/en/reference/configuration-reference/#i18nrouting>.
 - Static dynamic pages export `getStaticPaths()` and return string params plus normalized props: <https://docs.astro.build/en/reference/routing-reference/#getstaticpaths>.
 - Use Astro `<Image />` with a responsive `layout` for local raster assets; assets placed in `public/` are not optimized: <https://docs.astro.build/en/guides/images/#responsive-image-behavior>.
-- Use `<model-viewer>` with a poster and lazy runtime loading after interaction/visibility; preserve `touch-action="pan-y"`: <https://github.com/google/model-viewer/blob/master/packages/modelviewer.dev/examples/loading/index.html> and <https://github.com/google/model-viewer/blob/master/packages/modelviewer.dev/examples/lighthouse.html>.
+- Use direct Three.js `WebGLRenderer` and `GLTFLoader` behind a poster-first lazy enhancement. Import the runtime only after actual viewport intersection or user interaction, preserve vertical page scrolling, bound pointer rotation to ±18°, clean up listeners/observers/render resources, handle WebGL context loss, and keep the emitted lazy runtime chunk at or below 180 KB gzip. Current APIs were checked through Context7 against `/mrdoob/three.js`.
 
 ## File Map
 
 ```text
 astro.config.mjs                              Astro i18n/image/build configuration
 package.json                                  check/test/build scripts and dependencies
-src/env.d.ts                                  custom-element typing for model-viewer
+src/env.d.ts                                  project environment typings
 src/layouts/SiteLayout.astro                  localized document shell and SEO
 src/styles/{tokens,typography,global}.css      design system foundation
 src/lib/i18n/{types,ui,routes}.ts              locale types, copy, counterpart routes
@@ -89,7 +89,7 @@ tests/*.test.ts                                Bun unit tests
 Run:
 
 ```powershell
-bun add @google/model-viewer @fontsource/newsreader @fontsource/be-vietnam-pro
+bun add three @fontsource/newsreader @fontsource/be-vietnam-pro
 bun add -d @astrojs/check typescript
 ```
 
@@ -406,9 +406,11 @@ Expected: FAIL because `enhancement.ts` does not exist.
 
 - [ ] **Step 3: Implement pure eligibility and poster-first component**
 
-`ProductStage.astro` initially renders the authored poster, localized alt text, interaction prompt, and a status element. Store model URL in `data-model-src`; do not set `src` on `<model-viewer>` until eligibility succeeds and the stage intersects the viewport or receives user focus/pointer interaction.
+`ProductStage.astro` initially renders the authored poster, localized alt text, interaction prompt, and a status element. Store the model URL in `data-model-src`; do not import Three.js or request the GLB until eligibility succeeds and the stage actually intersects the viewport (`rootMargin: '0px'`) or receives user focus/pointer interaction.
 
-Load `@google/model-viewer` with a dynamic `import('@google/model-viewer')` only once. Then set `src`, `camera-controls`, `touch-action="pan-y"`, `interaction-prompt="none"`, `camera-orbit="0deg 75deg 110%"`, `min-camera-orbit="-18deg 65deg 105%"`, and `max-camera-orbit="18deg 85deg 120%"`. Do not enable AR or uncontrolled auto-rotate. On `load`, reveal the model without removing the poster DOM; on `error`, retain poster and set a localized non-alarming status.
+Load a dedicated adapter with a dynamic import. The adapter imports only the required named Three.js core exports and `three/addons/loaders/GLTFLoader.js`; do not use `OrbitControls`. It creates an accessible presentation canvas, sizes it with `ResizeObserver`, caps device pixel ratio, frames the loaded object, and renders bounded pointer rotation of at most ±18° while preserving vertical page scrolling with `touch-action: pan-y`. Do not enable AR or uncontrolled auto-rotation. On load, reveal the canvas without removing the poster DOM; on error or WebGL context loss, retain the poster and set a localized non-alarming status. On disconnect or failure, cancel animation work, disconnect observers, remove listeners, dispose geometries, materials, textures and the renderer, and release the WebGL context.
+
+The production build must measure the emitted lazy 3D JavaScript chunk and fail if it exceeds 180 KB gzip. Generated initial HTML must contain the poster, metadata, and CTAs but no eager GLB request or eager Three.js runtime reference.
 
 - [ ] **Step 4: Add the temporary GLB and provenance note**
 
