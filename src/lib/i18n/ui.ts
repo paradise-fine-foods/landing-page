@@ -23,6 +23,14 @@ export interface UiCopy {
     legal: string;
     copyright: string;
   };
+  floatingRail: {
+    navigation: string;
+    toggleOpen: string;
+    toggleClose: string;
+    buy: string;
+    sell: string;
+    contact: string;
+  };
   hero: {
     eyebrow: string;
     title: string;
@@ -162,6 +170,7 @@ export const ui: Record<Locale, UiCopy> = {
     demoNoticeLabel: 'Review / 00',
     header: { navigation: 'Primary navigation', menuOpen: 'Open menu', menuClose: 'Close menu', home: 'Home', products: 'Products', brands: 'Brands', contact: 'Contact', language: 'Tiếng Việt' },
     footer: { tagline: 'Exceptional ingredients, handled with care.', navigation: 'Explore', contact: 'Contact', legal: 'Demo content for review only.', copyright: 'Paradise Fine Foods. All rights reserved.' },
+    floatingRail: { navigation: 'Enquiry options', toggleOpen: 'Open enquiry options', toggleClose: 'Close enquiry options', buy: 'Buy ingredients', sell: 'Sell products', contact: 'General enquiry' },
     hero: { eyebrow: 'Living ingredients', title: 'Exceptional ingredients. Delivered with confidence.', description: 'A review-ready showcase of specialty dairy and professional ingredients, supported by careful handling and responsive service.', primaryCta: 'Explore products', secondaryCta: 'Start an enquiry', brand: 'Brand', origin: 'Origin', packFormat: 'Pack format', storage: 'Storage' },
     home: {
       credibilityTitle: 'Built for dependable ingredient sourcing',
@@ -199,6 +208,7 @@ export const ui: Record<Locale, UiCopy> = {
     demoNoticeLabel: 'Duyệt / 00',
     header: { navigation: 'Điều hướng chính', menuOpen: 'Mở menu', menuClose: 'Đóng menu', home: 'Trang chủ', products: 'Sản phẩm', brands: 'Thương hiệu', contact: 'Liên hệ', language: 'English' },
     footer: { tagline: 'Nguyên liệu tuyển chọn, được chăm chút cẩn thận.', navigation: 'Khám phá', contact: 'Liên hệ', legal: 'Nội dung demo chỉ dùng để duyệt.', copyright: 'Paradise Fine Foods. Bảo lưu mọi quyền.' },
+    floatingRail: { navigation: 'Lựa chọn yêu cầu', toggleOpen: 'Mở lựa chọn yêu cầu', toggleClose: 'Đóng lựa chọn yêu cầu', buy: 'Mua nguyên liệu', sell: 'Cung cấp sản phẩm', contact: 'Yêu cầu chung' },
     hero: { eyebrow: 'Nguyên liệu sống động', title: 'Nguyên liệu tuyển chọn. Giao hàng trọn niềm tin.', description: 'Không gian giới thiệu sẵn sàng để duyệt về nguyên liệu sữa đặc tuyển và nguyên liệu chuyên nghiệp, cùng quy trình bảo quản cẩn thận và dịch vụ linh hoạt.', primaryCta: 'Khám phá sản phẩm', secondaryCta: 'Gửi yêu cầu', brand: 'Thương hiệu', origin: 'Xuất xứ', packFormat: 'Quy cách', storage: 'Bảo quản' },
     home: {
       credibilityTitle: 'Nền tảng tìm nguồn nguyên liệu đáng tin cậy',
