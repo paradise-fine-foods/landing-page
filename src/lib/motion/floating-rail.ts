@@ -31,8 +31,10 @@ export function initializeFloatingRail(
   };
   const updateVisibility = () => {
     const visible = shouldShowFloatingRail(viewport.scrollY, viewport.innerHeight);
+    const wasVisible = root.dataset.visible === 'true';
     root.dataset.visible = String(visible);
     if (!visible) setExpanded(false);
+    else if (!wasVisible) setExpanded(viewport.innerWidth > 768);
   };
   const onScroll = () => updateVisibility();
   const onClick = () => setExpanded(root.dataset.expanded !== 'true');
@@ -43,9 +45,17 @@ export function initializeFloatingRail(
   };
 
   root.dataset.ready = 'true';
+  setExpanded(false);
   updateVisibility();
-  setExpanded(viewport.innerWidth > 768);
+  let isWide = viewport.innerWidth > 768;
+  const onResize = () => {
+    const nextIsWide = viewport.innerWidth > 768;
+    if (nextIsWide === isWide) return;
+    isWide = nextIsWide;
+    if (root.dataset.visible === 'true') setExpanded(isWide);
+  };
   viewport.addEventListener('scroll', onScroll, { passive: true });
+  viewport.addEventListener('resize', onResize);
   toggle.addEventListener('click', onClick);
   documentTarget.addEventListener('keydown', onKeydown);
 
@@ -55,6 +65,7 @@ export function initializeFloatingRail(
       if (disposed) return;
       disposed = true;
       viewport.removeEventListener('scroll', onScroll);
+      viewport.removeEventListener('resize', onResize);
       toggle.removeEventListener('click', onClick);
       documentTarget.removeEventListener('keydown', onKeydown);
     },

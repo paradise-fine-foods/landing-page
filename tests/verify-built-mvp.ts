@@ -23,6 +23,10 @@ const required = [
   'href="/en/products/"',
   'href="/vi/"',
   'href="/vi/products/"',
+  'data-floating-rail',
+  'href="/en/contact/?interest=retail"',
+  'href="/en/contact/?interest=other"',
+  'href="/en/contact/"',
 ];
 
 for (const value of required) {
@@ -77,10 +81,17 @@ if (canonicalLocalizedPages.length < 20) {
   throw new Error(`dist: expected at least 20 canonical localized pages, found ${canonicalLocalizedPages.length}`);
 }
 
-for (const { path } of canonicalLocalizedPages) {
+for (const { path, normalizedPath } of canonicalLocalizedPages) {
   const localizedFile = `dist/${path}`;
   const localizedHtml = await Bun.file(localizedFile).text();
-  for (const marker of ['data-floating-rail', '?interest=retail', '?interest=other', 'aria-controls="floating-rail-panel"']) {
+  const locale = normalizedPath.startsWith('en/') ? 'en' : 'vi';
+  for (const marker of [
+    'data-floating-rail',
+    'aria-controls="floating-rail-panel"',
+    `href="/${locale}/contact/?interest=retail"`,
+    `href="/${locale}/contact/?interest=other"`,
+    `href="/${locale}/contact/"`,
+  ]) {
     if (!localizedHtml.includes(marker)) throw new Error(`${localizedFile}: missing ${marker}`);
   }
 }

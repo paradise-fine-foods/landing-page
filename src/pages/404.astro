@@ -5,6 +5,8 @@ import '@fontsource/nunito/500.css';
 import { Image } from 'astro:assets';
 import logo from '../assets/brand/paradise-fine-foods-logo.png';
 import OrganicMark from '../components/global/OrganicMark.astro';
+import FloatingFormRail from '../components/global/FloatingFormRail.astro';
+import { ui } from '../lib/i18n/ui';
 import '../styles/tokens.css';
 import '../styles/typography.css';
 import '../styles/global.css';
@@ -67,6 +69,7 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
       <p>Review-only fictional content · <span lang="vi">Nội dung hư cấu chỉ dùng để duyệt</span></p>
       <p>Paradise Fine Foods</p>
     </footer>
+    <FloatingFormRail locale="en" contactPath="/en/contact/" copy={ui.en.floatingRail} staticOnly />
   </body>
 </html>
 

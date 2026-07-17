@@ -6,9 +6,10 @@ interface Props {
   locale: Locale;
   contactPath: string;
   copy: UiCopy['floatingRail'];
+  staticOnly?: boolean;
 }
 
-const { locale, contactPath, copy } = Astro.props;
+const { locale, contactPath, copy, staticOnly = false } = Astro.props;
 ---
 
 <div class="floating-form-rail" data-floating-rail data-locale={locale}>
@@ -31,12 +32,12 @@ const { locale, contactPath, copy } = Astro.props;
   </nav>
 </div>
 
-<script>
+{!staticOnly && <script>
   import { initializeFloatingRail } from '../../lib/motion/floating-rail';
 
   const rail = document.querySelector<HTMLElement>('[data-floating-rail]');
   if (rail) initializeFloatingRail(rail);
-</script>
+</script>}
 
 <style>
   .floating-form-rail {
@@ -78,6 +79,10 @@ const { locale, contactPath, copy } = Astro.props;
     text-decoration: none;
   }
 
+  .floating-form-rail__toggle { display: none; }
+  .floating-form-rail[data-ready='true'] .floating-form-rail__toggle { display: flex; }
+  .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel { display: none; }
+
   .floating-form-rail__toggle {
     cursor: pointer;
     inline-size: 2.75rem;
@@ -106,21 +111,19 @@ const { locale, contactPath, copy } = Astro.props;
   @media (max-width: 48rem) {
     .floating-form-rail {
       align-items: stretch;
-      flex-direction: row;
+      flex-direction: column;
       inset-block-end: 1rem;
       inset-inline: 1rem;
+      max-inline-size: min(20rem, calc(100vw - 2rem));
       top: auto;
       transform: none;
     }
 
     .floating-form-rail__panel {
-      flex: 1;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
     }
 
-    .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel {
-      display: none;
-    }
+    .floating-form-rail__toggle { align-self: flex-end; }
 
     .floating-form-rail__panel a {
       min-inline-size: 0;

@@ -15,6 +15,10 @@ describe('floating form rail rendering contract', () => {
       '?interest=retail',
       '?interest=other',
       'initializeFloatingRail',
+      'staticOnly?: boolean',
+      "!staticOnly && <script>",
+      "[data-ready='true'] .floating-form-rail__toggle",
+      "[data-ready='true'][data-expanded='false'] .floating-form-rail__panel",
     ]) {
       expect(source).toContain(value);
     }

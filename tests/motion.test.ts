@@ -98,7 +98,7 @@ describe('floating enquiry rail', () => {
     expect(shouldShowFloatingRail(801, 800)).toBe(true);
   });
 
-  test('synchronizes rail state and cleans up each listener once', () => {
+  test('synchronizes visibility, breakpoint expansion, and each listener cleanup once', () => {
     const listeners = new Map<string, EventListener>();
     const removals: string[] = [];
     const createTarget = () => ({
@@ -127,9 +127,24 @@ describe('floating enquiry rail', () => {
 
     const controller = initializeFloatingRail(root, dependencies);
     expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'true' });
+    viewport.innerWidth = 900;
+    listeners.get('resize')?.(new Event('resize'));
+    expect(root.dataset.expanded).toBe('true');
+    viewport.innerWidth = 700;
+    listeners.get('resize')?.(new Event('resize'));
+    expect(root.dataset.expanded).toBe('false');
     viewport.scrollY = 0;
     listeners.get('scroll')?.(new Event('scroll'));
     expect(root.dataset).toMatchObject({ visible: 'false', expanded: 'false' });
+    viewport.innerWidth = 1024;
+    listeners.get('resize')?.(new Event('resize'));
+    expect(root.dataset.expanded).toBe('false');
+    viewport.scrollY = 900;
+    listeners.get('scroll')?.(new Event('scroll'));
+    expect(root.dataset).toMatchObject({ visible: 'true', expanded: 'true' });
+    listeners.get('click')?.(new Event('click'));
+    expect(root.dataset.expanded).toBe('false');
+    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'false', 'aria-label': 'Open enquiries' });
     listeners.get('click')?.(new Event('click'));
     expect(root.dataset.expanded).toBe('true');
     expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
@@ -138,7 +153,7 @@ describe('floating enquiry rail', () => {
     expect(toggle.focusCalls).toBe(1);
     controller.dispose();
     controller.dispose();
-    expect(removals.sort()).toEqual(['click', 'keydown', 'scroll']);
+    expect(removals.sort()).toEqual(['click', 'keydown', 'resize', 'scroll']);
   });
 });
 

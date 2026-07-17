@@ -238,6 +238,17 @@ describe('Living Ingredients identity', () => {
     }
   });
 
+  test('keeps the 404 rail static and outside its main landmark', () => {
+    const page = source('src/pages/404.astro');
+    const rail = '<FloatingFormRail locale="en" contactPath="/en/contact/" copy={ui.en.floatingRail} staticOnly />';
+
+    expect(page).toContain("import { ui } from '../lib/i18n/ui';");
+    expect(page).toContain("import FloatingFormRail from '../components/global/FloatingFormRail.astro';");
+    expect(page).toContain(rail);
+    expect(page.indexOf('</main>')).toBeLessThan(page.indexOf(rail));
+    expect(page.indexOf('</footer>')).toBeLessThan(page.indexOf(rail));
+  });
+
   test('removes empty catalog and brand intro decorations from every locale page', () => {
     for (const file of [
       'src/pages/en/products/index.astro',
