@@ -249,6 +249,23 @@ describe('Living Ingredients identity', () => {
     expect(page.indexOf('</footer>')).toBeLessThan(page.indexOf(rail));
   });
 
+  test('styles the floating rail as a Living Ingredients label', () => {
+    const rail = source('src/components/global/FloatingFormRail.astro');
+    for (const token of [
+      'var(--color-rice-paper)',
+      'var(--color-paper-white)',
+      'var(--color-deep-herb)',
+      'var(--color-paradise-orange)',
+      'var(--color-mist-blue)',
+      'font-family: var(--font-display)',
+      'clip-path',
+    ]) {
+      expect(rail).toContain(token);
+    }
+    expect(rail).not.toContain('box-shadow');
+    expect(rail).not.toContain('linear-gradient');
+  });
+
   test('removes empty catalog and brand intro decorations from every locale page', () => {
     for (const file of [
       'src/pages/en/products/index.astro',

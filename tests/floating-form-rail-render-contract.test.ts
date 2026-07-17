@@ -30,5 +30,9 @@ describe('floating form rail rendering contract', () => {
   test('defines localized floating rail copy', async () => {
     const source = await read('../src/lib/i18n/ui.ts');
     expect(source).toContain('floatingRail:');
+    expect(source).toContain("label: 'Enquire'");
+    expect(source).toContain("panelTitle: 'Start a conversation'");
+    expect(source).toContain("label: 'Trao đổi'");
+    expect(source).toContain("panelTitle: 'Bắt đầu trao đổi'");
   });
 });

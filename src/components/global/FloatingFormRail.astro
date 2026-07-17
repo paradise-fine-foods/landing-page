@@ -44,9 +44,10 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
 
 <style>
   .floating-form-rail {
+    align-items: flex-end;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    flex-direction: row-reverse;
+    gap: 0.75rem;
     inset-inline-end: 1rem;
     position: fixed;
     top: 50%;
@@ -70,9 +71,6 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
   .floating-form-rail__toggle,
   .floating-form-rail__panel a {
     align-items: center;
-    background: var(--color-deep-herb);
-    border: 1px solid var(--color-deep-herb);
-    color: var(--color-rice-paper);
     display: flex;
     font-family: var(--font-body);
     font-size: var(--text-sm);
@@ -87,34 +85,97 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
   .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel { display: none; }
 
   .floating-form-rail__toggle {
+    align-items: center;
+    background: var(--color-deep-herb);
+    border: 0;
+    border-inline-start: 0.25rem solid var(--color-paradise-orange);
+    color: var(--color-rice-paper);
     cursor: pointer;
-    inline-size: 2.75rem;
-    padding: 0;
+    flex-direction: column;
+    gap: 0.5rem;
+    inline-size: 4.25rem;
+    justify-content: center;
+    min-block-size: 5.75rem;
+    padding: 0.75rem 0.5rem;
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
   }
 
   .floating-form-rail__toggle:hover,
-  .floating-form-rail__toggle:focus-visible,
-  .floating-form-rail__panel a:hover,
-  .floating-form-rail__panel a:focus-visible {
-    background: var(--color-paradise-blue);
-    border-color: var(--color-paradise-blue);
+  .floating-form-rail__toggle:focus-visible {
+    background: var(--color-paradise-orange);
+    color: var(--color-paper-white);
+  }
+
+  .floating-form-rail__label {
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    line-height: 1;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+
+  .floating-form-rail__toggle-icon {
+    font-size: var(--text-xl);
+    font-weight: 400;
+    line-height: 1;
   }
 
   .floating-form-rail__panel {
+    background: var(--color-paper-white);
+    border-block-start: 0.25rem solid var(--color-paradise-orange);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1rem), calc(100% - 1rem) 100%, 0 100%);
     display: grid;
-    gap: 1px;
-    transition: opacity 180ms ease;
+    gap: 0;
+    min-inline-size: min(19rem, calc(100vw - 2rem));
+    padding: 1rem 1rem 0.875rem;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .floating-form-rail__marker {
+    background: var(--color-paradise-orange);
+    block-size: 0.25rem;
+    display: block;
+    inline-size: 2rem;
+    margin-block-end: 0.75rem;
+  }
+
+  .floating-form-rail__heading {
+    color: var(--color-deep-herb);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    line-height: var(--leading-heading);
+    padding-block-end: 0.625rem;
   }
 
   .floating-form-rail__panel a {
-    min-inline-size: 10rem;
-    padding-inline: 1rem;
+    background: transparent;
+    border-block-start: 1px solid color-mix(in srgb, var(--color-deep-herb) 18%, transparent);
+    color: var(--color-deep-herb);
+    justify-content: space-between;
+    min-block-size: 3rem;
+    padding-inline: 0.25rem;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  .floating-form-rail__panel a::after {
+    color: var(--color-paradise-orange);
+    content: '↗';
+    font-size: var(--text-lg);
+    font-weight: 400;
+    margin-inline-start: 1rem;
+  }
+
+  .floating-form-rail__panel a:hover,
+  .floating-form-rail__panel a:focus-visible {
+    background: var(--color-mist-blue);
+    color: var(--color-deep-herb);
   }
 
   @media (max-width: 48rem) {
     .floating-form-rail {
-      align-items: stretch;
-      flex-direction: column;
+      align-items: flex-end;
+      flex-direction: column-reverse;
       inset-block-end: 1rem;
       inset-inline: 1rem;
       max-inline-size: min(20rem, calc(100vw - 2rem));
@@ -123,21 +184,28 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     }
 
     .floating-form-rail__panel {
-      grid-template-columns: 1fr;
+      min-inline-size: 0;
+      inline-size: 100%;
     }
 
-    .floating-form-rail__toggle { align-self: flex-end; }
+    .floating-form-rail__toggle {
+      flex-direction: row;
+      inline-size: auto;
+      min-block-size: 3.25rem;
+      min-inline-size: 7rem;
+    }
 
-    .floating-form-rail__panel a {
-      min-inline-size: 0;
-      padding-inline: 0.5rem;
-      text-align: center;
+    .floating-form-rail__label {
+      writing-mode: horizontal-tb;
+      transform: none;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .floating-form-rail,
-    .floating-form-rail__panel {
+    .floating-form-rail__panel,
+    .floating-form-rail__toggle,
+    .floating-form-rail__panel a {
       transition: none;
     }
   }
