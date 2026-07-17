@@ -7,6 +7,9 @@ dist/
 # dependencies
 node_modules/
 
+# isolated agent worktrees
+.worktrees/
+
 # logs
 npm-debug.log*
 yarn-debug.log*
