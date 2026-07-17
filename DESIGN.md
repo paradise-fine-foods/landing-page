@@ -245,33 +245,33 @@ The visual system combines:
 - Disciplined alignment for technical data, filters and forms
 - Subtle tactile textures used only in feature moments
 
-The experience should feel premium before a user notices any individual decorative feature. Refrigeration cues must remain abstract and architectural—precise rails, cool light, controlled reflections—not literal appliance imagery or laboratory sterility. Warm food imagery and human culinary craft keep the system appetizing.
+The experience should feel cultivated before a user notices any individual decorative feature. Organic forms must improve grouping, progression or tactility rather than become generic botanical decoration. Warm product imagery, asymmetry and human culinary craft keep the system appetizing; disciplined alignment keeps technical information trustworthy.
 
 ## 5.2 Color system
 
-The master palette is intentionally compact. It draws from milk, cold-chain infrastructure, cultured butter, and restrained wine/provenance cues rather than a generic collection of fashionable food colors.
+The master palette is intentionally compact and grounded in the Paradise identity plus the brochure's short blue, green and coral accents.
 
 | Token | Hex | Use |
 |---|---:|---|
-| `milk-paper` | `#F7F8F4` | Primary page surface and quiet product stages |
-| `cold-chain-blue` | `#123C69` | Navigation, structure, selected states, primary actions |
-| `carbon` | `#172127` | Primary text and dark editorial moments |
-| `stainless` | `#A9B4B8` | Rules, technical metadata, disabled states, stage details |
-| `cultured-butter` | `#F2C14E` | Controlled culinary emphasis and active details |
-| `bordeaux` | `#7D2C3B` | Rare campaign, origin, or provenance accent |
-| `paper-white` | `#FFFFFF` | Forms, pack-shot backgrounds, and high-clarity cards |
-| `success-700` | `#356146` | Success feedback |
-| `error-700` | `#9A3F38` | Validation and errors |
+| `paradise-orange` | `#E46F2C` | Primary identity, important actions and connector rules |
+| `fresh-tangerine` | `#FA6C47` | Warm animated and decorative emphasis |
+| `savencia-blue` | `#0796D2` | Informational and partner-continuity accents |
+| `garden-green` | `#94C11F` | Organic accents and non-text positive cues |
+| `soft-coral` | `#D94D55` | Small expressive accents only |
+| `rice-paper` | `#FBFAF5` | Primary page surface |
+| `paper-white` | `#FFFFFF` | Product, form and reading surfaces |
+| `deep-herb` | `#28342B` | Primary text and dark contrast moments |
+| `mist-blue` | `#E8F6FA` | Quiet alternate section surface |
 
 ### Color rules
 
-- Keep each page approximately **75% milk-paper/white, 15% carbon/cold-chain blue, and no more than 10% accent color**.
-- `cultured-butter` is the default Paradise accent. `bordeaux` is rare and must not appear in the same composition merely to add variety.
+- Keep rice-paper and white dominant; use Paradise orange for identity and actions, with blue, green, tangerine and coral in short decorative moments.
+- Bright palette colors are not body-text colors. Use deep herb or another contrast-tested dark token for text on light surfaces.
 - Partner-brand detail pages may temporarily adopt the brand's approved accent color while retaining Paradise typography and layout. Each approved color must declare contrast-tested roles: decorative field, rule, selected background, or text. An untested partner color is decoration only and may not carry text or interaction state.
 - Product pack colors should remain visually accurate and should not be recolored to match the website.
 - Do not use metallic gradients or fake gold.
-- Stainless may be represented through flat color, subtle directional light, and fine rules; do not use chrome gradients as decoration.
-- Use dark carbon or cold-chain-blue sections for one or two major moments per page, not as the default background.
+- Use authored droplet/petal shapes and thin orange specification rules rather than metallic rails or technical framing.
+- Dark sections are exceptional contrast moments, not the default section treatment.
 - Maintain WCAG AA contrast for text and interactive controls.
 
 ## 5.3 Typography
@@ -279,11 +279,11 @@ The master palette is intentionally compact. It draws from milk, cold-chain infr
 ### Recommended open-source pairing
 
 - **Display:** `Newsreader`
-- **Body/UI:** `Be Vietnam Pro`
+- **Body/UI:** `Nunito`
 
-Both families support Vietnamese and are available under open font licenses. Newsreader supplies a screen-native editorial voice; Be Vietnam Pro gives navigation, body copy, controls, and technical metadata a deliberate Vietnamese foundation. Self-host only the weights and subsets actually used.
+Both families support Vietnamese and are available under open font licenses. Newsreader supplies a soft editorial voice; Nunito preserves continuity with the Paradise identity for navigation, body copy, controls and technical metadata. Self-host only the weights and subsets actually used.
 
-Sources: [Newsreader repository](https://github.com/productiontype/Newsreader) and [Be Vietnam repository](https://github.com/bettergui/BeVietnam).
+Sources: [Newsreader repository](https://github.com/productiontype/Newsreader) and [Nunito repository](https://github.com/googlefonts/nunito).
 
 ### Type scale
 
@@ -305,7 +305,7 @@ Sources: [Newsreader repository](https://github.com/productiontype/Newsreader) a
 
 - Display serif is reserved for headlines, quotes, and important numbers.
 - Do not use serif for filters, menus, buttons, or long body copy.
-- Eyebrows use uppercase with `0.12em` tracking.
+- Eyebrows use restrained case and tracking; avoid repeated industrial-style uppercase labels.
 - Avoid full-uppercase headlines.
 - Keep homepage hero headlines under 10 words.
 - Text blocks should generally remain below 66 characters per line.

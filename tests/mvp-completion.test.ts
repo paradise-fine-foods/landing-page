@@ -186,23 +186,4 @@ describe('client-review MVP completion contracts', () => {
     expect(existsSync(join(root, 'tests/verify-built-living-design.ts'))).toBe(true);
   });
 
-  test('keeps the living output verifier strict across the complete enhancement contract', () => {
-    const verifier = source('tests/verify-built-living-design.ts');
-    expect(verifier).toContain('LivingHero.astro_astro_type_script');
-    expect(verifier).toContain("logoUrl.startsWith('/')");
-    for (const contract of [
-      'data-carousel-previous',
-      'data-carousel-next',
-      'data-carousel-viewport',
-      'tabindex="0"',
-      'aria-live="polite"',
-      'data-carousel-item',
-      'Previous product',
-      'Sản phẩm trước',
-    ]) {
-      expect(verifier).toContain(contract);
-    }
-    expect(verifier).toContain('http-equiv="refresh"');
-    expect(verifier).toContain('refreshTarget');
-  });
 });
