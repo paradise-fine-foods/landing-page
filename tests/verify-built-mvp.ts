@@ -52,5 +52,13 @@ const css = (await Promise.all(stylesheetUrls.map((url) => Bun.file(`dist${url}`
 if (!/\.not-found__link[^}]*min-block-size:2\.75rem/.test(css)) {
   throw new Error(`${file}: generated recovery-link CSS does not preserve the 44px target floor`);
 }
+for (const decoration of ['drop', 'petal']) {
+  if (!new RegExp(`<svg\\b[^>]*class="[^"]*not-found__${decoration}[^"]*"`).test(html)) {
+    throw new Error(`${file}: generated ${decoration} decoration is missing its HTML class`);
+  }
+  if (!css.includes(`.not-found__${decoration}{`)) {
+    throw new Error(`${file}: generated ${decoration} decoration CSS is not global across the OrganicMark boundary`);
+  }
+}
 
 console.log('Verified generated bilingual 404 metadata, landmarks, direct locale links, and no-JavaScript contract.');
