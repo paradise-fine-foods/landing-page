@@ -2,6 +2,7 @@ import type { Locale } from '../i18n/types';
 import { filterProducts } from '../catalog/filter-products';
 import {
   demoBrands,
+  demoBrandingAssets,
   demoCategories,
   demoFeaturedContent,
   demoGlobalSettings,
@@ -16,6 +17,7 @@ import type {
   Category,
   FeaturedContent,
   GlobalSettings,
+  BrandingAsset,
   ImageAsset,
   Product,
   ProductQuery,
@@ -95,6 +97,15 @@ export const getGlobalSettings = async (locale: Locale): Promise<GlobalSettings>
   siteName: demoGlobalSettings.siteName[locale],
   siteDescription: demoGlobalSettings.siteDescription[locale],
   demoNotice: demoGlobalSettings.demoNotice[locale],
+  partners: demoBrandingAssets.map((asset): BrandingAsset => ({
+    id: asset.id,
+    src: asset.src,
+    width: asset.width,
+    height: asset.height,
+    alt: asset.alt[locale],
+    sourceUrl: asset.sourceUrl,
+    group: asset.group,
+  })),
 });
 
 export const getCategories = async (locale: Locale): Promise<Category[]> =>

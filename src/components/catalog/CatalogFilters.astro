@@ -1,6 +1,7 @@
 ---
 import type { Brand, Category } from '../../lib/cms/types';
 import type { UiCopy } from '../../lib/i18n/ui';
+import Icon from '../global/Icon.astro';
 
 interface Props {
   categories: Category[];
@@ -49,7 +50,7 @@ const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSing
       aria-live="polite"
       aria-atomic="true"
     >{initialCountText}</p>
-    <button type="button" data-reset-filters>{copy.resetFilters}</button>
+    <button type="button" data-reset-filters><Icon name="lucide:rotate-ccw" size="1em" />{copy.resetFilters}</button>
   </div>
 </div>
 

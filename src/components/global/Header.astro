@@ -5,6 +5,7 @@ import type { Locale } from '../../lib/i18n/types';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
 import LanguageSwitcher from './LanguageSwitcher.astro';
+import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
@@ -26,7 +27,7 @@ const links = [
 <header class="site-header" data-header>
   <div class="site-header__bar container">
     <a class="wordmark" href={localizedPath(locale, 'home')} aria-label={siteName}>
-      <Image src={paradiseLogo} alt="" loading="eager" />
+      <Image src={paradiseLogo} alt={siteName} loading="eager" />
     </a>
     <button
       class="menu-toggle"
@@ -38,7 +39,8 @@ const links = [
       data-close-label={copy.menuClose}
     >
       <span data-menu-label>{copy.menuOpen}</span>
-      <span class="menu-toggle__mark" aria-hidden="true"></span>
+      <span class="menu-toggle__icon menu-toggle__icon--open" aria-hidden="true"><Icon name="lucide:menu" size="1.2em" /></span>
+      <span class="menu-toggle__icon menu-toggle__icon--close" aria-hidden="true"><Icon name="lucide:x" size="1.2em" /></span>
     </button>
     <nav id="primary-navigation" class="primary-nav" aria-label={copy.navigation} data-navigation>
       <ul>
@@ -136,7 +138,10 @@ const links = [
       min-block-size: 2.75rem;
       padding: 0;
     }
-    .menu-toggle__mark { border-block: 1px solid currentColor; block-size: 0.45rem; inline-size: 1.15rem; }
+    .menu-toggle__icon { align-items: center; display: inline-flex; }
+    .menu-toggle__icon--close { display: none; }
+    .menu-toggle[aria-expanded='true'] .menu-toggle__icon--open { display: none; }
+    .menu-toggle[aria-expanded='true'] .menu-toggle__icon--close { display: inline-flex; }
     .site-header--enhanced .primary-nav {
       align-items: stretch;
       background: var(--color-rice-paper);

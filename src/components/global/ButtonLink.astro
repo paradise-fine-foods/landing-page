@@ -5,12 +5,14 @@ interface Props {
   class?: string;
 }
 
+import Icon from './Icon.astro';
+
 const { href, variant = 'primary', class: className } = Astro.props;
 ---
 
 <a class:list={['button-link', `button-link--${variant}`, className]} href={href}>
   <slot />
-  <span aria-hidden="true">↗</span>
+  <Icon name="lucide:arrow-up-right" size="1.05em" />
 </a>
 
 <style>

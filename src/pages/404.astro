@@ -5,6 +5,7 @@ import '@fontsource/nunito/500.css';
 import { Image } from 'astro:assets';
 import logo from '../assets/brand/paradise-fine-foods-logo.png';
 import OrganicMark from '../components/global/OrganicMark.astro';
+import Icon from '../components/global/Icon.astro';
 import FloatingFormRail from '../components/global/FloatingFormRail.astro';
 import { ui } from '../lib/i18n/ui';
 import '../styles/tokens.css';
@@ -48,7 +49,7 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
           <h1 id="not-found-en">This page could not be found</h1>
           <p>The address may have changed, or this page may not be part of the client-review demo. Choose a clear English destination below.</p>
           <nav aria-label="English destinations">
-            <a class="not-found__link not-found__primary" href="/en/">English home <span aria-hidden="true">→</span></a>
+        <a class="not-found__link not-found__primary" href="/en/">English home <Icon name="lucide:arrow-right" size="1.05em" /></a>
             <a class="not-found__link" href="/en/products/">Browse English products</a>
           </nav>
         </section>
@@ -58,7 +59,7 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
           <h2 id="not-found-vi">Không tìm thấy trang này</h2>
           <p>Địa chỉ có thể đã thay đổi hoặc trang này chưa nằm trong phạm vi bản demo dành cho khách hàng duyệt. Vui lòng chọn điểm đến tiếng Việt bên dưới.</p>
           <nav aria-label="Điểm đến tiếng Việt">
-            <a class="not-found__link not-found__primary" href="/vi/">Trang chủ tiếng Việt <span aria-hidden="true">→</span></a>
+        <a class="not-found__link not-found__primary" href="/vi/">Trang chủ tiếng Việt <Icon name="lucide:arrow-right" size="1.05em" /></a>
             <a class="not-found__link" href="/vi/products/">Xem sản phẩm tiếng Việt</a>
           </nav>
         </section>

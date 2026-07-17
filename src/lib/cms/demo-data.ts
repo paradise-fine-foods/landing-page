@@ -2,6 +2,14 @@ import type { BrandAccent, LocalizedSlug, LocalizedText } from './types';
 import editorialTableSrc from '../../assets/demo/editorial-table.svg?no-inline';
 import livingHeroProductSrc from '../../assets/demo/living-hero-product.svg?no-inline';
 import productArtSrc from '../../assets/demo/product-art.svg?no-inline';
+import megaMartSrc from '../../assets/brand/paradise/mega-mart.jpeg?no-inline';
+import winmartSrc from '../../assets/brand/paradise/winmart.png?no-inline';
+import aeonMallSrc from '../../assets/brand/paradise/aeon-mall.png?no-inline';
+import emartSrc from '../../assets/brand/paradise/emart.png?no-inline';
+import lotteMartSrc from '../../assets/brand/paradise/lotte-mart.png?no-inline';
+import bachHoaXanhSrc from '../../assets/brand/paradise/bach-hoa-xanh.png?no-inline';
+import satraSrc from '../../assets/brand/paradise/satra.png?no-inline';
+import beeMartSrc from '../../assets/brand/paradise/beemart.png?no-inline';
 
 interface DemoImageAsset {
   src: string;
@@ -45,6 +53,16 @@ export interface DemoProduct {
   benefits: Record<'en' | 'vi', string[]>;
   featured: boolean;
   demo: true;
+}
+
+export interface DemoBrandingAsset {
+  id: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: LocalizedText;
+  sourceUrl: string;
+  group: 'retail' | 'horeca' | 'ecommerce';
 }
 
 const productImage = (en: string, vi: string): DemoImageAsset => ({
@@ -259,6 +277,17 @@ export const demoGlobalSettings = {
     vi: 'Nội dung hư cấu chỉ để duyệt: mọi tên gọi, thông số, tuyên bố và hình ảnh đều là hư cấu.',
   },
 };
+
+export const demoBrandingAssets: DemoBrandingAsset[] = [
+  { id: 'mega-mart', src: megaMartSrc, width: 512, height: 207, alt: { en: 'Mega Market partner mark', vi: 'Logo đối tác Mega Market' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/mega-mart.jpeg', group: 'retail' },
+  { id: 'winmart', src: winmartSrc, width: 792, height: 397, alt: { en: 'WinMart partner mark', vi: 'Logo đối tác WinMart' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/winmart.png', group: 'retail' },
+  { id: 'aeon-mall', src: aeonMallSrc, width: 392, height: 128, alt: { en: 'AEON Mall partner mark', vi: 'Logo đối tác AEON Mall' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/aeon-mall.png', group: 'retail' },
+  { id: 'emart', src: emartSrc, width: 1280, height: 362, alt: { en: 'Emart partner mark', vi: 'Logo đối tác Emart' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/1280px-Emart_Logo.svg_.png', group: 'retail' },
+  { id: 'lotte-mart', src: lotteMartSrc, width: 1672, height: 391, alt: { en: 'Lotte Mart partner mark', vi: 'Logo đối tác Lotte Mart' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/1672px-Lotte_Mart_2018.svg_.png', group: 'retail' },
+  { id: 'bach-hoa-xanh', src: bachHoaXanhSrc, width: 350, height: 150, alt: { en: 'Bach Hoa Xanh partner mark', vi: 'Logo đối tác Bách Hóa Xanh' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/logo-bach-hoa-xanh.png', group: 'retail' },
+  { id: 'satra', src: satraSrc, width: 219, height: 103, alt: { en: 'Satra partner mark', vi: 'Logo đối tác Satra' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/logo-satra.png', group: 'retail' },
+  { id: 'beemart', src: beeMartSrc, width: 1074, height: 354, alt: { en: 'BeeMart partner mark', vi: 'Logo đối tác BeeMart' }, sourceUrl: 'https://paradisefinefoods.com/wp-content/uploads/2021/10/beemart_logo_1074x.png', group: 'ecommerce' },
+];
 
 export const demoFeaturedContent = {
   hero: {

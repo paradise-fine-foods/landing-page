@@ -4,6 +4,7 @@ import type { Locale } from '../../lib/i18n/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import ProductGrid from './ProductGrid.astro';
 import ProductMetadata from './ProductMetadata.astro';
+import Icon from '../global/Icon.astro';
 
 interface Props {
   product: Product;
@@ -36,7 +37,7 @@ const { product, relatedProducts, locale, copy, enquiryPath } = Astro.props;
         <ul>{product.benefits.map((benefit) => <li>{benefit}</li>)}</ul>
       </section>
     </div>
-    <a class="product-detail__enquire" href={`${enquiryPath}?product=${encodeURIComponent(product.id)}`}>{copy.product.enquire}<span aria-hidden="true">→</span></a>
+    <a class="product-detail__enquire" href={`${enquiryPath}?product=${encodeURIComponent(product.id)}`}>{copy.product.enquire}<Icon name="lucide:arrow-right" size="1.05em" /></a>
   </div>
 </article>
 

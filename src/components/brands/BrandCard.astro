@@ -3,6 +3,7 @@ import type { Brand } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
+import Icon from '../global/Icon.astro';
 
 interface Props { brand: Brand; locale: Locale; index?: number; headingLevel?: 'h2' | 'h3' }
 const { brand, locale, headingLevel = 'h3' } = Astro.props;
@@ -21,7 +22,7 @@ const accentClasses: Record<Brand['accent'], string> = {
     <Heading>{brand.name}</Heading>
     <p>{brand.description}</p>
   </div>
-  <a href={href}>{ui[locale].brand.viewBrand}<span aria-hidden="true">↗</span></a>
+  <a href={href}>{ui[locale].brand.viewBrand}<Icon name="lucide:arrow-up-right" size="1.05em" /></a>
 </article>
 
 <style>

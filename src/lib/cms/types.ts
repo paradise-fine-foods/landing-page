@@ -13,6 +13,16 @@ export interface ImageAsset {
   alt: string;
 }
 
+export interface BrandingAsset {
+  id: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  sourceUrl: string;
+  group: 'retail' | 'horeca' | 'ecommerce';
+}
+
 export interface Category {
   id: string;
   slug: string;
@@ -58,6 +68,7 @@ export interface GlobalSettings {
   siteName: string;
   siteDescription: string;
   demoNotice: string;
+  partners: BrandingAsset[];
 }
 
 export interface FeaturedContent {

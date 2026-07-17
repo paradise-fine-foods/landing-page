@@ -8,6 +8,7 @@ import FeaturedBrands from '../../components/sections/FeaturedBrands.astro';
 import ServiceProof from '../../components/sections/ServiceProof.astro';
 import ChannelPathways from '../../components/sections/ChannelPathways.astro';
 import FinalCta from '../../components/sections/FinalCta.astro';
+import PartnerStrip from '../../components/sections/PartnerStrip.astro';
 import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getProducts } from '../../lib/cms/queries';
 import { counterpartPath, localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
@@ -43,6 +44,7 @@ const channels = [
   <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {categoryCounts} productLabel={copy.home.categoryProductLabel} {productsPath} />
   <FeaturedProducts eyebrow={copy.home.featuredProductsEyebrow} title={copy.home.featuredProductsTitle} products={products.filter((product) => product.featured)} locale={locale} carousel={copy.home.carousel} />
   <FeaturedBrands eyebrow={copy.home.featuredBrandsEyebrow} title={copy.home.featuredBrandsTitle} {selectedBrand} {selectedBrandProducts} {remainingBrands} locale={locale} />
+  <PartnerStrip eyebrow={copy.home.partnersEyebrow} title={copy.home.partnersTitle} partners={settings.partners} />
   <ServiceProof eyebrow={copy.home.serviceEyebrow} title={copy.home.serviceTitle} description={copy.home.serviceDescription} temperatureLabel={copy.home.serviceTemperatureLabel} pillars={copy.home.operationalPillars} editorial={featured.editorial} />
   <ChannelPathways eyebrow={copy.home.channelsEyebrow} title={copy.home.channelsTitle} {channels} />
   <FinalCta title={copy.home.finalCtaTitle} description={copy.home.finalCtaDescription} button={copy.home.finalCtaButton} href={contactPath} />

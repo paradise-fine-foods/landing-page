@@ -150,6 +150,14 @@ The review build self-hosts the authentic Paradise Fine Foods full logo rather t
 |---|---|---|---|---|
 | `src/assets/brand/paradise-fine-foods-logo.png` | Authentic self-hosted full logo used only in the client-review demo | Paradise brand owner and legal reviewer | Current Paradise source PNG, master identity artwork, usage guidance and confirmation that this export is approved for the production web property | Brand and legal owners approve the exact file, placement, sizing, accessible naming and production usage in both localized experiences |
 
+The homepage partner strip also self-hosts a limited set of partner marks retrieved from the public Paradise partner sections. Source URLs and localized alt text are recorded in `src/assets/brand/paradise/SOURCES.md`; these marks are review-only until the brand/legal owner approves their use.
+
+Partner source URLs: `https://paradisefinefoods.com/wp-content/uploads/2021/10/1280px-Emart_Logo.svg_.png`, `https://paradisefinefoods.com/wp-content/uploads/2021/10/1672px-Lotte_Mart_2018.svg_.png`, `https://paradisefinefoods.com/wp-content/uploads/2021/10/aeon-mall.png`, `https://paradisefinefoods.com/wp-content/uploads/2021/10/beemart_logo_1074x.png`, `https://paradisefinefoods.com/wp-content/uploads/2021/10/logo-bach-hoa-xanh.png`, `https://paradisefinefoods.com/wp-content/uploads/2021/10/logo-satra.png`, `https://paradisefinefoods.com/wp-content/uploads/2021/10/mega-mart.jpeg`, `https://paradisefinefoods.com/wp-content/uploads/2021/10/winmart.png`.
+
+| Asset group | Demo-only status | Production owner | Source/input | Acceptance |
+|---|---|---|---|---|
+| `src/assets/brand/paradise/*` partner marks | Local partner branding shown in a restrained homepage strip; fictional product/catalog imagery remains unchanged | Paradise brand owner + legal reviewer | Public Paradise partner image exports, source URL ledger, localized alt text and usage approval | Each mark is approved, legible at responsive sizes, locally served, and removed or replaced if approval is unavailable |
+
 ## Authored demo media and motion enhancement
 
 | Asset | Review-only role | Production owner | Source/input | Acceptance |
@@ -157,8 +165,8 @@ The review build self-hosts the authentic Paradise Fine Foods full logo rather t
 | `src/assets/demo/editorial-table.svg` | Original unbranded abstract kitchen still life used by editorial/service proof | Creative owner + rights reviewer | Approved commissioned image, crops, alt text, author and license/release record | Rights register complete; art direction, responsive crops, alt and performance pass |
 | `src/assets/demo/product-art.svg` | Original unbranded geometric pack art reused for categories, brands and all product cards/details | Creative owner + product/brand owners | Approved category art plus distinct accurate brand/product pack imagery | No demo reuse remains; each mapped record has approved image, crop, dimensions and alt |
 | `src/assets/demo/living-hero-product.svg` | Original fictional unbranded package silhouette with Paradise-inspired droplet and petal forms for the server-rendered homepage hero | Creative owner + product owner | Approved commissioned hero art, localized alt text, responsive crop guidance and rights record | Product owner approves the fictional-to-production replacement; dimensions, crop, LCP delivery, contrast and rights QA pass |
-| `public/favicon.svg` | Unmodified Astro starter mark shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Approved Paradise monogram/favicon SVG, source artwork, author and usage rights | Default Astro artwork is absent; brand owner approves the mark; light/dark and small-size legibility QA pass |
-| `public/favicon.ico` | Unmodified Astro starter icon shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Multi-size ICO export of the approved Paradise favicon and its source artwork | Default Astro artwork is absent; icon matches approved SVG and renders clearly at browser favicon sizes |
+| `public/favicon.svg` | Local Paradise-inspired favicon used by the shared layout | Paradise brand/creative owner | Approved Paradise monogram/favicon SVG, source artwork, author and usage rights | Brand owner approves the mark; light/dark and small-size legibility QA pass |
+| `public/favicon.ico` | Legacy fallback retained until the approved favicon export is available | Paradise brand/creative owner | Multi-size ICO export of the approved Paradise favicon and its source artwork | Icon matches approved SVG and renders clearly at browser favicon sizes |
 
 The decorative Canvas 2D layer carries no product content. The digital owner must preserve the reduced-motion and save-data loading gates, the ten-shape maximum, the capped device-pixel ratio and complete server-rendered static Living Hero when maintaining this enhancement.
 

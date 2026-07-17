@@ -1,0 +1,37 @@
+---
+import type { BrandingAsset } from '../../lib/cms/types';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  partners: BrandingAsset[];
+}
+
+const { eyebrow, title, partners } = Astro.props;
+---
+
+<section class="partner-strip section-space" aria-labelledby="partner-strip-title" data-partner-strip>
+  <div class="container partner-strip__heading" data-reveal>
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id="partner-strip-title">{title}</h2>
+  </div>
+  <div class="container partner-strip__grid" data-reveal>
+    {partners.map((partner) => (
+      <div class="partner-strip__asset" data-partner-group={partner.group}>
+        <img src={partner.src} width={partner.width} height={partner.height} alt={partner.alt} loading="lazy" decoding="async" />
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .partner-strip { background: var(--color-rice-paper); border-block-start: 1px solid var(--color-mist-blue); overflow: hidden; }
+  .partner-strip__heading { align-items: end; display: grid; gap: var(--space-5); grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr); margin-block-end: var(--space-6); }
+  .partner-strip__grid { align-items: center; display: grid; gap: 1px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .partner-strip__asset { align-items: center; background: var(--color-paper-white); display: flex; justify-content: center; min-block-size: 5.5rem; padding: var(--space-4); }
+  .partner-strip__asset img { block-size: 2.75rem; inline-size: min(100%, 9rem); object-fit: contain; }
+  :global([data-motion-enhanced]) [data-reveal] { opacity: 0; transform: translateY(1.5rem); }
+  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: opacity 600ms ease, transform 700ms cubic-bezier(.2,.75,.25,1); }
+  @media (max-width: 44rem) { .partner-strip__heading { grid-template-columns: 1fr; } .partner-strip__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } }
+</style>

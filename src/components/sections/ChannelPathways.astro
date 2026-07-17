@@ -1,6 +1,7 @@
 ---
 interface Channel { label: string; description: string; href: string }
 interface Props { eyebrow: string; title: string; channels: Channel[] }
+import Icon from '../global/Icon.astro';
 const { eyebrow, title, channels } = Astro.props;
 ---
 
@@ -9,7 +10,7 @@ const { eyebrow, title, channels } = Astro.props;
   <div class="container channel-pathways__links">
     {channels.map(({ label, description, href }) => (
       <a href={href} data-reveal>
-        <strong>{label}</strong><p>{description}</p><b aria-hidden="true">→</b>
+        <strong>{label}</strong><p>{description}</p><Icon name="lucide:arrow-right" size="1.15em" />
       </a>
     ))}
   </div>

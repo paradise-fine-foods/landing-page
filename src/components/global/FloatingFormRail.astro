@@ -1,6 +1,7 @@
 ---
 import type { Locale } from '../../lib/i18n/types';
 import type { UiCopy } from '../../lib/i18n/ui';
+import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
@@ -23,12 +24,13 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     data-open-label={copy.toggleOpen}
     data-close-label={copy.toggleClose}
   >
-    <span class="floating-form-rail__toggle-icon" data-floating-rail-icon aria-hidden="true"></span>
+    <span class="floating-form-rail__toggle-icon floating-form-rail__toggle-icon--open" data-floating-rail-icon aria-hidden="true"><Icon name="lucide:plus" size="1.15em" /></span>
+    <span class="floating-form-rail__toggle-icon floating-form-rail__toggle-icon--close" data-floating-rail-icon aria-hidden="true"><Icon name="lucide:minus" size="1.15em" /></span>
   </button>
   <nav id="floating-rail-panel" class="floating-form-rail__panel" aria-label={copy.navigation}>
-    <a href={`${contactPath}?interest=retail`}>{copy.buy}</a>
-    <a href={`${contactPath}?interest=other`}>{copy.sell}</a>
-    <a href={contactPath}>{copy.contact}</a>
+    <a href={`${contactPath}?interest=retail`}>{copy.buy}<Icon name="lucide:arrow-up-right" size="1em" /></a>
+    <a href={`${contactPath}?interest=other`}>{copy.sell}<Icon name="lucide:arrow-up-right" size="1em" /></a>
+    <a href={contactPath}>{copy.contact}<Icon name="lucide:arrow-up-right" size="1em" /></a>
   </nav>
 </div>
 
@@ -78,6 +80,7 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     min-block-size: 3.25rem;
     padding: 0;
     pointer-events: auto;
+    filter: drop-shadow(0 0.75rem 1.25rem rgb(40 52 43 / 0.16)) drop-shadow(0 0.125rem 0.25rem rgb(40 52 43 / 0.12));
     transition: background-color 160ms ease;
   }
 
@@ -88,44 +91,20 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     background: var(--color-deep-herb);
   }
 
-  .floating-form-rail__toggle-icon {
-    block-size: 1rem;
-    inline-size: 1rem;
-    position: relative;
-  }
-
-  .floating-form-rail__toggle-icon::before,
-  .floating-form-rail__toggle-icon::after {
-    background: currentColor;
-    content: '';
-    inset: 50% auto auto 50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  .floating-form-rail__toggle-icon::before {
-    block-size: 0.125rem;
-    inline-size: 1rem;
-  }
-
-  .floating-form-rail__toggle-icon::after {
-    block-size: 1rem;
-    inline-size: 0.125rem;
-  }
-
-  .floating-form-rail[data-expanded='true'] .floating-form-rail__toggle-icon::after {
-    transform: translate(-50%, -50%) scaleY(0);
-  }
+  .floating-form-rail__toggle-icon { align-items: center; display: inline-flex; transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1), transform 360ms cubic-bezier(0.22, 1, 0.36, 1); }
+  .floating-form-rail__toggle-icon--close { display: none; }
+  .floating-form-rail[data-expanded='true'] .floating-form-rail__toggle-icon--open { display: none; }
+  .floating-form-rail[data-expanded='true'] .floating-form-rail__toggle-icon--close { display: inline-flex; }
 
   .floating-form-rail__panel {
     background: var(--color-rice-paper);
     border-block-start: 0.1875rem solid var(--color-paradise-orange);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
     display: grid;
-    inline-size: min(18.5rem, calc(100vw - 3.25rem));
+    filter: drop-shadow(0 0.75rem 1.25rem rgb(40 52 43 / 0.16)) drop-shadow(0 0.125rem 0.25rem rgb(40 52 43 / 0.12));
+    inline-size: min(17rem, calc(100vw - 3.25rem));
     opacity: 1;
-    padding: 0.5rem 1rem 0.75rem;
+    padding: 0.25rem 0.75rem 0.5rem;
     pointer-events: auto;
     translate: 0 0;
     transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -149,20 +128,12 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     border-block-end: 1px solid color-mix(in srgb, var(--color-deep-herb) 16%, transparent);
     color: var(--color-deep-herb);
     justify-content: space-between;
-    min-block-size: 3rem;
+    min-block-size: 2.75rem;
     padding-inline: 0.25rem;
     transition: background-color 160ms ease, color 160ms ease;
   }
 
   .floating-form-rail__panel a:last-child { border-block-end: 0; }
-
-  .floating-form-rail__panel a::after {
-    color: var(--color-paradise-orange);
-    content: '↗';
-    font-size: var(--text-lg);
-    font-weight: 400;
-    margin-inline-start: 1rem;
-  }
 
   .floating-form-rail__panel a:hover,
   .floating-form-rail__panel a:focus-visible {
@@ -204,8 +175,7 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
 
     .floating-form-rail__panel,
     .floating-form-rail__toggle,
-    .floating-form-rail__toggle-icon::before,
-    .floating-form-rail__toggle-icon::after,
+    .floating-form-rail__toggle-icon,
     .floating-form-rail__panel a {
       transition: none;
     }

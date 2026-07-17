@@ -10,6 +10,8 @@ describe('floating form rail rendering contract', () => {
       'data-floating-rail',
       'data-floating-rail-toggle',
       'data-floating-rail-icon',
+      'lucide:plus',
+      'lucide:minus',
       'aria-controls="floating-rail-panel"',
       'aria-expanded="false"',
       '?interest=retail',
@@ -19,6 +21,9 @@ describe('floating form rail rendering contract', () => {
       "!staticOnly && <script>",
       "[data-ready='true'] .floating-form-rail__toggle",
       "[data-ready='true'][data-expanded='false'] .floating-form-rail__panel",
+      'drop-shadow',
+      'inline-size: min(17rem',
+      'min-block-size: 2.75rem',
     ]) expect(source).toContain(value);
 
     for (const obsolete of [
@@ -27,6 +32,10 @@ describe('floating form rail rendering contract', () => {
       'floating-form-rail__marker',
       'copy.label',
       'copy.panelTitle',
+      'Start a conversation',
+      'Enquire',
+      'LET’S TALK',
+      'floating-form-rail__heading',
     ]) expect(source).not.toContain(obsolete);
   });
 

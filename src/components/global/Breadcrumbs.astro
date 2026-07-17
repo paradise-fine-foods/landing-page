@@ -9,6 +9,8 @@ interface Props {
   items: BreadcrumbItem[];
 }
 
+import Icon from './Icon.astro';
+
 const { label, items } = Astro.props;
 ---
 
@@ -17,7 +19,7 @@ const { label, items } = Astro.props;
     {items.map((item, index) => (
       <li>
         {item.href ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}
-        {index < items.length - 1 && <span class="breadcrumbs__separator" aria-hidden="true">/</span>}
+        {index < items.length - 1 && <Icon class="breadcrumbs__separator" name="lucide:chevron-right" size="0.85em" />}
       </li>
     ))}
   </ol>

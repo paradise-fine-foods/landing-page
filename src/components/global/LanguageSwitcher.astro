@@ -1,6 +1,7 @@
 ---
 import { ui } from '../../lib/i18n/ui';
 import type { Locale } from '../../lib/i18n/types';
+import Icon from './Icon.astro';
 
 interface Props {
   currentPath: string;
@@ -20,6 +21,7 @@ const targetLocale = targetLocales[locale];
   lang={targetLocale}
   data-current-path={currentPath}
 >
+  <Icon name="lucide:globe-2" size="1em" />
   <span aria-hidden="true">{targetLocale.toUpperCase()}</span>
   {ui[locale].header.language}
 </a>

@@ -3,6 +3,7 @@ import type { Product } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import ProductCard from '../catalog/ProductCard.astro';
+import Icon from '../global/Icon.astro';
 
 interface Props { eyebrow: string; title: string; products: Product[]; locale: Locale; carousel: UiCopy['home']['carousel'] }
 const { eyebrow, title, products, locale, carousel } = Astro.props;
@@ -13,9 +14,9 @@ const initialStatus = carousel.status.replace('{current}', '1').replace('{total}
   <div class="container featured-products__heading" data-reveal>
     <div><p class="eyebrow">{eyebrow}</p><h2 id="featured-products-title">{title}</h2></div>
     <div class="featured-products__controls" data-carousel-controls hidden>
-      <button type="button" data-carousel-previous aria-label={carousel.previous}><span aria-hidden="true">←</span><span>{carousel.previous}</span></button>
+      <button type="button" data-carousel-previous aria-label={carousel.previous}><Icon name="lucide:chevron-left" size="1.1em" /><span>{carousel.previous}</span></button>
       <p aria-live="polite" aria-atomic="true" data-carousel-status data-carousel-status-template={carousel.status}>{initialStatus}</p>
-      <button type="button" data-carousel-next aria-label={carousel.next}><span>{carousel.next}</span><span aria-hidden="true">→</span></button>
+      <button type="button" data-carousel-next aria-label={carousel.next}><span>{carousel.next}</span><Icon name="lucide:chevron-right" size="1.1em" /></button>
     </div>
   </div>
   <div class="featured-products__viewport" data-carousel-viewport tabindex="0" data-reveal>

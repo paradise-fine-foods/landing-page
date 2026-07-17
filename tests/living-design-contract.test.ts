@@ -261,12 +261,12 @@ describe('Living Ingredients identity', () => {
       '360ms cubic-bezier(0.22, 1, 0.36, 1)',
       '@keyframes floating-rail-enter',
       '@media (prefers-reduced-motion: reduce)',
-      'min-block-size: 3rem',
+      'min-block-size: 2.75rem',
       'min-block-size: 3.25rem',
       'inset-inline-end: 0',
+      'drop-shadow(0 0.75rem 1.25rem',
     ]) expect(rail).toContain(token);
 
-    expect(rail).not.toContain('box-shadow');
     expect(rail).not.toContain('linear-gradient');
     expect(rail).not.toContain('font-family: var(--font-display)');
     expect(rail).not.toContain('floating-form-rail__heading');

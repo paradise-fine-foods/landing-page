@@ -4,6 +4,7 @@ import type { Locale } from '../../lib/i18n/types';
 import { getProductCardMetadata } from '../../lib/catalog/product-card';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
+import Icon from '../global/Icon.astro';
 
 interface Props { product: Product; locale: Locale; headingLevel?: 'h2' | 'h3' }
 const { product, locale, headingLevel = 'h3' } = Astro.props;
@@ -26,7 +27,7 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
     <div><dt>{ui[locale].product.origin}</dt><dd>{product.origin}</dd></div>
     <div><dt>{ui[locale].product.storage}</dt><dd>{product.storage.label} · {product.storage.temperature}</dd></div>
   </dl>
-  <a class="product-card__link" href={href}>{ui[locale].product.viewDetails}<span aria-hidden="true">→</span></a>
+  <a class="product-card__link" href={href}>{ui[locale].product.viewDetails}<Icon name="lucide:arrow-right" size="1.05em" /></a>
 </article>
 
 <style>

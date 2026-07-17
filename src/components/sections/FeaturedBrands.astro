@@ -4,6 +4,7 @@ import type { Locale } from '../../lib/i18n/types';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
 import OrganicMark from '../global/OrganicMark.astro';
+import Icon from '../global/Icon.astro';
 
 interface Props { eyebrow: string; title: string; selectedBrand: Brand; selectedBrandProducts: Product[]; remainingBrands: Brand[]; locale: Locale }
 const { eyebrow, title, selectedBrand, selectedBrandProducts, remainingBrands, locale } = Astro.props;
@@ -37,7 +38,7 @@ const copy = ui[locale];
           ))}
         </div>
       </div>
-      <a class="featured-brands__cta" href={brandHref}>{copy.brand.viewBrand}<span aria-hidden="true">↗</span></a>
+      <a class="featured-brands__cta" href={brandHref}>{copy.brand.viewBrand}<Icon name="lucide:arrow-up-right" size="1.05em" /></a>
     </div>
   </div>
   <div class="container featured-brands__secondary" data-reveal>
@@ -46,7 +47,7 @@ const copy = ui[locale];
         <p>{brand.origin}</p>
         <h3>{brand.name}</h3>
         <p>{brand.description}</p>
-        <a href={`${brandBase}${brand.slug}/`}>{copy.brand.viewBrand}<span aria-hidden="true">→</span></a>
+        <a href={`${brandBase}${brand.slug}/`}>{copy.brand.viewBrand}<Icon name="lucide:arrow-right" size="1.05em" /></a>
       </article>
     ))}
   </div>
