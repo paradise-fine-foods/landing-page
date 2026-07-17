@@ -19,7 +19,7 @@ const copy = ui[locale];
     <header class="brands-page__intro">
       <p>{copy.brand.eyebrow}</p>
       <h1>{copy.brand.title}</h1>
-      <div aria-hidden="true"></div>
+      <div class="brands-page__organic-petal" aria-hidden="true"></div>
       <p>{copy.brand.description}</p>
     </header>
     <section aria-label={copy.brand.title} class="brands-page__grid">
@@ -31,8 +31,9 @@ const copy = ui[locale];
 <style>
   .brands-page { min-inline-size: 0; }
   .brands-page__intro { display: grid; gap: var(--space-5); grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr); padding-block: var(--space-6) var(--space-8); }
-  .brands-page__intro > p:first-child { color: var(--color-cold-chain-blue); font-size: var(--text-xs); font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .brands-page__intro > p:first-child { color: var(--color-deep-herb); font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .brands-page__intro h1 { font-size: var(--text-hero); max-inline-size: 13ch; }
+  .brands-page__organic-petal { align-self: end; background: var(--color-paradise-green); block-size: 1rem; border-radius: var(--shape-drop); inline-size: 3rem; }
   .brands-page__intro > p:last-child { font-size: var(--text-lg); max-inline-size: var(--measure); }
   .brands-page__grid { display: grid; }
   @media (max-width: 42rem) { .brands-page__intro { grid-template-columns: minmax(0, 1fr); } .brands-page__intro > div { display: none; } }

@@ -10,7 +10,7 @@ interface Props {
 const { product, copy } = Astro.props;
 ---
 
-<dl class="product-metadata">
+<dl class="product-metadata product-detail__facts">
   <div><dt>{copy.origin}</dt><dd>{product.origin}</dd></div>
   <div><dt>{copy.category}</dt><dd>{product.categories.map(({ name }) => name).join(' · ')}</dd></div>
   <div><dt>{copy.packFormat}</dt><dd>{product.packFormat}</dd></div>
@@ -18,11 +18,10 @@ const { product, copy } = Astro.props;
 </dl>
 
 <style>
-  .product-metadata { border-block: 1px solid var(--color-stainless); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .product-metadata div { min-inline-size: 0; padding: var(--space-4); }
-  .product-metadata div:nth-child(odd) { border-inline-end: 1px solid var(--color-stainless); }
-  .product-metadata div:nth-child(-n + 2) { border-block-end: 1px solid var(--color-stainless); }
-  .product-metadata dt { color: var(--color-cold-chain-blue); font-size: 0.66rem; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .product-metadata { border-inline-start: 2px solid var(--color-paradise-orange); display: grid; gap: var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); padding-inline-start: var(--space-6); }
+  .product-metadata div { min-inline-size: 0; }
+  .product-metadata dt { color: var(--color-deep-herb); font-size: 0.66rem; font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .product-metadata dd { margin-block-start: var(--space-2); overflow-wrap: anywhere; }
-  @media (max-width: 28rem) { .product-metadata { grid-template-columns: 1fr; } .product-metadata div:nth-child(n) { border-block-end: 1px solid var(--color-stainless); border-inline-end: 0; } .product-metadata div:last-child { border-block-end: 0; } }
+  @media (max-width: 48rem) { .product-metadata { border-inline-start: 0; padding-inline-start: 0; } }
+  @media (max-width: 28rem) { .product-metadata { grid-template-columns: 1fr; } }
 </style>

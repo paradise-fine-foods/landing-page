@@ -2,6 +2,9 @@
 import '@fontsource/newsreader/500.css';
 import '@fontsource/nunito/400.css';
 import '@fontsource/nunito/500.css';
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/paradise-fine-foods-logo.png';
+import OrganicMark from '../components/global/OrganicMark.astro';
 import '../styles/tokens.css';
 import '../styles/typography.css';
 import '../styles/global.css';
@@ -24,17 +27,17 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
     <a class="skip-link" href="#main-content">Skip to content · <span lang="vi">Chuyển đến nội dung</span></a>
     <header class="not-found-header">
       <a class="not-found__link" href="/en/" aria-label="Paradise Fine Foods Demo — English home">
-        <span aria-hidden="true">PFF</span>
-        Paradise Fine Foods Demo
+        <Image src={logo} alt="Paradise Fine Foods" width={158} height={130} />
       </a>
       <p>Client review · <span lang="vi">Bản duyệt khách hàng</span></p>
     </header>
 
     <main id="main-content" class="not-found">
-      <div class="not-found__code" aria-hidden="true">
-        <span>Route</span>
+      <div class="not-found__art" aria-hidden="true">
+        <OrganicMark variant="drop" color="orange" class="not-found__drop" />
+        <OrganicMark variant="petal" color="green" class="not-found__petal" />
+        <Image src={logo} alt="" width={158} height={130} />
         <strong>404</strong>
-        <span>No locale assumed</span>
       </div>
 
       <div class="not-found__content">
@@ -62,31 +65,34 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
 
     <footer class="not-found-footer">
       <p>Review-only fictional content · <span lang="vi">Nội dung hư cấu chỉ dùng để duyệt</span></p>
-      <p>Paradise Fine Foods / Cold-Chain Atelier</p>
+      <p>Paradise Fine Foods</p>
     </footer>
   </body>
 </html>
 
 <style>
-  body { background: var(--color-milk-paper); color: var(--color-carbon); min-block-size: 100vh; }
+  body { background: var(--color-rice-paper); color: var(--color-deep-herb); min-block-size: 100vh; }
   .not-found-header, .not-found-footer { align-items: center; display: flex; font-size: var(--text-xs); justify-content: space-between; letter-spacing: var(--tracking-label); margin-inline: auto; max-inline-size: var(--container-max); padding: var(--space-4) var(--container-inline); text-transform: uppercase; }
-  .not-found-header { border-bottom: 1px solid var(--color-stainless); }
+  .not-found-header { border-bottom: 2px solid var(--color-paradise-orange); }
   .not-found-header a { align-items: center; color: inherit; display: flex; font-weight: 600; gap: var(--space-3); text-decoration: none; }
   .not-found__link { align-items: center; display: flex; min-block-size: 2.75rem; }
-  .not-found-header a span { background: var(--color-cold-chain-blue); color: var(--color-paper-white); display: grid; font-size: 0.62rem; letter-spacing: 0.08em; min-block-size: 2.5rem; min-inline-size: 2.5rem; place-items: center; }
+  .not-found-header a img { block-size: 3.5rem; inline-size: auto; }
   .not-found { display: grid; grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 2.2fr); margin-inline: auto; max-inline-size: var(--container-max); min-block-size: calc(100vh - 11rem); padding-inline: var(--container-inline); }
-  .not-found__code { align-content: center; background: var(--color-cold-chain-blue); color: var(--color-paper-white); display: grid; padding: clamp(var(--space-6), 6vw, var(--space-9)); }
-  .not-found__code strong { color: var(--color-cultured-butter); font-family: var(--font-display); font-size: clamp(6rem, 14vw, 12rem); font-weight: 500; letter-spacing: -0.07em; line-height: 0.85; margin-inline-start: -0.07em; }
-  .not-found__code span { font-size: 0.65rem; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .not-found__art { align-items: center; display: flex; isolation: isolate; justify-content: center; min-block-size: 30rem; position: relative; }
+  .not-found__art img { block-size: auto; inline-size: min(16rem, 62vw); position: relative; z-index: 2; }
+  .not-found__art strong { color: var(--color-deep-herb); font-family: var(--font-display); font-size: clamp(5rem, 12vw, 10rem); font-weight: 500; inset-block-end: 8%; position: absolute; z-index: 3; }
+  .not-found__art :global(.organic-mark) { position: absolute; }
+  .not-found__drop { inline-size: min(27rem, 82%); inset: 8% auto auto 2%; opacity: 0.16; }
+  .not-found__petal { inline-size: min(18rem, 55%); inset: auto 0 5% auto; opacity: 0.18; }
   .not-found__content { align-content: center; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .not-found__content section { display: flex; flex-direction: column; min-inline-size: 0; padding: clamp(var(--space-6), 5vw, var(--space-9)); }
-  .not-found__content section + section { border-inline-start: 1px solid var(--color-stainless); }
+  .not-found__content section + section { border-inline-start: 1px solid color-mix(in srgb, var(--color-deep-herb) 18%, transparent); }
   .not-found__content h1, .not-found__content h2 { font-size: clamp(2.4rem, 5vw, 4.7rem); margin-block: var(--space-4); overflow-wrap: anywhere; }
   .not-found__content section > p:not(.eyebrow) { max-inline-size: 34rem; }
-  .not-found__content nav { border-top: 1px solid var(--color-stainless); display: grid; gap: var(--space-3); margin-block-start: auto; padding-block-start: var(--space-6); }
-  .not-found__content nav a { color: var(--color-cold-chain-blue); font-weight: 500; inline-size: fit-content; text-underline-offset: 0.25em; }
-  .not-found__content .not-found__primary { align-items: center; background: var(--color-cold-chain-blue); color: var(--color-paper-white); display: flex; inline-size: 100%; justify-content: space-between; min-block-size: 3rem; padding-inline: var(--space-4); text-decoration: none; }
-  .not-found-footer { border-top: 1px solid var(--color-stainless); }
-  @media (max-width: 58rem) { .not-found { grid-template-columns: 1fr; padding-inline: 0; } .not-found__code { min-block-size: 16rem; } .not-found__code strong { font-size: clamp(5rem, 22vw, 9rem); } }
-  @media (max-width: 40rem) { .not-found-header p, .not-found-footer p + p { display: none; } .not-found__content { grid-template-columns: 1fr; } .not-found__content section + section { border-block-start: 1px solid var(--color-stainless); border-inline-start: 0; } .not-found__content nav { margin-block-start: var(--space-6); } }
+  .not-found__content nav { border-top: 2px solid var(--color-paradise-orange); display: grid; gap: var(--space-3); margin-block-start: auto; padding-block-start: var(--space-6); }
+  .not-found__content nav a { color: var(--color-deep-herb); font-weight: 600; inline-size: fit-content; text-underline-offset: 0.25em; }
+  .not-found__content .not-found__primary { align-items: center; background: var(--color-deep-herb); border: 1px solid var(--color-paradise-orange); border-radius: 1.5rem 0 1.5rem 0; color: var(--color-paper-white); display: flex; inline-size: 100%; justify-content: space-between; min-block-size: 3rem; padding-inline: var(--space-4); text-decoration: none; }
+  .not-found-footer { border-top: 2px solid var(--color-paradise-orange); }
+  @media (max-width: 58rem) { .not-found { grid-template-columns: 1fr; padding-inline: 0; } .not-found__art { min-block-size: 20rem; } }
+  @media (max-width: 40rem) { .not-found-header p, .not-found-footer p + p { display: none; } .not-found__content { grid-template-columns: 1fr; } .not-found__content section + section { border-block-start: 1px solid color-mix(in srgb, var(--color-deep-herb) 18%, transparent); border-inline-start: 0; } .not-found__content nav { margin-block-start: var(--space-6); } }
 </style>

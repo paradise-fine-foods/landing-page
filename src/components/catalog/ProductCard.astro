@@ -13,7 +13,7 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
 ---
 
 <article class="product-card">
-  <a class="product-card__image" href={href} tabindex="-1" aria-hidden="true">
+  <a class="product-card__image product-card__organic-media" href={href} tabindex="-1" aria-hidden="true">
     <img src={product.image.src} width={product.image.width} height={product.image.height} alt="" loading="lazy" />
   </a>
   <div class="product-card__meta">
@@ -30,16 +30,17 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
 </article>
 
 <style>
-  .product-card { border-top: 1px solid var(--color-stainless); display: grid; gap: var(--space-3); padding-block-start: var(--space-3); }
-  .product-card__image { aspect-ratio: 1 / 1; background: var(--color-paper-white); display: block; overflow: hidden; }
+  .product-card { border: 0; display: grid; gap: var(--space-3); }
+  .product-card__organic-media { aspect-ratio: 1 / 1; background: var(--color-paper-white); border-radius: var(--shape-drop); display: block; isolation: isolate; overflow: hidden; position: relative; }
+  .product-card__organic-media::before { background: var(--color-mist-blue); border-radius: 48% 52% 64% 36% / 57% 39% 61% 43%; content: ''; inset: 12%; position: absolute; z-index: -1; }
   .product-card__image img { block-size: 100%; inline-size: 100%; object-fit: cover; transition: transform var(--transition-base); }
   .product-card:hover .product-card__image img { transform: scale(1.018); }
-  .product-card__meta { color: var(--color-cold-chain-blue); display: flex; font-size: 0.68rem; font-weight: 600; justify-content: space-between; letter-spacing: 0.05em; text-transform: uppercase; }
+  .product-card__meta { border-block-start: 2px solid var(--color-paradise-orange); color: var(--color-deep-herb); display: flex; font-size: 0.68rem; font-weight: 700; justify-content: space-between; letter-spacing: 0.05em; padding-block-start: var(--space-3); text-transform: uppercase; }
   .product-card :is(h2, h3) { font-size: clamp(1.45rem, 2vw, 1.9rem); }
-  .product-card :is(h2, h3) a { color: var(--color-carbon); text-decoration: none; }
-  .product-card__specs { border-top: 1px solid var(--color-stainless); margin: 0; }
+  .product-card :is(h2, h3) a { color: var(--color-deep-herb); text-decoration: none; }
+  .product-card__specs { margin: 0; }
   .product-card__specs div { display: grid; gap: var(--space-3); grid-template-columns: 5.5rem 1fr; padding-block: var(--space-2); }
-  .product-card__specs dt { color: var(--color-cold-chain-blue); font-size: 0.63rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .product-card__specs dt { color: var(--color-deep-herb); font-size: 0.63rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
   .product-card__specs dd { font-size: var(--text-xs); line-height: 1.45; }
-  .product-card__link { align-items: center; color: var(--color-carbon); display: flex; font-size: var(--text-sm); font-weight: 600; justify-content: space-between; margin-block-start: auto; padding-block-start: var(--space-2); text-decoration: none; }
+  .product-card__link { align-items: center; color: var(--color-deep-herb); display: flex; font-size: var(--text-sm); font-weight: 700; justify-content: space-between; margin-block-start: auto; min-block-size: 2.75rem; padding-block-start: var(--space-2); text-decoration: none; }
 </style>

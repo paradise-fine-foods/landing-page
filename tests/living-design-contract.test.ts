@@ -138,4 +138,61 @@ describe('Living Ingredients identity', () => {
       expect(page).toContain('{channels}');
     }
   });
+
+  test('carries organic presentation through every inner-page family', () => {
+    for (const file of [
+      'src/components/catalog/ProductCard.astro',
+      'src/components/catalog/ProductDetail.astro',
+      'src/components/brands/BrandCard.astro',
+      'src/components/brands/BrandDetail.astro',
+      'src/components/forms/EnquiryForm.astro',
+      'src/pages/404.astro',
+    ]) {
+      const component = source(file);
+      expect(component).toMatch(/organic|living|shape|petal|drop/);
+      expect(component).not.toMatch(/color-cold-chain-blue|color-stainless/);
+    }
+
+    expect(source('src/components/forms/EnquiryForm.astro')).toContain('aria-invalid');
+    expect(source('src/components/catalog/CatalogFilters.astro')).toContain('aria-live');
+  });
+
+  test('keeps inner-page accents organic and removes industrial presentation tokens', () => {
+    for (const file of [
+      'src/components/catalog/CatalogFilters.astro',
+      'src/components/catalog/ProductCard.astro',
+      'src/components/catalog/ProductGrid.astro',
+      'src/components/catalog/ProductDetail.astro',
+      'src/components/catalog/ProductMetadata.astro',
+      'src/components/brands/BrandCard.astro',
+      'src/components/brands/BrandDetail.astro',
+      'src/components/forms/EnquiryForm.astro',
+      'src/components/global/Breadcrumbs.astro',
+      'src/pages/en/products/index.astro',
+      'src/pages/vi/products/index.astro',
+      'src/pages/en/brands/index.astro',
+      'src/pages/vi/brands/index.astro',
+      'src/pages/404.astro',
+    ]) {
+      expect(source(file)).not.toMatch(/color-cold-chain-blue|color-stainless/);
+    }
+  });
+
+  test('keeps the product facts reading order and removes the mobile connector', () => {
+    const metadata = source('src/components/catalog/ProductMetadata.astro');
+    expect(metadata.indexOf('{copy.origin}')).toBeLessThan(metadata.indexOf('{copy.category}'));
+    expect(metadata.indexOf('{copy.category}')).toBeLessThan(metadata.indexOf('{copy.packFormat}'));
+    expect(metadata.indexOf('{copy.packFormat}')).toBeLessThan(metadata.indexOf('{copy.storage}'));
+
+    const detail = source('src/components/catalog/ProductDetail.astro');
+    expect(detail).toContain('.product-detail__facts');
+    expect(detail).toMatch(/@media \(max-width: 48rem\)[\s\S]*?\.product-detail__facts\s*\{[^}]*border-inline-start:\s*0/);
+  });
+
+  test('derives organic brand-card fields from the CMS accent', () => {
+    const card = source('src/components/brands/BrandCard.astro');
+    expect(card).toContain('brand.accent');
+    expect(card).toContain('--brand-accent');
+    expect(card).toContain('color-mix(in srgb, var(--brand-accent)');
+  });
 });
