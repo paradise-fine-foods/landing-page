@@ -23,12 +23,9 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     data-open-label={copy.toggleOpen}
     data-close-label={copy.toggleClose}
   >
-    <span class="floating-form-rail__label" data-floating-rail-label aria-hidden="true">{copy.label}</span>
-    <span class="floating-form-rail__toggle-icon" aria-hidden="true">+</span>
+    <span class="floating-form-rail__toggle-icon" data-floating-rail-icon aria-hidden="true"></span>
   </button>
   <nav id="floating-rail-panel" class="floating-form-rail__panel" aria-label={copy.navigation}>
-    <span class="floating-form-rail__marker" aria-hidden="true"></span>
-    <div class="floating-form-rail__heading" data-floating-rail-title>{copy.panelTitle}</div>
     <a href={`${contactPath}?interest=retail`}>{copy.buy}</a>
     <a href={`${contactPath}?interest=other`}>{copy.sell}</a>
     <a href={contactPath}>{copy.contact}</a>
@@ -107,14 +104,6 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     transform: translateX(-0.125rem);
   }
 
-  .floating-form-rail__label {
-    font-size: var(--text-xs);
-    letter-spacing: var(--tracking-label);
-    line-height: 1;
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-  }
-
   .floating-form-rail__toggle-icon {
     font-size: var(--text-xl);
     font-weight: 400;
@@ -130,23 +119,6 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     min-inline-size: min(19rem, calc(100vw - 2rem));
     padding: 1rem 1rem 0.875rem;
     transition: opacity 180ms ease, transform 180ms ease;
-  }
-
-  .floating-form-rail__marker {
-    background: var(--color-paradise-orange);
-    block-size: 0.25rem;
-    display: block;
-    inline-size: 2rem;
-    margin-block-end: 0.75rem;
-  }
-
-  .floating-form-rail__heading {
-    color: var(--color-deep-herb);
-    font-family: var(--font-display);
-    font-size: var(--text-lg);
-    font-weight: 500;
-    line-height: var(--leading-heading);
-    padding-block-end: 0.625rem;
   }
 
   .floating-form-rail__panel a {
@@ -197,10 +169,6 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
       min-inline-size: 7rem;
     }
 
-    .floating-form-rail__label {
-      writing-mode: horizontal-tb;
-      transform: none;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
