@@ -249,7 +249,7 @@ describe('Living Ingredients identity', () => {
     expect(page.indexOf('</footer>')).toBeLessThan(page.indexOf(rail));
   });
 
-  test('styles the floating rail as a Living Ingredients label', () => {
+  test('styles the floating rail as one simple animated ingredient label', () => {
     const rail = source('src/components/global/FloatingFormRail.astro');
     for (const token of [
       'var(--color-rice-paper)',
@@ -257,17 +257,20 @@ describe('Living Ingredients identity', () => {
       'var(--color-deep-herb)',
       'var(--color-paradise-orange)',
       'var(--color-mist-blue)',
-      'font-family: var(--font-display)',
       'clip-path',
-    ]) {
-      expect(rail).toContain(token);
-    }
+      '360ms cubic-bezier(0.22, 1, 0.36, 1)',
+      '@keyframes floating-rail-enter',
+      '@media (prefers-reduced-motion: reduce)',
+      'min-block-size: 3rem',
+      'min-block-size: 3.25rem',
+      'inset-inline-end: 0',
+    ]) expect(rail).toContain(token);
+
     expect(rail).not.toContain('box-shadow');
     expect(rail).not.toContain('linear-gradient');
-    const toggleInteraction = rail.match(/\.floating-form-rail__toggle:hover,[\s\S]*?\}/)?.[0] ?? '';
-    expect(toggleInteraction).toContain('background: var(--color-deep-herb)');
-    expect(toggleInteraction).not.toContain('background: var(--color-paradise-orange)');
-    expect(rail).toContain('inset-inline-start: auto;');
+    expect(rail).not.toContain('font-family: var(--font-display)');
+    expect(rail).not.toContain('floating-form-rail__heading');
+    expect(rail).not.toContain('floating-form-rail__marker');
   });
 
   test('removes empty catalog and brand intro decorations from every locale page', () => {
