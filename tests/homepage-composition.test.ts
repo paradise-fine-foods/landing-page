@@ -51,6 +51,26 @@ describe('homepage composition', () => {
       expect(page).toContain('<LivingHero');
       expect(page).not.toMatch(/ProductStage|modelSrc|slot="stage"/);
       expect(page).not.toMatch(/locale\s*===|locale\s*!==/);
+      expect(page).toContain('carousel={copy.home.carousel}');
     }
+    const hero = source('src/components/sections/LivingHero.astro');
+    expect(hero).toContain("import('../../lib/motion/reveal')");
+    expect(hero).toContain("import('../../lib/carousel/controller')");
+  });
+
+  test('limits reveals to selected authored section elements and provides settled reduced motion', () => {
+    const sections = [
+      'CategoryDiscovery.astro', 'FeaturedProducts.astro', 'FeaturedBrands.astro',
+      'ServiceProof.astro', 'ChannelPathways.astro', 'CredibilityStrip.astro', 'FinalCta.astro',
+    ].map((file) => source(`src/components/sections/${file}`)).join('\n');
+    const hooks = sections.match(/<[^>]+data-reveal(?:[\s>])/g) ?? [];
+    expect(hooks.length).toBeGreaterThanOrEqual(7);
+    expect(hooks.length).toBeLessThanOrEqual(18);
+    expect(sections).toContain(':global([data-motion-enhanced]) [data-reveal]');
+    expect(sections).toContain("[data-reveal][data-revealed='true']");
+    expect(sections).toMatch(/prefers-reduced-motion:\s*reduce/);
+    expect(sections).toMatch(/opacity:\s*1/);
+    expect(sections).toMatch(/transform:\s*none/);
+    expect(sections).toMatch(/transition:\s*none/);
   });
 });

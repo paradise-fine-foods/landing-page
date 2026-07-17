@@ -128,4 +128,14 @@ describe('Living Ingredients identity', () => {
       expect(declarations, `${selector} must not use bright blue as text`).not.toContain('color: var(--color-paradise-blue)');
     }
   });
+
+  test('keeps homepage product, category, brand, and channel content CMS-derived', () => {
+    for (const locale of ['en', 'vi']) {
+      const page = source(`src/pages/${locale}/index.astro`);
+      expect(page).toContain('products.filter((product) => product.featured)');
+      expect(page).toContain('{categories}');
+      expect(page).toContain('{remainingBrands}');
+      expect(page).toContain('{channels}');
+    }
+  });
 });

@@ -5,6 +5,77 @@ import {
   type LivingCanvasDependencies,
 } from '../src/lib/motion/living-canvas';
 import { shouldEnhanceMotion } from '../src/lib/motion/preferences';
+import { installReveals, type RevealDependencies } from '../src/lib/motion/reveal';
+
+describe('one-shot scroll reveals', () => {
+  test('observes authored reveal nodes at the exact threshold and settles each once', () => {
+    const first = { dataset: {} as Record<string, string> } as unknown as HTMLElement;
+    const second = { dataset: {} as Record<string, string> } as unknown as HTMLElement;
+    const observed: Element[] = [];
+    const unobserved: Element[] = [];
+    let callback: IntersectionObserverCallback = () => {};
+    let threshold: number | number[] | undefined;
+    let disconnects = 0;
+    const dependencies: RevealDependencies = {
+      createObserver(nextCallback, options) {
+        callback = nextCallback;
+        threshold = options?.threshold;
+        return {
+          observe(node: Element) { observed.push(node); },
+          unobserve(node: Element) { unobserved.push(node); },
+          disconnect: () => { disconnects += 1; },
+        } as unknown as IntersectionObserver;
+      },
+    };
+    const root = { querySelectorAll: (selector: string) => selector === '[data-reveal]' ? [first, second] : [] } as unknown as ParentNode;
+    const controller = installReveals(root, dependencies);
+    expect(observed).toEqual([first, second]);
+    expect(threshold).toBe(0.18);
+    callback([
+      { target: first, isIntersecting: true },
+      { target: second, isIntersecting: false },
+    ] as unknown as IntersectionObserverEntry[], {} as IntersectionObserver);
+    callback([{ target: first, isIntersecting: true }] as unknown as IntersectionObserverEntry[], {} as IntersectionObserver);
+    expect((first as unknown as { dataset: Record<string, string> }).dataset.revealed).toBe('true');
+    expect((second as unknown as { dataset: Record<string, string> }).dataset.revealed).toBeUndefined();
+    expect(unobserved).toEqual([first]);
+    controller.dispose();
+    controller.dispose();
+    expect(disconnects).toBe(1);
+  });
+
+  test('missing IntersectionObserver settles content and returns a safe no-op', () => {
+    const node = { dataset: {} as Record<string, string> } as unknown as HTMLElement;
+    const root = { querySelectorAll: () => [node] } as unknown as ParentNode;
+    const controller = installReveals(root, { createObserver: undefined });
+    expect((node as unknown as { dataset: Record<string, string> }).dataset.revealed).toBe('true');
+    controller.dispose();
+    controller.dispose();
+  });
+
+  test('disconnects and settles every node when observation fails partway through setup', () => {
+    const first = { dataset: {} as Record<string, string> } as unknown as HTMLElement;
+    const second = { dataset: {} as Record<string, string> } as unknown as HTMLElement;
+    let observations = 0;
+    let disconnects = 0;
+    const root = { querySelectorAll: () => [first, second] } as unknown as ParentNode;
+    const controller = installReveals(root, {
+      createObserver: () => ({
+        observe() {
+          observations += 1;
+          if (observations === 2) throw new Error('observe failed');
+        },
+        unobserve() {},
+        disconnect() { disconnects += 1; },
+      }) as unknown as IntersectionObserver,
+    });
+    expect(disconnects).toBe(1);
+    expect((first as unknown as { dataset: Record<string, string> }).dataset.revealed).toBe('true');
+    expect((second as unknown as { dataset: Record<string, string> }).dataset.revealed).toBe('true');
+    controller.dispose();
+    expect(disconnects).toBe(1);
+  });
+});
 
 describe('motion eligibility', () => {
   test('allows enhancement only without reduced motion or save-data', () => {

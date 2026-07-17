@@ -98,6 +98,7 @@ The test suite recursively discovers every leaf below `ui.en` and `ui.vi`. In th
 | `ui.*.footer.*` | Brand owner and legal reviewer | Approved footer tagline, navigation, legal and copyright copy | Brand and legal owners approve both locales and generated footer links pass |
 | `ui.*.hero.*` | Business owner, legal reviewer and marketing owner | Substantiated proposition, product metadata labels and CTAs for the server-rendered static Living Hero | Every claim has evidence; localized heading, description, actions, metadata, alt and caption pass bilingual and accessibility review |
 | `ui.*.home.*` | Marketing owner and business owner | Approved direct homepage headings, descriptions, labels and CTAs | Direct homepage copy is proofed in both locales and matches the approved page narrative |
+| `ui.*.home.carousel.*` | UX content owner, localization owner and accessibility owner | Approved manual carousel label and previous/next control names | Both locale control names are concise, correctly announced and keyboard-tested |
 | `ui.*.home.operationalPillars.*.*` | Operations owner and legal reviewer | Current portfolio, handling, channel-support and coverage evidence | Each pillar title and description maps to approved operational evidence |
 | `ui.*.home.channels.*.*` | Channel sales owners and legal reviewer | Approved retail, HORECA, bakery and e-commerce offer sheets | Every channel label and statement is approved by its owner in both locales |
 | `ui.*.catalog.*` | Product data owner and UX content owner | Approved catalog terminology, filter labels and result or empty-state copy | Search and filter language is complete, locale-correct and behavior-tested |
@@ -159,6 +160,8 @@ The review build self-hosts the authentic Paradise Fine Foods full logo rather t
 | `public/favicon.ico` | Unmodified Astro starter icon shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Multi-size ICO export of the approved Paradise favicon and its source artwork | Default Astro artwork is absent; icon matches approved SVG and renders clearly at browser favicon sizes |
 
 The decorative Canvas 2D layer carries no product content. The digital owner must preserve the reduced-motion and save-data loading gates, the ten-shape maximum, the capped device-pixel ratio and complete server-rendered static Living Hero when maintaining this enhancement.
+
+The homepage also owns `src/lib/motion/reveal.ts` and `src/lib/carousel/controller.ts`. The digital and accessibility owners must preserve one-shot authored reveals, settled reduced-motion content, SSR-visible product order, manual-only movement, localized controls, clamped navigation and safe no-JavaScript reading order.
 
 ## Demo origins, URLs and route inputs
 

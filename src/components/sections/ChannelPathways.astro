@@ -5,26 +5,28 @@ const { eyebrow, title, channels } = Astro.props;
 ---
 
 <section class="channel-pathways section-space" aria-labelledby="channels-title">
-  <div class="container channel-pathways__grid">
-    <div><p class="eyebrow">{eyebrow}</p><h2 id="channels-title">{title}</h2></div>
-    <div class="channel-pathways__links">
-      {channels.map(({ label, description, href }, index) => (
-        <a href={href}><span>{String(index + 1).padStart(2, '0')}</span><strong>{label}</strong><p>{description}</p><b aria-hidden="true">→</b></a>
-      ))}
-    </div>
+  <div class="container channel-pathways__heading" data-reveal><p class="eyebrow">{eyebrow}</p><h2 id="channels-title">{title}</h2></div>
+  <div class="container channel-pathways__links">
+    {channels.map(({ label, description, href }) => (
+      <a href={href} data-reveal>
+        <strong>{label}</strong><p>{description}</p><b aria-hidden="true">→</b>
+      </a>
+    ))}
   </div>
 </section>
 
 <style>
-  .channel-pathways__grid { display: grid; gap: var(--space-8); grid-template-columns: 1fr 2fr; }
-  .channel-pathways__grid > div:first-child { position: sticky; top: var(--space-6); }
-  .channel-pathways__grid h2 { margin-block-start: var(--space-4); }
-  .channel-pathways__links { border-top: 1px solid var(--color-carbon); }
-  .channel-pathways__links a { align-items: center; border-bottom: 1px solid var(--color-stainless); color: var(--color-carbon); display: grid; gap: var(--space-4); grid-template-columns: auto minmax(9rem, 0.8fr) minmax(14rem, 1.2fr) auto; min-block-size: 8rem; text-decoration: none; transition: padding-inline var(--transition-fast); }
-  .channel-pathways__links a:hover { padding-inline: var(--space-3); }
-  .channel-pathways__links span { color: var(--color-cold-chain-blue); font-size: var(--text-xs); }
+  .channel-pathways { background: var(--color-paper-white); overflow: hidden; }
+  .channel-pathways__heading { display: grid; gap: var(--space-5); grid-template-columns: 1fr 3fr; margin-block-end: var(--space-7); }
+  .channel-pathways__links { display: grid; gap: var(--space-5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .channel-pathways__links a { background: var(--color-rice-paper); border-block-start: 2px solid var(--color-paradise-orange); border-radius: 0 2.5rem 2.5rem 2.5rem; color: var(--color-deep-herb); display: grid; gap: var(--space-3); grid-template-columns: 1fr auto; min-block-size: 13rem; padding: clamp(var(--space-5), 4vw, var(--space-7)); text-decoration: none; }
+  .channel-pathways__links a:nth-child(2), .channel-pathways__links a:nth-child(3) { background: var(--color-mist-blue); border-radius: 2.5rem 0 2.5rem 2.5rem; }
+  .channel-pathways__links a:nth-child(even) { translate: 0 var(--space-7); }
   .channel-pathways__links strong { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 500; }
-  .channel-pathways__links p { font-size: var(--text-sm); line-height: 1.55; }
-  @media (max-width: 46rem) { .channel-pathways__grid { grid-template-columns: 1fr; } .channel-pathways__grid > div:first-child { position: static; } }
-  @media (max-width: 34rem) { .channel-pathways__links a { align-items: start; grid-template-columns: auto 1fr auto; padding-block: var(--space-4); } .channel-pathways__links p { grid-column: 2 / -1; } }
+  .channel-pathways__links p { grid-column: 1 / -1; max-inline-size: 32rem; }
+  .channel-pathways__links b { align-self: start; font-size: var(--text-lg); }
+  :global([data-motion-enhanced]) [data-reveal] { opacity: 0; transform: translateY(1.5rem); }
+  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: opacity 600ms ease, transform 700ms cubic-bezier(.2,.75,.25,1); }
+  @media (max-width: 46rem) { .channel-pathways__heading, .channel-pathways__links { grid-template-columns: 1fr; } .channel-pathways__links a:nth-child(n) { translate: none; } }
+  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } }
 </style>

@@ -40,6 +40,42 @@ describe('reviewed homepage contracts', () => {
     expect(component).toContain('remainingBrands');
   });
 
+  test('localizes the manual featured-product carousel in both locales', () => {
+    for (const locale of ['en', 'vi'] as const) {
+      expect(ui[locale].home.carousel.label.length).toBeGreaterThan(4);
+      expect(ui[locale].home.carousel.previous.length).toBeGreaterThan(2);
+      expect(ui[locale].home.carousel.next.length).toBeGreaterThan(2);
+      expect(ui[locale].home.carousel.status).toContain('{current}');
+      expect(ui[locale].home.carousel.status).toContain('{total}');
+    }
+    const component = source('src/components/sections/FeaturedProducts.astro');
+    expect(component).toContain('aria-roledescription="carousel"');
+    expect(component).toContain('data-carousel-controls hidden');
+    expect(component).toContain('aria-live="polite"');
+    expect(component).toContain('aria-atomic="true"');
+    expect(component).toContain('data-carousel-item');
+    expect(component).toContain('data-carousel-status-template={carousel.status}');
+    expect(component).toContain('<ProductCard');
+    expect(component).not.toMatch(/autoplay|setInterval|setTimeout|cloneNode|infinite/i);
+  });
+
+  test('uses authored organic section compositions without industrial rails', () => {
+    const categories = source('src/components/sections/CategoryDiscovery.astro');
+    expect(categories).toContain('category-discovery__loose-table');
+    expect(categories).toContain('<OrganicMark');
+    expect(categories).toContain("variant={marks[index % marks.length].variant}");
+    const brands = source('src/components/sections/FeaturedBrands.astro');
+    expect(brands).toContain('featured-brands__story-mask');
+    const service = source('src/components/sections/ServiceProof.astro');
+    expect(service).toContain('service-proof__journey');
+    expect(service).toContain('aria-hidden="true"');
+    expect(service).toContain('focusable="false"');
+    expect(service).toContain('<ol class="service-proof__pillars"');
+    const credibility = source('src/components/sections/CredibilityStrip.astro');
+    expect(credibility).not.toContain('background: var(--color-cold-chain-blue)');
+    expect(service).not.toMatch(/ledger|stage/i);
+  });
+
   test('product cards use a square stage and buyer metadata', () => {
     const component = source('src/components/catalog/ProductCard.astro');
     const metadata = source('src/lib/catalog/product-card.ts');

@@ -1,24 +1,24 @@
 ---
 import ButtonLink from '../global/ButtonLink.astro';
-interface Props { title: string; description: string; button: string; label: string; href: string }
-const { title, description, button, label, href } = Astro.props;
+interface Props { title: string; description: string; button: string; href: string }
+const { title, description, button, href } = Astro.props;
 ---
 
 <section class="final-cta" aria-labelledby="final-cta-title">
-  <div class="container final-cta__grid">
-    <p>{label}</p>
+  <div class="container final-cta__shape" data-reveal>
     <div><h2 id="final-cta-title">{title}</h2><p>{description}</p></div>
     <ButtonLink {href}>{button}</ButtonLink>
   </div>
 </section>
 
 <style>
-  .final-cta { background: var(--color-cold-chain-blue); color: var(--color-paper-white); padding-block: var(--space-7); position: relative; }
-  .final-cta::before { background: var(--color-cultured-butter); block-size: 0.35rem; content: ''; inline-size: clamp(5rem, 14vw, 12rem); inset-block-start: 0; inset-inline-start: var(--container-inline); position: absolute; }
-  .final-cta__grid { align-items: center; display: grid; gap: var(--space-6); grid-template-columns: 0.7fr 2fr auto; }
-  .final-cta__grid > p { font-size: var(--text-xs); letter-spacing: var(--tracking-label); }
-  .final-cta h2 { font-size: clamp(2rem, 4vw, 3.8rem); }
+  .final-cta { background: var(--color-paper-white); padding-block: var(--space-7) var(--space-9); }
+  .final-cta__shape { align-items: center; background: color-mix(in srgb, var(--color-paradise-orange) 14%, var(--color-rice-paper)); border-radius: 3rem 3rem 3rem 0.65rem; display: grid; gap: var(--space-6); grid-template-columns: 1fr auto; padding: clamp(var(--space-6), 6vw, var(--space-8)); position: relative; }
+  .final-cta__shape::before { background: var(--color-paradise-orange); block-size: 0.35rem; border-radius: 999px; content: ''; inline-size: clamp(4rem, 11vw, 8rem); inset-block-start: 0; inset-inline-start: clamp(var(--space-6), 6vw, var(--space-8)); position: absolute; }
+  .final-cta h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
   .final-cta h2 + p { margin-block-start: var(--space-2); max-inline-size: 42rem; }
-  .final-cta :global(.button-link--primary) { background: var(--color-paper-white); color: var(--color-carbon); }
-  @media (max-width: 48rem) { .final-cta__grid { grid-template-columns: 1fr; } .final-cta__grid > p { display: none; } }
+  :global([data-motion-enhanced]) [data-reveal] { opacity: 0; transform: translateY(1.5rem); }
+  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: opacity 600ms ease, transform 700ms cubic-bezier(.2,.75,.25,1); }
+  @media (max-width: 48rem) { .final-cta__shape { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } }
 </style>

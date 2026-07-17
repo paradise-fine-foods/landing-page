@@ -63,15 +63,38 @@ const metadata = [
 
   const reduceMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? true;
   const saveData = Boolean((navigator as NavigatorWithConnection).connection?.saveData);
+  const controllers: Array<{ dispose(): void }> = [];
+  let pageDisposed = false;
+
+  globalThis.addEventListener('pagehide', () => {
+    pageDisposed = true;
+    for (const controller of controllers) controller.dispose();
+  }, { once: true });
+
+  import('../../lib/carousel/controller')
+    .then(({ createCarousel }) => {
+      if (pageDisposed) return;
+      controllers.push(...[...document.querySelectorAll<HTMLElement>('[data-carousel]')]
+        .map((carousel) => createCarousel(carousel, { reduceMotion })));
+    })
+    .catch(() => undefined);
 
   if (shouldEnhanceMotion({ reduceMotion, saveData })) {
     import('../../lib/motion/living-canvas')
       .then(({ mountLivingCanvas }) => {
-        const controllers = [...document.querySelectorAll<HTMLCanvasElement>('[data-living-canvas]')]
-          .map((canvas) => mountLivingCanvas(canvas));
-        globalThis.addEventListener('pagehide', () => {
-          for (const controller of controllers) controller.dispose();
-        }, { once: true });
+        if (pageDisposed) return;
+        controllers.push(...[...document.querySelectorAll<HTMLCanvasElement>('[data-living-canvas]')]
+          .map((canvas) => mountLivingCanvas(canvas)));
+      })
+      .catch(() => undefined);
+
+    import('../../lib/motion/reveal')
+      .then(({ installReveals }) => {
+        if (pageDisposed) return;
+        const root = document.querySelector<HTMLElement>('main');
+        if (!root) return;
+        root.dataset.motionEnhanced = 'true';
+        controllers.push(installReveals(root));
       })
       .catch(() => undefined);
   }

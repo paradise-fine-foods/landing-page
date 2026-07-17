@@ -43,6 +43,7 @@ export interface UiCopy {
     categoryProductLabel: string;
     featuredProductsEyebrow: string;
     featuredProductsTitle: string;
+    carousel: { label: string; previous: string; next: string; status: string };
     featuredBrandsEyebrow: string;
     featuredBrandsTitle: string;
     serviceEyebrow: string;
@@ -171,7 +172,7 @@ export const ui: Record<Locale, UiCopy> = {
         { title: 'Nationwide Vietnam delivery', description: 'Distribution planning supports partners and service points across Vietnam.' },
       ],
       categoryEyebrow: 'Discover', categoryTitle: 'Ingredients by category', categoryDescription: 'Explore a representative selection created to review the future catalog experience.', categoryProductLabel: 'products',
-      featuredProductsEyebrow: 'Selected ingredients', featuredProductsTitle: 'Featured products', featuredBrandsEyebrow: 'Producer stories', featuredBrandsTitle: 'Featured brands',
+      featuredProductsEyebrow: 'Selected ingredients', featuredProductsTitle: 'Featured products', carousel: { label: 'Featured products', previous: 'Previous product', next: 'Next product', status: 'Product {current} of {total}' }, featuredBrandsEyebrow: 'Producer stories', featuredBrandsTitle: 'Featured brands',
       serviceEyebrow: 'Cold-chain confidence', serviceTitle: 'Care from selection to delivery', serviceDescription: 'A precise service framework for professional kitchens, retail teams, and growing food businesses.', serviceTemperatureLabel: '2—6 °C / MONITORED',
       channelsEyebrow: 'Who we serve', channelsTitle: 'Pathways for every channel',
       channels: {
@@ -208,7 +209,7 @@ export const ui: Record<Locale, UiCopy> = {
         { title: 'Giao hàng toàn quốc', description: 'Kế hoạch phân phối hỗ trợ đối tác và điểm phục vụ trên khắp Việt Nam.' },
       ],
       categoryEyebrow: 'Khám phá', categoryTitle: 'Nguyên liệu theo danh mục', categoryDescription: 'Khám phá bộ sưu tập đại diện được xây dựng để duyệt trải nghiệm danh mục tương lai.', categoryProductLabel: 'sản phẩm',
-      featuredProductsEyebrow: 'Nguyên liệu tuyển chọn', featuredProductsTitle: 'Sản phẩm nổi bật', featuredBrandsEyebrow: 'Câu chuyện nhà sản xuất', featuredBrandsTitle: 'Thương hiệu nổi bật',
+      featuredProductsEyebrow: 'Nguyên liệu tuyển chọn', featuredProductsTitle: 'Sản phẩm nổi bật', carousel: { label: 'Sản phẩm nổi bật', previous: 'Sản phẩm trước', next: 'Sản phẩm tiếp theo', status: 'Sản phẩm {current} trên {total}' }, featuredBrandsEyebrow: 'Câu chuyện nhà sản xuất', featuredBrandsTitle: 'Thương hiệu nổi bật',
       serviceEyebrow: 'Vững tin chuỗi lạnh', serviceTitle: 'Chăm chút từ tuyển chọn đến giao hàng', serviceDescription: 'Quy trình dịch vụ chuẩn xác dành cho bếp chuyên nghiệp, đội ngũ bán lẻ và doanh nghiệp thực phẩm đang phát triển.', serviceTemperatureLabel: '2—6 °C / KIỂM SOÁT',
       channelsEyebrow: 'Đối tượng phục vụ', channelsTitle: 'Giải pháp cho từng kênh',
       channels: {
