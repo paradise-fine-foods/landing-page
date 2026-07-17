@@ -46,7 +46,7 @@ const copy = ui[locale];
 <SiteLayout {locale} title={`${product.name} | ${settings.siteName}`} description={product.description} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={product.image.src}>
   <div class="product-page container section-space">
     <Breadcrumbs label={copy.product.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.products, href: localizedPath(locale, 'products') }, { label: product.name }]} />
-    <ProductDetail {product} {relatedProducts} {locale} {copy} enquiryPath={localizedPath(locale, 'contact')} />
+    <ProductDetail {product} {relatedProducts} {locale} {copy} enquiryPath={localizedPath(locale, 'customerContact')} />
   </div>
 </SiteLayout>
 

@@ -1,6 +1,6 @@
 export type Locale = 'en' | 'vi';
 
-export type RouteKey = 'home' | 'products' | 'brands' | 'contact';
+export type RouteKey = 'home' | 'products' | 'brands' | 'contact' | 'customerContact' | 'supplierContact';
 
 export const locales = ['en', 'vi'] as const;
 

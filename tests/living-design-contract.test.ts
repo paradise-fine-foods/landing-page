@@ -223,7 +223,7 @@ describe('Living Ingredients identity', () => {
   test('places the localized floating enquiry rail after the shared footer', () => {
     const layout = source('src/layouts/SiteLayout.astro');
     const footer = '<Footer {locale} {siteName} />';
-    const rail = '<FloatingFormRail locale={locale} contactPath={localizedPath(locale, \'contact\')} copy={ui[locale].floatingRail} />';
+    const rail = '<FloatingFormRail locale={locale} contactPath={localizedPath(locale, \'contact\')} customerPath={localizedPath(locale, \'customerContact\')} supplierPath={localizedPath(locale, \'supplierContact\')} copy={ui[locale].floatingRail} />';
 
     expect(layout).toContain("import { localizedPath } from '../lib/i18n/routes';");
     expect(layout).toContain("import FloatingFormRail from '../components/global/FloatingFormRail.astro';");
@@ -240,7 +240,7 @@ describe('Living Ingredients identity', () => {
 
   test('keeps the 404 rail static and outside its main landmark', () => {
     const page = source('src/pages/404.astro');
-    const rail = '<FloatingFormRail locale="en" contactPath="/en/contact/" copy={ui.en.floatingRail} staticOnly />';
+    const rail = '<FloatingFormRail locale="en" contactPath="/en/contact/" customerPath="/en/contact/customer/" supplierPath="/en/contact/supplier/" copy={ui.en.floatingRail} staticOnly />';
 
     expect(page).toContain("import { ui } from '../lib/i18n/ui';");
     expect(page).toContain("import FloatingFormRail from '../components/global/FloatingFormRail.astro';");

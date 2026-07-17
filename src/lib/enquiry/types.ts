@@ -1,7 +1,9 @@
 import type { Locale } from '../i18n/types';
+import type { EnquiryMode } from '../i18n/ui';
 
 export interface EnquiryInput {
   locale: Locale;
+  mode?: EnquiryMode;
   name: string;
   company: string;
   email: string;

@@ -105,7 +105,7 @@ describe('client-review MVP completion contracts', () => {
     for (const href of ['/en/', '/en/products/', '/vi/', '/vi/products/']) {
       expect(page).toContain(`href="${href}"`);
     }
-    expect(page).toContain('<FloatingFormRail locale="en" contactPath="/en/contact/" copy={ui.en.floatingRail} staticOnly />');
+    expect(page).toContain('<FloatingFormRail locale="en" contactPath="/en/contact/" customerPath="/en/contact/customer/" supplierPath="/en/contact/supplier/" copy={ui.en.floatingRail} staticOnly />');
     expect(page).not.toMatch(/Astro\.redirect|navigator\.language|<script/);
     expect(page).toContain('<title>Page not found | Paradise Fine Foods Demo</title>');
     expect(page).not.toMatch(/<title>[^<]*[À-ỹĐđ]/u);

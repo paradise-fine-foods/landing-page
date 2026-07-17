@@ -5,6 +5,7 @@ const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const trimInput = (input: EnquiryInput): EnquiryInput => ({
   locale: input.locale,
+  ...(input.mode ? { mode: input.mode } : {}),
   name: input.name.trim(),
   company: input.company.trim(),
   email: input.email.trim(),
@@ -23,7 +24,7 @@ export const validateEnquiry = (input: EnquiryInput): EnquiryValidationResult =>
   if (!value.name) errors.name = copy.nameRequired;
   if (!value.email) errors.email = copy.emailRequired;
   else if (!emailPattern.test(value.email)) errors.email = copy.emailInvalid;
-  if (!value.interest) errors.interest = copy.interestRequired;
+  if (value.mode !== 'general' && !value.interest) errors.interest = copy.interestRequired;
   if (!value.message) errors.message = copy.messageRequired;
   if (!value.consent) errors.consent = copy.consentRequired;
 

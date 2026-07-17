@@ -73,6 +73,6 @@ const meta = buildMeta({
       <slot />
     </main>
     <Footer {locale} {siteName} />
-    <FloatingFormRail locale={locale} contactPath={localizedPath(locale, 'contact')} copy={ui[locale].floatingRail} />
+    <FloatingFormRail locale={locale} contactPath={localizedPath(locale, 'contact')} customerPath={localizedPath(locale, 'customerContact')} supplierPath={localizedPath(locale, 'supplierContact')} copy={ui[locale].floatingRail} />
   </body>
 </html>

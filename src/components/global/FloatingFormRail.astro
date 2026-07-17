@@ -6,11 +6,13 @@ import Icon from './Icon.astro';
 interface Props {
   locale: Locale;
   contactPath: string;
+  customerPath: string;
+  supplierPath: string;
   copy: UiCopy['floatingRail'];
   staticOnly?: boolean;
 }
 
-const { locale, contactPath, copy, staticOnly = false } = Astro.props;
+const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = false } = Astro.props;
 ---
 
 <div class="floating-form-rail" data-floating-rail data-locale={locale}>
@@ -28,8 +30,8 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     <span class="floating-form-rail__toggle-icon floating-form-rail__toggle-icon--close" data-floating-rail-icon aria-hidden="true"><Icon name="lucide:minus" size="1.15em" /></span>
   </button>
   <nav id="floating-rail-panel" class="floating-form-rail__panel" aria-label={copy.navigation}>
-    <a href={`${contactPath}?interest=retail`}>{copy.buy}<Icon name="lucide:arrow-up-right" size="1em" /></a>
-    <a href={`${contactPath}?interest=other`}>{copy.sell}<Icon name="lucide:arrow-up-right" size="1em" /></a>
+    <a href={customerPath}>{copy.buy}<Icon name="lucide:arrow-up-right" size="1em" /></a>
+    <a href={supplierPath}>{copy.sell}<Icon name="lucide:arrow-up-right" size="1em" /></a>
     <a href={contactPath}>{copy.contact}<Icon name="lucide:arrow-up-right" size="1em" /></a>
   </nav>
 </div>
@@ -45,7 +47,7 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
   .floating-form-rail {
     align-items: flex-end;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     inset-inline-end: 0;
     pointer-events: none;
     position: fixed;
@@ -156,7 +158,7 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
   @media (max-width: 48rem) {
     .floating-form-rail {
       align-items: flex-end;
-      flex-direction: column-reverse;
+      flex-direction: row;
       inset-block-end: 1rem;
       inset-inline-end: 1rem;
       inline-size: min(20rem, calc(100vw - 2rem));
@@ -165,7 +167,7 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     }
 
     .floating-form-rail__panel {
-      inline-size: 100%;
+      inline-size: min(17rem, calc(100vw - 3.25rem));
       max-block-size: 16rem;
     }
   }

@@ -2,23 +2,27 @@
 import type { Product } from '../../lib/cms/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import type { Locale } from '../../lib/i18n/types';
+import type { EnquiryMode } from '../../lib/i18n/ui';
+import { getEnquiryModeCopy } from '../../lib/enquiry/modes';
 
 interface Props {
   locale: Locale;
   products: Product[];
   copy: UiCopy;
+  mode?: EnquiryMode;
 }
 
-const { locale, products, copy } = Astro.props;
+const { locale, products, copy, mode = 'general' } = Astro.props;
 const formCopy = copy.form;
+const modeCopy = getEnquiryModeCopy(locale, mode);
 const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
 ---
 
-<section class="enquiry" aria-labelledby="enquiry-title" data-enquiry-root data-locale={locale} data-known-products={JSON.stringify(products.map(({ id }) => id))} data-submitting={formCopy.submitting} data-form-error={copy.status.formError} data-unexpected-error={formCopy.unexpectedError}>
+<section class="enquiry" aria-labelledby="enquiry-title" data-enquiry-root data-mode={mode} data-locale={locale} data-known-products={JSON.stringify(products.map(({ id }) => id))} data-submitting={formCopy.submitting} data-form-error={copy.status.formError} data-unexpected-error={formCopy.unexpectedError}>
   <div class="enquiry__intro">
-    <p class="enquiry__eyebrow">{formCopy.eyebrow}</p>
-    <h1 id="enquiry-title">{formCopy.title}</h1>
-    <p class="enquiry__description">{formCopy.description}</p>
+    <p class="enquiry__eyebrow">{modeCopy.eyebrow}</p>
+    <h1 id="enquiry-title">{modeCopy.title}</h1>
+    <p class="enquiry__description">{modeCopy.description}</p>
     <div class="enquiry__organic-mark" aria-hidden="true"></div>
   </div>
 
@@ -50,21 +54,32 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
       </div>
 
       <div class="field field--wide">
-        <label for="enquiry-interest">{formCopy.interest} <span aria-hidden="true">*</span></label>
+        <label for="enquiry-interest">{modeCopy.interestLabel} <span aria-hidden="true">*</span></label>
         <select id="enquiry-interest" name="interest" aria-required="true" aria-describedby="enquiry-required-note enquiry-interest-error">
           <option value="">{formCopy.interestPlaceholder}</option>
-          {Object.entries(formCopy.interestOptions).map(([value, label]) => <option {value}>{label}</option>)}
+          {Object.entries(modeCopy.interestOptions).map(([value, label]) => <option {value}>{label}</option>)}
         </select>
         <p id="enquiry-interest-error" class="field__error" data-error-for="interest"></p>
       </div>
 
-      <div class="field field--wide">
+      {mode !== 'supplier' && <div class="field field--wide">
         <label for="enquiry-product">{formCopy.product}</label>
         <select id="enquiry-product" name="productId" data-product-select>
           <option value="">{formCopy.productPlaceholder}</option>
           {products.map((product) => <option value={product.id}>{product.name} — {product.packFormat}</option>)}
         </select>
-      </div>
+      </div>}
+
+      {mode === 'supplier' && <>
+        <div class="field">
+          <label for="enquiry-product-range">Product range</label>
+          <input id="enquiry-product-range" name="productRange" type="text" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="enquiry-temperature">Storage temperature</label>
+          <input id="enquiry-temperature" name="temperature" type="text" autocomplete="off" />
+        </div>
+      </>}
 
       <div class="field field--wide">
         <label for="enquiry-message">{formCopy.message} <span aria-hidden="true">*</span></label>
@@ -79,7 +94,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
       </div>
 
       <div class="enquiry-form__actions">
-        <button type="submit" data-enquiry-submit data-idle-label={formCopy.submit} disabled>{formCopy.submit}</button>
+        <button type="submit" data-enquiry-submit data-idle-label={modeCopy.submit} disabled>{modeCopy.submit}</button>
         <div class="enquiry-form__status" role="status" aria-live="polite" aria-atomic="true" data-enquiry-status></div>
       </div>
     </form>
@@ -87,7 +102,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
     <section class="enquiry-success" data-enquiry-success hidden>
       <p class="enquiry-success__mark" aria-hidden="true">✓</p>
       <h2 tabindex="-1" data-enquiry-success-heading>{copy.status.successTitle}</h2>
-      <p>{copy.status.successMessage}</p>
+      <p>{modeCopy.successMessage ?? copy.status.successMessage}</p>
       <p>{copy.status.reference}: <strong data-enquiry-reference></strong></p>
     </section>
 
@@ -99,6 +114,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
   import { submitEnquiry } from '../../lib/cms/queries';
   import { initializeEnquiryForm, type EnquiryFormView } from '../../lib/enquiry/controller';
   import type { Locale } from '../../lib/i18n/types';
+  import type { EnquiryMode } from '../../lib/i18n/ui';
 
   for (const root of document.querySelectorAll<HTMLElement>('[data-enquiry-root]')) {
     const form = root.querySelector<HTMLFormElement>('[data-enquiry-form]');
@@ -109,7 +125,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
     const reference = root.querySelector<HTMLElement>('[data-enquiry-reference]');
     const product = root.querySelector<HTMLSelectElement>('[data-product-select]');
     const interest = form?.elements.namedItem('interest');
-    if (!form || !submit || !status || !success || !successHeading || !reference || !product || !(interest instanceof HTMLSelectElement)) continue;
+    if (!form || !submit || !status || !success || !successHeading || !reference || !(interest instanceof HTMLSelectElement)) continue;
 
     try {
       const parsed = JSON.parse(root.dataset.knownProducts ?? '[]');
@@ -121,7 +137,8 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
         if (name) errorNodes.set(name, node);
       }
       const requiredErrorNames = ['name', 'email', 'interest', 'message', 'consent'];
-      const controlNames = ['name', 'company', 'email', 'phone', 'interest', 'productId', 'message', 'consent'];
+      const controlNames = ['name', 'company', 'email', 'phone', 'interest', 'message', 'consent'];
+      if (root.dataset.mode !== 'supplier') controlNames.push('productId');
       if (requiredErrorNames.some((name) => !errorNodes.has(name))) continue;
       if (controlNames.some((name) => !(form.elements.namedItem(name) instanceof HTMLElement))) continue;
 
@@ -166,7 +183,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
           success.hidden = false;
           successHeading.focus();
         },
-        selectProduct(productId) { product.value = productId; },
+        selectProduct(productId) { if (product) product.value = productId; },
         selectInterest(value) { interest.value = value; },
       };
 
@@ -174,6 +191,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
 
       initializeEnquiryForm(view, submitEnquiry, {
         locale: root.dataset.locale as Locale,
+        mode: root.dataset.mode as EnquiryMode,
         knownProductIds,
         requestedProductId: searchParams.get('product'),
         knownInterestValues: [...interest.options].map(({ value }) => value).filter(Boolean),

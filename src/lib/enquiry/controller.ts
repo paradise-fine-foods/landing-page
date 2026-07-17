@@ -1,4 +1,5 @@
 import type { Locale } from '../i18n/types';
+import type { EnquiryMode } from '../i18n/ui';
 import { EnquiryValidationError, type EnquiryErrors, type EnquiryInput, type EnquirySuccess } from './types';
 
 export interface EnquiryFormView {
@@ -21,6 +22,7 @@ interface EnquiryControllerOptions {
   requestedProductId: string | null;
   knownInterestValues?: readonly string[];
   requestedInterest?: string | null;
+  mode?: EnquiryMode;
   submitting: string;
   formError: string;
   unexpectedError: string;
@@ -33,10 +35,11 @@ const stringValue = (data: FormData, name: string): string => {
   return typeof value === 'string' ? value : '';
 };
 
-export const collectEnquiryInput = (locale: Locale, data: FormData): EnquiryInput => {
+export const collectEnquiryInput = (locale: Locale, data: FormData, mode: EnquiryMode = 'general'): EnquiryInput => {
   const productId = stringValue(data, 'productId');
   return {
     locale,
+    mode,
     name: stringValue(data, 'name'),
     company: stringValue(data, 'company'),
     email: stringValue(data, 'email'),
@@ -77,7 +80,7 @@ export const initializeEnquiryForm = (
     view.showStatus(options.submitting);
 
     try {
-      const result = await submitEnquiry(collectEnquiryInput(options.locale, view.readFormData()));
+      const result = await submitEnquiry(collectEnquiryInput(options.locale, view.readFormData(), options.mode));
       view.showSuccess(result);
     } catch (error) {
       if (error instanceof EnquiryValidationError) {

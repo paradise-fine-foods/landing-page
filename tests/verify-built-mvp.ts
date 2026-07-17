@@ -24,8 +24,8 @@ const required = [
   'href="/vi/"',
   'href="/vi/products/"',
   'data-floating-rail',
-  'href="/en/contact/?interest=retail"',
-  'href="/en/contact/?interest=other"',
+  'href="/en/contact/customer/"',
+  'href="/en/contact/supplier/"',
   'href="/en/contact/"',
 ];
 
@@ -88,8 +88,8 @@ for (const { path, normalizedPath } of canonicalLocalizedPages) {
   for (const marker of [
     'data-floating-rail',
     'aria-controls="floating-rail-panel"',
-    `href="/${locale}/contact/?interest=retail"`,
-    `href="/${locale}/contact/?interest=other"`,
+    `href="/${locale}/contact/customer/"`,
+    `href="/${locale}/contact/supplier/"`,
     `href="/${locale}/contact/"`,
   ]) {
     if (!localizedHtml.includes(marker)) throw new Error(`${localizedFile}: missing ${marker}`);

@@ -1,5 +1,7 @@
 import type { Locale } from './types';
 
+export type EnquiryMode = 'general' | 'customer' | 'supplier';
+
 export interface UiCopy {
   siteName: string;
   languageName: string;
@@ -118,6 +120,8 @@ export interface UiCopy {
     demoNotice: string;
   };
   form: {
+    mode?: EnquiryMode;
+    modes?: Record<EnquiryMode, { eyebrow: string; title: string; description: string; submit: string; successMessage: string; interestLabel: string; interestOptions: Record<string, string> }>;
     eyebrow: string;
     title: string;
     description: string;
