@@ -4,7 +4,7 @@ import {
   createLivingParticles,
   type LivingCanvasDependencies,
 } from '../src/lib/motion/living-canvas';
-import { shouldEnhanceMotion } from '../src/lib/motion/preferences';
+import { shouldDisposePage, shouldEnhanceMotion } from '../src/lib/motion/preferences';
 import { installReveals, type RevealDependencies } from '../src/lib/motion/reveal';
 
 describe('one-shot scroll reveals', () => {
@@ -83,6 +83,11 @@ describe('motion eligibility', () => {
     expect(shouldEnhanceMotion({ reduceMotion: true, saveData: false })).toBe(false);
     expect(shouldEnhanceMotion({ reduceMotion: false, saveData: true })).toBe(false);
     expect(shouldEnhanceMotion({ reduceMotion: true, saveData: true })).toBe(false);
+  });
+
+  test('keeps controllers alive for BFCache pagehide and disposes on terminal pagehide', () => {
+    expect(shouldDisposePage({ persisted: true })).toBe(false);
+    expect(shouldDisposePage({ persisted: false })).toBe(true);
   });
 });
 

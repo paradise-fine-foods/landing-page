@@ -24,11 +24,15 @@ Implemented the accessible manual featured-product carousel, one-shot authored s
 
 The required independent diff review found no critical issues and identified three fixes. New failing regressions reproduced nonzero item-offset native scrolling, missing localized live-status context and partial IntersectionObserver setup cleanup. The controller now normalizes item positions to the first item's offset, formats its live status through localized `{current}` / `{total}` templates, and reveal setup disconnects before settling after partial failure.
 
+### Final BFCache lifecycle follow-up
+
+A final independent review found that unconditional one-shot `pagehide` cleanup left restored BFCache pages with visible but dead carousel controls and disposed Canvas/reveal controllers. RED reproduced the missing `shouldDisposePage` policy and stale one-shot source contract. The fix ignores `pagehide` when `event.persisted` is true, retains the listener for a later terminal navigation, and still performs idempotent cleanup when `persisted` is false. The focused lifecycle run passed 17/17; final Task 4 focused verification passed 43/43 with 282 assertions. Full verification passed 100/100 with 583 assertions, Astro check reported zero diagnostics, the 28-page production build/verifiers passed, and `git diff --check` remained clean.
+
 ## Verification
 
-- Focused tests: 42 passed, 0 failed.
+- Focused tests: 43 passed, 0 failed.
 - `bun run check`: 0 errors, 0 warnings, 0 hints across 81 files.
-- Full `bun test`: 99 passed, 0 failed, 579 assertions.
+- Full `bun test`: 100 passed, 0 failed, 583 assertions.
 - `bun run build`: success; 28 static pages plus all CMS/catalog/brand/enquiry/MVP verifiers passed.
 - `git diff --check`: clean.
 - Known pre-existing build warning: Astro reports a root `/` route priority conflict while still completing the build successfully; Task 4 did not modify root routing.

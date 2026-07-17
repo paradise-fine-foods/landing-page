@@ -35,6 +35,8 @@ describe('homepage composition', () => {
     expect(hero).toContain('data-living-canvas');
     expect(hero).toContain('aria-hidden="true"');
     expect(hero).not.toMatch(/slot name="stage"|ProductStage|modelSrc/);
+    expect(hero).toContain('shouldDisposePage(event)');
+    expect(hero).not.toMatch(/addEventListener\('pagehide',[\s\S]{0,240}\{ once: true \}/);
   });
 
   test('both localized homepages consume CMS queries and fixed route counterparts', () => {

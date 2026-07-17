@@ -55,7 +55,7 @@ const metadata = [
 </section>
 
 <script>
-  import { shouldEnhanceMotion } from '../../lib/motion/preferences';
+  import { shouldDisposePage, shouldEnhanceMotion } from '../../lib/motion/preferences';
 
   interface NavigatorWithConnection extends Navigator {
     connection?: { saveData?: boolean };
@@ -66,10 +66,11 @@ const metadata = [
   const controllers: Array<{ dispose(): void }> = [];
   let pageDisposed = false;
 
-  globalThis.addEventListener('pagehide', () => {
+  globalThis.addEventListener('pagehide', (event) => {
+    if (!shouldDisposePage(event)) return;
     pageDisposed = true;
     for (const controller of controllers) controller.dispose();
-  }, { once: true });
+  });
 
   import('../../lib/carousel/controller')
     .then(({ createCarousel }) => {
