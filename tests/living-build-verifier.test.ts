@@ -12,6 +12,7 @@ import {
 } from './verify-built-living-design';
 
 const fixtureDir = () => mkdtempSync(join(tmpdir(), 'living-build-verifier-'));
+const safeRandomPayload = (size: number): string => randomBytes(size).toString('base64').replace(/three|webgl/gi, 'xxxxx');
 const carousel = (body: string) => `<section aria-roledescription="carousel" aria-label="Featured products" data-carousel>${body}</section>`;
 const completeCarousel = carousel(`
   <button data-carousel-previous aria-label="Previous product"></button>
@@ -94,24 +95,24 @@ describe('living build verifier semantics', () => {
 
   test('rejects an over-budget unique homepage initial JavaScript graph', () => {
     const dist = verifierFixture('<script type="module" src="/_astro/critical.js"></script>');
-    writeFileSync(join(dist, '_astro', 'critical.js'), `export default ${JSON.stringify(randomBytes(125_000).toString('base64'))};`);
+    writeFileSync(join(dist, '_astro', 'critical.js'), `export default ${JSON.stringify(safeRandomPayload(125_000))};`);
     expect(() => verifyBuiltLivingDesign(dist)).toThrow('Critical initial JavaScript');
   });
 
   test('rejects an over-budget unique homepage-authored SVG graph', () => {
     const dist = verifierFixture('<img src="/_astro/authored-graphic.svg"><img src="/_astro/authored-graphic.svg"><img src="https://example.test/external.svg"><img src="data:image/svg+xml,ignored"><img src="/_astro/%2e%2e/ignored.svg">');
-    writeFileSync(join(dist, '_astro', 'authored-graphic.svg'), `<svg><!--${randomBytes(85_000).toString('base64')}--></svg>`);
+    writeFileSync(join(dist, '_astro', 'authored-graphic.svg'), `<svg><!--${safeRandomPayload(85_000)}--></svg>`);
     expect(() => verifyBuiltLivingDesign(dist)).toThrow('Homepage authored SVG graphics');
   });
 
   test('rejects an over-budget unique inline homepage module body', () => {
-    const dist = verifierFixture(`<script type="module">export default ${JSON.stringify(randomBytes(125_000).toString('base64'))};</script>`);
+    const dist = verifierFixture(`<script type="module">export default ${JSON.stringify(safeRandomPayload(125_000))};</script>`);
     expect(() => verifyBuiltLivingDesign(dist)).toThrow('Critical initial JavaScript');
   });
 
   test('rejects an over-budget standalone modulepreload graph with query and hash', () => {
     const dist = verifierFixture('<link rel="modulepreload" href="/_astro/critical-preload.js?cache=1#entry">');
-    writeFileSync(join(dist, '_astro', 'critical-preload.js'), `export default ${JSON.stringify(randomBytes(125_000).toString('base64'))};`);
+    writeFileSync(join(dist, '_astro', 'critical-preload.js'), `export default ${JSON.stringify(safeRandomPayload(125_000))};`);
     expect(() => verifyBuiltLivingDesign(dist)).toThrow('Critical initial JavaScript');
   });
 });
