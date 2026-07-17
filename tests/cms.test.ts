@@ -76,7 +76,7 @@ describe('CMS adapter', () => {
     expect(imageSources.every((source) => !source.startsWith('/src/'))).toBe(true);
     expect(
       imageSources.every((source) =>
-        /(?:product-stage|editorial-table)\.svg(?:\?.*)?$/.test(source),
+        /(?:product-art|editorial-table|living-hero-product)\.svg(?:\?.*)?$/.test(source),
       ),
     ).toBe(true);
   });

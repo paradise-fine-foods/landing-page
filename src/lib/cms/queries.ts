@@ -137,13 +137,17 @@ export const getFeaturedContent = async (locale: Locale): Promise<FeaturedConten
     throw new Error('Invalid featured product reference');
   }
 
+  const heroImage = localizeImage(demoFeaturedContent.hero.image, locale);
+  const featuredProduct = localizeProduct(heroProduct, locale);
+  featuredProduct.image = heroImage;
+
   return {
     hero: {
       eyebrow: demoFeaturedContent.hero.eyebrow[locale],
       title: demoFeaturedContent.hero.title[locale],
       body: demoFeaturedContent.hero.body[locale],
-      product: localizeProduct(heroProduct, locale),
-      image: localizeImage(demoFeaturedContent.hero.image, locale),
+      product: featuredProduct,
+      image: heroImage,
     },
     editorial: {
       title: demoFeaturedContent.editorial.title[locale],

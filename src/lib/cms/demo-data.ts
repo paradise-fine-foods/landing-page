@@ -1,6 +1,7 @@
 import type { BrandAccent, LocalizedSlug, LocalizedText } from './types';
 import editorialTableSrc from '../../assets/demo/editorial-table.svg?no-inline';
-import productStageSrc from '../../assets/demo/product-stage.svg?no-inline';
+import livingHeroProductSrc from '../../assets/demo/living-hero-product.svg?no-inline';
+import productArtSrc from '../../assets/demo/product-art.svg?no-inline';
 
 interface DemoImageAsset {
   src: string;
@@ -47,7 +48,7 @@ export interface DemoProduct {
 }
 
 const productImage = (en: string, vi: string): DemoImageAsset => ({
-  src: productStageSrc,
+  src: productArtSrc,
   width: 1200,
   height: 900,
   alt: { en, vi },
@@ -57,6 +58,13 @@ const editorialImage = (en: string, vi: string): DemoImageAsset => ({
   src: editorialTableSrc,
   width: 1600,
   height: 1000,
+  alt: { en, vi },
+});
+
+const livingHeroImage = (en: string, vi: string): DemoImageAsset => ({
+  src: livingHeroProductSrc,
+  width: 1600,
+  height: 1100,
   alt: { en, vi },
 });
 
@@ -258,7 +266,7 @@ export const demoFeaturedContent = {
     title: { en: 'Ingredients shaped for thoughtful menus', vi: 'Nguyên liệu cho thực đơn chỉn chu' },
     body: { en: 'Explore fictional products prepared for design review.', vi: 'Khám phá sản phẩm hư cấu được chuẩn bị để duyệt thiết kế.' },
     productId: 'cultured-butter-sheet',
-    image: productImage('Fictional featured butter presentation', 'Trình bày bơ nổi bật hư cấu'),
+    image: livingHeroImage('Fictional featured butter presentation', 'Trình bày bơ nổi bật hư cấu'),
   },
   editorial: {
     title: { en: 'Built around the professional table', vi: 'Được xây dựng quanh bàn bếp chuyên nghiệp' },

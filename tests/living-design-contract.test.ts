@@ -1,10 +1,15 @@
 import { describe, expect, test } from 'bun:test';
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = join(import.meta.dir, '..');
 const source = (path: string) => readFileSync(join(root, path), 'utf8');
+const filesBelow = (directory: string): string[] => readdirSync(join(root, directory), { withFileTypes: true })
+  .flatMap((entry) => {
+    const path = `${directory}/${entry.name}`;
+    return entry.isDirectory() ? filesBelow(path) : [path];
+  });
 const cssRule = (css: string, selector: string) => [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .filter(([, selectors]) => selectors.split(',').some((item) => item.trim() === selector))
   .at(-1)?.[2] ?? '';
@@ -24,6 +29,17 @@ const contrastRatio = (foreground: string, background: string) => {
 };
 
 describe('Living Ingredients identity', () => {
+  test('contains no 3D runtime, model, or stage contract', () => {
+    const packageJson = JSON.parse(source('package.json'));
+    expect(packageJson.dependencies?.three).toBeUndefined();
+    expect(packageJson.devDependencies?.['@types/three']).toBeUndefined();
+    for (const path of ['src/components/three', 'src/lib/three', 'public/models']) {
+      expect(existsSync(join(root, path))).toBe(false);
+    }
+    const textFiles = filesBelow('src').filter((path) => /\.(?:astro|css|js|ts)$/.test(path));
+    expect(textFiles.filter((path) => /three|webgl|\.glb|model-src|product-stage/i.test(source(path)))).toEqual([]);
+  });
+
   test('self-hosts and renders the authentic Paradise logo', () => {
     const logoPath = join(root, 'src/assets/brand/paradise-fine-foods-logo.png');
     expect(existsSync(logoPath)).toBe(true);

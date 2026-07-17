@@ -33,12 +33,6 @@ export interface UiCopy {
     origin: string;
     packFormat: string;
     storage: string;
-    interactionPrompt: string;
-    stageAccessibleLabel: string;
-    stageReadyStatus: string;
-    stageFallbackStatus: string;
-    stageFallback: string;
-    stageCode: string;
   };
   home: {
     credibilityTitle: string;
@@ -140,8 +134,6 @@ export interface UiCopy {
     successTitle: string;
     successMessage: string;
     reference: string;
-    modelLoading: string;
-    modelUnavailable: string;
   };
   validation: {
     nameRequired: string;
@@ -169,7 +161,7 @@ export const ui: Record<Locale, UiCopy> = {
     demoNoticeLabel: 'Review / 00',
     header: { navigation: 'Primary navigation', menuOpen: 'Open menu', menuClose: 'Close menu', home: 'Home', products: 'Products', brands: 'Brands', contact: 'Contact', language: 'Tiếng Việt' },
     footer: { tagline: 'Exceptional ingredients, handled with care.', navigation: 'Explore', contact: 'Contact', legal: 'Demo content for review only.', copyright: 'Paradise Fine Foods. All rights reserved.' },
-    hero: { eyebrow: 'Cold-chain ingredients', title: 'Exceptional ingredients. Delivered with confidence.', description: 'A review-ready showcase of specialty dairy and professional ingredients, supported by careful handling and responsive service.', primaryCta: 'Explore products', secondaryCta: 'Start an enquiry', brand: 'Brand', origin: 'Origin', packFormat: 'Pack format', storage: 'Storage', interactionPrompt: 'Interact with the 3D product package', stageAccessibleLabel: 'Interactive 3D product package', stageReadyStatus: '3D preview ready.', stageFallbackStatus: 'The interactive view is unavailable. The image preview remains available.', stageFallback: 'Product package preview', stageCode: 'PFF / CHILLED 02—06' },
+    hero: { eyebrow: 'Cold-chain ingredients', title: 'Exceptional ingredients. Delivered with confidence.', description: 'A review-ready showcase of specialty dairy and professional ingredients, supported by careful handling and responsive service.', primaryCta: 'Explore products', secondaryCta: 'Start an enquiry', brand: 'Brand', origin: 'Origin', packFormat: 'Pack format', storage: 'Storage' },
     home: {
       credibilityTitle: 'Built for dependable ingredient sourcing',
       operationalPillars: [
@@ -194,7 +186,7 @@ export const ui: Record<Locale, UiCopy> = {
     product: { viewDetails: 'View product', productDetails: 'Product details', origin: 'Origin', category: 'Category', packFormat: 'Pack format', storage: 'Storage', applications: 'Applications', applicationNames: { lamination: 'Lamination', viennoiserie: 'Viennoiserie', whipping: 'Whipping', sauces: 'Sauces', tiramisu: 'Tiramisu', desserts: 'Desserts', cheesecake: 'Cheesecake', spreads: 'Spreads', pizza: 'Pizza', baking: 'Baking', cooking: 'Cooking' }, benefits: 'Professional benefits', audience: 'Suitable for', enquire: 'Enquire about this product', relatedTitle: 'Related products', backToProducts: 'Back to products', breadcrumb: 'Product breadcrumb' },
     brand: { eyebrow: 'Our brands', title: 'Ingredient makers with a point of view', description: 'Explore representative producer stories and product families.', viewBrand: 'View brand', origin: 'Origin', story: 'Brand story', categories: 'Categories', products: 'Products from this brand', backToBrands: 'Back to brands', breadcrumb: 'Brand breadcrumb', demoNotice: 'Review-only story: this brand identity, origin, imagery, and product relationship are fictional.' },
     form: { eyebrow: 'Sales enquiry', title: 'Tell us what you need', description: 'Share your ingredient requirements and we will prepare a useful follow-up.', requiredNote: 'Fields marked with an asterisk are required.', required: 'Required', name: 'Name', company: 'Company', email: 'Email', phone: 'Phone', interest: 'Area of interest', interestPlaceholder: 'Choose an area of interest', interestOptions: { retail: 'Retail', horeca: 'HORECA', bakery: 'Bakery & Pastry', ecommerce: 'E-commerce', other: 'Other' }, product: 'Product (optional)', productPlaceholder: 'No specific product', message: 'How can we help?', consent: 'I agree that this demo may process my details to show the enquiry experience.', submit: 'Send enquiry', submitting: 'Sending…', demoDelivery: 'Demo only: this form does not send an email or create a CRM record.', noScript: 'JavaScript is required to demonstrate submission. Your details are not sent anywhere.', unexpectedError: 'The demo could not complete this submission. Please try again.' },
-    status: { formError: 'Please correct the highlighted fields.', successTitle: 'Thank you for your enquiry', successMessage: 'Your demo enquiry has been recorded for this review session.', reference: 'Reference', modelLoading: 'Loading interactive product view…', modelUnavailable: 'The interactive view is unavailable. The product preview remains available.' },
+    status: { formError: 'Please correct the highlighted fields.', successTitle: 'Thank you for your enquiry', successMessage: 'Your demo enquiry has been recorded for this review session.', reference: 'Reference' },
     validation: { nameRequired: 'Enter your name.', emailRequired: 'Enter your email address.', emailInvalid: 'Enter a valid email address.', interestRequired: 'Choose an area of interest.', messageRequired: 'Tell us how we can help.', consentRequired: 'Confirm your consent to continue.' },
     notFound: { eyebrow: '404', title: 'This page could not be found', description: 'The address may have changed, or the page may not be part of this demo.', homeLink: 'Go to English home', productsLink: 'Browse English products' },
   },
@@ -206,7 +198,7 @@ export const ui: Record<Locale, UiCopy> = {
     demoNoticeLabel: 'Duyệt / 00',
     header: { navigation: 'Điều hướng chính', menuOpen: 'Mở menu', menuClose: 'Đóng menu', home: 'Trang chủ', products: 'Sản phẩm', brands: 'Thương hiệu', contact: 'Liên hệ', language: 'English' },
     footer: { tagline: 'Nguyên liệu tuyển chọn, được chăm chút cẩn thận.', navigation: 'Khám phá', contact: 'Liên hệ', legal: 'Nội dung demo chỉ dùng để duyệt.', copyright: 'Paradise Fine Foods. Bảo lưu mọi quyền.' },
-    hero: { eyebrow: 'Nguyên liệu chuỗi lạnh', title: 'Nguyên liệu tuyển chọn. Giao hàng trọn niềm tin.', description: 'Không gian giới thiệu sẵn sàng để duyệt về nguyên liệu sữa đặc tuyển và nguyên liệu chuyên nghiệp, cùng quy trình bảo quản cẩn thận và dịch vụ linh hoạt.', primaryCta: 'Khám phá sản phẩm', secondaryCta: 'Gửi yêu cầu', brand: 'Thương hiệu', origin: 'Xuất xứ', packFormat: 'Quy cách', storage: 'Bảo quản', interactionPrompt: 'Tương tác với bao bì sản phẩm 3D', stageAccessibleLabel: 'Bao bì sản phẩm 3D tương tác', stageReadyStatus: 'Bản xem 3D đã sẵn sàng.', stageFallbackStatus: 'Chế độ xem tương tác hiện không khả dụng. Hình ảnh xem trước vẫn sẵn sàng.', stageFallback: 'Hình xem trước bao bì sản phẩm', stageCode: 'PFF / LẠNH 02—06' },
+    hero: { eyebrow: 'Nguyên liệu chuỗi lạnh', title: 'Nguyên liệu tuyển chọn. Giao hàng trọn niềm tin.', description: 'Không gian giới thiệu sẵn sàng để duyệt về nguyên liệu sữa đặc tuyển và nguyên liệu chuyên nghiệp, cùng quy trình bảo quản cẩn thận và dịch vụ linh hoạt.', primaryCta: 'Khám phá sản phẩm', secondaryCta: 'Gửi yêu cầu', brand: 'Thương hiệu', origin: 'Xuất xứ', packFormat: 'Quy cách', storage: 'Bảo quản' },
     home: {
       credibilityTitle: 'Nền tảng tìm nguồn nguyên liệu đáng tin cậy',
       operationalPillars: [
@@ -231,7 +223,7 @@ export const ui: Record<Locale, UiCopy> = {
     product: { viewDetails: 'Xem sản phẩm', productDetails: 'Chi tiết sản phẩm', origin: 'Xuất xứ', category: 'Danh mục', packFormat: 'Quy cách', storage: 'Bảo quản', applications: 'Ứng dụng', applicationNames: { lamination: 'Cán lớp', viennoiserie: 'Bánh viennoiserie', whipping: 'Đánh bông', sauces: 'Xốt', tiramisu: 'Tiramisu', desserts: 'Món tráng miệng', cheesecake: 'Bánh phô mai', spreads: 'Món phết', pizza: 'Pizza', baking: 'Làm bánh', cooking: 'Nấu ăn' }, benefits: 'Lợi ích chuyên nghiệp', audience: 'Phù hợp với', enquire: 'Yêu cầu tư vấn sản phẩm', relatedTitle: 'Sản phẩm liên quan', backToProducts: 'Quay lại sản phẩm', breadcrumb: 'Đường dẫn sản phẩm' },
     brand: { eyebrow: 'Thương hiệu', title: 'Những nhà sản xuất nguyên liệu giàu bản sắc', description: 'Khám phá câu chuyện nhà sản xuất và các dòng sản phẩm đại diện.', viewBrand: 'Xem thương hiệu', origin: 'Xuất xứ', story: 'Câu chuyện thương hiệu', categories: 'Danh mục', products: 'Sản phẩm từ thương hiệu này', backToBrands: 'Quay lại thương hiệu', breadcrumb: 'Đường dẫn thương hiệu', demoNotice: 'Câu chuyện chỉ để duyệt: nhận diện, xuất xứ, hình ảnh và mối quan hệ sản phẩm của thương hiệu này đều là hư cấu.' },
     form: { eyebrow: 'Yêu cầu tư vấn', title: 'Chia sẻ nhu cầu của bạn', description: 'Hãy cho chúng tôi biết yêu cầu nguyên liệu để chuẩn bị phản hồi hữu ích.', requiredNote: 'Các trường có dấu sao là bắt buộc.', required: 'Bắt buộc', name: 'Họ và tên', company: 'Công ty', email: 'Email', phone: 'Điện thoại', interest: 'Lĩnh vực quan tâm', interestPlaceholder: 'Chọn lĩnh vực quan tâm', interestOptions: { retail: 'Bán lẻ', horeca: 'HORECA', bakery: 'Bánh mì & Bánh ngọt', ecommerce: 'Thương mại điện tử', other: 'Khác' }, product: 'Sản phẩm (không bắt buộc)', productPlaceholder: 'Không chọn sản phẩm cụ thể', message: 'Chúng tôi có thể hỗ trợ gì?', consent: 'Tôi đồng ý để bản demo xử lý thông tin nhằm minh họa trải nghiệm gửi yêu cầu.', submit: 'Gửi yêu cầu', submitting: 'Đang gửi…', demoDelivery: 'Chỉ là demo: biểu mẫu này không gửi email hoặc tạo hồ sơ CRM.', noScript: 'Cần JavaScript để minh họa việc gửi biểu mẫu. Thông tin của bạn không được gửi đi.', unexpectedError: 'Bản demo chưa thể hoàn tất yêu cầu này. Vui lòng thử lại.' },
-    status: { formError: 'Vui lòng sửa các trường được đánh dấu.', successTitle: 'Cảm ơn yêu cầu của bạn', successMessage: 'Yêu cầu demo đã được ghi nhận cho phiên duyệt này.', reference: 'Mã tham chiếu', modelLoading: 'Đang tải chế độ xem sản phẩm tương tác…', modelUnavailable: 'Chế độ xem tương tác hiện không khả dụng. Hình xem trước sản phẩm vẫn được giữ lại.' },
+    status: { formError: 'Vui lòng sửa các trường được đánh dấu.', successTitle: 'Cảm ơn yêu cầu của bạn', successMessage: 'Yêu cầu demo đã được ghi nhận cho phiên duyệt này.', reference: 'Mã tham chiếu' },
     validation: { nameRequired: 'Vui lòng nhập họ và tên.', emailRequired: 'Vui lòng nhập địa chỉ email.', emailInvalid: 'Vui lòng nhập địa chỉ email hợp lệ.', interestRequired: 'Vui lòng chọn lĩnh vực quan tâm.', messageRequired: 'Vui lòng cho biết chúng tôi có thể hỗ trợ gì.', consentRequired: 'Vui lòng xác nhận đồng ý để tiếp tục.' },
     notFound: { eyebrow: '404', title: 'Không tìm thấy trang này', description: 'Địa chỉ có thể đã thay đổi hoặc trang chưa nằm trong phạm vi bản demo.', homeLink: 'Đến trang chủ tiếng Việt', productsLink: 'Xem sản phẩm tiếng Việt' },
   },

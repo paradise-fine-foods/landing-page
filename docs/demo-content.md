@@ -148,44 +148,40 @@ The review build self-hosts the authentic Paradise Fine Foods full logo rather t
 |---|---|---|---|---|
 | `src/assets/brand/paradise-fine-foods-logo.png` | Authentic self-hosted full logo used only in the client-review demo | Paradise brand owner and legal reviewer | Current Paradise source PNG, master identity artwork, usage guidance and confirmation that this export is approved for the production web property | Brand and legal owners approve the exact file, placement, sizing, accessible naming and production usage in both localized experiences |
 
-## Authored demo media and temporary 3D
+## Authored demo media and motion enhancement
 
 | Asset | Review-only role | Production owner | Source/input | Acceptance |
 |---|---|---|---|---|
 | `src/assets/demo/editorial-table.svg` | Original unbranded abstract kitchen still life used by editorial/service proof | Creative owner + rights reviewer | Approved commissioned image, crops, alt text, author and license/release record | Rights register complete; art direction, responsive crops, alt and performance pass |
-| `src/assets/demo/product-stage.svg` | Original unbranded geometric pack stage reused for categories, brands and all product cards/details | Creative owner + product/brand owners | Approved category art plus distinct accurate brand/product pack imagery | No demo reuse remains; each mapped record has approved image, crop, dimensions and alt |
-| `src/assets/demo/hero-poster-desktop.svg` | Original 1600×1000 poster-first hero fallback | Creative owner | Approved hero/package poster matching the production GLB | Desktop crop, color accuracy, fallback, rights and performance QA pass |
-| `src/assets/demo/hero-poster-mobile.svg` | Original 800×1000 narrow hero fallback | Creative owner | Approved mobile art direction matching desktop poster and GLB | 390 px visual/overflow review, alt relationship, rights and performance QA pass |
-| `public/models/demo-package.glb` | Temporary Khronos BoxTextured sample loaded from `/models/demo-package.glb` | Creative/3D owner + rights reviewer | Approved optimized Paradise package GLB, texture sources, license/ownership and poster pairing | Visual accuracy, ≤180 KB compressed lazy runtime budget, fallback, reduced-motion, data-saving, WebGL failure and rights QA pass |
-| `public/models/README.md` | Provenance record for the temporary GLB | Rights reviewer | Upstream source and license are already recorded; replace with the production asset provenance record | Production source, author, ownership/license, export settings and approval date are documented |
+| `src/assets/demo/product-art.svg` | Original unbranded geometric pack art reused for categories, brands and all product cards/details | Creative owner + product/brand owners | Approved category art plus distinct accurate brand/product pack imagery | No demo reuse remains; each mapped record has approved image, crop, dimensions and alt |
+| `src/assets/demo/living-hero-product.svg` | Original fictional unbranded package silhouette with Paradise-inspired droplet and petal forms for the server-rendered homepage hero | Creative owner + product owner | Approved commissioned hero art, localized alt text, responsive crop guidance and rights record | Product owner approves the fictional-to-production replacement; dimensions, crop, LCP delivery, contrast and rights QA pass |
 | `public/favicon.svg` | Unmodified Astro starter mark shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Approved Paradise monogram/favicon SVG, source artwork, author and usage rights | Default Astro artwork is absent; brand owner approves the mark; light/dark and small-size legibility QA pass |
 | `public/favicon.ico` | Unmodified Astro starter icon shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Multi-size ICO export of the approved Paradise favicon and its source artwork | Default Astro artwork is absent; icon matches approved SVG and renders clearly at browser favicon sizes |
 
-The temporary GLB provenance is recorded in `public/models/README.md`: KhronosGroup glTF-Sample-Assets, BoxTextured GLB, retrieved 2026-07-16 from `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/BoxTextured/glTF-Binary/BoxTextured.glb`, under the upstream license at `https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/LICENSE.md`. The model and both posters must be replaced as one approved visual set.
+The native Canvas 2D layer is decorative only and carries no product content. The digital owner must preserve the reduced-motion and save-data loading gates, the ten-shape maximum, the capped device-pixel ratio and complete static hero fallback when maintaining this enhancement.
 
 ## Demo origins, URLs and route inputs
 
 ### Authoritative URL discovery scope
 
-The ledger test scans only the following runtime, configuration, fixture and provenance sources: `astro.config.mjs`, `src/lib/cms/demo-data.ts`, `src/layouts/SiteLayout.astro`, `src/pages/404.astro`, `src/pages/en/index.astro`, `src/pages/vi/index.astro`, `src/components/sections/CategoryDiscovery.astro`, `src/components/catalog/ProductDetail.astro`, and `public/models/README.md`. It discovers external `https`, `mailto`, and `tel` values; `/models/` public assets; exact contextual query values; and dynamic category/product query templates normalized to `{value}`. Source comment-only URLs are removed before scanning, so Astro documentation links and other documentation-only destinations are outside this runtime/provenance inventory. Media paths are independently discovered from the asset directories documented above.
+The ledger test scans only the following runtime, configuration and fixture sources: `astro.config.mjs`, `src/lib/cms/demo-data.ts`, `src/layouts/SiteLayout.astro`, `src/pages/404.astro`, `src/pages/en/index.astro`, `src/pages/vi/index.astro`, `src/components/sections/CategoryDiscovery.astro`, and `src/components/catalog/ProductDetail.astro`. It discovers external `https`, `mailto`, and `tel` values, exact contextual query values, and dynamic category/product query templates normalized to `{value}`. Source comment-only URLs are removed before scanning, so Astro documentation links and other documentation-only destinations are outside this runtime/provenance inventory. Media paths are independently discovered from the asset directory documented above.
 
 | URL/input | Review-only use | Production owner | Source/input | Acceptance |
 |---|---|---|---|---|
 | `https://demo.paradisefinefoods.com` | `astro.config.mjs` site origin and canonical/Open Graph base; duplicated only as a defensive fallback in `src/layouts/SiteLayout.astro` and `src/pages/404.astro` | Digital owner | Final HTTPS production hostname and environment/deployment configuration | Deployment crawl confirms the expected host in every canonical/Open Graph URL; demo hostname is absent from production output |
-| `/models/demo-package.glb` | Public model URL consumed by both localized homepages | Creative/3D owner | CMS/CDN URL or versioned production public asset | URL returns the approved GLB with correct caching/content type; failure fallback still passes |
 | `/en/`, `/vi/`, `/en/products/`, `/vi/san-pham/` | Direct bilingual recovery URLs on the 404 | Digital owner + content owner | Approved localized route map | All links return 200 and remain correct in deployed base-path configuration |
 | `?category={value}` | Dynamic category discovery URL pattern whose value is the exact localized category slug | Product/data owner | Stable localized category slug inventory | Each generated link filters to a non-empty intended set; invalid input degrades to full catalog |
 | `?interest=retail`, `?interest=horeca`, `?interest=bakery`, `?interest=ecommerce` | Homepage channel-to-enquiry paths in both locales | Channel sales owners | Approved interest taxonomy and CRM mapping | Each value preselects the intended localized option and reaches the production field mapping |
 | `?product={value}` | Dynamic product-detail-to-enquiry pattern whose value is one of the six stable product IDs listed above | Product/data owner + sales operations | Stable CMS product identifier and production endpoint mapping | Known IDs preselect correctly; unknown values are ignored; submitted context reaches the approved system |
 
-SVG namespace URLs and Astro/documentation links are technical identifiers, not business destinations. The external Khronos source/license URLs are provenance records and must remain with the temporary model until that model is removed.
+SVG namespace URLs and Astro/documentation links are technical identifiers, not business destinations.
 
 ## Production cutover checklist
 
 - Replace the local default CMS data behind the stable query functions; do not bind page components to a CMS SDK.
 - Obtain named brand and legal approval for the self-hosted Paradise logo before production release.
 - Reconcile this ledger against the final CMS export so every stable record, string family, visual and URL has an owner and approval record.
-- Replace all four authored demo SVGs and the GLB/poster set with approved, rights-cleared media; replace or remove the Astro starter `public/favicon.svg` and `public/favicon.ico` so no default artwork ships.
+- Replace all three authored demo SVGs with approved, rights-cleared media; replace or remove the Astro starter `public/favicon.svg` and `public/favicon.ico` so no default artwork ships.
 - Connect `submitEnquiry()` to reviewed delivery and remove success-only demo behavior after privacy/security acceptance.
 - Set the final site origin, crawl every generated route, and verify canonicals, locale alternates, internal links and redirects.
 - Obtain explicit English/Vietnamese business, legal, product, partnership, creative, privacy and accessibility approvals before launch.

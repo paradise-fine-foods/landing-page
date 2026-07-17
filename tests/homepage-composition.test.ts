@@ -23,14 +23,18 @@ describe('homepage composition', () => {
     expect(layout).toContain('<main id="main-content">');
   });
 
-  test('hero reserves a named product stage and keeps actions outside it', () => {
-    const hero = source('src/components/sections/Hero.astro');
-    const slotPosition = hero.indexOf('<slot name="stage"');
-    const actionsPosition = hero.indexOf('hero__actions');
+  test('living hero server-renders its image, actions, caption, and decorative canvas', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
 
-    expect(slotPosition).toBeGreaterThan(-1);
-    expect(actionsPosition).toBeGreaterThan(-1);
-    expect(actionsPosition).toBeLessThan(slotPosition);
+    expect(hero).toContain('interface Props');
+    expect(hero).toContain('product.image.alt');
+    expect(hero).toContain('width={product.image.width}');
+    expect(hero).toContain('height={product.image.height}');
+    expect(hero).toContain('living-hero__actions');
+    expect(hero).toContain('<figcaption>{product.name}</figcaption>');
+    expect(hero).toContain('data-living-canvas');
+    expect(hero).toContain('aria-hidden="true"');
+    expect(hero).not.toMatch(/slot name="stage"|ProductStage|modelSrc/);
   });
 
   test('both localized homepages consume CMS queries and fixed route counterparts', () => {
@@ -43,6 +47,9 @@ describe('homepage composition', () => {
       expect(page).toContain('getProducts');
       expect(page).toContain('getBrands');
       expect(page).toContain('counterpartPath');
+      expect(page).toContain("import LivingHero from '../../components/sections/LivingHero.astro'");
+      expect(page).toContain('<LivingHero');
+      expect(page).not.toMatch(/ProductStage|modelSrc|slot="stage"/);
       expect(page).not.toMatch(/locale\s*===|locale\s*!==/);
     }
   });

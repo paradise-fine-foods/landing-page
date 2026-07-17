@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title description">
+  <title id="title">Abstract ingredient package</title>
+  <desc id="description">An original fictional cream package surrounded by colorful petal and droplet shapes.</desc>
+  <rect width="1600" height="1100" fill="#e8f6fa"/>
+  <path d="M0 870C250 750 393 969 662 875s430-124 938 36v189H0Z" fill="#94c11f" opacity=".42"/>
+  <path d="M80 150C284 14 486 64 552 232 403 338 192 333 80 150Z" fill="#0796d2" opacity=".88"/>
+  <path d="M1259 92c161 78 232 231 148 354-149-6-270-117-272-263 31-38 72-69 124-91Z" fill="#fa6c47" opacity=".9"/>
+  <path d="M1267 797c91-38 205 6 240 105-78 91-204 111-294 39-4-58 13-106 54-144Z" fill="#d94d55" opacity=".82"/>
+  <ellipse cx="805" cy="928" rx="342" ry="62" fill="#28342b" opacity=".14"/>
+  <g transform="translate(498 150)">
+    <path d="M119 48h428l65 126v675H53V174Z" fill="#fbfaf5" stroke="#28342b" stroke-width="14"/>
+    <path d="m119 48 63-38h309l56 38-57 120H178Z" fill="#fff" stroke="#28342b" stroke-width="14" stroke-linejoin="round"/>
+    <path d="M53 174h559v189H53Z" fill="#e46f2c"/>
+    <path d="M332 221c68 77 101 127 101 173a101 101 0 1 1-202 0c0-46 33-96 101-173Z" fill="#fbfaf5"/>
+    <path d="M148 526c123-91 262-102 369-26-41 181-188 273-369 242Z" fill="#94c11f"/>
+    <path d="M186 683c88-117 197-167 318-150" fill="none" stroke="#28342b" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="186" cy="683" r="18" fill="#28342b"/>
+  </g>
+</svg>

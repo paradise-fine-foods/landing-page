@@ -66,7 +66,6 @@ const runtimeUrlSources = [
   'src/pages/vi/index.astro',
   'src/components/sections/CategoryDiscovery.astro',
   'src/components/catalog/ProductDetail.astro',
-  'public/models/README.md',
 ] as const;
 
 const discoverTemporaryUrls = (): string[] => {
@@ -74,7 +73,6 @@ const discoverTemporaryUrls = (): string[] => {
   for (const path of runtimeUrlSources) {
     const content = source(path).replace(/^\s*\/\/.*$/gm, '');
     for (const [url] of content.matchAll(/(?:https?:\/\/|mailto:|tel:)[^\s"'`<>]+/g)) discovered.add(url);
-    for (const [, url] of content.matchAll(/["'`](\/models\/[^\s"'`$}]+)["'`]/g)) discovered.add(url);
     for (const [, parameter] of content.matchAll(/\?(category|product)=\$\{[^}\r\n]+\}/g)) {
       discovered.add(`?${parameter}={value}`);
     }
@@ -87,7 +85,6 @@ const discoverTemporaryUrls = (): string[] => {
 
 const discoveredMedia = [
   ...filesBelow('src/assets/demo'),
-  ...filesBelow('public/models'),
   ...readdirSync(join(root, 'public'), { withFileTypes: true })
     .filter((entry) => entry.isFile() && /(?:demo|favicon)/i.test(entry.name))
     .map((entry) => `public/${entry.name}`),

@@ -9,7 +9,7 @@ for (const locale of locales) {
   const html = readFileSync(htmlPath, 'utf8');
   const assetUrls = [
     ...html.matchAll(
-      /(?:src|content)="([^"]*(?:product-stage|editorial-table)[^"]*)"/g,
+      /(?:src|content)="([^"]*(?:product-art|editorial-table|living-hero-product)[^"]*)"/g,
     ),
   ].map((match) => match[1]);
 
