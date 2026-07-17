@@ -15,7 +15,7 @@ Focused rendered-QA correction only. This does not mark the wider Living Ingredi
 - `src/components/sections/FeaturedBrands.astro`
 - `src/components/global/Breadcrumbs.astro`
 - `src/components/forms/EnquiryForm.astro` — standalone navigation targets and the consent label have a `2.75rem` minimum block target; the checkbox remains visually `1.25rem`.
-- `src/components/catalog/ProductDetail.astro` — isolated product-stage stacking with backplate `z-index: 0`, image `z-index: 1`, and brand label `z-index: 2`.
+- `src/components/catalog/ProductDetail.astro` — isolated product-stage stacking with backplate `z-index: 0`, image `z-index: 1`, and brand label `z-index: 2`; the label now uses responsive safe-area insets (`16%` block-start and `36%` inline-start) inside the asymmetric clipped mask.
 - `tests/living-design-contract.test.ts` — focused contracts for all corrections.
 
 ## TDD evidence
@@ -36,13 +36,17 @@ After the additional product-detail rendered-QA defect was added, the same focus
 
 The final focused command passed: 28 pass, 0 fail, 218 assertions.
 
+### Follow-up safe-area correction
+
+Browser QA on the first Task 7 commit confirmed that the computed stack order was correct but the label was clipped by the stage's asymmetric top-left border radius. The new safe-area contract first failed with 28 pass, 1 fail, and 219 assertions because the label used `var(--space-4)` insets. After replacing those offsets with proportional `16%` block-start and `36%` inline-start insets, the focused command passed with 29 pass, 0 fail, and 220 assertions.
+
 ## Decoration restraint decision
 
 Removed the isolated orange catalog oval and green brands oval from both English and Vietnamese index pages, including their CSS. They carried no grouping, sequence, state, or tactility meaning and competed with the hero’s expressive organic signature. The resulting asymmetric editorial grid retains the eyebrow/title/description hierarchy without an empty decorative slot; the mobile layout remains one column.
 
 ## Self-review
 
-Reviewed the worktree diff against Task 7 requirements. No correctness, scope, or test-contract issues remain. In particular, the product-detail stage has an isolated stacking context and an explicit `0 < 1 < 2` layer order for backplate, image, and brand label.
+Reviewed the worktree diff against Task 7 requirements. No correctness, scope, or test-contract issues remain. In particular, the product-detail stage has an isolated stacking context and an explicit `0 < 1 < 2` layer order for backplate, image, and brand label; the label is now positioned proportionally beyond the clipped top-left curve.
 
 ## Final verification
 
@@ -50,13 +54,13 @@ Reviewed the worktree diff against Task 7 requirements. No correctness, scope, o
 bun test tests/living-design-contract.test.ts tests/homepage-contract.test.ts tests/product-card.test.ts
 ```
 
-Pass: 28 tests, 0 failures, 218 assertions.
+Pass: 29 tests, 0 failures, 220 assertions.
 
 ```powershell
 bun test
 ```
 
-Pass: 112 tests, 0 failures, 652 assertions across 16 files.
+Pass: 113 tests, 0 failures, 654 assertions across 16 files.
 
 ```powershell
 bun run check
@@ -78,4 +82,4 @@ Pass: no whitespace errors.
 
 ## Concern
 
-The in-app Browser was unavailable in this environment, so no new browser screenshot was captured. The final source contract explicitly verifies stage isolation and the backplate/image/label stacking order; focused, full, type-check, and production-build verification all passed.
+Rendered re-verification is deferred to the parent task as requested. The final source contract explicitly verifies stage isolation, the backplate/image/label stacking order, and the proportional safe-area insets; focused, full, type-check, and production-build verification all passed.

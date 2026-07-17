@@ -230,4 +230,10 @@ describe('Living Ingredients identity', () => {
     expect(cssRule(detail, '.product-detail__stage img')).toContain('z-index: 1');
     expect(cssRule(detail, '.product-detail__stage > span')).toContain('z-index: 2');
   });
+
+  test('keeps the product-stage brand label inside the organic mask safe area', () => {
+    const label = cssRule(source('src/components/catalog/ProductDetail.astro'), '.product-detail__stage > span');
+    expect(label).toContain('inset-block-start: 16%');
+    expect(label).toContain('inset-inline-start: 36%');
+  });
 });
