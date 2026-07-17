@@ -6,6 +6,7 @@ import {
 } from '../src/lib/motion/living-canvas';
 import { shouldDisposePage, shouldEnhanceMotion } from '../src/lib/motion/preferences';
 import { installReveals, type RevealDependencies } from '../src/lib/motion/reveal';
+import { initializeFloatingRail, shouldShowFloatingRail, type FloatingRailDependencies } from '../src/lib/motion/floating-rail';
 
 describe('one-shot scroll reveals', () => {
   test('observes authored reveal nodes at the exact threshold and settles each once', () => {
@@ -88,6 +89,56 @@ describe('motion eligibility', () => {
   test('keeps controllers alive for BFCache pagehide and disposes on terminal pagehide', () => {
     expect(shouldDisposePage({ persisted: true })).toBe(false);
     expect(shouldDisposePage({ persisted: false })).toBe(true);
+  });
+});
+
+describe('floating enquiry rail', () => {
+  test('shows only after scrolling beyond one viewport height', () => {
+    expect(shouldShowFloatingRail(0, 800)).toBe(false);
+    expect(shouldShowFloatingRail(801, 800)).toBe(true);
+  });
+
+  test('synchronizes rail state and cleans up each listener once', () => {
+    const listeners = new Map<string, EventListener>();
+    const removals: string[] = [];
+    const createTarget = () => ({
+      addEventListener(type: string, listener: EventListener) { listeners.set(type, listener); },
+      removeEventListener(type: string) { removals.push(type); listeners.delete(type); },
+    });
+    const toggle = {
+      ...createTarget(),
+      dataset: { openLabel: 'Open enquiries', closeLabel: 'Close enquiries' },
+      setAttribute(name: string, value: string) { this.attributes[name] = value; },
+      attributes: { 'aria-expanded': 'false', 'aria-label': 'Open enquiries' } as Record<string, string>,
+      focusCalls: 0,
+      focus() { this.focusCalls += 1; },
+    } as unknown as HTMLButtonElement & { attributes: Record<string, string>; focusCalls: number };
+    const panel = {} as HTMLElement;
+    const root = {
+      dataset: {} as Record<string, string>,
+      querySelector: (selector: string) => selector === '[data-floating-rail-toggle]' ? toggle : selector === '#floating-rail-panel' ? panel : null,
+    } as unknown as HTMLElement;
+    const viewport = { ...createTarget(), scrollY: 900, innerHeight: 800, innerWidth: 1024 };
+    const documentTarget = createTarget();
+    const dependencies: FloatingRailDependencies = {
+      viewport: viewport as FloatingRailDependencies['viewport'],
+      document: documentTarget as FloatingRailDependencies['document'],
+    };
+
+    const controller = initializeFloatingRail(root, dependencies);
+    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'true' });
+    viewport.scrollY = 0;
+    listeners.get('scroll')?.(new Event('scroll'));
+    expect(root.dataset).toMatchObject({ visible: 'false', expanded: 'false' });
+    listeners.get('click')?.(new Event('click'));
+    expect(root.dataset.expanded).toBe('true');
+    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
+    listeners.get('keydown')?.({ key: 'Escape' } as KeyboardEvent);
+    expect(root.dataset.expanded).toBe('false');
+    expect(toggle.focusCalls).toBe(1);
+    controller.dispose();
+    controller.dispose();
+    expect(removals.sort()).toEqual(['click', 'keydown', 'scroll']);
   });
 });
 

@@ -32,7 +32,7 @@ const { locale, contactPath, copy } = Astro.props;
 </div>
 
 <script>
-  import { initializeFloatingRail } from '../../lib/floating-rail/controller';
+  import { initializeFloatingRail } from '../../lib/motion/floating-rail';
 
   const rail = document.querySelector<HTMLElement>('[data-floating-rail]');
   if (rail) initializeFloatingRail(rail);
@@ -47,7 +47,20 @@ const { locale, contactPath, copy } = Astro.props;
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
+    transition: opacity 180ms ease, visibility 180ms ease;
     z-index: 15;
+  }
+
+  .floating-form-rail[data-ready='true'] {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .floating-form-rail[data-ready='true'][data-visible='true'] {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
   }
 
   .floating-form-rail__toggle,
@@ -82,6 +95,7 @@ const { locale, contactPath, copy } = Astro.props;
   .floating-form-rail__panel {
     display: grid;
     gap: 1px;
+    transition: opacity 180ms ease;
   }
 
   .floating-form-rail__panel a {
@@ -104,10 +118,21 @@ const { locale, contactPath, copy } = Astro.props;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel {
+      display: none;
+    }
+
     .floating-form-rail__panel a {
       min-inline-size: 0;
       padding-inline: 0.5rem;
       text-align: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .floating-form-rail,
+    .floating-form-rail__panel {
+      transition: none;
     }
   }
 </style>
