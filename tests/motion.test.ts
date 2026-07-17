@@ -108,10 +108,10 @@ describe('floating enquiry rail', () => {
     const toggle = {
       ...createTarget(),
       dataset: { openLabel: 'Open enquiries', closeLabel: 'Close enquiries' },
-      setAttribute(name: string, value: string) { this.attributes[name] = value; },
+      setAttribute(this: { attributes: Record<string, string> }, name: string, value: string) { this.attributes[name] = value; },
       attributes: { 'aria-expanded': 'false', 'aria-label': 'Open enquiries' } as Record<string, string>,
       focusCalls: 0,
-      focus() { this.focusCalls += 1; },
+      focus(this: { focusCalls: number }) { this.focusCalls += 1; },
     } as unknown as HTMLButtonElement & { attributes: Record<string, string>; focusCalls: number };
     const panel = {} as HTMLElement;
     const root = {
