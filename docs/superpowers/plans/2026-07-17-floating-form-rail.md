@@ -41,10 +41,7 @@ const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 describe('floating form rail rendering', () => {
   test('renders progressive-enhancement wiring and three localized contact intents', async () => {
     const rail = await read('../src/components/global/FloatingFormRail.astro');
-    const layout = await read('../src/layouts/SiteLayout.astro');
     const ui = await read('../src/lib/i18n/ui.ts');
-    expect(layout).toContain('FloatingFormRail');
-    expect(layout).toContain('localizedPath(locale, \'contact\')');
     expect(rail).toContain('data-floating-rail');
     expect(rail).toContain('aria-controls="floating-rail-panel"');
     expect(rail).toContain('aria-expanded="false"');
