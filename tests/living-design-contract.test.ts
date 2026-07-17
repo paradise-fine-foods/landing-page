@@ -101,4 +101,15 @@ describe('Living Ingredients identity', () => {
     expect(navHover).toContain('color: var(--color-deep-herb)');
     expect(navHover).toContain('text-decoration-color: var(--color-paradise-blue)');
   });
+
+  test('keeps every global eyebrow text rule at safe contrast', () => {
+    const typography = source('src/styles/typography.css');
+    const eyebrowRules = [...typography.matchAll(/([^{}]*\.eyebrow[^{}]*)\{([^{}]*)\}/g)]
+      .map(([, selector, declarations]) => ({ selector: selector.trim(), declarations }));
+    expect(eyebrowRules.length).toBeGreaterThan(0);
+    for (const { selector, declarations } of eyebrowRules) {
+      expect(declarations, `${selector} must use the contrast-safe text token`).toContain('color: var(--color-deep-herb)');
+      expect(declarations, `${selector} must not use bright blue as text`).not.toContain('color: var(--color-paradise-blue)');
+    }
+  });
 });
