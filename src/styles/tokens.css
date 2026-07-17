@@ -11,13 +11,13 @@
 
   /* Compatibility aliases for sections scheduled for later redesign tasks. */
   --color-milk-paper: var(--color-rice-paper);
-  --color-cold-chain-blue: var(--color-paradise-blue);
+  --color-cold-chain-blue: #123c69;
   --color-carbon: var(--color-deep-herb);
   --color-stainless: var(--color-mist-blue);
   --color-cultured-butter: var(--color-paradise-green);
   --color-bordeaux: var(--color-paradise-coral);
-  --color-success: var(--color-paradise-green);
-  --color-error: var(--color-paradise-coral);
+  --color-success: #356146;
+  --color-error: #9a3f38;
 
   --font-display: 'Newsreader', Georgia, serif;
   --font-body: 'Nunito', system-ui, sans-serif;

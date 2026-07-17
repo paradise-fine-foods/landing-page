@@ -54,6 +54,13 @@ describe('Living Ingredients identity', () => {
     expect(mark).toContain("'drop' | 'seed' | 'petal'");
   });
 
+  test('preserves contrast-safe compatibility tokens for deferred consumers', () => {
+    const tokens = source('src/styles/tokens.css').toLowerCase();
+    expect(tokens).toContain('--color-cold-chain-blue: #123c69');
+    expect(tokens).toContain('--color-success: #356146');
+    expect(tokens).toContain('--color-error: #9a3f38');
+  });
+
   test('uses Nunito for body and navigation while reserving Newsreader for display type', () => {
     const packageJson = source('package.json');
     expect(packageJson).toContain('@fontsource/nunito');
