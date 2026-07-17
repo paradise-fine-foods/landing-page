@@ -35,6 +35,7 @@ describe('living build verifier semantics', () => {
     writeFileSync(join(dist, '_astro', 'paradise-fine-foods-logo.demo.webp'), 'logo');
     expect(() => assertHomepageLogo('<script src="/_astro/paradise-fine-foods-logo.demo.webp"></script>', dist, 'en')).toThrow();
     expect(() => assertHomepageLogo('<img src="https://evil.test/_astro/paradise-fine-foods-logo.demo.webp">', dist, 'en')).toThrow();
+    expect(() => assertHomepageLogo('<img src="/\\evil.test/_astro/paradise-fine-foods-logo.demo.webp">', dist, 'en')).toThrow();
     expect(() => assertHomepageLogo('<img src="/_astro/paradise-fine-foods-logo.demo.webp">', dist, 'en')).not.toThrow();
   });
 
@@ -52,6 +53,7 @@ describe('living build verifier semantics', () => {
     const valid = '<meta http-equiv="refresh" content="0;url=/vi/products"><link rel="canonical" href="https://demo.paradisefinefoods.com/vi/products"><a href="/vi/products">Go</a>';
     expect(() => assertRedirect(valid, '/vi/products/', 'legacy')).not.toThrow();
     expect(() => assertRedirect(valid.replace('/vi/products\"', 'https://evil.test/vi/products\"'), '/vi/products/', 'legacy')).toThrow();
+    expect(() => assertRedirect(valid.replace('/vi/products\"', '/\\evil.test/vi/products\"'), '/vi/products/', 'legacy')).toThrow();
     expect(() => assertRedirect(valid.replace('https://demo.paradisefinefoods.com', 'https://evil.test'), '/vi/products/', 'legacy')).toThrow();
     expect(() => assertRedirect(valid.replace('<a href="/vi/products"', '<a href="https://evil.test/vi/products"'), '/vi/products/', 'legacy')).toThrow();
   });

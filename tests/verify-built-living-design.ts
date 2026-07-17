@@ -46,6 +46,7 @@ const requireRootRelativeTarget = (value: string | undefined, label: string): st
     throw new Error(`${label} must be a same-origin root-relative URL`);
   }
   const url = new URL(value, configuredOrigin);
+  if (url.origin !== configuredOrigin) throw new Error(`${label} must resolve on ${configuredOrigin}`);
   if (url.search || url.hash) throw new Error(`${label} must not contain a query or fragment`);
   return normalizedPath(url.pathname);
 };
