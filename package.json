@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && bun tests/verify-built-cms-assets.ts && bun tests/verify-built-catalog.ts && bun tests/verify-built-brands.ts && bun tests/verify-built-enquiry.ts && bun tests/verify-built-mvp.ts",
+    "build": "astro build && bun tests/verify-built-cms-assets.ts && bun tests/verify-built-living-design.ts && bun tests/verify-built-catalog.ts && bun tests/verify-built-brands.ts && bun tests/verify-built-enquiry.ts && bun tests/verify-built-mvp.ts",
     "check": "astro check",
     "test": "bun test",
     "preview": "astro preview",

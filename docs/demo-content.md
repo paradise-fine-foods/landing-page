@@ -21,7 +21,7 @@ No business claims in this MVP are verified. Every product, brand, category rela
 
 ## Demo catalog inventory
 
-All records below are defined in `src/lib/cms/demo-data.ts` and returned through the vendor-neutral functions in `src/lib/cms/queries.ts`. Production pages must continue to consume that query interface rather than importing fixtures.
+All records below are temporary demo records defined in `src/lib/cms/demo-data.ts` and returned by default through the vendor-neutral functions in `src/lib/cms/queries.ts`. Those query functions intentionally return default data for this client-review build and form the future headless-CMS integration seam. Production pages must continue to consume that interface rather than importing fixtures or binding components to a vendor SDK.
 
 ### Categories
 
@@ -134,7 +134,7 @@ The ownership manifest above is the authoritative responsibility mapping. The su
 
 No office address, business email address or telephone number is published in this MVP. The contact pages contain visitor-input fields named company, email and phone; those are not Paradise contact facts. The generic “contact our team” and response/follow-up statements are review-only promises owned by Sales Operations.
 
-`src/lib/enquiry/submit.ts` is a demo adapter. It validates in-browser input, waits 350 ms, creates a local `PFF-…` success reference and returns `{ ok, reference, message, receivedAt, demo }`. It does not send or deliver an email, call a CRM, persist a record or expose a submission endpoint.
+`src/lib/enquiry/submit.ts` is a temporary demo adapter. It validates in-browser input, waits 350 ms, creates a local `PFF-…` success reference and returns success-shaped `{ ok, reference, message, receivedAt, demo }` data. It does not send or deliver an email, call a CRM, persist a record or expose a submission endpoint.
 
 | Boundary | Production owner | Source/input | Acceptance |
 |---|---|---|---|
@@ -161,7 +161,7 @@ The review build self-hosts the authentic Paradise Fine Foods full logo rather t
 
 The decorative Canvas 2D layer carries no product content. The digital owner must preserve the reduced-motion and save-data loading gates, the ten-shape maximum, the capped device-pixel ratio and complete server-rendered static Living Hero when maintaining this enhancement.
 
-The homepage also owns `src/lib/motion/reveal.ts` and `src/lib/carousel/controller.ts`. The digital and accessibility owners must preserve one-shot authored reveals, settled reduced-motion content, SSR-visible product order, manual-only movement, localized controls, clamped navigation and safe no-JavaScript reading order.
+The homepage also owns `src/lib/motion/reveal.ts` and `src/lib/carousel/controller.ts`. The digital and accessibility owners must preserve one-shot authored reveals, settled reduced-motion content, SSR-visible product order, manual-only movement, localized controls and status copy from `ui.en.home.carousel` and `ui.vi.home.carousel`, clamped navigation and safe no-JavaScript reading order. These modules and `src/lib/motion/living-canvas.ts` are progressive enhancements only; the original demo illustrations and all product content remain present without them.
 
 ## Demo origins, URLs and route inputs
 
@@ -172,7 +172,7 @@ The ledger test scans only the following runtime, configuration and fixture sour
 | URL/input | Review-only use | Production owner | Source/input | Acceptance |
 |---|---|---|---|---|
 | `https://demo.paradisefinefoods.com` | `astro.config.mjs` site origin and canonical/Open Graph base; duplicated only as a defensive fallback in `src/layouts/SiteLayout.astro` and `src/pages/404.astro` | Digital owner | Final HTTPS production hostname and environment/deployment configuration | Deployment crawl confirms the expected host in every canonical/Open Graph URL; demo hostname is absent from production output |
-| `/en/`, `/vi/`, `/en/products/`, `/vi/san-pham/` | Direct bilingual recovery URLs on the 404 | Digital owner + content owner | Approved localized route map | All links return 200 and remain correct in deployed base-path configuration |
+| `/en/`, `/vi/`, `/en/products/`, `/vi/products/` | Direct bilingual recovery URLs on the 404 | Digital owner + content owner | Approved uniform localized route map | All links return 200 and remain correct in deployed base-path configuration |
 | `?category={value}` | Dynamic category discovery URL pattern whose value is the exact localized category slug | Product/data owner | Stable localized category slug inventory | Each generated link filters to a non-empty intended set; invalid input degrades to full catalog |
 | `?interest=retail`, `?interest=horeca`, `?interest=bakery`, `?interest=ecommerce` | Homepage channel-to-enquiry paths in both locales | Channel sales owners | Approved interest taxonomy and CRM mapping | Each value preselects the intended localized option and reaches the production field mapping |
 | `?product={value}` | Dynamic product-detail-to-enquiry pattern whose value is one of the six stable product IDs listed above | Product/data owner + sales operations | Stable CMS product identifier and production endpoint mapping | Known IDs preselect correctly; unknown values are ignored; submitted context reaches the approved system |

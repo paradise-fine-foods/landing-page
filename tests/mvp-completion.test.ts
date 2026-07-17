@@ -178,9 +178,11 @@ describe('client-review MVP completion contracts', () => {
     expect(plan).not.toContain('/vi/brands/nha-sua-mau/');
   });
 
-  test('wires a generated-output verifier into every production build', () => {
+  test('wires generated-output verifiers into every production build', () => {
     const packageJson = source('package.json');
     expect(packageJson).toContain('tests/verify-built-mvp.ts');
+    expect(packageJson).toContain('tests/verify-built-living-design.ts');
     expect(existsSync(join(root, 'tests/verify-built-mvp.ts'))).toBe(true);
+    expect(existsSync(join(root, 'tests/verify-built-living-design.ts'))).toBe(true);
   });
 });

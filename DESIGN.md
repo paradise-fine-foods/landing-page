@@ -1,10 +1,12 @@
 # Paradise Fine Foods — Website Rebuild Design Specification
 
-**Status:** Catalog-informed design direction and implementation blueprint<br>
+**Status:** Living Ingredients implementation contract; final visual/browser acceptance pending<br>
 **Project:** Paradise Fine Foods corporate and product-catalog website<br>
 **Primary markets:** Vietnam, B2B food distribution, Retail, HORECA, Bakery/Pastry, E-commerce<br>
 **Languages:** English and Vietnamese<br>
-**Design theme:** **Cold-Chain Atelier — Culinary craft framed by distribution precision**
+**Design theme:** **Living Ingredients — organic product storytelling grounded in the Paradise identity**
+
+> **Supersession note (2026-07-17):** The accepted Living Ingredients redesign replaces every active 3D, WebGL, GLB, model-stage, industrial rail, and localized Vietnamese structural-segment requirement in earlier revisions of this document. The current implementation uses a complete server-rendered 2D hero, original demo illustrations, an optional decorative Canvas 2D layer, one-shot reveals, and a manual carousel. The canonical structural routes are `/{locale}/products/`, `/{locale}/brands/`, and `/{locale}/contact/`; localized detail slugs remain content-owned. Historical wording below must be read through this contract where it conflicts.
 
 ---
 
@@ -21,11 +23,11 @@ The intended impression is:
 
 > **European culinary refinement, backed by serious Vietnamese distribution capability.**
 
-Premium must come from restraint, art direction, typography, spacing, and confidence—not from fake gold gradients, glossy effects, or decorative clutter. Motion is concentrated in one exceptional product-stage moment rather than scattered across the interface.
+Premium comes from restraint, art direction, typography, spacing, and confidence—not fake gold gradients, glossy effects, or decorative clutter. Motion is limited to the manual carousel, selected one-shot reveals and an optional decorative Canvas 2D layer, each with a complete static fallback.
 
 ### Creative thesis
 
-**Cold-Chain Atelier** combines the warmth and tactility of French culinary craft with the precision of professional refrigerated distribution. Cool stainless and cold-chain blue frame real food texture, accurate packaging, and verified technical information. This controlled contrast is the system's deliberate aesthetic risk: Paradise should not resemble the familiar cream-and-terracotta “premium food” template.
+**Living Ingredients** connects products, makers and professional kitchens through Paradise orange, organic droplet/petal forms, generous negative space and disciplined technical information. The interface should feel cultivated and approachable while preserving operational clarity.
 
 ### Greenfield rebuild mandate
 
@@ -342,7 +344,7 @@ Sources: [Newsreader repository](https://github.com/productiontype/Newsreader) a
 
 | Usage | Ratio |
 |---|---:|
-| Hero poster / 3D stage | 16:10 desktop; authored 4:5 mobile poster |
+| Living Hero illustration | 16:10 desktop; authored 4:5 mobile composition |
 | Editorial portrait | 4:5 |
 | Product card | 1:1 |
 | Brand feature | 3:2 |
@@ -384,7 +386,7 @@ Rules:
 - Do not reproduce Savencia's exact droplet shapes as Paradise-owned artwork.
 - On a partner-brand page, approved partner artwork may replace the Paradise aperture system.
 
-### Product-stage composition
+### Product composition
 
 Borrow the strongest behavior from catalog pages 3–5:
 
@@ -565,16 +567,16 @@ The homepage has one hero and no competing “mini heroes.” After it, the hier
 
 ### Recommended composition
 
-Use a quiet editorial split: text occupies five columns and one art-directed 3D product stage occupies seven. The featured pack stands on an illuminated porcelain/stainless stage against milk-paper. Product metadata sits close enough to connect the visual desire to commercial proof. Do not combine the model with a second chef image, decorative aperture cluster, or campaign video in the hero.
+Use a quiet editorial split: text occupies five columns and one asymmetric 2D living-ingredient cluster occupies seven. The featured pack, original demo art and Paradise-inspired droplet/petal shapes sit in generous negative space. Product metadata stays close enough to connect visual desire to commercial proof. The complete composition is server rendered; the decorative Canvas 2D layer may enhance it only when motion and data preferences allow.
 
 ```text
 ┌─────────────────────────────────────────────────────┐
 │ Logo        Products  Brands  Solutions       Sales │
 ├──────────────────────┬──────────────────────────────┤
 │ Premium distribution │                              │
-│                      │     OPTIMIZED 3D PRODUCT     │
-│ Exceptional          │        on illuminated       │
-│ ingredients.         │      porcelain/steel stage  │
+│                      │       2D PRODUCT CLUSTER     │
+│ Exceptional          │       with organic marks    │
+│ ingredients.         │       and negative space    │
 │ Delivered with       │                              │
 │ confidence.          │       origin · format       │
 │                      │       storage · brand        │
@@ -596,7 +598,7 @@ A quiet proof line beneath the CTAs:
 
 `Imported brands · Nationwide distribution · Retail & HORECA expertise`
 
-The product stage must also expose verified metadata for the featured SKU:
+The product composition must also expose verified metadata for the featured SKU:
 
 - Brand
 - Origin
@@ -608,12 +610,12 @@ The product stage must also expose verified metadata for the featured SKU:
 
 - No rotating hero slides
 - No hero video
-- Use one production-quality GLB model of a real featured product
-- Show a responsive poster immediately and progressively replace it with the 3D stage after capability checks
-- Packaging labels must remain readable and color-accurate throughout the allowed motion
+- Render the product illustration, caption, metadata and CTAs completely in HTML before enhancement
+- Use original, rights-cleared 2D imagery with explicit dimensions and responsive treatment
+- Packaging labels must remain readable and color-accurate
 - One dominant visual idea only
-- Navigation and both CTAs remain usable while the 3D runtime or model loads
-- Products outside the hero use transparent pack shots rather than additional 3D canvases
+- Navigation and both CTAs remain usable while optional motion modules load or fail
+- Products outside the hero use transparent pack shots or original demo illustrations
 
 ## 8.3 Credibility strip
 
@@ -1122,7 +1124,7 @@ Do not show blank grids or technical error codes.
 
 ## 14. Motion and Interaction
 
-Motion is deliberately bold in one place and disciplined everywhere else. The homepage product stage is the signature; supporting movement exists only to preserve rhythm, hierarchy, and feedback.
+Motion is disciplined and progressive. The manual featured-product carousel, selected one-shot reveals and an optional decorative Canvas 2D layer preserve rhythm, hierarchy and feedback without becoming content dependencies.
 
 ### Timing
 
@@ -1131,25 +1133,20 @@ Motion is deliberately bold in one place and disciplined everywhere else. The ho
 - Editorial mask or image reveal: `400–600ms`
 - Hero resolve sequence: approximately `900ms`
 
-### 3D hero choreography
+### Living Hero choreography
 
-- Render the responsive poster as the initial and LCP image, reserving the final canvas dimensions to prevent layout shift.
-- Lazy-load the 3D runtime and one optimized GLB only after the poster, navigation, headline, and CTAs are usable.
-- Resolve the product from a controlled close crop into its resting position over approximately `900ms`.
-- Map normal hero scroll progress to no more than `18°` of camera or product rotation. Do not pin the page or alter scrolling physics.
-- Pointer input may add no more than `5°` of temporary tilt and must ease back to the authored resting pose.
-- Use one restrained lighting pass to reveal packaging material. Lighting must not recolor the label, create fake metallic packaging, or obscure required product text.
-- Reveal brand, origin, format, storage class, and professional benefit in one coordinated stagger after the product settles.
-- Keep the canvas non-blocking so navigation, selection, text rendering, and CTA interaction never wait for WebGL.
+- Render the responsive 2D hero image, marks, caption and CTAs as the initial and LCP composition with explicit dimensions.
+- Load the decorative Canvas 2D module only after the static hero is usable and only when reduced-motion and save-data preferences allow it.
+- Keep canvas shapes abstract, non-interactive and limited to ten; cap device-pixel ratio and dispose every listener and animation frame safely.
+- Use selected one-shot reveals at a threshold of `0.18`; content remains settled and visible when scripts or observers are unavailable.
+- Keep the canvas non-blocking so navigation, selection, text rendering and CTA interaction never wait for enhancement.
 
-### 3D asset and loading budget
+### Enhancement asset and loading budget
 
-- One production-quality hero model only; no 3D canvas in cards, listings, or other homepage sections.
-- GLB plus compressed textures: `≤ 2 MB` combined transfer size.
-- Use mesh and texture compression appropriate to the chosen runtime and preserve packaging-label fidelity during compression review.
-- Load the 3D JavaScript as a separate lazy chunk; it must not increase the critical initial JavaScript budget.
-- If the model or runtime fails, retain the poster without an error message or broken stage.
-- If the interactive stage is not ready within `5s` after loading begins, abort enhancement for that page view and retain the poster. Do not retry automatically.
+- Living Canvas, carousel and reveal JavaScript together remain `≤ 35KB` compressed.
+- Authored homepage SVG graphics remain `≤ 80KB` compressed in transfer.
+- Load enhancement JavaScript as separate chunks; it must not increase the critical initial JavaScript budget.
+- If enhancement fails, retain the complete server-rendered composition without an error message or broken placeholder.
 
 ### Supporting motion
 
@@ -1158,7 +1155,7 @@ Motion is deliberately bold in one place and disciplined everywhere else. The ho
 - Arrow translation of `3–5px`
 - Border or underline reveal
 - Header background transition on scroll
-- Product pack shots may rise slightly with a controlled shadow on hover; they must not imitate the hero's 3D choreography.
+- Product pack shots may rise slightly with a controlled shadow on hover; motion must remain restrained and optional.
 
 ### Avoid
 
@@ -1174,7 +1171,7 @@ Motion is deliberately bold in one place and disciplined everywhere else. The ho
 
 ### Capability and reduced-motion fallback
 
-Keep the poster and do not initialize the 3D stage when WebGL is unavailable, data saving is enabled, the model fails to load, or `prefers-reduced-motion: reduce` is active. All information and actions remain present in the same reading order. The design must still communicate premium quality with every animation disabled.
+Keep the complete static composition and do not initialize the decorative canvas when data saving or `prefers-reduced-motion: reduce` is active. Reduced motion keeps manual carousel controls functional with instant movement and reveals all content in its settled state. All information and actions remain present in the same reading order.
 
 ---
 
@@ -1198,7 +1195,7 @@ Suggested breakpoints:
 - No tiny logo rails
 - No hover-dependent information
 - Avoid long walls of centered text
-- Use the authored mobile poster and focal point for the 3D stage; do not depend on cropping the desktop composition
+- Use the authored mobile illustration and focal point for the Living Hero; do not depend on cropping the desktop composition
 - Keep critical product metadata above the fold
 
 ## 15.3 Tablet
@@ -1289,16 +1286,22 @@ Stronger:
 - Use localized date formats and address conventions.
 - Avoid machine translation without editorial review for premium brand copy and technical product information.
 
-Suggested routes:
+Canonical routes use uniform structural segments in both locales:
 
 ```text
 /en/products/
 /en/products/[slug]/
-/vi/san-pham/
-/vi/san-pham/[slug]/
+/en/brands/
+/en/brands/[slug]/
+/en/contact/
+/vi/products/
+/vi/products/[localized-slug]/
+/vi/brands/
+/vi/brands/[localized-slug]/
+/vi/contact/
 ```
 
-Implement proper `hreflang` relationships.
+Detail slugs remain localized where the content records provide them. Implement reciprocal `hreflang` relationships. Former `/vi/san-pham/`, `/vi/thuong-hieu/` and `/vi/lien-he/` paths are legacy redirect inputs, not canonical route structure; adapterless static demo output uses Astro redirect pages, while deployment-level HTTP `301`/`308` behavior remains a hosting decision.
 
 ---
 
@@ -1469,15 +1472,13 @@ legal_links
 
 ```text
 featured_product
-model_glb
-poster_image
+hero_image
 alt_text_en
 alt_text_vi
-approved_camera_preset
 fallback_focal_point
 ```
 
-The featured product supplies its brand, origin, pack format, storage class, and verified professional benefit. Editors may replace approved assets and select the featured product, but may not enter arbitrary camera, lighting, or animation values. Camera presets and motion limits remain code-owned design controls. The CMS vendor and 3D runtime are implementation choices outside this visual specification; they must preserve this content contract, static-rendered fallback, budgets, and accessibility behavior.
+The featured product supplies its brand, origin, pack format, storage class, and verified professional benefit. Editors may replace approved 2D assets and select the featured product, but may not enter arbitrary animation values. Motion limits remain code-owned design controls. The CMS vendor remains an implementation choice outside this visual specification; it must preserve this content contract, static-rendered fallback, budgets and accessibility behavior.
 
 ---
 
@@ -1521,7 +1522,7 @@ src/
 - Server-render only forms, live search, or protected document access when necessary
 - Client-side JavaScript only for interactions that genuinely require it
 - Product filtering should use a compact client-side island for small catalogs or server/search indexing for large catalogs
-- The 3D product stage is an isolated, lazy-loaded client island that progressively enhances a server-rendered poster and metadata block
+- Canvas 2D, carousel and reveal controllers progressively enhance complete server-rendered content and load only when eligible
 
 ### Component philosophy
 
@@ -1541,14 +1542,14 @@ Targets on representative mobile hardware:
 - Interaction to Next Paint: `< 200ms`
 - Cumulative Layout Shift: `< 0.1`
 - Critical initial JavaScript: `≤ 120KB` compressed
-- Lazy 3D JavaScript chunk: `≤ 180KB` compressed
+- Living Canvas, carousel and reveal JavaScript: `≤ 35KB` compressed combined
 
 Requirements:
 
 - Responsive AVIF/WebP images
 - Explicit image dimensions
 - Lazy-load below-the-fold media
-- Preload only the responsive hero poster and critical font files; the poster remains the LCP element even when 3D enhancement succeeds
+- Preload only the responsive hero illustration and critical font files; the static illustration remains the LCP element
 - Self-host fonts where licensing permits
 - Use two font families maximum
 - Avoid oversized video
@@ -1556,9 +1557,9 @@ Requirements:
 - Generate multiple crops rather than relying on CSS to load one enormous image everywhere
 - Defer maps until user interaction
 - Use static logo SVGs
-- Keep the 3D runtime out of the critical initial JavaScript bundle and lazy-load it only after essential hero content is interactive
-- Reserve the exact stage dimensions before the canvas initializes so the 3D enhancement adds no layout shift
-- Keep the optimized GLB and compressed textures at `≤ 2 MB` combined transfer size
+- Keep all motion enhancement modules out of the critical initial JavaScript bundle and load them only after essential content is interactive
+- Reserve exact illustration and canvas dimensions so enhancement adds no layout shift
+- Keep authored homepage SVG graphics at `≤ 80KB` compressed transfer
 
 ---
 
@@ -1695,7 +1696,7 @@ The MVP is a complete public catalog and lead-generation experience, not an inco
 
 ### Required at launch
 
-- Homepage with the single 3D featured-product stage and resilient poster fallback
+- Homepage with the server-rendered Living Hero, manual accessible product carousel, selected reveals and eligible decorative Canvas 2D enhancement
 - Complete About experience
 - Brands index and populated brand-detail pages
 - Products index, category pages, populated product-detail pages, search, filtering, and useful zero-result states
@@ -1703,7 +1704,7 @@ The MVP is a complete public catalog and lead-generation experience, not an inco
 - Curated Stories index and populated story/event pages
 - Contact, office information, and functional sales/product enquiry forms
 - Complete English and Vietnamese localization, including metadata, validation, empty states, and preserved routes when switching language
-- CMS integration with guarded editorial controls and the `hero_showcase` configuration
+- Vendor-neutral CMS query boundary with guarded editorial controls and the `hero_showcase` configuration; temporary demo data remains the default until integration
 - Technical SEO, localized structured data, sitemap, analytics events, and redirect mapping from the current site
 - Verified pack shots, product metadata, claims, partner logos, office details, and sales contacts; no placeholder or mixed-language production content
 
@@ -1718,16 +1719,16 @@ The MVP is a complete public catalog and lead-generation experience, not an inco
 - Event registration
 - Distributor/partner portal integration
 - B2B ordering, prices, checkout, and account management
-- Additional 3D product models or interactive 3D comparison
+- Additional immersive product viewers or automatic carousel behavior
 
 Do not delay the public rebuild to chase transactional or partner-portal capabilities. The first release is a sharp, maintainable catalog and lead engine; “MVP” does not excuse incomplete product information, placeholder copy, inaccessible interactions, or broken bilingual routes.
 
 ### First-release assumptions
 
-- One production-quality GLB model and matching packaging texture will be supplied or commissioned for the featured SKU.
+- Approved, rights-cleared product imagery will replace the original demo illustrations before production.
 - Product pack shots, claims, technical metadata, partner logos, office details, and bilingual content will be verified by their owners before launch.
 - Only transactional and partner-portal capabilities are deferred; the full public catalog and its content states remain launch requirements.
-- This specification replaces conflicting conservative hero-motion guidance. The 3D stage is the one approved exception, with the limits and fallbacks defined in Section 14.
+- This specification replaces prior immersive hero guidance. Only the lightweight 2D enhancements and fallbacks defined in Section 14 are approved.
 
 ---
 
@@ -1737,7 +1738,7 @@ The design is ready for development when:
 
 - Desktop, tablet, and mobile layouts are defined for every page type
 - English and Vietnamese versions have been tested with real copy
-- The 3D hero has been verified at wide desktop, laptop, tablet, and `390px` mobile widths in both languages
+- The Living Hero and optional 2D enhancements have been verified at wide desktop, laptop, tablet and exact `390px` mobile widths in both languages
 - Product listing and detail states are complete
 - Navigation, search, filtering, and forms have interaction specifications
 - Empty, loading, success, and error states are designed
@@ -1746,16 +1747,16 @@ The design is ready for development when:
 - Every reusable component maps to CMS fields
 - Photography ratios and minimum resolutions are documented
 - Pack shots are available on consistent transparent or clean neutral backgrounds
-- The featured GLB and poster use the same approved packaging artwork; labels remain legible and color-accurate through the full `18°` rotation range
-- Successful 3D loading, WebGL unavailability, a missing or failed model, a slow connection, data-saving mode, and reduced-motion mode all preserve the poster, metadata, and actions
+- The featured 2D image uses approved packaging artwork; labels remain legible and color-accurate at every responsive size
+- Successful enhancement loading, missing browser APIs, a slow connection, data-saving mode and reduced-motion mode all preserve the image, metadata and actions
 - Product technical metadata from the current catalog is represented in the CMS and UI
 - Partner-brand accent rules have been approved and tested
 - Content owners have approved the new sitemap
 - All numeric claims are verified
 - There are no placeholder details
 - No screen, component, navigation pattern, layout, stylesheet, script, or interaction has been copied or adapted from the legacy Paradise website
-- A reviewer can explain each major visual decision from Cold-Chain Atelier, product content, culinary craft, or distribution behavior—not from the previous site's presentation
-- LCP is measured from the poster, CLS remains below `0.1`, and loading the lazy 3D bundle does not block interaction or regress the critical initial JavaScript budget
+- A reviewer can explain each major visual decision from Living Ingredients, Paradise identity, product content, culinary craft or distribution behavior—not from the previous site's presentation
+- LCP is measured from the static hero illustration, CLS remains below `0.1`, and loading optional enhancement chunks does not block interaction or regress the critical initial JavaScript budget
 - The design still feels premium with animation disabled
 
 ---

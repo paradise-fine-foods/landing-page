@@ -26,7 +26,7 @@ describe('localized routes', () => {
   });
 });
 
-test('configures permanent redirects for legacy Vietnamese routes', () => {
+test('configures adapterless demo redirects for legacy Vietnamese routes', () => {
   const config = readFileSync(join(import.meta.dir, '..', 'astro.config.mjs'), 'utf8');
   for (const [legacy, current] of [
     ['/vi/san-pham', '/vi/products'],

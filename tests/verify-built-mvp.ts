@@ -1,5 +1,12 @@
 export {};
 
+const generatedHtml = Array.from(
+  new Bun.Glob('**/*.html').scanSync({ cwd: 'dist', onlyFiles: true }),
+);
+if (generatedHtml.length < 28) {
+  throw new Error(`dist: expected at least 28 generated pages, found ${generatedHtml.length}`);
+}
+
 const file = 'dist/404.html';
 const html = await Bun.file(file).text();
 
@@ -61,4 +68,4 @@ for (const decoration of ['drop', 'petal']) {
   }
 }
 
-console.log('Verified generated bilingual 404 metadata, landmarks, direct locale links, and no-JavaScript contract.');
+console.log(`Verified ${generatedHtml.length} generated pages plus bilingual 404 metadata, landmarks, direct locale links, and no-JavaScript contract.`);
