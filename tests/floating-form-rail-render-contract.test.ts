@@ -33,6 +33,8 @@ describe('floating form rail rendering contract', () => {
     ]) expect(source).toContain(value);
 
     expect(source).not.toContain("[data-expanded='false'] .floating-form-rail__panel");
+    expect(source).not.toContain('animation: floating-rail-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both');
+    expect(source).not.toContain('translate: 1rem 0');
 
     for (const obsolete of [
       'data-floating-rail-label',
