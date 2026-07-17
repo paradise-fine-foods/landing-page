@@ -57,12 +57,13 @@ a {
 }
 
 a {
-  color: var(--color-paradise-blue);
+  color: var(--color-deep-herb);
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.2em;
 }
 
 a:hover {
+  text-decoration-color: var(--color-paradise-blue);
   text-decoration-thickness: 0.14em;
 }
 

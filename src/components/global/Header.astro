@@ -116,7 +116,11 @@ const links = [
   .primary-nav { font-family: var(--font-body); gap: var(--space-6); }
   .primary-nav ul { gap: var(--space-5); list-style: none; }
   .primary-nav a { color: var(--color-deep-herb); font-size: var(--text-sm); font-weight: 500; text-decoration: none; }
-  .primary-nav a:hover { color: var(--color-paradise-blue); }
+  .primary-nav a:hover {
+    color: var(--color-deep-herb);
+    text-decoration: underline;
+    text-decoration-color: var(--color-paradise-blue);
+  }
 
   .menu-toggle,
   .noscript-nav { display: none; }
