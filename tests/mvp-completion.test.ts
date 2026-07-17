@@ -45,7 +45,7 @@ const uiLeavesBelow = (value: unknown, path: string): UiLeaf[] => {
 const uiOwnershipRows = (ledger: string) => {
   const manifest = ledger.match(/<!-- ui-ownership:start -->([\s\S]*?)<!-- ui-ownership:end -->/)?.[1] ?? '';
   return manifest.split('\n').flatMap((line) => {
-    const match = line.match(/^\|\s*`(ui\.[^`]+)`\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|$/);
+    const match = line.match(/^\|\s*`(ui\.[^`]+)`\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\r?$/);
     return match ? [{ pattern: match[1], owner: match[2], input: match[3], acceptance: match[4] }] : [];
   });
 };
