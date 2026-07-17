@@ -220,6 +220,24 @@ describe('Living Ingredients identity', () => {
     expect(ui.vi.hero.eyebrow).toBe('Nguyên liệu sống động');
   });
 
+  test('places the localized floating enquiry rail after the shared footer', () => {
+    const layout = source('src/layouts/SiteLayout.astro');
+    const footer = '<Footer {locale} {siteName} />';
+    const rail = '<FloatingFormRail locale={locale} contactPath={localizedPath(locale, \'contact\')} copy={ui[locale].floatingRail} />';
+
+    expect(layout).toContain("import { localizedPath } from '../lib/i18n/routes';");
+    expect(layout).toContain("import FloatingFormRail from '../components/global/FloatingFormRail.astro';");
+    expect(layout).toContain(rail);
+    expect(layout.indexOf('</main>')).toBeLessThan(layout.indexOf(footer));
+    expect(layout.indexOf(footer)).toBeLessThan(layout.indexOf(rail));
+
+    for (const locale of ['en', 'vi'] as const) {
+      expect(ui[locale].floatingRail.buy).toBeTruthy();
+      expect(ui[locale].floatingRail.sell).toBeTruthy();
+      expect(ui[locale].floatingRail.contact).toBeTruthy();
+    }
+  });
+
   test('removes empty catalog and brand intro decorations from every locale page', () => {
     for (const file of [
       'src/pages/en/products/index.astro',

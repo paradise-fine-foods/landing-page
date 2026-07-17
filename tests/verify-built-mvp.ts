@@ -68,4 +68,22 @@ for (const decoration of ['drop', 'petal']) {
   }
 }
 
+const compatibilityRedirectPrefixes = ['vi/san-pham/', 'vi/thuong-hieu/', 'vi/lien-he/'];
+const canonicalLocalizedPages = generatedHtml
+  .map((path) => ({ path, normalizedPath: path.replaceAll('\\', '/') }))
+  .filter(({ normalizedPath }) => /^(?:en|vi)\//.test(normalizedPath)
+    && !compatibilityRedirectPrefixes.some((prefix) => normalizedPath.startsWith(prefix)));
+if (canonicalLocalizedPages.length < 20) {
+  throw new Error(`dist: expected at least 20 canonical localized pages, found ${canonicalLocalizedPages.length}`);
+}
+
+for (const { path } of canonicalLocalizedPages) {
+  const localizedFile = `dist/${path}`;
+  const localizedHtml = await Bun.file(localizedFile).text();
+  for (const marker of ['data-floating-rail', '?interest=retail', '?interest=other', 'aria-controls="floating-rail-panel"']) {
+    if (!localizedHtml.includes(marker)) throw new Error(`${localizedFile}: missing ${marker}`);
+  }
+}
+
 console.log(`Verified ${generatedHtml.length} generated pages plus bilingual 404 metadata, landmarks, direct locale links, and no-JavaScript contract.`);
+console.log(`Verified floating rail on ${canonicalLocalizedPages.length} canonical localized pages.`);

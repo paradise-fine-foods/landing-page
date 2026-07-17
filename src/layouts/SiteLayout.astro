@@ -7,11 +7,13 @@ import '../styles/tokens.css';
 import '../styles/typography.css';
 import '../styles/global.css';
 import { ui } from '../lib/i18n/ui';
+import { localizedPath } from '../lib/i18n/routes';
 import type { Locale } from '../lib/i18n/types';
 import { buildMeta } from '../lib/seo/meta';
 import DemoNotice from '../components/global/DemoNotice.astro';
 import Header from '../components/global/Header.astro';
 import Footer from '../components/global/Footer.astro';
+import FloatingFormRail from '../components/global/FloatingFormRail.astro';
 
 interface Props {
   locale: Locale;
@@ -67,5 +69,6 @@ const meta = buildMeta({
       <slot />
     </main>
     <Footer {locale} {siteName} />
+    <FloatingFormRail locale={locale} contactPath={localizedPath(locale, 'contact')} copy={ui[locale].floatingRail} />
   </body>
 </html>
