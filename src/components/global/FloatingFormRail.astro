@@ -53,7 +53,13 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
+    translate: 0 0;
+    transition: translate 360ms cubic-bezier(0.22, 1, 0.36, 1);
     z-index: 15;
+  }
+
+  .floating-form-rail[data-ready='true'][data-expanded='false'] {
+    translate: calc(100% - 3.25rem) 0;
   }
 
   .floating-form-rail[data-ready='true'] {
@@ -105,24 +111,12 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     display: grid;
     filter: drop-shadow(0 0.75rem 1.25rem rgb(40 52 43 / 0.16)) drop-shadow(0 0.125rem 0.25rem rgb(40 52 43 / 0.12));
     inline-size: min(17rem, calc(100vw - 3.25rem));
-    opacity: 1;
     padding: 0.25rem 0.75rem 0.5rem;
     pointer-events: auto;
-    translate: 0 0;
-    transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
-      translate 360ms cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0ms;
-    visibility: visible;
   }
 
-  .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel {
-    opacity: 0;
+  .floating-form-rail__panel[inert] {
     pointer-events: none;
-    translate: 0.75rem 0;
-    transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1),
-      translate 360ms cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0ms linear 360ms;
-    visibility: hidden;
   }
 
   .floating-form-rail__panel a {
@@ -173,7 +167,7 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .floating-form-rail[data-ready='true'] { animation: none; }
+    .floating-form-rail[data-ready='true'] { animation: none; transition: none; }
 
     .floating-form-rail__panel,
     .floating-form-rail__toggle,

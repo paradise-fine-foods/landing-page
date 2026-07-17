@@ -19,15 +19,20 @@ describe('floating form rail rendering contract', () => {
       'href={customerPath}',
       'href={supplierPath}',
       'flex-direction: row',
+      "[data-expanded='false'] {",
+      'translate: calc(100% - 3.25rem) 0',
+      'transition: translate 360ms cubic-bezier(0.22, 1, 0.36, 1)',
       'initializeFloatingRail',
       'staticOnly?: boolean',
       "!staticOnly && <script>",
       "[data-ready='true'] .floating-form-rail__toggle",
-      "[data-ready='true'][data-expanded='false'] .floating-form-rail__panel",
+      ".floating-form-rail__panel[inert]",
       'drop-shadow',
       'inline-size: min(17rem',
       'min-block-size: 2.75rem',
     ]) expect(source).toContain(value);
+
+    expect(source).not.toContain("[data-expanded='false'] .floating-form-rail__panel");
 
     for (const obsolete of [
       'data-floating-rail-label',

@@ -16,6 +16,9 @@ describe('local enquiry modes', () => {
     expect(getEnquiryModeCopy('en', 'supplier').interestOptions).toHaveProperty('dairy');
     expect(getEnquiryModeCopy('en', 'general').interestOptions).toHaveProperty('other');
     expect(getEnquiryModeCopy('vi', 'customer').title).not.toBe(getEnquiryModeCopy('en', 'customer').title);
+    expect(getEnquiryModeCopy('vi', 'general').title).toBe('Chia sẻ nhu cầu của bạn');
+    expect(getEnquiryModeCopy('vi', 'customer').submit).toBe('Đăng ký khách hàng');
+    expect(getEnquiryModeCopy('vi', 'supplier').interestOptions.dairy).toBe('Sữa');
   });
 
   test('general enquiries do not require a mode-specific interest', () => {

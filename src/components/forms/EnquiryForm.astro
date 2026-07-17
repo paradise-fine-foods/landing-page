@@ -72,11 +72,11 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
 
       {mode === 'supplier' && <>
         <div class="field">
-          <label for="enquiry-product-range">Product range</label>
+          <label for="enquiry-product-range">{modeCopy.productRangeLabel}</label>
           <input id="enquiry-product-range" name="productRange" type="text" autocomplete="off" />
         </div>
         <div class="field">
-          <label for="enquiry-temperature">Storage temperature</label>
+          <label for="enquiry-temperature">{modeCopy.temperatureLabel}</label>
           <input id="enquiry-temperature" name="temperature" type="text" autocomplete="off" />
         </div>
       </>}

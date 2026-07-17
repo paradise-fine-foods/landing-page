@@ -17,6 +17,7 @@ export function initializeFloatingRail(
 
   const setExpanded = (expanded: boolean) => {
     root.dataset.expanded = String(expanded);
+    panel.inert = !expanded;
     toggle.setAttribute('aria-expanded', String(expanded));
     toggle.setAttribute('aria-label', expanded ? toggle.dataset.closeLabel ?? '' : toggle.dataset.openLabel ?? '');
   };

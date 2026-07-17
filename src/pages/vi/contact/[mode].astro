@@ -6,6 +6,7 @@ import { getGlobalSettings, getProducts } from '../../../lib/cms/queries';
 import { localizedPath } from '../../../lib/i18n/routes';
 import type { EnquiryMode } from '../../../lib/i18n/ui';
 import { ui } from '../../../lib/i18n/ui';
+import { getEnquiryModeCopy } from '../../../lib/enquiry/modes';
 
 export function getStaticPaths() {
   return ['customer', 'supplier'].map((mode) => ({ params: { mode }, props: { mode } }));
@@ -17,12 +18,12 @@ const pathname = localizedPath(locale, mode === 'customer' ? 'customerContact' :
 const alternatePath = localizedPath('en', mode === 'customer' ? 'customerContact' : 'supplierContact');
 const [settings, products] = await Promise.all([getGlobalSettings(locale), getProducts(locale)]);
 const copy = ui[locale];
-const modeCopy = mode === 'customer' ? 'Tro thanh khach hang' : 'Tro thanh nha cung cap';
+const modeCopy = getEnquiryModeCopy(locale, mode);
 ---
 
-<SiteLayout {locale} title={`${modeCopy} | ${settings.siteName}`} description={copy.form.description} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice}>
+<SiteLayout {locale} title={`${modeCopy.eyebrow} | ${settings.siteName}`} description={modeCopy.description} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice}>
   <div class="contact-page container section-space">
-    <Breadcrumbs label={copy.header.contact} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.contact, href: localizedPath(locale, 'contact') }, { label: modeCopy }]} />
+    <Breadcrumbs label={copy.header.contact} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.contact, href: localizedPath(locale, 'contact') }, { label: modeCopy.eyebrow }]} />
     <EnquiryForm {locale} {products} {copy} {mode} />
   </div>
 </SiteLayout>
