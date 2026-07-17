@@ -2,6 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { ui } from '../src/lib/i18n/ui';
 
 const root = join(import.meta.dir, '..');
 const source = (path: string) => readFileSync(join(root, path), 'utf8');
@@ -194,5 +195,39 @@ describe('Living Ingredients identity', () => {
     expect(card).toContain('brand.accent');
     expect(card).toContain('--brand-accent');
     expect(card).toContain('color-mix(in srgb, var(--brand-accent)');
+  });
+
+  test('uses the Living Ingredients thesis in both hero locales', () => {
+    expect(ui.en.hero.eyebrow).toBe('Living ingredients');
+    expect(ui.vi.hero.eyebrow).toBe('Nguyên liệu sống động');
+  });
+
+  test('removes empty catalog and brand intro decorations from every locale page', () => {
+    for (const file of [
+      'src/pages/en/products/index.astro',
+      'src/pages/vi/products/index.astro',
+      'src/pages/en/brands/index.astro',
+      'src/pages/vi/brands/index.astro',
+    ]) {
+      const page = source(file);
+      expect(page).not.toContain('catalog-page__organic-drop');
+      expect(page).not.toContain('brands-page__organic-petal');
+    }
+  });
+
+  test('keeps standalone navigation targets and enquiry consent at 44px', () => {
+    expect(source('src/components/catalog/ProductCard.astro')).toMatch(/\.product-card :is\(h2, h3\) a\s*\{[^}]*min-block-size:\s*2\.75rem/);
+    expect(cssRule(source('src/components/sections/FeaturedBrands.astro'), '.featured-brands__products a')).toContain('min-block-size: 2.75rem');
+    expect(cssRule(source('src/components/global/Breadcrumbs.astro'), '.breadcrumbs a')).toContain('min-block-size: 2.75rem');
+    expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.field--consent label')).toContain('min-block-size: 2.75rem');
+  });
+
+  test('isolates the product stage and orders the brand label above image layers', () => {
+    const detail = source('src/components/catalog/ProductDetail.astro');
+    expect(cssRule(detail, '.product-detail__organic-stage')).toContain('isolation: isolate');
+    expect(cssRule(detail, '.product-detail__stage::before')).toContain('z-index: 0');
+    expect(cssRule(detail, '.product-detail__stage img')).toContain('position: relative');
+    expect(cssRule(detail, '.product-detail__stage img')).toContain('z-index: 1');
+    expect(cssRule(detail, '.product-detail__stage > span')).toContain('z-index: 2');
   });
 });
