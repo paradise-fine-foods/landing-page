@@ -8,7 +8,6 @@ import FeaturedBrands from '../../components/sections/FeaturedBrands.astro';
 import ServiceProof from '../../components/sections/ServiceProof.astro';
 import ChannelPathways from '../../components/sections/ChannelPathways.astro';
 import FinalCta from '../../components/sections/FinalCta.astro';
-import livingHeroProductSrc from '../../assets/demo/living-hero-product.svg?no-inline';
 import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getProducts } from '../../lib/cms/queries';
 import { counterpartPath, localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
@@ -29,6 +28,7 @@ const selectedBrand = brands.find(({ id }) => id === featured.hero.product.brand
 if (!selectedBrand) throw new Error('Featured brand is required');
 const selectedBrandProducts = products.filter((product) => product.brand.id === selectedBrand.id).slice(0, 3);
 const remainingBrands = brands.filter(({ id }) => id !== selectedBrand.id);
+const preloadImages = [{ href: featured.hero.image.src, media: '(min-width: 36.001rem)' }, { href: featured.hero.image.src, media: '(max-width: 36rem)' }];
 const channels = [
   { ...copy.home.channels.retail, href: `${contactPath}?interest=retail` },
   { ...copy.home.channels.horeca, href: `${contactPath}?interest=horeca` },
@@ -37,7 +37,7 @@ const channels = [
 ];
 ---
 
-<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={featured.hero.image.src} preloadImages={[{ href: livingHeroProductSrc, media: '(min-width: 36.001rem)' }, { href: livingHeroProductSrc, media: '(max-width: 36rem)' }]}>
+<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={featured.hero.image.src} {preloadImages}>
   <LivingHero copy={copy.hero} product={featured.hero.product} {productsPath} {contactPath} />
   <CredibilityStrip title={copy.home.credibilityTitle} pillars={copy.home.operationalPillars} />
   <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {categoryCounts} productLabel={copy.home.categoryProductLabel} {productsPath} />

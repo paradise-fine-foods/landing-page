@@ -60,6 +60,17 @@ describe('homepage composition', () => {
     expect(hero).toContain("import('../../lib/carousel/controller')");
   });
 
+  test('derives hero preloads from the same CMS image rendered by the hero', () => {
+    for (const locale of ['en', 'vi']) {
+      const page = source(`src/pages/${locale}/index.astro`);
+      expect(page).not.toMatch(/import\s+livingHeroProductSrc\s+from/);
+      expect(page).not.toContain('assets/demo/living-hero-product.svg');
+      expect(page).toContain("const preloadImages = [{ href: featured.hero.image.src");
+      expect(page).toContain('{preloadImages}');
+      expect(page).toContain('image={featured.hero.image.src}');
+    }
+  });
+
   test('limits reveals to selected authored section elements and provides settled reduced motion', () => {
     const sections = [
       'CategoryDiscovery.astro', 'FeaturedProducts.astro', 'FeaturedBrands.astro',

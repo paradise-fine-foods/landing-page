@@ -83,3 +83,33 @@ Pass: no whitespace errors.
 ## Concern
 
 Rendered re-verification is deferred to the parent task as requested. The final source contract explicitly verifies stage isolation, the backplate/image/label stacking order, and the proportional safe-area insets; focused, full, type-check, and production-build verification all passed.
+
+## Acceptance-gap follow-up
+
+### Scope
+
+Closed only the final redesign acceptance gaps. Adapterless redirects and the QA memo route were intentionally unchanged.
+
+### Changes
+
+- Added emitted homepage budget gates: static initial JavaScript is limited to 120,000 gzip bytes and unique homepage-referenced authored SVG files are limited to 80,000 gzip bytes. The graph collectors deduplicate files across English and Vietnamese homepages and ignore external, data, and traversal references.
+- Replaced hardcoded English/Vietnamese hero fixture preloads with `featured.hero.image.src`, the same CMS-derived image passed to `LivingHero` and page metadata.
+- Replaced every active `--color-cold-chain-blue` use with `--color-paradise-blue` and removed the now-unused alias token.
+- Corrected the Living Hero art backplate from the undefined `--color-morning-mist` to `--color-mist-blue`.
+
+### TDD evidence
+
+The focused RED run recorded 25 pass, 6 fail, and 191 assertions. Failures covered the direct fixture preload import, both over-budget emitted fixtures accepted by the old verifier, the remaining cold-chain token and active consumers, and the undefined hero color.
+
+The focused GREEN run passed 31 tests, 0 failures, and 205 assertions. The two budget tests use production-shaped emitted fixtures: a unique 125KB random homepage script and a unique 85KB random authored SVG, both of which now fail their respective gates.
+
+### Final verification
+
+- `bun test` — 118 pass, 0 fail, 671 assertions across 16 files.
+- `bun run check` — 83 files, 0 errors, 0 warnings, 0 hints.
+- `bun run build` — passed all generated-output verifiers; initial JS measured 1,123 gzip bytes and three unique homepage SVG files measured 1,683 gzip bytes. Astro retained its pre-existing root-route conflict warning while completing successfully.
+- `git diff --check` — no whitespace errors.
+
+### Self-review
+
+Verified that the initial-JS graph follows only static emitted imports while the existing enhancement budget retains dynamic reachability, matching the two different loading scopes. Confirmed all active source references to the removed cold-chain alias are gone and no redirect source was changed.

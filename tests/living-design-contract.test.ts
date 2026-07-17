@@ -73,9 +73,17 @@ describe('Living Ingredients identity', () => {
 
   test('preserves contrast-safe compatibility tokens for deferred consumers', () => {
     const tokens = source('src/styles/tokens.css').toLowerCase();
-    expect(tokens).toContain('--color-cold-chain-blue: #123c69');
+    expect(tokens).not.toContain('--color-cold-chain-blue');
     expect(tokens).toContain('--color-success: #356146');
     expect(tokens).toContain('--color-error: #9a3f38');
+  });
+
+  test('keeps retired cold-chain palette aliases out of active source consumers', () => {
+    const activeFiles = filesBelow('src').filter((path) => /\.(?:astro|css|js|ts)$/.test(path));
+    expect(activeFiles.filter((path) => source(path).includes('--color-cold-chain-blue'))).toEqual([]);
+    for (const file of ['src/components/sections/CategoryDiscovery.astro', 'src/components/sections/FeaturedBrands.astro']) {
+      expect(source(file)).toContain('var(--color-paradise-blue)');
+    }
   });
 
   test('uses Nunito for body and navigation while reserving Newsreader for display type', () => {
@@ -220,6 +228,12 @@ describe('Living Ingredients identity', () => {
     expect(cssRule(source('src/components/sections/FeaturedBrands.astro'), '.featured-brands__products a')).toContain('min-block-size: 2.75rem');
     expect(cssRule(source('src/components/global/Breadcrumbs.astro'), '.breadcrumbs a')).toContain('min-block-size: 2.75rem');
     expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.field--consent label')).toContain('min-block-size: 2.75rem');
+  });
+
+  test('uses the defined mist-blue token for the Living Hero art backplate', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
+    expect(hero).toContain('background: var(--color-mist-blue)');
+    expect(hero).not.toContain('--color-morning-mist');
   });
 
   test('isolates the product stage and orders the brand label above image layers', () => {

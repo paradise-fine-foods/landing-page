@@ -136,18 +136,19 @@ export const assertRedirect = (html: string, target: string, legacy: string): vo
   }
 };
 
-const importedJs = (content: string): string[] => {
+const importedJs = (content: string, includeDynamic = true): string[] => {
   const imports = new Set<string>();
   for (const pattern of [
-    /\bimport\s*(?:\(\s*)?["'`](\.{1,2}\/[^"'`]+\.js)["'`]/g,
+    /\bimport\s*["'`](\.{1,2}\/[^"'`]+\.js)["'`]/g,
     /\bfrom\s*["'`](\.{1,2}\/[^"'`]+\.js)["'`]/g,
+    ...(includeDynamic ? [/\bimport\s*\(\s*["'`](\.{1,2}\/[^"'`]+\.js)["'`]\s*\)/g] : []),
   ]) {
     for (const match of content.matchAll(pattern)) imports.add(match[1]);
   }
   return [...imports];
 };
 
-export const collectReachableJs = (dist: string, entryUrl: string): Set<string> => {
+export const collectReachableJs = (dist: string, entryUrl: string, includeDynamic = true): Set<string> => {
   const entryPath = join(dist, requireRootRelativeTarget(entryUrl, 'Living Hero entry').replace(/^\/+/, ''));
   const reachable = new Set<string>();
   const visit = (file: string): void => {
@@ -157,10 +158,69 @@ export const collectReachableJs = (dist: string, entryUrl: string): Set<string> 
     if (reachable.has(absolute)) return;
     if (!existsSync(absolute)) throw new Error(`Missing emitted enhancement import: ${fromDist}`);
     reachable.add(absolute);
-    for (const specifier of importedJs(readFileSync(absolute, 'utf8'))) visit(resolve(dirname(absolute), specifier));
+    for (const specifier of importedJs(readFileSync(absolute, 'utf8'), includeDynamic)) visit(resolve(dirname(absolute), specifier));
   };
   visit(entryPath);
   return reachable;
+};
+
+const emittedHomepageFile = (dist: string, value: string | undefined): string | undefined => {
+  if (!value || value.startsWith('data:') || !value.startsWith('/') || value.startsWith('//')) return undefined;
+  const rawPath = value.split(/[?#]/, 1)[0];
+  let decodedPath: string;
+  try {
+    decodedPath = decodeURIComponent(rawPath);
+  } catch {
+    return undefined;
+  }
+  if (decodedPath.split('/').includes('..')) return undefined;
+  const url = new URL(value, configuredOrigin);
+  if (url.origin !== configuredOrigin) return undefined;
+  const file = resolve(dist, `.${url.pathname}`);
+  const fromDist = relative(resolve(dist), file);
+  if (!fromDist || fromDist.startsWith('..') || !existsSync(file)) return undefined;
+  return file;
+};
+
+const homepageTags = (html: string): string[] => [...html.matchAll(/<(?:img|source|link|script)\b[^>]*>/gi)].map(([tag]) => tag);
+const srcsetUrls = (value: string | undefined): string[] => value?.split(',')
+  .map((candidate) => candidate.trim().split(/\s+/)[0])
+  .filter(Boolean) ?? [];
+
+export const collectHomepageInitialJs = (dist: string, html: string): Set<string> => {
+  const files = new Set<string>();
+  for (const tag of homepageTags(html).filter((tag) => /^<script\b/i.test(tag))) {
+    const src = attribute(tag, 'src');
+    if (!src?.endsWith('.js') || !emittedHomepageFile(dist, src)) continue;
+    for (const file of collectReachableJs(dist, src, false)) files.add(file);
+  }
+  return files;
+};
+
+export const collectHomepageAuthoredSvgs = (dist: string, html: string): Set<string> => {
+  const files = new Set<string>();
+  for (const tag of homepageTags(html)) {
+    const isImageLink = /^<link\b/i.test(tag)
+      && attribute(tag, 'rel')?.toLowerCase() === 'preload'
+      && attribute(tag, 'as')?.toLowerCase() === 'image';
+    if (/^<link\b/i.test(tag) && !isImageLink) continue;
+    for (const value of [attribute(tag, 'src'), attribute(tag, 'href'), ...srcsetUrls(attribute(tag, 'srcset'))]) {
+      const file = emittedHomepageFile(dist, value);
+      if (file?.toLowerCase().endsWith('.svg')) files.add(file);
+    }
+  }
+  return files;
+};
+
+const gzipBytes = (files: Iterable<string>): number => [...files].reduce(
+  (total, file) => total + gzipSync(readFileSync(file)).byteLength,
+  0,
+);
+
+export const assertGzipBudget = (files: Iterable<string>, budget: number, label: string): number => {
+  const bytes = gzipBytes(files);
+  if (bytes > budget) throw new Error(`${label} are ${bytes} gzip bytes (budget ${budget})`);
+  return bytes;
 };
 
 const homepageEntry = (html: string, locale: string): string => {
@@ -182,11 +242,15 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
   }
 
   const enhancementFiles = new Set<string>();
+  const criticalInitialFiles = new Set<string>();
+  const authoredSvgFiles = new Set<string>();
   for (const locale of ['en', 'vi'] as const) {
     const html = readFileSync(join(dist, locale, 'index.html'), 'utf8');
     assertHomepageLogo(html, dist, locale);
     assertCarousel(html, locale);
     for (const file of collectReachableJs(dist, homepageEntry(html, locale))) enhancementFiles.add(file);
+    for (const file of collectHomepageInitialJs(dist, html)) criticalInitialFiles.add(file);
+    for (const file of collectHomepageAuthoredSvgs(dist, html)) authoredSvgFiles.add(file);
   }
   for (const [legacy, target] of [
     ['vi/san-pham/index.html', '/vi/products/'],
@@ -200,13 +264,11 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
     assertRedirect(readFileSync(redirectFile, 'utf8'), target, legacy);
   }
 
-  const enhancementGzip = [...enhancementFiles].reduce(
-    (total, file) => total + gzipSync(readFileSync(file)).byteLength,
-    0,
-  );
-  if (enhancementGzip > 35_000) throw new Error(`Enhancements are ${enhancementGzip} gzip bytes`);
+  const criticalInitialGzip = assertGzipBudget(criticalInitialFiles, 120_000, 'Critical initial JavaScript');
+  const authoredSvgGzip = assertGzipBudget(authoredSvgFiles, 80_000, 'Homepage authored SVG graphics');
+  const enhancementGzip = assertGzipBudget(enhancementFiles, 35_000, 'Enhancements');
   console.log(
-    `Living design verified: ${canonicalRoutes.length} canonical routes, ${enhancementFiles.size} reachable enhancement files, ${enhancementGzip} gzip bytes.`,
+    `Living design verified: ${canonicalRoutes.length} canonical routes, ${criticalInitialFiles.size} initial JS files (${criticalInitialGzip} gzip bytes), ${authoredSvgFiles.size} homepage SVG files (${authoredSvgGzip} gzip bytes), ${enhancementFiles.size} reachable enhancement files (${enhancementGzip} gzip bytes).`,
   );
   return enhancementGzip;
 };
