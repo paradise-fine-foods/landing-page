@@ -264,6 +264,10 @@ describe('Living Ingredients identity', () => {
     }
     expect(rail).not.toContain('box-shadow');
     expect(rail).not.toContain('linear-gradient');
+    const toggleInteraction = rail.match(/\.floating-form-rail__toggle:hover,[\s\S]*?\}/)?.[0] ?? '';
+    expect(toggleInteraction).toContain('background: var(--color-deep-herb)');
+    expect(toggleInteraction).not.toContain('background: var(--color-paradise-orange)');
+    expect(rail).toContain('inset-inline-start: auto;');
   });
 
   test('removes empty catalog and brand intro decorations from every locale page', () => {

@@ -102,8 +102,9 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
 
   .floating-form-rail__toggle:hover,
   .floating-form-rail__toggle:focus-visible {
-    background: var(--color-paradise-orange);
-    color: var(--color-paper-white);
+    background: var(--color-deep-herb);
+    color: var(--color-rice-paper);
+    transform: translateX(-0.125rem);
   }
 
   .floating-form-rail__label {
@@ -177,8 +178,9 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
       align-items: flex-end;
       flex-direction: column-reverse;
       inset-block-end: 1rem;
-      inset-inline: 1rem;
-      max-inline-size: min(20rem, calc(100vw - 2rem));
+      inset-inline-end: 1rem;
+      inset-inline-start: auto;
+      inline-size: min(20rem, calc(100vw - 2rem));
       top: auto;
       transform: none;
     }
