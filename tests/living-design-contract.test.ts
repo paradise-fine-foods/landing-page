@@ -71,11 +71,16 @@ describe('Living Ingredients identity', () => {
     expect(mark).toContain("'drop' | 'seed' | 'petal'");
   });
 
-  test('preserves contrast-safe compatibility tokens for deferred consumers', () => {
+  test('keeps the active palette free of retired compatibility aliases', () => {
     const tokens = source('src/styles/tokens.css').toLowerCase();
     expect(tokens).not.toContain('--color-cold-chain-blue');
+    for (const alias of ['--color-milk-paper', '--color-carbon', '--color-stainless', '--color-cultured-butter', '--color-bordeaux']) {
+      expect(tokens).not.toContain(alias);
+    }
     expect(tokens).toContain('--color-success: #356146');
     expect(tokens).toContain('--color-error: #9a3f38');
+    expect(source('src/styles/global.css')).not.toContain('--color-carbon');
+    expect(source('src/components/sections/LivingHero.astro')).not.toContain('--color-stainless');
   });
 
   test('keeps retired cold-chain palette aliases out of active source consumers', () => {

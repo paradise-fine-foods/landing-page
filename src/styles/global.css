@@ -101,7 +101,7 @@ a:hover {
 
 .skip-link {
   background: var(--color-paper-white);
-  color: var(--color-carbon);
+  color: var(--color-deep-herb);
   inset-block-start: var(--space-3);
   inset-inline-start: var(--space-3);
   padding: var(--space-3) var(--space-4);

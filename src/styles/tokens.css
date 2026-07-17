@@ -9,12 +9,6 @@
   --color-deep-herb: #28342b;
   --color-mist-blue: #e8f6fa;
 
-  /* Compatibility aliases for sections scheduled for later redesign tasks. */
-  --color-milk-paper: var(--color-rice-paper);
-  --color-carbon: var(--color-deep-herb);
-  --color-stainless: var(--color-mist-blue);
-  --color-cultured-butter: var(--color-paradise-green);
-  --color-bordeaux: var(--color-paradise-coral);
   --color-success: #356146;
   --color-error: #9a3f38;
 
