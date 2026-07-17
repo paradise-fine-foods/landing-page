@@ -113,3 +113,27 @@ The focused GREEN run passed 31 tests, 0 failures, and 205 assertions. The two b
 ### Self-review
 
 Verified that the initial-JS graph follows only static emitted imports while the existing enhancement budget retains dynamic reachability, matching the two different loading scopes. Confirmed all active source references to the removed cold-chain alias are gone and no redirect source was changed.
+
+## Release-gate hardening follow-up
+
+### Scope
+
+Addressed only the reviewer’s release-gate accounting and small-text contrast findings.
+
+### TDD evidence
+
+The focused RED run recorded 25 pass and 3 failures: the verifier accepted an over-budget inline module, accepted an over-budget standalone `modulepreload` graph with a query/hash URL, and retained low-contrast Paradise-blue text in the category/brand metadata selectors.
+
+The focused GREEN run passed 28 tests, 0 failures, and 149 assertions. New fixtures use unique random 125KB module content for both inline and `modulepreload` paths.
+
+### Changes
+
+- Initial JavaScript accounting now combines unique static graphs rooted at script/preload/modulepreload assets with unique gzipped inline JavaScript bodies. Query/hash suffixes are normalized before JavaScript extension checks, and shared external files remain deduplicated.
+- Category discovery counts and featured-brand origin metadata now use the contrast-safe deep-herb text token. Paradise blue remains available for non-text accents.
+
+### Final verification
+
+- `bun test` — 121 pass, 0 fail, 675 assertions across 16 files.
+- `bun run check` — 83 files, 0 errors, 0 warnings, 0 hints.
+- `bun run build` — passed all generated-output verifiers; initial JavaScript measured 1,432 gzip bytes across one emitted graph plus one inline body. Astro retained its pre-existing root-route conflict warning while completing successfully.
+- `git diff --check` — no whitespace errors.

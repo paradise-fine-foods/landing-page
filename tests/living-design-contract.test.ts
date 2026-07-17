@@ -81,9 +81,14 @@ describe('Living Ingredients identity', () => {
   test('keeps retired cold-chain palette aliases out of active source consumers', () => {
     const activeFiles = filesBelow('src').filter((path) => /\.(?:astro|css|js|ts)$/.test(path));
     expect(activeFiles.filter((path) => source(path).includes('--color-cold-chain-blue'))).toEqual([]);
-    for (const file of ['src/components/sections/CategoryDiscovery.astro', 'src/components/sections/FeaturedBrands.astro']) {
-      expect(source(file)).toContain('var(--color-paradise-blue)');
-    }
+  });
+
+  test('keeps small category and brand metadata text at contrast-safe deep herb', () => {
+    expect(contrastRatio('#28342b', '#ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-deep-herb)');
+    const brands = source('src/components/sections/FeaturedBrands.astro');
+    expect(cssRule(brands, '.featured-brands__origin')).toContain('color: var(--color-deep-herb)');
+    expect(cssRule(brands, '.featured-brands__secondary article > p:first-child')).toContain('color: var(--color-deep-herb)');
   });
 
   test('uses Nunito for body and navigation while reserving Newsreader for display type', () => {

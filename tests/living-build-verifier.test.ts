@@ -103,4 +103,15 @@ describe('living build verifier semantics', () => {
     writeFileSync(join(dist, '_astro', 'authored-graphic.svg'), `<svg><!--${randomBytes(85_000).toString('base64')}--></svg>`);
     expect(() => verifyBuiltLivingDesign(dist)).toThrow('Homepage authored SVG graphics');
   });
+
+  test('rejects an over-budget unique inline homepage module body', () => {
+    const dist = verifierFixture(`<script type="module">export default ${JSON.stringify(randomBytes(125_000).toString('base64'))};</script>`);
+    expect(() => verifyBuiltLivingDesign(dist)).toThrow('Critical initial JavaScript');
+  });
+
+  test('rejects an over-budget standalone modulepreload graph with query and hash', () => {
+    const dist = verifierFixture('<link rel="modulepreload" href="/_astro/critical-preload.js?cache=1#entry">');
+    writeFileSync(join(dist, '_astro', 'critical-preload.js'), `export default ${JSON.stringify(randomBytes(125_000).toString('base64'))};`);
+    expect(() => verifyBuiltLivingDesign(dist)).toThrow('Critical initial JavaScript');
+  });
 });

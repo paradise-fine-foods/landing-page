@@ -187,14 +187,36 @@ const srcsetUrls = (value: string | undefined): string[] => value?.split(',')
   .map((candidate) => candidate.trim().split(/\s+/)[0])
   .filter(Boolean) ?? [];
 
-export const collectHomepageInitialJs = (dist: string, html: string): Set<string> => {
+const normalizedAssetPath = (value: string): string => value.split(/[?#]/, 1)[0].toLowerCase();
+const isJavaScriptUrl = (value: string | undefined): value is string => Boolean(value && normalizedAssetPath(value).endsWith('.js'));
+const isInitialJavaScriptPreload = (tag: string): boolean => {
+  const rel = new Set(attribute(tag, 'rel')?.toLowerCase().split(/\s+/) ?? []);
+  return rel.has('modulepreload') || (rel.has('preload') && attribute(tag, 'as')?.toLowerCase() === 'script');
+};
+
+interface HomepageInitialJs {
+  files: Set<string>;
+  inlineBodies: Set<string>;
+}
+
+export const collectHomepageInitialJs = (dist: string, html: string): HomepageInitialJs => {
   const files = new Set<string>();
-  for (const tag of homepageTags(html).filter((tag) => /^<script\b/i.test(tag))) {
-    const src = attribute(tag, 'src');
-    if (!src?.endsWith('.js') || !emittedHomepageFile(dist, src)) continue;
-    for (const file of collectReachableJs(dist, src, false)) files.add(file);
+  const inlineBodies = new Set<string>();
+  const addGraph = (url: string | undefined) => {
+    if (!isJavaScriptUrl(url) || !emittedHomepageFile(dist, url)) return;
+    for (const file of collectReachableJs(dist, url.split(/[?#]/, 1)[0], false)) files.add(file);
+  };
+  for (const tag of homepageTags(html)) {
+    if (/^<script\b/i.test(tag)) addGraph(attribute(tag, 'src'));
+    if (/^<link\b/i.test(tag) && isInitialJavaScriptPreload(tag)) addGraph(attribute(tag, 'href'));
   }
-  return files;
+  for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    const opening = `<script${match[1]}>`;
+    const type = attribute(opening, 'type')?.toLowerCase();
+    const body = match[2].trim();
+    if (!attribute(opening, 'src') && body && (!type || type === 'module' || /(?:java|ecma)script/.test(type))) inlineBodies.add(body);
+  }
+  return { files, inlineBodies };
 };
 
 export const collectHomepageAuthoredSvgs = (dist: string, html: string): Set<string> => {
@@ -243,13 +265,16 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
 
   const enhancementFiles = new Set<string>();
   const criticalInitialFiles = new Set<string>();
+  const criticalInitialInlineBodies = new Set<string>();
   const authoredSvgFiles = new Set<string>();
   for (const locale of ['en', 'vi'] as const) {
     const html = readFileSync(join(dist, locale, 'index.html'), 'utf8');
     assertHomepageLogo(html, dist, locale);
     assertCarousel(html, locale);
     for (const file of collectReachableJs(dist, homepageEntry(html, locale))) enhancementFiles.add(file);
-    for (const file of collectHomepageInitialJs(dist, html)) criticalInitialFiles.add(file);
+    const initialJs = collectHomepageInitialJs(dist, html);
+    for (const file of initialJs.files) criticalInitialFiles.add(file);
+    for (const body of initialJs.inlineBodies) criticalInitialInlineBodies.add(body);
     for (const file of collectHomepageAuthoredSvgs(dist, html)) authoredSvgFiles.add(file);
   }
   for (const [legacy, target] of [
@@ -264,11 +289,15 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
     assertRedirect(readFileSync(redirectFile, 'utf8'), target, legacy);
   }
 
-  const criticalInitialGzip = assertGzipBudget(criticalInitialFiles, 120_000, 'Critical initial JavaScript');
+  const criticalInitialGzip = gzipBytes(criticalInitialFiles) + [...criticalInitialInlineBodies].reduce(
+    (total, body) => total + gzipSync(body).byteLength,
+    0,
+  );
+  if (criticalInitialGzip > 120_000) throw new Error(`Critical initial JavaScript are ${criticalInitialGzip} gzip bytes (budget 120000)`);
   const authoredSvgGzip = assertGzipBudget(authoredSvgFiles, 80_000, 'Homepage authored SVG graphics');
   const enhancementGzip = assertGzipBudget(enhancementFiles, 35_000, 'Enhancements');
   console.log(
-    `Living design verified: ${canonicalRoutes.length} canonical routes, ${criticalInitialFiles.size} initial JS files (${criticalInitialGzip} gzip bytes), ${authoredSvgFiles.size} homepage SVG files (${authoredSvgGzip} gzip bytes), ${enhancementFiles.size} reachable enhancement files (${enhancementGzip} gzip bytes).`,
+    `Living design verified: ${canonicalRoutes.length} canonical routes, ${criticalInitialFiles.size} initial JS files and ${criticalInitialInlineBodies.size} inline JS bodies (${criticalInitialGzip} gzip bytes), ${authoredSvgFiles.size} homepage SVG files (${authoredSvgGzip} gzip bytes), ${enhancementFiles.size} reachable enhancement files (${enhancementGzip} gzip bytes).`,
   );
   return enhancementGzip;
 };
