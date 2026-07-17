@@ -120,6 +120,11 @@ describe('client-review MVP completion contracts', () => {
     expect(existsSync(path)).toBe(true);
     const ledger = source('docs/demo-content.md');
 
+    expect(ledger).not.toMatch(/public\/models|\b3D\b|WebGL|\.glb|accessible 3D|stage (?:code|labels|statuses)/i);
+    expect(ledger).toMatch(/server-rendered static Living Hero/i);
+    expect(ledger).toMatch(/decorative Canvas 2D/i);
+    expect(ledger).toMatch(/reduced-motion and save-data/i);
+
     expect(discoveredMedia.filter((item) => !ledger.includes(`\`${item}\``))).toEqual([]);
     for (const id of [...demoProducts, ...demoBrands, ...demoCategories].map(({ id }) => id)) {
       expect(ledger).toContain(`\`${id}\``);

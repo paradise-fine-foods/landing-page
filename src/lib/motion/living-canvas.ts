@@ -14,24 +14,53 @@ export interface LivingCanvasDependencies {
   createResizeObserver?: (callback: () => void) => ResizeObserverHandle;
 }
 
+export interface LivingParticle {
+  x: number;
+  y: number;
+  radius: number;
+  speed: number;
+}
+
 const particleCount = 10;
+const noopController: LivingCanvasController = { dispose() {} };
+
+export const createLivingParticles = (): LivingParticle[] =>
+  Array.from({ length: particleCount }, (_, index) => ({
+    x: (index * 0.097) % 1,
+    y: (index * 0.173) % 1,
+    radius: 3 + (index % 4),
+    speed: 0.000015 + (index % 3) * 0.000004,
+  }));
 
 export function createLivingCanvasController(
   canvas: HTMLCanvasElement,
   dependencies: LivingCanvasDependencies,
 ): LivingCanvasController {
   const context = canvas.getContext('2d');
-  if (!context) return { dispose() {} };
+  if (!context) return noopController;
 
-  const particles = Array.from({ length: particleCount }, (_, index) => ({
-    x: (index * 0.097) % 1,
-    y: (index * 0.173) % 1,
-    radius: 3 + (index % 4),
-    speed: 0.000015 + (index % 3) * 0.000004,
-  }));
-  let frame = 0;
+  const particles = createLivingParticles();
+  let frame: number | undefined;
   let previous = 0;
   let disposed = false;
+  let observer: ResizeObserverHandle | undefined;
+
+  const clearOutput = () => {
+    try { context.clearRect(0, 0, canvas.width, canvas.height); } catch {}
+    try { canvas.width = 1; } catch {}
+    try { canvas.height = 1; } catch {}
+  };
+
+  const cleanup = () => {
+    if (disposed) return;
+    disposed = true;
+    if (frame !== undefined) {
+      try { dependencies.cancelFrame(frame); } catch {}
+      frame = undefined;
+    }
+    try { observer?.disconnect(); } catch {}
+    clearOutput();
+  };
 
   const resize = () => {
     const ratio = Math.min(Math.max(dependencies.devicePixelRatio || 1, 1), 2);
@@ -43,6 +72,7 @@ export function createLivingCanvasController(
 
   const draw = (time: number) => {
     if (disposed) return;
+    frame = undefined;
     const delta = Math.min(32, time - previous || 16);
     previous = time;
     const { width, height } = canvas.getBoundingClientRect();
@@ -62,32 +92,42 @@ export function createLivingCanvasController(
       );
       context.fill();
     }
-    frame = dependencies.requestFrame(draw);
+    try {
+      frame = dependencies.requestFrame(draw);
+    } catch {
+      cleanup();
+    }
   };
 
-  const observer = dependencies.createResizeObserver?.(resize);
-  observer?.observe(canvas);
-  resize();
-  frame = dependencies.requestFrame(draw);
+  const observedResize = () => {
+    if (disposed) return;
+    try {
+      resize();
+    } catch {
+      cleanup();
+    }
+  };
+
+  try {
+    observer = dependencies.createResizeObserver?.(observedResize);
+    observer?.observe(canvas);
+    if (disposed) return noopController;
+    resize();
+    frame = dependencies.requestFrame(draw);
+  } catch {
+    cleanup();
+    return noopController;
+  }
 
   return {
-    dispose() {
-      if (disposed) return;
-      disposed = true;
-      dependencies.cancelFrame(frame);
-      observer?.disconnect();
-      const { width, height } = canvas.getBoundingClientRect();
-      context.clearRect(0, 0, width, height);
-      canvas.width = 1;
-      canvas.height = 1;
-    },
+    dispose: cleanup,
   };
 }
 
 export function mountLivingCanvas(canvas: HTMLCanvasElement): LivingCanvasController {
   const requestFrame = globalThis.requestAnimationFrame?.bind(globalThis);
   const cancelFrame = globalThis.cancelAnimationFrame?.bind(globalThis);
-  if (!requestFrame || !cancelFrame) return { dispose() {} };
+  if (!requestFrame || !cancelFrame) return noopController;
 
   return createLivingCanvasController(canvas, {
     devicePixelRatio: globalThis.devicePixelRatio || 1,

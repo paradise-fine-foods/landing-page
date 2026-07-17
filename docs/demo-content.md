@@ -4,7 +4,7 @@
 
 **Scope:** the complete client-review MVP as implemented on 2026-07-16
 
-**Authoritative implementation sources:** `src/lib/cms/demo-data.ts`, `src/lib/i18n/ui.ts`, `src/lib/enquiry/submit.ts`, `src/assets/demo/`, `public/models/`, top-level `public/` favicon files, and `astro.config.mjs`
+**Authoritative implementation sources:** `src/lib/cms/demo-data.ts`, `src/lib/i18n/ui.ts`, `src/lib/enquiry/submit.ts`, `src/assets/demo/`, top-level `public/` favicon files, and `astro.config.mjs`
 
 No business claims in this MVP are verified. Every product, brand, category relationship, origin, specification, operational statement, service promise, contact prompt, and visual is fictional or review-only until the acceptance requirement in this ledger is met. Nothing here is launch approval.
 
@@ -15,7 +15,7 @@ No business claims in this MVP are verified. Every product, brand, category rela
 | Company identity, proposition, service and distribution claims | Paradise business owner + legal reviewer | Signed company fact sheet, approved positioning and substantiation for every operational claim | Named owner approves English and Vietnamese copy; legal reviewer confirms claims and usage rights |
 | Products, categories and technical facts | Paradise product/data owner | Export from the production catalog or headless CMS, with source documents from each producer | IDs and locale routes resolve; required fields are complete; specifications match signed producer documents |
 | Brands, origins, stories and relationships | Paradise brand/partnership owner | Approved partner roster, contracts, brand kits and localized stories | Partner usage rights, naming, accent, imagery, origin and product relationships are approved in writing |
-| Photography, illustration, pack art, poster and 3D | Paradise creative owner + rights reviewer | Original production files, licenses, release records, alt text and crop guidance | Rights register is complete; assets pass visual, accessibility, performance and responsive QA |
+| Photography, illustration, pack art and decorative motion | Paradise creative owner + rights reviewer + digital owner | Original production files, licenses, release records, alt text, crop guidance and the approved lightweight motion specification | Rights register is complete; the server-rendered static Living Hero passes visual, accessibility, LCP and responsive QA; decorative Canvas 2D remains non-content and its reduced-motion and save-data gates pass |
 | Enquiry delivery and contact details | Paradise sales/operations owner + privacy owner | Approved offices, email/phone, retention policy, consent copy and CRM/email endpoint | End-to-end delivery succeeds; privacy review passes; monitored recipient and failure procedure are documented |
 | Canonical origin and route inventory | Paradise digital owner | Final production hostname, deployment configuration and redirect map | Crawl of the deployed site has one correct canonical per page, reciprocal alternates, no broken internal links and approved redirects |
 
@@ -96,7 +96,7 @@ The test suite recursively discovers every leaf below `ui.en` and `ui.vi`. In th
 | `ui.*.demoNoticeLabel` | Legal reviewer and UX content owner | Approved compact status label | Label remains understandable with the full notice and is locale-correct |
 | `ui.*.header.*` | Digital product owner and UX content owner | Approved information architecture and navigation labels | Every header control and destination is localized and link-tested |
 | `ui.*.footer.*` | Brand owner and legal reviewer | Approved footer tagline, navigation, legal and copyright copy | Brand and legal owners approve both locales and generated footer links pass |
-| `ui.*.hero.*` | Business owner, legal reviewer and marketing owner | Substantiated proposition, temperature scope, CTAs and accessible 3D state copy | Every claim has evidence and all visual and assistive states pass bilingual review |
+| `ui.*.hero.*` | Business owner, legal reviewer and marketing owner | Substantiated proposition, product metadata labels and CTAs for the server-rendered static Living Hero | Every claim has evidence; localized heading, description, actions, metadata, alt and caption pass bilingual and accessibility review |
 | `ui.*.home.*` | Marketing owner and business owner | Approved direct homepage headings, descriptions, labels and CTAs | Direct homepage copy is proofed in both locales and matches the approved page narrative |
 | `ui.*.home.operationalPillars.*.*` | Operations owner and legal reviewer | Current portfolio, handling, channel-support and coverage evidence | Each pillar title and description maps to approved operational evidence |
 | `ui.*.home.channels.*.*` | Channel sales owners and legal reviewer | Approved retail, HORECA, bakery and e-commerce offer sheets | Every channel label and statement is approved by its owner in both locales |
@@ -119,7 +119,7 @@ The ownership manifest above is the authoritative responsibility mapping. The su
 | `demoGlobalSettings` | “Paradise Fine Foods Demo” / “Thực Phẩm Paradise Bản Mẫu”, review-only foodservice description and fiction notice | Brand owner + legal reviewer | Approved company naming, site description and mandatory demo/production notices | Exact bilingual proof approval and metadata review |
 | `demoFeaturedContent.hero` | Pastry-demo eyebrow, “Ingredients shaped for thoughtful menus”, Vietnamese equivalent, design-review body, featured product relationship and image alt | Marketing owner + product owner | Approved campaign/editorial copy, featured record and licensed visual | Both locales approved; relationship exists in CMS; metadata and alt QA pass |
 | `demoFeaturedContent.editorial` | “Built around the professional table”, Vietnamese equivalent, stakeholder-review body and still-life alt | Marketing owner + creative owner | Approved editorial story and licensed visual | Bilingual editorial and rights approval |
-| `ui.*.hero` | Cold-chain eyebrow; “Exceptional ingredients. Delivered with confidence.” and Vietnamese counterpart; careful-handling/service proposition; 2–6 stage code; stage labels/statuses and CTAs | Business owner + legal + UX/content | Substantiated value proposition, confirmed temperature scope, approved CTA and accessibility copy | Claim evidence attached; bilingual content and accessible-state review pass |
+| `ui.*.hero` | Cold-chain eyebrow; “Exceptional ingredients. Delivered with confidence.” and Vietnamese counterpart; careful-handling/service proposition; product metadata labels and catalog/enquiry CTAs | Business owner + legal + UX/content | Substantiated value proposition, approved product-label vocabulary, CTA and accessibility copy | Claim evidence attached; server-rendered bilingual content, links, image alt and product caption pass review without requiring JavaScript |
 | `ui.*.home.operationalPillars` | Selected portfolio, cold-chain care, channel support and nationwide Vietnam delivery; all descriptions and Vietnamese counterparts | Operations owner + legal | Service-level evidence, actual coverage, handling process and approved translations | Each statement maps to current operational evidence; legal and operations sign off |
 | `ui.*.home` discovery/featured/service | Category, product, producer, cold-chain and service headings/descriptions; “2—6 °C / MONITORED” and Vietnamese counterpart | Marketing + operations + product owners | Approved campaign copy, monitoring evidence and catalog taxonomy | Bilingual proof approval; service temperature applies to displayed context |
 | `ui.*.home.channels` | Retail, HORECA, Bakery & Pastry and E-commerce names plus shelf-ready, replenishment, format, guidance, performance and online-handling statements | Channel sales owners + legal | Channel offer sheets and supporting service evidence | Each channel owner and legal reviewer approve both locale variants |
@@ -158,7 +158,7 @@ The review build self-hosts the authentic Paradise Fine Foods full logo rather t
 | `public/favicon.svg` | Unmodified Astro starter mark shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Approved Paradise monogram/favicon SVG, source artwork, author and usage rights | Default Astro artwork is absent; brand owner approves the mark; light/dark and small-size legibility QA pass |
 | `public/favicon.ico` | Unmodified Astro starter icon shipped as an unreferenced public fallback asset | Paradise brand/creative owner | Multi-size ICO export of the approved Paradise favicon and its source artwork | Default Astro artwork is absent; icon matches approved SVG and renders clearly at browser favicon sizes |
 
-The native Canvas 2D layer is decorative only and carries no product content. The digital owner must preserve the reduced-motion and save-data loading gates, the ten-shape maximum, the capped device-pixel ratio and complete static hero fallback when maintaining this enhancement.
+The decorative Canvas 2D layer carries no product content. The digital owner must preserve the reduced-motion and save-data loading gates, the ten-shape maximum, the capped device-pixel ratio and complete server-rendered static Living Hero when maintaining this enhancement.
 
 ## Demo origins, URLs and route inputs
 
@@ -181,7 +181,7 @@ SVG namespace URLs and Astro/documentation links are technical identifiers, not 
 - Replace the local default CMS data behind the stable query functions; do not bind page components to a CMS SDK.
 - Obtain named brand and legal approval for the self-hosted Paradise logo before production release.
 - Reconcile this ledger against the final CMS export so every stable record, string family, visual and URL has an owner and approval record.
-- Replace all three authored demo SVGs with approved, rights-cleared media; replace or remove the Astro starter `public/favicon.svg` and `public/favicon.ico` so no default artwork ships.
+- Replace each authored demo SVG with approved, rights-cleared media; replace or remove the Astro starter `public/favicon.svg` and `public/favicon.ico` so no default artwork ships.
 - Connect `submitEnquiry()` to reviewed delivery and remove success-only demo behavior after privacy/security acceptance.
 - Set the final site origin, crawl every generated route, and verify canonicals, locale alternates, internal links and redirects.
 - Obtain explicit English/Vietnamese business, legal, product, partnership, creative, privacy and accessibility approvals before launch.
