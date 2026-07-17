@@ -230,19 +230,19 @@ English and Vietnamese are equal product experiences. Translation cannot be trea
 
 ## 5. Visual Direction
 
-## 5.1 Creative concept: Cold-Chain Atelier
+## 5.1 Creative concept: Living Ingredients
 
 The visual system combines:
 
-- Milk-paper and clean white product stages
-- Cold-chain blue and carbon typography
-- Stainless rules, rails, and technical metadata
-- Cultured-butter warmth used as one controlled culinary accent
+- Rice-paper and clean white product fields
+- Paradise orange with blue, green and coral organic accents
+- Droplet/petal masks, curved boundaries and concise orange specification rules
+- Warm product imagery balanced by generous negative space
 - Restrained editorial serif headlines
-- A Vietnamese-designed sans-serif for body text and interface controls
+- Nunito for body text and interface controls
 - Large ingredient photography
 - Crisp pack shots
-- Thin rules and precise grids
+- Disciplined alignment for technical data, filters and forms
 - Subtle tactile textures used only in feature moments
 
 The experience should feel premium before a user notices any individual decorative feature. Refrigeration cues must remain abstract and architectural—precise rails, cool light, controlled reflections—not literal appliance imagery or laboratory sterility. Warm food imagery and human culinary craft keep the system appetizing.
@@ -1778,4 +1778,4 @@ If the answer is only one of those two, the design is incomplete.
 - Gourmet Partner Vietnam—culinary content-quality benchmark only: <https://gourmetpartner.vn/>
 - Savencia brochure—approved portfolio facts, product presentation evidence, and partner-brand material: `Savencia Brochure 2026_Vie(1).pdf`, especially pages 2–5
 
-No reference supplies a page composition to copy. Cold-Chain Atelier, the Paradise content model, and the requirements in this specification are the sole design source of truth.
+No reference supplies a page composition to copy. Living Ingredients, the Paradise content model, and the requirements in this specification are the sole design source of truth.
