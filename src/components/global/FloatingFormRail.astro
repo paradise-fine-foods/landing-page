@@ -23,9 +23,12 @@ const { locale, contactPath, copy, staticOnly = false } = Astro.props;
     data-open-label={copy.toggleOpen}
     data-close-label={copy.toggleClose}
   >
-    <span aria-hidden="true">+</span>
+    <span class="floating-form-rail__label" data-floating-rail-label aria-hidden="true">{copy.label}</span>
+    <span class="floating-form-rail__toggle-icon" aria-hidden="true">+</span>
   </button>
   <nav id="floating-rail-panel" class="floating-form-rail__panel" aria-label={copy.navigation}>
+    <span class="floating-form-rail__marker" aria-hidden="true"></span>
+    <div class="floating-form-rail__heading" data-floating-rail-title>{copy.panelTitle}</div>
     <a href={`${contactPath}?interest=retail`}>{copy.buy}</a>
     <a href={`${contactPath}?interest=other`}>{copy.sell}</a>
     <a href={contactPath}>{copy.contact}</a>
