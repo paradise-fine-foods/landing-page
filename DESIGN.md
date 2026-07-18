@@ -1,6 +1,6 @@
 # Paradise Fine Foods — Website Rebuild Design Specification
 
-**Status:** Living Ingredients implementation contract; final visual/browser acceptance pending<br>
+**Status:** Living Ingredients implementation contract; canonical-only localized routes<br>
 **Project:** Paradise Fine Foods corporate and product-catalog website<br>
 **Primary markets:** Vietnam, B2B food distribution, Retail, HORECA, Bakery/Pastry, E-commerce<br>
 **Languages:** English and Vietnamese<br>
@@ -1301,7 +1301,7 @@ Canonical routes use uniform structural segments in both locales:
 /vi/contact/
 ```
 
-Detail slugs remain localized where the content records provide them. Implement reciprocal `hreflang` relationships. Former `/vi/san-pham/`, `/vi/thuong-hieu/` and `/vi/lien-he/` paths are legacy redirect inputs, not canonical route structure; adapterless static demo output uses Astro redirect pages, while deployment-level HTTP `301`/`308` behavior remains a hosting decision.
+Detail slugs remain localized where the content records provide them. Implement reciprocal `hreflang` relationships. Former `/vi/san-pham/`, `/vi/thuong-hieu/` and `/vi/lien-he/` paths are retired and unserved; adapterless static output emits only the canonical localized routes listed above.
 
 ---
 
