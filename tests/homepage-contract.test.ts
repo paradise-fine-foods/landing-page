@@ -110,7 +110,7 @@ describe('reviewed homepage contracts', () => {
 
   test('utility labels are localized and navigation never uses the display face', () => {
     const files = [
-      'src/components/global/DemoNotice.astro',
+      'src/components/global/Header.astro',
       'src/components/sections/LivingHero.astro',
       'src/components/sections/ServiceProof.astro',
       'src/components/sections/FinalCta.astro',
