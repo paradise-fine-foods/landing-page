@@ -6,7 +6,6 @@ import { tmpdir } from 'node:os';
 import {
   assertCarousel,
   assertHomepageLogo,
-  assertRedirect,
   collectReachableJs,
   verifyBuiltLivingDesign,
 } from './verify-built-living-design';
@@ -32,7 +31,6 @@ const writeFixtureFile = (dist: string, path: string, content: string) => {
   writeFileSync(file, content);
 };
 const homepage = (locale: 'en' | 'vi', extras = '') => `<img src="/_astro/paradise-fine-foods-logo.fixture.webp">${locale === 'en' ? completeCarousel : viCarousel}<script type="module" src="/_astro/LivingHero.astro_astro_type_script_index_0_lang.fixture.js"></script>${extras}`;
-const redirectPage = (target: string) => `<meta http-equiv="refresh" content="0;url=${target}"><link rel="canonical" href="https://paradisefinefoods.com${target}"><a href="${target}">Go</a>`;
 const verifierFixture = (extras = '') => {
   const dist = fixtureDir();
   mkdirSync(join(dist, '_astro'));
@@ -43,13 +41,6 @@ const verifierFixture = (extras = '') => {
   for (const route of ['en/products', 'vi/products', 'en/brands', 'vi/brands', 'en/contact', 'vi/contact']) {
     writeFixtureFile(dist, `${route}/index.html`, '<!doctype html>');
   }
-  for (const [legacy, target] of [
-    ['vi/san-pham/index.html', '/vi/products/'],
-    ['vi/san-pham/bo-lat-len-men/index.html', '/vi/products/bo-lat-len-men/'],
-    ['vi/thuong-hieu/index.html', '/vi/brands/'],
-    ['vi/thuong-hieu/nha-sua-maison/index.html', '/vi/brands/nha-sua-maison/'],
-    ['vi/lien-he/index.html', '/vi/contact/'],
-  ]) writeFixtureFile(dist, legacy, redirectPage(target));
   return dist;
 };
 
@@ -82,15 +73,6 @@ describe('living build verifier semantics', () => {
       <div data-carousel-viewport tabindex="0"></div>`;
     expect(() => assertCarousel(detached, 'en')).toThrow();
     expect(() => assertCarousel(completeCarousel, 'en')).not.toThrow();
-  });
-
-  test('rejects external redirect targets while accepting the configured origin canonical', () => {
-    const valid = '<meta http-equiv="refresh" content="0;url=/vi/products"><link rel="canonical" href="https://paradisefinefoods.com/vi/products"><a href="/vi/products">Go</a>';
-    expect(() => assertRedirect(valid, '/vi/products/', 'legacy')).not.toThrow();
-    expect(() => assertRedirect(valid.replace('/vi/products\"', 'https://evil.test/vi/products\"'), '/vi/products/', 'legacy')).toThrow();
-    expect(() => assertRedirect(valid.replace('/vi/products\"', '/\\evil.test/vi/products\"'), '/vi/products/', 'legacy')).toThrow();
-    expect(() => assertRedirect(valid.replace('https://paradisefinefoods.com', 'https://evil.test'), '/vi/products/', 'legacy')).toThrow();
-    expect(() => assertRedirect(valid.replace('<a href="/vi/products"', '<a href="https://evil.test/vi/products"'), '/vi/products/', 'legacy')).toThrow();
   });
 
   test('rejects an over-budget unique homepage initial JavaScript graph', () => {

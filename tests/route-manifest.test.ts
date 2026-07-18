@@ -24,11 +24,14 @@ const addRoute = (dist: string, route: string) => {
 };
 
 describe('generated HTML route manifest', () => {
-  test('accepts exactly the closed canonical and legacy route set', () => {
+  test('accepts exactly the closed canonical route set', () => {
     const dist = fixture();
+    const routes = expectedGeneratedHtmlRoutes();
 
-    expect(expectedGeneratedHtmlRoutes()).toContain('index.html');
-    expect(expectedGeneratedHtmlRoutes()).toContain('404.html');
+    expect(routes).toHaveLength(32);
+    expect(routes).toContain('index.html');
+    expect(routes).toContain('404.html');
+    expect(routes.some((route) => /vi\/(?:san-pham|thuong-hieu|lien-he)(?:\/|$)/.test(route))).toBe(false);
     expect(() => assertExactRouteManifest(dist)).not.toThrow();
   });
 

@@ -110,32 +110,6 @@ export const assertCarousel = (html: string, locale: keyof typeof carouselCopy):
   }
 };
 
-export const assertRedirect = (html: string, target: string, legacy: string): void => {
-  const expected = normalizedPath(target);
-  const refreshTag = [...html.matchAll(/<meta\b[^>]*>/gi)]
-    .map(([tag]) => tag)
-    .find((tag) => attribute(tag, 'http-equiv')?.toLowerCase() === 'refresh');
-  const refreshTarget = refreshTag ? attribute(refreshTag, 'content')?.match(/^[^;]+;\s*url=(.+)$/i)?.[1] : undefined;
-  if (requireRootRelativeTarget(refreshTarget, `${legacy}: meta refresh`) !== expected) {
-    throw new Error(`${legacy}: meta-refresh target must be ${target}`);
-  }
-
-  const canonicalTag = [...html.matchAll(/<link\b[^>]*>/gi)]
-    .map(([tag]) => tag)
-    .find((tag) => attribute(tag, 'rel')?.toLowerCase() === 'canonical');
-  const canonicalValue = canonicalTag ? attribute(canonicalTag, 'href') : undefined;
-  if (!canonicalValue) throw new Error(`${legacy}: canonical target missing`);
-  const canonical = new URL(canonicalValue);
-  if (canonical.origin !== configuredOrigin || normalizedPath(canonical.pathname) !== expected || canonical.search || canonical.hash) {
-    throw new Error(`${legacy}: canonical target must use ${configuredOrigin}${target}`);
-  }
-
-  const bodyTarget = attribute(requireTag(html, /<a\b[^>]*>/i, `${legacy}: body link missing`), 'href');
-  if (requireRootRelativeTarget(bodyTarget, `${legacy}: body link`) !== expected) {
-    throw new Error(`${legacy}: body link target must be ${target}`);
-  }
-};
-
 const importedJs = (content: string, includeDynamic = true): string[] => {
   const imports = new Set<string>();
   for (const pattern of [
@@ -277,18 +251,6 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
     for (const body of initialJs.inlineBodies) criticalInitialInlineBodies.add(body);
     for (const file of collectHomepageAuthoredSvgs(dist, html)) authoredSvgFiles.add(file);
   }
-  for (const [legacy, target] of [
-    ['vi/san-pham/index.html', '/vi/products/'],
-    ['vi/san-pham/bo-lat-len-men/index.html', '/vi/products/bo-lat-len-men/'],
-    ['vi/thuong-hieu/index.html', '/vi/brands/'],
-    ['vi/thuong-hieu/nha-sua-maison/index.html', '/vi/brands/nha-sua-maison/'],
-    ['vi/lien-he/index.html', '/vi/contact/'],
-  ] as const) {
-    const redirectFile = join(dist, legacy);
-    if (!existsSync(redirectFile)) throw new Error(`${legacy}: redirect output missing`);
-    assertRedirect(readFileSync(redirectFile, 'utf8'), target, legacy);
-  }
-
   const criticalInitialGzip = gzipBytes(criticalInitialFiles) + [...criticalInitialInlineBodies].reduce(
     (total, body) => total + gzipSync(body).byteLength,
     0,

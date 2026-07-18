@@ -27,33 +27,13 @@ describe('localized routes', () => {
   });
 });
 
-test('configures adapterless demo redirects for legacy Vietnamese routes', () => {
+test('removes every legacy Vietnamese route', () => {
   const config = readFileSync(join(import.meta.dir, '..', 'astro.config.mjs'), 'utf8');
-  for (const [legacy, current] of [
-    ['/vi/san-pham', '/vi/products'],
-    ['/vi/thuong-hieu', '/vi/brands'],
-    ['/vi/lien-he', '/vi/contact'],
-  ]) {
-    expect(config).toContain(`'${legacy}': '${current}'`);
-  }
-  expect(config).not.toContain("'/vi/san-pham/[slug]'");
-  expect(config).not.toContain("'/vi/thuong-hieu/[slug]'");
-});
+  const legacyRoutes = ['/vi/san-pham', '/vi/thuong-hieu', '/vi/lien-he'];
 
-test('enumerates only valid Vietnamese detail slugs for permanent legacy redirects', () => {
-  for (const [file, query, destination] of [
-    ['san-pham/[slug].astro', "getProducts('vi')", "productDetailPath('vi', product)"],
-    ['thuong-hieu/[slug].astro', "getBrands('vi')", "brandDetailPath('vi', brand)"],
-  ]) {
-    const path = join(import.meta.dir, '..', 'src', 'pages', '[locale]', file);
-    expect(existsSync(path)).toBe(true);
-    if (!existsSync(path)) continue;
-    const route = readFileSync(path, 'utf8');
-    expect(route).toContain('satisfies GetStaticPaths');
-    expect(route).toContain(query);
-    expect(route).toContain("locale: 'vi'");
-    expect(route).toContain(destination);
-    expect(route).toContain("return Astro.redirect((Astro.props as { destination: string }).destination, 301)");
+  for (const legacyRoute of legacyRoutes) expect(config).not.toContain(legacyRoute);
+  for (const page of ['san-pham/[slug].astro', 'thuong-hieu/[slug].astro']) {
+    expect(existsSync(join(import.meta.dir, '..', 'src', 'pages', '[locale]', page))).toBe(false);
   }
 });
 

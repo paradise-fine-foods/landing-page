@@ -72,11 +72,9 @@ for (const decoration of ['drop', 'petal']) {
   }
 }
 
-const compatibilityRedirectPrefixes = ['vi/san-pham/', 'vi/thuong-hieu/', 'vi/lien-he/'];
 const canonicalLocalizedPages = generatedHtml
   .map((path) => ({ path, normalizedPath: path.replaceAll('\\', '/') }))
-  .filter(({ normalizedPath }) => /^(?:en|vi)\//.test(normalizedPath)
-    && !compatibilityRedirectPrefixes.some((prefix) => normalizedPath.startsWith(prefix)));
+  .filter(({ normalizedPath }) => /^(?:en|vi)\//.test(normalizedPath));
 if (canonicalLocalizedPages.length < 20) {
   throw new Error(`dist: expected at least 20 canonical localized pages, found ${canonicalLocalizedPages.length}`);
 }

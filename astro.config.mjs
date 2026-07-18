@@ -8,12 +8,6 @@ export default defineConfig({
   site: 'https://paradisefinefoods.com',
   output: 'static',
 
-  redirects: {
-    '/vi/san-pham': '/vi/products',
-    '/vi/thuong-hieu': '/vi/brands',
-    '/vi/lien-he': '/vi/contact',
-  },
-
   i18n: {
     defaultLocale,
     locales: [...locales],

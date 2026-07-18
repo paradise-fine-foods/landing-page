@@ -18,12 +18,6 @@ export function expectedGeneratedHtmlRoutes(): string[] {
     for (const brand of demoBrands) routes.add(htmlRoute(locale, 'brands', brand.slug[locale]));
   }
 
-  routes.add(htmlRoute('vi', 'san-pham'));
-  routes.add(htmlRoute('vi', 'thuong-hieu'));
-  routes.add(htmlRoute('vi', 'lien-he'));
-  for (const product of demoProducts) routes.add(htmlRoute('vi', 'san-pham', product.slug.vi));
-  for (const brand of demoBrands) routes.add(htmlRoute('vi', 'thuong-hieu', brand.slug.vi));
-
   return [...routes].sort();
 }
 
