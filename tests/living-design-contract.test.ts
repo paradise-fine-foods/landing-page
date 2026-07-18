@@ -262,7 +262,8 @@ describe('Living Ingredients identity', () => {
       '@keyframes floating-rail-enter',
       '@media (prefers-reduced-motion: reduce)',
       'min-block-size: 2.75rem',
-      'min-block-size: 3.25rem',
+      'block-size: 2.75rem',
+      'inline-size: 2.75rem',
       'inset-inline-end: 0',
       'drop-shadow(0 0.75rem 1.25rem',
     ]) expect(rail).toContain(token);

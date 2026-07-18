@@ -10,8 +10,8 @@ describe('floating form rail rendering contract', () => {
       'data-floating-rail',
       'data-floating-rail-toggle',
       'data-floating-rail-icon',
-      'lucide:plus',
-      'lucide:minus',
+      'lucide:chevron-left',
+      'lucide:chevron-right',
       'aria-controls="floating-rail-panel"',
       'aria-expanded="false"',
       'customerPath: string',
@@ -19,8 +19,9 @@ describe('floating form rail rendering contract', () => {
       'href={customerPath}',
       'href={supplierPath}',
       'flex-direction: row',
+      'align-items: flex-start',
       "[data-expanded='false'] {",
-      'translate: calc(100% - 3.25rem) 0',
+      'translate: calc(100% - 2.75rem) 0',
       'transition: translate 360ms cubic-bezier(0.22, 1, 0.36, 1)',
       'initializeFloatingRail',
       'staticOnly?: boolean',
@@ -28,10 +29,16 @@ describe('floating form rail rendering contract', () => {
       "[data-ready='true'] .floating-form-rail__toggle",
       ".floating-form-rail__panel[inert]",
       'drop-shadow',
-      'inline-size: min(17rem',
+      'inline-size: 2.75rem',
+      'block-size: 2.75rem',
+      'inline-size: min(17rem, calc(100vw - 2.75rem))',
       'min-block-size: 2.75rem',
     ]) expect(source).toContain(value);
 
+    expect(source).not.toContain('lucide:plus');
+    expect(source).not.toContain('lucide:minus');
+    expect(source).not.toContain('align-items: flex-end');
+    expect(source).not.toContain('3.25rem');
     expect(source).not.toContain("[data-expanded='false'] .floating-form-rail__panel");
     expect(source).not.toContain('animation: floating-rail-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both');
     expect(source).not.toContain('translate: 1rem 0');
