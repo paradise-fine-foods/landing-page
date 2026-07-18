@@ -25,14 +25,16 @@ describe('enquiry rendering contract', () => {
   });
 
   test('localized routes render the shared form through CMS queries', async () => {
-    const [english, vietnamese] = await Promise.all([
-      read('../src/pages/en/contact.astro'),
-      read('../src/pages/vi/contact.astro'),
+    const routes = await Promise.all([
+      read('../src/pages/[locale]/contact.astro'),
+      read('../src/pages/[locale]/contact/[mode].astro'),
     ]);
-    for (const source of [english, vietnamese]) {
+    for (const source of routes) {
       expect(source).toContain('getProducts');
       expect(source).toContain('<EnquiryForm');
       expect(source).not.toContain('demo-data');
     }
+    expect(routes[1]).toContain("['customer', 'supplier']");
+    expect(routes[1]).toContain('params: { locale, mode }');
   });
 });

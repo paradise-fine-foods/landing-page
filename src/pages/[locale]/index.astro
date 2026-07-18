@@ -10,13 +10,15 @@ import ChannelPathways from '../../components/sections/ChannelPathways.astro';
 import FinalCta from '../../components/sections/FinalCta.astro';
 import PartnerStrip from '../../components/sections/PartnerStrip.astro';
 import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getProducts } from '../../lib/cms/queries';
-import { counterpartPath, localizedPath } from '../../lib/i18n/routes';
+import { localizedPath } from '../../lib/i18n/routes';
+import { counterpartLocale, getLocaleStaticPaths } from '../../lib/i18n/static-paths';
 import { ui } from '../../lib/i18n/ui';
 
-const locale = 'en';
-const pathname = '/en/';
-const routePairs = [{ en: '/en/', vi: '/vi/' }] as const;
-const alternatePath = counterpartPath(pathname, 'vi', routePairs);
+export const getStaticPaths = getLocaleStaticPaths;
+
+const { locale } = Astro.props;
+const pathname = localizedPath(locale, 'home');
+const alternatePath = localizedPath(counterpartLocale(locale), 'home');
 const [settings, featured, categories, products, brands] = await Promise.all([
   getGlobalSettings(locale), getFeaturedContent(locale), getCategories(locale),
   getProducts(locale, {}), getBrands(locale),
@@ -38,7 +40,7 @@ const channels = [
 ];
 ---
 
-<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} demoNotice={settings.demoNotice} image={featured.hero.image.src} {preloadImages}>
+<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} image={featured.hero.image.src} {preloadImages}>
   <LivingHero copy={copy.hero} product={featured.hero.product} {productsPath} {contactPath} />
   <CredibilityStrip title={copy.home.credibilityTitle} pillars={copy.home.operationalPillars} />
   <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {categoryCounts} productLabel={copy.home.categoryProductLabel} {productsPath} />

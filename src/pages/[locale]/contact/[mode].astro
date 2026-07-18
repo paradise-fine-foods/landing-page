@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths, InferGetStaticParamsType, InferGetStaticPropsType } from 'astro';
+import EnquiryForm from '../../../components/forms/EnquiryForm.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { getEnquiryModeCopy } from '../../../lib/enquiry/modes';
+import { getGlobalSettings, getProducts } from '../../../lib/cms/queries';
+import { localizedPath } from '../../../lib/i18n/routes';
+import { counterpartLocale, getLocaleStaticPaths } from '../../../lib/i18n/static-paths';
+import { ui } from '../../../lib/i18n/ui';
+
+export const getStaticPaths = (() => {
+  const modes = ['customer', 'supplier'] as const;
+  return getLocaleStaticPaths().flatMap(({ props: { locale } }) =>
+    modes.map((mode) => ({
+      params: { locale, mode },
+      props: { locale, mode },
+    })));
+}) satisfies GetStaticPaths;
+
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { locale, mode } = Astro.props as Props;
+const localeParam: Params['locale'] = Astro.params.locale;
+const modeParam: Params['mode'] = Astro.params.mode;
+void localeParam;
+void modeParam;
+const routeKey = mode === 'customer' ? 'customerContact' : 'supplierContact';
+const pathname = localizedPath(locale, routeKey);
+const alternatePath = localizedPath(counterpartLocale(locale), routeKey);
+const [settings, products] = await Promise.all([getGlobalSettings(locale), getProducts(locale)]);
+const copy = ui[locale];
+const modeCopy = getEnquiryModeCopy(locale, mode);
+---
+
+<SiteLayout {locale} title={`${modeCopy.eyebrow} | ${settings.siteName}`} description={modeCopy.description} {pathname} {alternatePath} siteName={settings.siteName}>
+  <div class="contact-page container section-space">
+    <Breadcrumbs label={copy.header.contact} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.contact, href: localizedPath(locale, 'contact') }, { label: modeCopy.eyebrow }]} />
+    <EnquiryForm {locale} {products} {copy} {mode} />
+  </div>
+</SiteLayout>

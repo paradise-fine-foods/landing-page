@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { brandDetailPath } from '../../../lib/brands/routes';
+import { getBrands } from '../../../lib/cms/queries';
+
+export const getStaticPaths = (async () => {
+  const brands = await getBrands('vi');
+  return brands.map((brand) => ({
+    params: { locale: 'vi', slug: brand.slug },
+    props: { destination: brandDetailPath('vi', brand) },
+  }));
+}) satisfies GetStaticPaths;
+
+return Astro.redirect((Astro.props as { destination: string }).destination, 301);
+---

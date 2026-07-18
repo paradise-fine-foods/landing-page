@@ -149,13 +149,11 @@ describe('Living Ingredients identity', () => {
   });
 
   test('keeps homepage product, category, brand, and channel content CMS-derived', () => {
-    for (const locale of ['en', 'vi']) {
-      const page = source(`src/pages/${locale}/index.astro`);
-      expect(page).toContain('products.filter((product) => product.featured)');
-      expect(page).toContain('{categories}');
-      expect(page).toContain('{remainingBrands}');
-      expect(page).toContain('{channels}');
-    }
+    const page = source('src/pages/[locale]/index.astro');
+    expect(page).toContain('products.filter((product) => product.featured)');
+    expect(page).toContain('{categories}');
+    expect(page).toContain('{remainingBrands}');
+    expect(page).toContain('{channels}');
   });
 
   test('carries organic presentation through every inner-page family', () => {
@@ -187,10 +185,8 @@ describe('Living Ingredients identity', () => {
       'src/components/brands/BrandDetail.astro',
       'src/components/forms/EnquiryForm.astro',
       'src/components/global/Breadcrumbs.astro',
-      'src/pages/en/products/index.astro',
-      'src/pages/vi/products/index.astro',
-      'src/pages/en/brands/index.astro',
-      'src/pages/vi/brands/index.astro',
+      'src/pages/[locale]/products/index.astro',
+      'src/pages/[locale]/brands/index.astro',
       'src/pages/404.astro',
     ]) {
       expect(source(file)).not.toMatch(/color-cold-chain-blue|color-stainless/);
@@ -276,10 +272,8 @@ describe('Living Ingredients identity', () => {
 
   test('removes empty catalog and brand intro decorations from every locale page', () => {
     for (const file of [
-      'src/pages/en/products/index.astro',
-      'src/pages/vi/products/index.astro',
-      'src/pages/en/brands/index.astro',
-      'src/pages/vi/brands/index.astro',
+      'src/pages/[locale]/products/index.astro',
+      'src/pages/[locale]/brands/index.astro',
     ]) {
       const page = source(file);
       expect(page).not.toContain('catalog-page__organic-drop');

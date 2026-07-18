@@ -99,15 +99,13 @@ describe('reviewed homepage contracts', () => {
   });
 
   test('pages create described channel destinations and count categories from CMS products', () => {
-    for (const locale of ['en', 'vi']) {
-      const page = source(`src/pages/${locale}/index.astro`);
-      for (const interest of ['retail', 'horeca', 'bakery', 'ecommerce']) {
-        expect(page).toContain(`interest=${interest}`);
-      }
-      expect(page).toContain('categoryCounts');
-      expect(page).toContain('product.categories.some');
-      expect(page).toContain('product.brand.id === selectedBrand.id');
+    const page = source('src/pages/[locale]/index.astro');
+    for (const interest of ['retail', 'horeca', 'bakery', 'ecommerce']) {
+      expect(page).toContain(`interest=${interest}`);
     }
+    expect(page).toContain('categoryCounts');
+    expect(page).toContain('product.categories.some');
+    expect(page).toContain('product.brand.id === selectedBrand.id');
   });
 
   test('utility labels are localized and navigation never uses the display face', () => {

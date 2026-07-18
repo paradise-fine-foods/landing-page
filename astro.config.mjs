@@ -10,9 +10,7 @@ export default defineConfig({
 
   redirects: {
     '/vi/san-pham': '/vi/products',
-    '/vi/san-pham/[slug]': '/vi/products/[slug]',
     '/vi/thuong-hieu': '/vi/brands',
-    '/vi/thuong-hieu/[slug]': '/vi/brands/[slug]',
     '/vi/lien-he': '/vi/contact',
   },
 

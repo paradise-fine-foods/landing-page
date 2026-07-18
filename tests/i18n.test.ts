@@ -1,7 +1,7 @@
 /// <reference types="bun" />
 
 import { describe, expect, test } from 'bun:test';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ui } from '../src/lib/i18n/ui';
 import { counterpartPath, localizedPath } from '../src/lib/i18n/routes';
@@ -31,12 +31,29 @@ test('configures adapterless demo redirects for legacy Vietnamese routes', () =>
   const config = readFileSync(join(import.meta.dir, '..', 'astro.config.mjs'), 'utf8');
   for (const [legacy, current] of [
     ['/vi/san-pham', '/vi/products'],
-    ['/vi/san-pham/[slug]', '/vi/products/[slug]'],
     ['/vi/thuong-hieu', '/vi/brands'],
-    ['/vi/thuong-hieu/[slug]', '/vi/brands/[slug]'],
     ['/vi/lien-he', '/vi/contact'],
   ]) {
     expect(config).toContain(`'${legacy}': '${current}'`);
+  }
+  expect(config).not.toContain("'/vi/san-pham/[slug]'");
+  expect(config).not.toContain("'/vi/thuong-hieu/[slug]'");
+});
+
+test('enumerates only valid Vietnamese detail slugs for permanent legacy redirects', () => {
+  for (const [file, query, destination] of [
+    ['san-pham/[slug].astro', "getProducts('vi')", "productDetailPath('vi', product)"],
+    ['thuong-hieu/[slug].astro', "getBrands('vi')", "brandDetailPath('vi', brand)"],
+  ]) {
+    const path = join(import.meta.dir, '..', 'src', 'pages', '[locale]', file);
+    expect(existsSync(path)).toBe(true);
+    if (!existsSync(path)) continue;
+    const route = readFileSync(path, 'utf8');
+    expect(route).toContain('satisfies GetStaticPaths');
+    expect(route).toContain(query);
+    expect(route).toContain("locale: 'vi'");
+    expect(route).toContain(destination);
+    expect(route).toContain("return Astro.redirect((Astro.props as { destination: string }).destination, 301)");
   }
 });
 
@@ -50,6 +67,26 @@ test('provides string-valued static paths with matching locale props', () => {
 test('maps each locale to its reciprocal counterpart', () => {
   expect(counterpartLocale('en')).toBe('vi');
   expect(counterpartLocale('vi')).toBe('en');
+});
+
+test('consolidates every localized page shape under one static locale tree', () => {
+  const localizedPages = [
+    'index.astro',
+    'products/index.astro',
+    'products/[slug].astro',
+    'brands/index.astro',
+    'brands/[slug].astro',
+    'contact.astro',
+    'contact/[mode].astro',
+  ];
+
+  for (const page of localizedPages) {
+    const path = join(import.meta.dir, '..', 'src', 'pages', '[locale]', page);
+    expect(existsSync(path)).toBe(true);
+    if (existsSync(path)) expect(readFileSync(path, 'utf8')).toContain('getStaticPaths');
+    expect(existsSync(join(import.meta.dir, '..', 'src', 'pages', 'en', page))).toBe(false);
+    expect(existsSync(join(import.meta.dir, '..', 'src', 'pages', 'vi', page))).toBe(false);
+  }
 });
 
 test('imports canonical locale configuration values', () => {

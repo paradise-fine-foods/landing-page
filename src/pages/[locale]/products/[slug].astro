@@ -1,0 +1,65 @@
+---
+import type { GetStaticPaths, InferGetStaticParamsType, InferGetStaticPropsType } from 'astro';
+import ProductDetail from '../../../components/catalog/ProductDetail.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { buildProductRouteMaps, findProductRoute, productDetailPath } from '../../../lib/catalog/routes';
+import { getGlobalSettings, getProducts } from '../../../lib/cms/queries';
+import { localizedPath } from '../../../lib/i18n/routes';
+import { counterpartLocale, getLocaleStaticPaths } from '../../../lib/i18n/static-paths';
+import { ui } from '../../../lib/i18n/ui';
+
+export const getStaticPaths = (async () => {
+  const [englishProducts, vietnameseProducts] = await Promise.all([
+    getProducts('en'),
+    getProducts('vi'),
+  ]);
+  const routeMaps = buildProductRouteMaps(englishProducts, vietnameseProducts);
+  const productsByLocale = { en: englishProducts, vi: vietnameseProducts };
+
+  return getLocaleStaticPaths().flatMap(({ props: { locale } }) => {
+    const products = productsByLocale[locale];
+    const alternateLocale = counterpartLocale(locale);
+
+    return products.map((product) => {
+      const pathname = productDetailPath(locale, product);
+      const relatedProducts = products
+        .filter((candidate) => candidate.id !== product.id && (
+          candidate.brand.id === product.brand.id
+          || candidate.categories.some(({ id }) => product.categories.some((category) => category.id === id))
+        ))
+        .slice(0, 3);
+
+      return {
+        params: { locale, slug: product.slug },
+        props: {
+          locale,
+          product,
+          relatedProducts,
+          pathname,
+          alternatePath: findProductRoute(routeMaps, pathname, alternateLocale) ?? localizedPath(alternateLocale, 'products'),
+        },
+      };
+    });
+  });
+}) satisfies GetStaticPaths;
+
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { locale, product, relatedProducts, pathname, alternatePath } = Astro.props as Props;
+const localeParam: Params['locale'] = Astro.params.locale;
+const slug: Params['slug'] = Astro.params.slug;
+void localeParam;
+void slug;
+const settings = await getGlobalSettings(locale);
+const copy = ui[locale];
+---
+
+<SiteLayout {locale} title={`${product.name} | ${settings.siteName}`} description={product.description} {pathname} {alternatePath} siteName={settings.siteName} image={product.image.src}>
+  <div class="product-page container section-space">
+    <Breadcrumbs label={copy.product.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.products, href: localizedPath(locale, 'products') }, { label: product.name }]} />
+    <ProductDetail {product} {relatedProducts} {locale} {copy} enquiryPath={localizedPath(locale, 'customerContact')} />
+  </div>
+</SiteLayout>
+
+<style>.product-page { min-inline-size: 0; }</style>

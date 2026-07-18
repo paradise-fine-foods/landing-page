@@ -25,7 +25,7 @@ describe('Paradise branding assets', () => {
     const footer = await read('../src/components/global/Footer.astro');
     const notFound = await read('../src/pages/404.astro');
     const partnerStrip = await read('../src/components/sections/PartnerStrip.astro');
-    const home = await read('../src/pages/en/index.astro');
+    const home = await read('../src/pages/[locale]/index.astro');
 
     for (const source of [layout, header, footer, notFound]) {
       expect(source).toContain('paradise-fine-foods-logo.png');

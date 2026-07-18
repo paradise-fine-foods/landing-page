@@ -79,31 +79,27 @@ describe('localized brand routes', () => {
 
   test('keeps routes behind typed CMS queries and normalized static props', () => {
     const routes = [
-      'src/pages/en/brands/index.astro',
-      'src/pages/en/brands/[slug].astro',
-      'src/pages/vi/brands/index.astro',
-      'src/pages/vi/brands/[slug].astro',
+      'src/pages/[locale]/brands/index.astro',
+      'src/pages/[locale]/brands/[slug].astro',
     ].map(source);
 
     for (const route of routes) {
       expect(route).toContain('lib/cms/queries');
       expect(route).not.toMatch(/demo-data|demoProducts|demoCategories|demoBrands/);
     }
-    for (const detailRoute of [routes[1], routes[3]]) {
-      expect(detailRoute).toContain('satisfies GetStaticPaths');
-      expect(detailRoute).toContain('InferGetStaticParamsType');
-      expect(detailRoute).toContain('InferGetStaticPropsType');
-      expect(detailRoute).toContain('params: { slug: brand.slug }');
-    }
+    const detailRoute = routes[1]!;
+    expect(detailRoute).toContain('satisfies GetStaticPaths');
+    expect(detailRoute).toContain('InferGetStaticParamsType');
+    expect(detailRoute).toContain('InferGetStaticPropsType');
+    expect(detailRoute).toContain('params: { locale, slug: brand.slug }');
+    expect(detailRoute).toContain('buildBrandRouteMaps(englishBrands, vietnameseBrands)');
   });
 
   test('centralizes locale copy and preserves accessible detail structure', () => {
     const detail = source('src/components/brands/BrandDetail.astro');
     const routeSources = [
-      source('src/pages/en/brands/index.astro'),
-      source('src/pages/en/brands/[slug].astro'),
-      source('src/pages/vi/brands/index.astro'),
-      source('src/pages/vi/brands/[slug].astro'),
+      source('src/pages/[locale]/brands/index.astro'),
+      source('src/pages/[locale]/brands/[slug].astro'),
     ].join('\n');
 
     expect(detail).toContain('copy.brand.demoNotice');
@@ -111,7 +107,7 @@ describe('localized brand routes', () => {
     expect(detail).toContain('<h1>{brand.name}</h1>');
     expect(detail).toContain('accentClasses[brand.accent]');
     expect(detail).not.toMatch(/style=\{`[^`]*brand\.accent|--brand-accent:\s*\$\{/);
-    expect(routeSources.match(/headingLevel="h2"/g)).toHaveLength(2);
+    expect(routeSources.match(/headingLevel="h2"/g)).toHaveLength(1);
     expect(routeSources).not.toMatch(/locale\s*===|locale\s*\?/);
   });
 });

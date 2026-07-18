@@ -50,7 +50,7 @@ describe('localized product routes', () => {
     const catalogSource = [
       source('src/components/catalog/CatalogFilters.astro'),
       source('src/components/catalog/ProductGrid.astro'),
-      source('src/pages/en/products/index.astro'),
+      source('src/pages/[locale]/products/index.astro'),
     ].join('\n');
 
     for (const attribute of [
@@ -72,21 +72,19 @@ describe('localized product routes', () => {
 
   test('uses typed static paths and only the vendor-neutral query boundary', () => {
     const routeFiles = [
-      'src/pages/en/products/index.astro',
-      'src/pages/en/products/[slug].astro',
-      'src/pages/vi/products/index.astro',
-      'src/pages/vi/products/[slug].astro',
+      'src/pages/[locale]/products/index.astro',
+      'src/pages/[locale]/products/[slug].astro',
     ].map(source);
 
     for (const route of routeFiles) {
       expect(route).toContain('lib/cms/queries');
       expect(route).not.toMatch(/demo-data|demoProducts|demoCategories|demoBrands/);
     }
-    for (const detailRoute of [routeFiles[1], routeFiles[3]]) {
-      expect(detailRoute).toContain('satisfies GetStaticPaths');
-      expect(detailRoute).toContain('InferGetStaticParamsType');
-      expect(detailRoute).toContain('InferGetStaticPropsType');
-      expect(detailRoute).toContain("params: { slug: product.slug }");
-    }
+    const detailRoute = routeFiles[1]!;
+    expect(detailRoute).toContain('satisfies GetStaticPaths');
+    expect(detailRoute).toContain('InferGetStaticParamsType');
+    expect(detailRoute).toContain('InferGetStaticPropsType');
+    expect(detailRoute).toContain('params: { locale, slug: product.slug }');
+    expect(detailRoute).toContain('buildProductRouteMaps(englishProducts, vietnameseProducts)');
   });
 });
