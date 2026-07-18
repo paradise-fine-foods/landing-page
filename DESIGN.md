@@ -1,6 +1,6 @@
 # Paradise Fine Foods — Website Rebuild Design Specification
 
-**Status:** Living Ingredients implementation contract; canonical-only localized routes<br>
+**Status:** Living Ingredients implementation contract; final visual/browser acceptance pending<br>
 **Project:** Paradise Fine Foods corporate and product-catalog website<br>
 **Primary markets:** Vietnam, B2B food distribution, Retail, HORECA, Bakery/Pastry, E-commerce<br>
 **Languages:** English and Vietnamese<br>
