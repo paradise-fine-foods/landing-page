@@ -1,6 +1,4 @@
-import { isLocale, type Locale } from './types';
-
-const defaultLocale: Locale = 'en';
+import { defaultLocale, isLocale, type Locale } from './types';
 
 export function preferredLocale(acceptLanguage: string | null): Locale {
   if (!acceptLanguage) return defaultLocale;
