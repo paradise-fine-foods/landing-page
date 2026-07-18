@@ -1,4 +1,5 @@
 ---
+import type { InferGetStaticPropsType } from 'astro';
 import CatalogFilters from '../../../components/catalog/CatalogFilters.astro';
 import ProductGrid from '../../../components/catalog/ProductGrid.astro';
 import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
@@ -10,7 +11,8 @@ import { ui } from '../../../lib/i18n/ui';
 
 export const getStaticPaths = getLocaleStaticPaths;
 
-const { locale } = Astro.props;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { locale } = Astro.props as Props;
 const pathname = localizedPath(locale, 'products');
 const alternatePath = localizedPath(counterpartLocale(locale), 'products');
 const [settings, products, categories, brands] = await Promise.all([

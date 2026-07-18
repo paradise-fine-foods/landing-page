@@ -89,6 +89,21 @@ test('consolidates every localized page shape under one static locale tree', () 
   }
 });
 
+test('infers trusted locale props on every locale-only static page', () => {
+  for (const page of [
+    'index.astro',
+    'products/index.astro',
+    'brands/index.astro',
+    'contact.astro',
+  ]) {
+    const path = join(import.meta.dir, '..', 'src', 'pages', '[locale]', page);
+    const route = readFileSync(path, 'utf8');
+    expect(route).toContain("import type { InferGetStaticPropsType } from 'astro'");
+    expect(route).toContain('type Props = InferGetStaticPropsType<typeof getStaticPaths>');
+    expect(route).toContain('Astro.props as Props');
+  }
+});
+
 test('imports canonical locale configuration values', () => {
   const config = readFileSync(join(import.meta.dir, '..', 'astro.config.mjs'), 'utf8');
 

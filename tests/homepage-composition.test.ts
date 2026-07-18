@@ -17,7 +17,7 @@ describe('homepage composition', () => {
   test('site layout composes the shared shell around one main landmark', () => {
     const layout = source('src/layouts/SiteLayout.astro');
 
-    expect(layout).toContain("import DemoNotice from '../components/global/DemoNotice.astro'");
+    expect(layout).not.toMatch(/DemoNotice|demoNotice/);
     expect(layout).toContain("import Header from '../components/global/Header.astro'");
     expect(layout).toContain("import Footer from '../components/global/Footer.astro'");
     expect(layout).toContain('<main id="main-content">');
