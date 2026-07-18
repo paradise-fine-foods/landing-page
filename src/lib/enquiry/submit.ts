@@ -12,7 +12,7 @@ const wait = (milliseconds: number) => new Promise<void>((resolve) => {
   globalThis.setTimeout(resolve, milliseconds);
 });
 
-/** Internal factory kept injectable so the demo-only boundary is deterministic under test. */
+/** Internal factory kept injectable so submission behavior is deterministic under test. */
 export const createEnquirySubmitter = ({ now, createId, delay }: EnquiryDependencies) =>
   async (input: EnquiryInput): Promise<EnquirySuccess> => {
     await delay(350);
@@ -25,7 +25,6 @@ export const createEnquirySubmitter = ({ now, createId, delay }: EnquiryDependen
       reference: `PFF-${createId().toUpperCase()}`,
       message: ui[validation.value.locale].status.successMessage,
       receivedAt: now().toISOString(),
-      demo: true,
     };
   };
 

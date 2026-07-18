@@ -4,6 +4,13 @@ import { readFile } from 'node:fs/promises';
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
 describe('Paradise branding assets', () => {
+  test('uses Astro passthrough images for the Cloudflare wrapper', async () => {
+    const config = await read('../astro.config.mjs');
+
+    expect(config).toContain("import { defineConfig, passthroughImageService } from 'astro/config'");
+    expect(config).toContain('service: passthroughImageService()');
+  });
+
   test('keeps local provenance-backed partner assets in the typed CMS boundary', async () => {
     const types = await read('../src/lib/cms/types.ts');
     const data = await read('../src/lib/cms/demo-data.ts');

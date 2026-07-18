@@ -16,9 +16,9 @@ const required = [
   'id="not-found-en"',
   'This page could not be found</h1>',
   'Không tìm thấy trang này',
-  'rel="canonical" href="https://demo.paradisefinefoods.com/404.html"',
+  'rel="canonical" href="https://paradisefinefoods.com/404.html"',
   'name="robots" content="noindex"',
-  '<title>Page not found | Paradise Fine Foods Demo</title>',
+  '<title>Page not found | Paradise Fine Foods</title>',
   'href="/en/"',
   'href="/en/products/"',
   'href="/vi/"',
@@ -34,7 +34,7 @@ for (const value of required) {
 }
 
 if (/<title>[^<]*[À-ỹĐđ]/u.test(html)) throw new Error(`${file}: title must remain monolingual English`);
-for (const phrase of ['Chuyển đến nội dung', 'Bản duyệt khách hàng', 'Nội dung hư cấu chỉ dùng để duyệt']) {
+for (const phrase of ['Chuyển đến nội dung', 'Tiếng Việt', 'Nguyên liệu tuyển chọn']) {
   if (!new RegExp(`<span lang="vi"[^>]*>${phrase}</span>`).test(html)) {
     throw new Error(`${file}: missing Vietnamese language annotation for ${phrase}`);
   }
@@ -85,6 +85,9 @@ for (const { path, normalizedPath } of canonicalLocalizedPages) {
   const localizedFile = `dist/${path}`;
   const localizedHtml = await Bun.file(localizedFile).text();
   const locale = normalizedPath.startsWith('en/') ? 'en' : 'vi';
+  if (localizedHtml.includes('/_image?')) {
+    throw new Error(`${localizedFile}: contains a runtime image transform URL`);
+  }
   for (const marker of [
     'data-floating-rail',
     'aria-controls="floating-rail-panel"',

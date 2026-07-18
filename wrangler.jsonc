@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "compatibility_date": "2026-07-18",
+  "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
+  "name": "finefoods",
+  "main": "./src/worker.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+  },
+  "observability": {
+    "enabled": true,
+  },
+}

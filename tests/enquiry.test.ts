@@ -66,8 +66,8 @@ describe('validateEnquiry', () => {
   });
 });
 
-describe('demo enquiry submission', () => {
-  test.each(['en', 'vi'] as const)('returns deterministic demo success for %s', async (locale) => {
+describe('enquiry submission', () => {
+  test.each(['en', 'vi'] as const)('returns deterministic success for %s', async (locale) => {
     const delays: number[] = [];
     const submit = createEnquirySubmitter({
       now: () => new Date('2026-07-16T08:30:00.000Z'),
@@ -81,10 +81,9 @@ describe('demo enquiry submission', () => {
       ok: true,
       reference: 'PFF-FIXED-ID',
       message: locale === 'en'
-        ? 'Your demo enquiry has been recorded for this review session.'
-        : 'Yêu cầu demo đã được ghi nhận cho phiên duyệt này.',
+        ? 'Your enquiry has been received.'
+        : 'Yêu cầu của bạn đã được tiếp nhận.',
       receivedAt: '2026-07-16T08:30:00.000Z',
-      demo: true,
     });
   });
 

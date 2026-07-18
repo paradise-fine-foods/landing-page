@@ -102,7 +102,7 @@ describe('localized brand routes', () => {
       source('src/pages/[locale]/brands/[slug].astro'),
     ].join('\n');
 
-    expect(detail).toContain('copy.brand.demoNotice');
+    expect(detail).not.toMatch(/demoNotice|brand-detail__notice/);
     expect(detail).toContain('headingLevel="h3"');
     expect(detail).toContain('<h1>{brand.name}</h1>');
     expect(detail).toContain('accentClasses[brand.accent]');

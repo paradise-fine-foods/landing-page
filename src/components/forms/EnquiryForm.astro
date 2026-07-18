@@ -28,8 +28,6 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
 
   <div class="enquiry__panel">
     <p id="enquiry-required-note" class="enquiry__required">{requiredDescription}</p>
-    <p class="enquiry__demo-note">{formCopy.demoDelivery}</p>
-
     <form class="enquiry-form" data-enquiry-form novalidate>
       <div class="field">
         <label for="enquiry-name">{formCopy.name} <span aria-hidden="true">*</span></label>
@@ -214,8 +212,8 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
   .enquiry__description { font-size: var(--text-lg); max-inline-size: 34rem; }
   .enquiry__organic-mark { background: var(--color-mist-blue); block-size: clamp(7rem, 16vw, 12rem); border-radius: var(--shape-drop); inline-size: clamp(7rem, 16vw, 12rem); }
   .enquiry__panel { background: var(--color-paper-white); border: 0; border-radius: 2.5rem 0 2.5rem 0; box-shadow: 0 1.5rem 4rem color-mix(in srgb, var(--color-deep-herb) 8%, transparent); padding: clamp(var(--space-5), 5vw, var(--space-8)); }
-  .enquiry__required, .enquiry__demo-note, .enquiry__noscript { font-size: var(--text-sm); }
-  .enquiry__demo-note, .enquiry__noscript { border-inline-start: 0.25rem solid var(--color-paradise-green); margin-block: var(--space-4) var(--space-6); padding: var(--space-3) var(--space-4); }
+  .enquiry__required, .enquiry__noscript { font-size: var(--text-sm); }
+  .enquiry__noscript { border-inline-start: 0.25rem solid var(--color-paradise-green); margin-block: var(--space-4) var(--space-6); padding: var(--space-3) var(--space-4); }
   .enquiry-form { display: grid; gap: var(--space-5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .field { min-inline-size: 0; }
   .field--wide, .enquiry-form__actions { grid-column: 1 / -1; }

@@ -3,7 +3,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { gzipSync } from 'node:zlib';
 
 const root = join(import.meta.dir, '..');
-const configuredOrigin = 'https://demo.paradisefinefoods.com';
+const configuredOrigin = 'https://paradisefinefoods.com';
 const forbidden = /(?:three(?:\.module)?|webgl|\.glb|model-src|product-stage)/i;
 const canonicalRoutes = [
   '/en/products/',
@@ -279,7 +279,7 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
   }
   for (const [legacy, target] of [
     ['vi/san-pham/index.html', '/vi/products/'],
-    ['vi/san-pham/bo-lat-mau/index.html', '/vi/products/bo-lat-mau/'],
+    ['vi/san-pham/bo-lat-len-men/index.html', '/vi/products/bo-lat-len-men/'],
     ['vi/thuong-hieu/index.html', '/vi/brands/'],
     ['vi/thuong-hieu/nha-sua-maison/index.html', '/vi/brands/nha-sua-maison/'],
     ['vi/lien-he/index.html', '/vi/contact/'],

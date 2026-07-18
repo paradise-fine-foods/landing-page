@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title description">
   <title id="title">Abstract ingredient package</title>
-  <desc id="description">An original fictional cream package surrounded by colorful petal and droplet shapes.</desc>
+  <desc id="description">A cream package surrounded by colorful petal and droplet shapes.</desc>
   <rect width="1600" height="1100" fill="#e8f6fa"/>
   <path d="M0 870C250 750 393 969 662 875s430-124 938 36v189H0Z" fill="#94c11f" opacity=".42"/>
   <path d="M80 150C284 14 486 64 552 232 403 338 192 333 80 150Z" fill="#0796d2" opacity=".88"/>

@@ -47,7 +47,7 @@ for (const [label, path] of [
   ['English homepage', 'en'],
   ['Vietnamese homepage', 'vi'],
   ['English detail', 'en/products/cultured-butter-sheet'],
-  ['Vietnamese detail', 'vi/products/bo-lat-mau'],
+  ['Vietnamese detail', 'vi/products/bo-lat-len-men'],
 ] as const) {
   const cards = productCards(built(path));
   assert.ok(cards.length > 0, `${label} must contain product cards`);

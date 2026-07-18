@@ -31,7 +31,8 @@ describe('floating form rail rendering contract', () => {
       'drop-shadow',
       'inline-size: 2.75rem',
       'block-size: 2.75rem',
-      'inline-size: min(17rem, calc(100vw - 2.75rem))',
+      'inline-size: min(14rem, calc(100vw - 2.75rem))',
+      'inline-size: min(16.75rem, calc(100vw - 2rem))',
       'min-block-size: 2.75rem',
     ]) expect(source).toContain(value);
 
@@ -39,6 +40,8 @@ describe('floating form rail rendering contract', () => {
     expect(source).not.toContain('lucide:minus');
     expect(source).not.toContain('align-items: flex-end');
     expect(source).not.toContain('3.25rem');
+    expect(source).not.toContain('inline-size: min(17rem');
+    expect(source).not.toContain('inline-size: min(20rem');
     expect(source).not.toContain("[data-expanded='false'] .floating-form-rail__panel");
     expect(source).not.toContain('animation: floating-rail-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both');
     expect(source).not.toContain('translate: 1rem 0');

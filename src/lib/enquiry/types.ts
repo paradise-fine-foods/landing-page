@@ -21,7 +21,6 @@ export interface EnquirySuccess {
   reference: string;
   message: string;
   receivedAt: string;
-  demo: true;
 }
 
 export class EnquiryValidationError extends Error {

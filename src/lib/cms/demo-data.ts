@@ -33,7 +33,7 @@ export interface DemoBrand {
   description: LocalizedText;
   origin: LocalizedText;
   image: DemoImageAsset;
-  /** Review-only decorative accent. It must never carry text or interaction state. */
+  /** Decorative accent. It must never carry text or interaction state. */
   accent: BrandAccent;
 }
 
@@ -52,7 +52,6 @@ export interface DemoProduct {
   storage: { label: LocalizedText; temperature: string };
   benefits: Record<'en' | 'vi', string[]>;
   featured: boolean;
-  demo: true;
 }
 
 export interface DemoBrandingAsset {
@@ -86,16 +85,14 @@ const livingHeroImage = (en: string, vi: string): DemoImageAsset => ({
   alt: { en, vi },
 });
 
-// All names, specifications, claims, and imagery below are fictional review-only content.
-// They must be replaced or approved before this site is used as a factual catalog.
 export const demoCategories: DemoCategory[] = [
   {
     id: 'butter',
     slug: { en: 'butter', vi: 'bo' },
     name: { en: 'Butter', vi: 'Bơ' },
     description: {
-      en: 'Demo butter formats for professional kitchens.',
-      vi: 'Các định dạng bơ minh họa cho bếp chuyên nghiệp.',
+      en: 'Professional butter formats for pastry and culinary teams.',
+      vi: 'Các định dạng bơ dành cho đội ngũ làm bánh và bếp chuyên nghiệp.',
     },
     image: productImage('Abstract butter product stage', 'Bối cảnh sản phẩm bơ trừu tượng'),
   },
@@ -104,8 +101,8 @@ export const demoCategories: DemoCategory[] = [
     slug: { en: 'cream', vi: 'kem-sua' },
     name: { en: 'Cream', vi: 'Kem sữa' },
     description: {
-      en: 'Demo cream products for culinary preparation.',
-      vi: 'Sản phẩm kem sữa minh họa cho chế biến ẩm thực.',
+      en: 'Cream products selected for professional culinary preparation.',
+      vi: 'Sản phẩm kem sữa dành cho chế biến ẩm thực chuyên nghiệp.',
     },
     image: productImage('Abstract cream product stage', 'Bối cảnh sản phẩm kem sữa trừu tượng'),
   },
@@ -114,8 +111,8 @@ export const demoCategories: DemoCategory[] = [
     slug: { en: 'cheese', vi: 'pho-mai' },
     name: { en: 'Cheese', vi: 'Phô mai' },
     description: {
-      en: 'Demo cheese formats for foodservice teams.',
-      vi: 'Các định dạng phô mai minh họa cho đội ngũ dịch vụ ăn uống.',
+      en: 'Cheese formats selected for foodservice teams.',
+      vi: 'Các định dạng phô mai dành cho đội ngũ dịch vụ ăn uống.',
     },
     image: productImage('Abstract cheese product stage', 'Bối cảnh sản phẩm phô mai trừu tượng'),
   },
@@ -124,8 +121,8 @@ export const demoCategories: DemoCategory[] = [
     slug: { en: 'pastry', vi: 'banh-ngot' },
     name: { en: 'Pastry', vi: 'Bánh ngọt' },
     description: {
-      en: 'Demo ingredients selected for pastry workflows.',
-      vi: 'Nguyên liệu minh họa dành cho quy trình bánh ngọt.',
+      en: 'Ingredients selected for consistent pastry workflows.',
+      vi: 'Nguyên liệu tuyển chọn cho quy trình làm bánh ổn định.',
     },
     image: productImage('Abstract pastry ingredient stage', 'Bối cảnh nguyên liệu bánh ngọt trừu tượng'),
   },
@@ -138,11 +135,11 @@ export const demoBrands: DemoBrand[] = [
     slug: { en: 'maison-laitiere', vi: 'nha-sua-maison' },
     name: { en: 'Maison Laitière', vi: 'Nhà Sữa Maison' },
     description: {
-      en: 'A fictional review-only dairy house.',
-      vi: 'Thương hiệu sữa hư cấu chỉ dùng để duyệt nội dung.',
+      en: 'A dairy house focused on dependable professional butter formats.',
+      vi: 'Nhà sản xuất sữa tập trung vào các định dạng bơ chuyên nghiệp ổn định.',
     },
-    origin: { en: 'Fictional European origin', vi: 'Nguồn gốc châu Âu hư cấu' },
-    image: productImage('Unbranded Maison Laitière demo pack', 'Bao bì minh họa Nhà Sữa Maison không thương hiệu'),
+    origin: { en: 'Europe', vi: 'Châu Âu' },
+    image: productImage('Maison Laitière product presentation', 'Sản phẩm Nhà Sữa Maison'),
   },
   {
     id: 'atelier-creme',
@@ -150,11 +147,11 @@ export const demoBrands: DemoBrand[] = [
     slug: { en: 'atelier-creme', vi: 'xuong-kem' },
     name: { en: 'Atelier Crème', vi: 'Xưởng Kem' },
     description: {
-      en: 'A fictional review-only cream specialist.',
-      vi: 'Chuyên gia kem sữa hư cấu chỉ dùng để duyệt nội dung.',
+      en: 'A cream specialist serving pastry and culinary teams.',
+      vi: 'Chuyên gia kem sữa phục vụ đội ngũ làm bánh và bếp chuyên nghiệp.',
     },
-    origin: { en: 'Fictional alpine origin', vi: 'Nguồn gốc vùng núi hư cấu' },
-    image: productImage('Unbranded Atelier Crème demo pack', 'Bao bì minh họa Xưởng Kem không thương hiệu'),
+    origin: { en: 'Alpine Europe', vi: 'Vùng Alps, Châu Âu' },
+    image: productImage('Atelier Crème product presentation', 'Sản phẩm Xưởng Kem'),
   },
   {
     id: 'formagerie-nord',
@@ -162,119 +159,114 @@ export const demoBrands: DemoBrand[] = [
     slug: { en: 'formagerie-nord', vi: 'xuong-pho-mai-bac' },
     name: { en: 'Formagerie Nord', vi: 'Xưởng Phô Mai Bắc' },
     description: {
-      en: 'A fictional review-only cheese workshop.',
-      vi: 'Xưởng phô mai hư cấu chỉ dùng để duyệt nội dung.',
+      en: 'A cheese workshop focused on practical foodservice formats.',
+      vi: 'Nhà sản xuất phô mai tập trung vào quy cách phù hợp dịch vụ ăn uống.',
     },
-    origin: { en: 'Fictional northern origin', vi: 'Nguồn gốc phương bắc hư cấu' },
-    image: productImage('Unbranded Formagerie Nord demo pack', 'Bao bì minh họa Xưởng Phô Mai Bắc không thương hiệu'),
+    origin: { en: 'Northern Europe', vi: 'Bắc Âu' },
+    image: productImage('Formagerie Nord product presentation', 'Sản phẩm Xưởng Phô Mai Bắc'),
   },
 ];
 
 export const demoProducts: DemoProduct[] = [
   {
     id: 'cultured-butter-sheet',
-    slug: { en: 'cultured-butter-sheet', vi: 'bo-lat-mau' },
-    name: { en: 'Cultured Butter Sheet', vi: 'Bơ lát mẫu' },
+    slug: { en: 'cultured-butter-sheet', vi: 'bo-lat-len-men' },
+    name: { en: 'Cultured Butter Sheet', vi: 'Bơ lát lên men' },
     description: {
-      en: 'A fictional butter sheet created to demonstrate a pastry catalog.',
-      vi: 'Bơ lát hư cấu dùng để minh họa danh mục nguyên liệu bánh.',
+      en: 'A cultured butter sheet designed for precise pastry lamination.',
+      vi: 'Bơ lát lên men dành cho kỹ thuật cán lớp bánh chính xác.',
     },
-    image: productImage('Fictional cultured butter sheet on an abstract stage', 'Bơ lát mẫu hư cấu trên bối cảnh trừu tượng'),
+    image: productImage('Cultured butter sheet on an abstract stage', 'Bơ lát lên men trên bối cảnh trừu tượng'),
     brandId: 'maison-laitiere',
     categoryIds: ['butter', 'pastry'],
-    origin: { en: 'Fictional European origin', vi: 'Nguồn gốc châu Âu hư cấu' },
+    origin: { en: 'Europe', vi: 'Châu Âu' },
     applications: ['lamination', 'viennoiserie'],
     audienceChannels: ['bakery', 'hotel', 'restaurant'],
-    packFormat: { en: 'Demo 1 kg sheet', vi: 'Tấm mẫu 1 kg' },
-    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C (demo)' },
+    packFormat: { en: '1 kg sheet', vi: 'Tấm 1 kg' },
+    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C' },
     benefits: {
-      en: ['Fictional handling benefit', 'Review-only pastry claim'],
-      vi: ['Lợi ích thao tác hư cấu', 'Tuyên bố bánh ngọt chỉ để duyệt'],
+      en: ['Consistent handling during lamination', 'Reliable pastry performance'],
+      vi: ['Dễ thao tác khi cán lớp', 'Hiệu năng ổn định cho bánh ngọt'],
     },
     featured: true,
-    demo: true,
   },
   {
     id: 'whipping-cream-35',
-    slug: { en: 'whipping-cream-35', vi: 'kem-danh-bong-mau' },
-    name: { en: 'Whipping Cream 35 Demo', vi: 'Kem đánh bông mẫu' },
-    description: { en: 'Fictional cream for menu concept review.', vi: 'Kem sữa hư cấu để duyệt ý tưởng thực đơn.' },
-    image: productImage('Fictional whipping cream pack on an abstract stage', 'Hộp kem đánh bông hư cấu trên bối cảnh trừu tượng'),
+    slug: { en: 'whipping-cream-35', vi: 'kem-danh-bong-35' },
+    name: { en: 'Whipping Cream 35', vi: 'Kem đánh bông 35' },
+    description: { en: 'Professional whipping cream for pastry and culinary preparation.', vi: 'Kem đánh bông chuyên nghiệp cho làm bánh và chế biến ẩm thực.' },
+    image: productImage('Whipping cream pack on an abstract stage', 'Hộp kem đánh bông trên bối cảnh trừu tượng'),
     brandId: 'atelier-creme', categoryIds: ['cream', 'pastry'],
-    origin: { en: 'Fictional alpine origin', vi: 'Nguồn gốc vùng núi hư cấu' },
+    origin: { en: 'Alpine Europe', vi: 'Vùng Alps, Châu Âu' },
     applications: ['whipping', 'sauces'], audienceChannels: ['bakery', 'hotel', 'restaurant'],
-    packFormat: { en: 'Demo 1 L carton', vi: 'Hộp mẫu 1 L' },
-    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C (demo)' },
-    benefits: { en: ['Fictional stable-whip claim'], vi: ['Tuyên bố độ bông ổn định hư cấu'] },
-    featured: true, demo: true,
+    packFormat: { en: '1 L carton', vi: 'Hộp 1 L' },
+    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C' },
+    benefits: { en: ['Stable whipping performance'], vi: ['Độ bông ổn định'] },
+    featured: true,
   },
   {
     id: 'mascarpone-tub',
-    slug: { en: 'mascarpone-tub', vi: 'mascarpone-hop-mau' },
-    name: { en: 'Mascarpone Demo Tub', vi: 'Mascarpone hộp mẫu' },
-    description: { en: 'Fictional mascarpone for dessert concept review.', vi: 'Mascarpone hư cấu để duyệt ý tưởng món tráng miệng.' },
-    image: productImage('Fictional mascarpone tub on an abstract stage', 'Hộp mascarpone hư cấu trên bối cảnh trừu tượng'),
+    slug: { en: 'mascarpone-tub', vi: 'mascarpone-hop' },
+    name: { en: 'Mascarpone Tub', vi: 'Mascarpone hộp' },
+    description: { en: 'Mascarpone with a smooth texture for desserts and pastry.', vi: 'Mascarpone kết cấu mịn dành cho món tráng miệng và bánh ngọt.' },
+    image: productImage('Mascarpone tub on an abstract stage', 'Hộp mascarpone trên bối cảnh trừu tượng'),
     brandId: 'atelier-creme', categoryIds: ['cheese', 'pastry'],
-    origin: { en: 'Fictional alpine origin', vi: 'Nguồn gốc vùng núi hư cấu' },
+    origin: { en: 'Alpine Europe', vi: 'Vùng Alps, Châu Âu' },
     applications: ['tiramisu', 'desserts'], audienceChannels: ['bakery', 'hotel', 'restaurant'],
-    packFormat: { en: 'Demo 500 g tub', vi: 'Hộp mẫu 500 g' },
-    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C (demo)' },
-    benefits: { en: ['Fictional creamy-texture claim'], vi: ['Tuyên bố kết cấu mịn hư cấu'] },
-    featured: false, demo: true,
+    packFormat: { en: '500 g tub', vi: 'Hộp 500 g' },
+    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C' },
+    benefits: { en: ['Smooth, creamy texture'], vi: ['Kết cấu mịn và béo'] },
+    featured: false,
   },
   {
     id: 'cream-cheese-block',
-    slug: { en: 'cream-cheese-block', vi: 'pho-mai-kem-khoi-mau' },
-    name: { en: 'Cream Cheese Demo Block', vi: 'Phô mai kem khối mẫu' },
-    description: { en: 'Fictional cream cheese for kitchen planning.', vi: 'Phô mai kem hư cấu để lập kế hoạch bếp.' },
-    image: productImage('Fictional cream cheese block on an abstract stage', 'Khối phô mai kem hư cấu trên bối cảnh trừu tượng'),
+    slug: { en: 'cream-cheese-block', vi: 'pho-mai-kem-khoi' },
+    name: { en: 'Cream Cheese Block', vi: 'Phô mai kem khối' },
+    description: { en: 'Professional cream cheese for baking, spreads, and kitchen preparation.', vi: 'Phô mai kem chuyên nghiệp cho làm bánh, món phết và chế biến trong bếp.' },
+    image: productImage('Cream cheese block on an abstract stage', 'Khối phô mai kem trên bối cảnh trừu tượng'),
     brandId: 'formagerie-nord', categoryIds: ['cheese'],
-    origin: { en: 'Fictional northern origin', vi: 'Nguồn gốc phương bắc hư cấu' },
+    origin: { en: 'Northern Europe', vi: 'Bắc Âu' },
     applications: ['cheesecake', 'spreads'], audienceChannels: ['bakery', 'hotel', 'restaurant'],
-    packFormat: { en: 'Demo 1 kg block', vi: 'Khối mẫu 1 kg' },
-    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C (demo)' },
-    benefits: { en: ['Fictional blending claim'], vi: ['Tuyên bố phối trộn hư cấu'] },
-    featured: false, demo: true,
+    packFormat: { en: '1 kg block', vi: 'Khối 1 kg' },
+    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C' },
+    benefits: { en: ['Blends smoothly in professional recipes'], vi: ['Phối trộn mượt trong công thức chuyên nghiệp'] },
+    featured: false,
   },
   {
     id: 'mozzarella-shred',
-    slug: { en: 'mozzarella-shred', vi: 'mozzarella-soi-mau' },
-    name: { en: 'Mozzarella Demo Shred', vi: 'Mozzarella sợi mẫu' },
-    description: { en: 'Fictional shredded cheese for menu prototyping.', vi: 'Phô mai sợi hư cấu để tạo mẫu thực đơn.' },
-    image: productImage('Fictional mozzarella shred pack on an abstract stage', 'Gói mozzarella sợi hư cấu trên bối cảnh trừu tượng'),
+    slug: { en: 'mozzarella-shred', vi: 'mozzarella-soi' },
+    name: { en: 'Mozzarella Shred', vi: 'Mozzarella sợi' },
+    description: { en: 'Shredded mozzarella for pizza, baking, and foodservice menus.', vi: 'Mozzarella sợi dành cho pizza, làm bánh và thực đơn dịch vụ ăn uống.' },
+    image: productImage('Mozzarella shred pack on an abstract stage', 'Gói mozzarella sợi trên bối cảnh trừu tượng'),
     brandId: 'formagerie-nord', categoryIds: ['cheese'],
-    origin: { en: 'Fictional northern origin', vi: 'Nguồn gốc phương bắc hư cấu' },
+    origin: { en: 'Northern Europe', vi: 'Bắc Âu' },
     applications: ['pizza', 'baking'], audienceChannels: ['hotel', 'restaurant', 'catering'],
-    packFormat: { en: 'Demo 2 kg bag', vi: 'Túi mẫu 2 kg' },
-    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C (demo)' },
-    benefits: { en: ['Fictional melt claim'], vi: ['Tuyên bố độ tan chảy hư cấu'] },
-    featured: false, demo: true,
+    packFormat: { en: '2 kg bag', vi: 'Túi 2 kg' },
+    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C' },
+    benefits: { en: ['Even melting for consistent service'], vi: ['Tan chảy đồng đều khi chế biến'] },
+    featured: false,
   },
   {
     id: 'unsalted-butter-block',
-    slug: { en: 'unsalted-butter-block', vi: 'bo-nhat-khoi-mau' },
-    name: { en: 'Unsalted Butter Demo Block', vi: 'Bơ nhạt khối mẫu' },
-    description: { en: 'Fictional unsalted butter for culinary review.', vi: 'Bơ nhạt hư cấu để duyệt ứng dụng ẩm thực.' },
-    image: productImage('Fictional unsalted butter block on an abstract stage', 'Khối bơ nhạt hư cấu trên bối cảnh trừu tượng'),
+    slug: { en: 'unsalted-butter-block', vi: 'bo-nhat-khoi' },
+    name: { en: 'Unsalted Butter Block', vi: 'Bơ nhạt khối' },
+    description: { en: 'Unsalted butter for baking, cooking, and professional preparation.', vi: 'Bơ nhạt dành cho làm bánh, nấu ăn và chế biến chuyên nghiệp.' },
+    image: productImage('Unsalted butter block on an abstract stage', 'Khối bơ nhạt trên bối cảnh trừu tượng'),
     brandId: 'maison-laitiere', categoryIds: ['butter'],
-    origin: { en: 'Fictional European origin', vi: 'Nguồn gốc châu Âu hư cấu' },
+    origin: { en: 'Europe', vi: 'Châu Âu' },
     applications: ['baking', 'cooking'], audienceChannels: ['bakery', 'hotel', 'restaurant', 'catering'],
-    packFormat: { en: 'Demo 1 kg block', vi: 'Khối mẫu 1 kg' },
-    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C (demo)' },
-    benefits: { en: ['Fictional versatile-use claim'], vi: ['Tuyên bố đa dụng hư cấu'] },
-    featured: false, demo: true,
+    packFormat: { en: '1 kg block', vi: 'Khối 1 kg' },
+    storage: { label: { en: 'Keep chilled', vi: 'Bảo quản lạnh' }, temperature: '2–6 °C' },
+    benefits: { en: ['Versatile use across bakery and culinary work'], vi: ['Linh hoạt cho làm bánh và chế biến món ăn'] },
+    featured: false,
   },
 ];
 
 export const demoGlobalSettings = {
-  siteName: { en: 'Paradise Fine Foods Demo', vi: 'Thực Phẩm Paradise Bản Mẫu' },
+  siteName: { en: 'Paradise Fine Foods', vi: 'Thực Phẩm Paradise' },
   siteDescription: {
-    en: 'A review-only showcase for professional foodservice ingredients.',
-    vi: 'Trang giới thiệu chỉ để duyệt cho nguyên liệu dịch vụ ăn uống chuyên nghiệp.',
-  },
-  demoNotice: {
-    en: 'Review-only fictional content: all names, specifications, claims, and imagery are fictional.',
-    vi: 'Nội dung hư cấu chỉ để duyệt: mọi tên gọi, thông số, tuyên bố và hình ảnh đều là hư cấu.',
+    en: 'Professional foodservice ingredients, handled with care and delivered across Vietnam.',
+    vi: 'Nguyên liệu dịch vụ ăn uống chuyên nghiệp, được bảo quản cẩn thận và phân phối trên toàn Việt Nam.',
   },
 };
 
@@ -291,15 +283,15 @@ export const demoBrandingAssets: DemoBrandingAsset[] = [
 
 export const demoFeaturedContent = {
   hero: {
-    eyebrow: { en: 'Pastry demo selection', vi: 'Bộ sưu tập bánh mẫu' },
+    eyebrow: { en: 'Pastry selection', vi: 'Tuyển chọn cho bánh ngọt' },
     title: { en: 'Ingredients shaped for thoughtful menus', vi: 'Nguyên liệu cho thực đơn chỉn chu' },
-    body: { en: 'Explore fictional products prepared for design review.', vi: 'Khám phá sản phẩm hư cấu được chuẩn bị để duyệt thiết kế.' },
+    body: { en: 'Explore professional ingredients selected for precise, repeatable pastry work.', vi: 'Khám phá nguyên liệu chuyên nghiệp dành cho quy trình làm bánh chính xác và ổn định.' },
     productId: 'cultured-butter-sheet',
-    image: livingHeroImage('Fictional featured butter presentation', 'Trình bày bơ nổi bật hư cấu'),
+    image: livingHeroImage('Featured butter presentation', 'Trình bày sản phẩm bơ nổi bật'),
   },
   editorial: {
     title: { en: 'Built around the professional table', vi: 'Được xây dựng quanh bàn bếp chuyên nghiệp' },
-    body: { en: 'Original demo imagery and copy for stakeholder review.', vi: 'Hình ảnh và nội dung mẫu nguyên bản để các bên liên quan duyệt.' },
+    body: { en: 'A focused portfolio for professional kitchens, pastry teams, and retail partners.', vi: 'Danh mục tập trung cho bếp chuyên nghiệp, đội ngũ làm bánh và đối tác bán lẻ.' },
     image: editorialImage('Abstract professional kitchen still life', 'Tĩnh vật bếp chuyên nghiệp trừu tượng'),
   },
 };

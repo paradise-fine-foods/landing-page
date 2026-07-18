@@ -11,16 +11,15 @@ import {
 } from '../src/lib/cms/queries';
 
 describe('CMS adapter', () => {
-  test('returns a stable localized demo catalog', async () => {
+  test('returns a stable localized catalog', async () => {
     const products = await getProducts('en');
 
     expect(products.length).toBeGreaterThanOrEqual(6);
-    expect(products.every((item) => item.demo === true)).toBe(true);
     expect(products.every((item) => item.slug && item.name && item.storage.label)).toBe(true);
     expect((await getProducts('vi')).map((item) => item.id)).toEqual(
       products.map((item) => item.id),
     );
-    expect((await getProductBySlug('vi', 'bo-lat-mau'))?.id).toBe(
+    expect((await getProductBySlug('vi', 'bo-lat-len-men'))?.id).toBe(
       'cultured-butter-sheet',
     );
     expect((await getBrands('en')).length).toBeGreaterThanOrEqual(3);
@@ -30,7 +29,7 @@ describe('CMS adapter', () => {
   });
 
   test('localizes settings, categories, brands, and featured editorial content', async () => {
-    expect((await getGlobalSettings('en')).demoNotice).toContain('fictional');
+    expect((await getGlobalSettings('en')).siteDescription).toContain('Professional foodservice ingredients');
     expect((await getGlobalSettings('vi')).siteName).not.toBe(
       (await getGlobalSettings('en')).siteName,
     );

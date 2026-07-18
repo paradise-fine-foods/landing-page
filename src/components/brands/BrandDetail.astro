@@ -44,9 +44,6 @@ const accentClasses: Record<BrandAccent, string> = {
     <section aria-labelledby="brand-story-title">
       <h2 id="brand-story-title">{copy.brand.story}</h2>
       <p class="brand-detail__story">{brand.description}</p>
-      <aside class="brand-detail__notice" aria-label={copy.demoNoticeLabel}>
-        {copy.brand.demoNotice}
-      </aside>
     </section>
 
     <section aria-labelledby="brand-categories-title">
@@ -88,7 +85,6 @@ const accentClasses: Record<BrandAccent, string> = {
   .brand-detail__editorial section { align-content: start; display: grid; gap: var(--space-4); }
   .brand-detail__editorial h2, .brand-detail__section-heading h2 { font-size: var(--text-2xl); }
   .brand-detail__story { font-size: var(--text-lg); max-inline-size: var(--measure); }
-  .brand-detail__notice { border-inline-start: 0.25rem solid var(--brand-accent); color: var(--color-deep-herb); font-size: var(--text-sm); margin-block-start: var(--space-4); max-inline-size: var(--measure); padding: var(--space-3) var(--space-4); }
   .brand-detail__categories { display: grid; gap: var(--space-2); list-style: none; }
   .brand-detail__categories li { border-block-end: 2px solid color-mix(in srgb, var(--brand-accent) 45%, transparent); color: var(--color-deep-herb); padding-block: var(--space-3); }
   .brand-detail__products { padding-block: var(--space-9); }

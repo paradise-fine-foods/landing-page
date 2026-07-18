@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { getBrands, getProducts } from '../src/lib/cms/queries';
 
 const root = join(import.meta.dir, '..', 'dist');
-const origin = 'https://demo.paradisefinefoods.com';
+const origin = 'https://paradisefinefoods.com';
 const built = (path: string) => readFileSync(join(root, path, 'index.html'), 'utf8');
 const withoutTrailingSlash = (path: string) => path.replace(/^\//, '').replace(/\/$/, '');
 const assertMeta = (html: string, canonicalPath: string, alternatePath: string) => {
@@ -65,7 +65,7 @@ for (const expected of expectedBrands) {
     assert.ok(html.includes(brand.name), `${locale} detail must render its localized name`);
     assert.ok(html.includes(brand.origin), `${locale} detail must render its localized origin`);
     assert.ok(html.includes(brand.description), `${locale} detail must render its localized story`);
-    assert.ok(html.includes('brand-detail__notice'), `${locale} detail must render its demo notice`);
+    assert.ok(!html.includes('brand-detail__notice'), `${locale} detail must not render a temporary notice`);
     for (const product of products) {
       const productRoot = locale === 'en' ? '/en/products/' : '/vi/products/';
       assert.ok(html.includes(`href="${productRoot}${product.slug}/"`), `${locale} detail must link ${product.id}`);

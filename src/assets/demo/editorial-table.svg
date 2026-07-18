@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
   <title id="title">Abstract editorial table</title>
-  <desc id="desc">Original still-life demo artwork with simple kitchen forms and no branding.</desc>
+  <desc id="desc">Still-life artwork with simple professional kitchen forms.</desc>
   <rect width="1600" height="1000" fill="#F7F8F4"/>
   <rect y="610" width="1600" height="390" fill="#A9B4B8"/>
   <path d="M176 610V248h280v362M262 248V136h108v112" fill="#FFFFFF" stroke="#123C69" stroke-width="22"/>

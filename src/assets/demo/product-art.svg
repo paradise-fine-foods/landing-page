@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
   <title id="title">Abstract product stage</title>
-  <desc id="desc">Original geometric demo artwork in cream, burgundy, and warm grey.</desc>
+  <desc id="desc">Geometric product artwork in cream, burgundy, and warm grey.</desc>
   <rect width="1200" height="900" fill="#F7F8F4"/>
   <circle cx="950" cy="170" r="220" fill="#F2C14E" opacity=".62"/>
   <path d="M0 625C220 545 432 560 634 650c186 83 369 75 566-23v273H0Z" fill="#123C69"/>

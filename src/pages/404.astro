@@ -12,7 +12,7 @@ import '../styles/tokens.css';
 import '../styles/typography.css';
 import '../styles/global.css';
 
-const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinefoods.com');
+const canonical = new URL('/404.html', Astro.site ?? 'https://paradisefinefoods.com');
 ---
 
 <!doctype html>
@@ -21,18 +21,18 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>Page not found | Paradise Fine Foods Demo</title>
-    <meta name="description" content="Choose the English or Vietnamese Paradise Fine Foods demo after reaching an unavailable page." />
+    <title>Page not found | Paradise Fine Foods</title>
+    <meta name="description" content="Choose an English or Vietnamese Paradise Fine Foods destination after reaching an unavailable page." />
     <meta name="robots" content="noindex" />
     <link rel="canonical" href={canonical} />
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content · <span lang="vi">Chuyển đến nội dung</span></a>
     <header class="not-found-header">
-      <a class="not-found__link" href="/en/" aria-label="Paradise Fine Foods Demo — English home">
+      <a class="not-found__link" href="/en/" aria-label="Paradise Fine Foods — English home">
         <Image src={logo} alt="Paradise Fine Foods" width={158} height={130} />
       </a>
-      <p>Client review · <span lang="vi">Bản duyệt khách hàng</span></p>
+      <p>English · <span lang="vi">Tiếng Việt</span></p>
     </header>
 
     <main id="main-content" class="not-found">
@@ -47,7 +47,7 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
         <section lang="en" aria-labelledby="not-found-en">
           <p class="eyebrow">Page unavailable</p>
           <h1 id="not-found-en">This page could not be found</h1>
-          <p>The address may have changed, or this page may not be part of the client-review demo. Choose a clear English destination below.</p>
+          <p>The address may have changed. Choose an English destination below.</p>
           <nav aria-label="English destinations">
         <a class="not-found__link not-found__primary" href="/en/">English home <Icon name="lucide:arrow-right" size="1.05em" /></a>
             <a class="not-found__link" href="/en/products/">Browse English products</a>
@@ -57,7 +57,7 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
         <section lang="vi" aria-labelledby="not-found-vi">
           <p class="eyebrow">Trang không khả dụng</p>
           <h2 id="not-found-vi">Không tìm thấy trang này</h2>
-          <p>Địa chỉ có thể đã thay đổi hoặc trang này chưa nằm trong phạm vi bản demo dành cho khách hàng duyệt. Vui lòng chọn điểm đến tiếng Việt bên dưới.</p>
+          <p>Địa chỉ có thể đã thay đổi. Vui lòng chọn điểm đến tiếng Việt bên dưới.</p>
           <nav aria-label="Điểm đến tiếng Việt">
         <a class="not-found__link not-found__primary" href="/vi/">Trang chủ tiếng Việt <Icon name="lucide:arrow-right" size="1.05em" /></a>
             <a class="not-found__link" href="/vi/products/">Xem sản phẩm tiếng Việt</a>
@@ -67,7 +67,7 @@ const canonical = new URL('/404.html', Astro.site ?? 'https://demo.paradisefinef
     </main>
 
     <footer class="not-found-footer">
-      <p>Review-only fictional content · <span lang="vi">Nội dung hư cấu chỉ dùng để duyệt</span></p>
+      <p>Exceptional ingredients · <span lang="vi">Nguyên liệu tuyển chọn</span></p>
       <p>Paradise Fine Foods</p>
     </footer>
   <FloatingFormRail locale="en" contactPath="/en/contact/" customerPath="/en/contact/customer/" supplierPath="/en/contact/supplier/" copy={ui.en.floatingRail} staticOnly />

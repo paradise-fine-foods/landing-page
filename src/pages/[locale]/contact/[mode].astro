@@ -3,16 +3,15 @@ import type { GetStaticPaths, InferGetStaticParamsType, InferGetStaticPropsType 
 import EnquiryForm from '../../../components/forms/EnquiryForm.astro';
 import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { getEnquiryModeCopy } from '../../../lib/enquiry/modes';
+import { contactModes, getEnquiryModeCopy } from '../../../lib/enquiry/modes';
 import { getGlobalSettings, getProducts } from '../../../lib/cms/queries';
 import { localizedPath } from '../../../lib/i18n/routes';
 import { counterpartLocale, getLocaleStaticPaths } from '../../../lib/i18n/static-paths';
 import { ui } from '../../../lib/i18n/ui';
 
 export const getStaticPaths = (() => {
-  const modes = ['customer', 'supplier'] as const;
   return getLocaleStaticPaths().flatMap(({ props: { locale } }) =>
-    modes.map((mode) => ({
+    contactModes.map((mode) => ({
       params: { locale, mode },
       props: { locale, mode },
     })));

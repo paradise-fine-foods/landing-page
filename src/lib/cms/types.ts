@@ -61,13 +61,11 @@ export interface Product {
   storage: ProductStorage;
   benefits: string[];
   featured: boolean;
-  demo: true;
 }
 
 export interface GlobalSettings {
   siteName: string;
   siteDescription: string;
-  demoNotice: string;
   partners: BrandingAsset[];
 }
 

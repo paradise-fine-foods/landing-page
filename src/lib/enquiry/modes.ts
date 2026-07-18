@@ -1,6 +1,9 @@
 import type { Locale } from '../i18n/types';
 import type { EnquiryMode } from '../i18n/ui';
 
+export const contactModes = ['customer', 'supplier'] as const;
+export type ContactMode = (typeof contactModes)[number];
+
 export interface EnquiryModeCopy {
   eyebrow: string;
   title: string;

@@ -68,7 +68,7 @@ const localizeProduct = (product: DemoProduct, locale: Locale): Product => {
   );
 
   if (!brand || categories.some((category) => !category)) {
-    throw new Error(`Invalid demo catalog references for product: ${product.id}`);
+    throw new Error(`Invalid catalog references for product: ${product.id}`);
   }
 
   return {
@@ -89,14 +89,12 @@ const localizeProduct = (product: DemoProduct, locale: Locale): Product => {
     },
     benefits: [...product.benefits[locale]],
     featured: product.featured,
-    demo: true,
   };
 };
 
 export const getGlobalSettings = async (locale: Locale): Promise<GlobalSettings> => ({
   siteName: demoGlobalSettings.siteName[locale],
   siteDescription: demoGlobalSettings.siteDescription[locale],
-  demoNotice: demoGlobalSettings.demoNotice[locale],
   partners: demoBrandingAssets.map((asset): BrandingAsset => ({
     id: asset.id,
     src: asset.src,

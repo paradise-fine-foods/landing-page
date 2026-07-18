@@ -1,6 +1,6 @@
 # Paradise Fine Foods branding assets
 
-These local partner marks were downloaded from the public Paradise Fine Foods homepage and are used for the review-only partner strip. They are intentionally kept separate from the fictional catalog imagery.
+These local partner marks were downloaded from the public Paradise Fine Foods homepage and are used for the partner strip. They are intentionally kept separate from the catalog artwork.
 
 | Local asset | Source URL | Group |
 | --- | --- | --- |

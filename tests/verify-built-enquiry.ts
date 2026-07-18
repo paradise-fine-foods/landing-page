@@ -11,7 +11,7 @@ for (const page of pages) {
   const productIds = (await getProducts(page.locale)).map(({ id }) => id);
 
   if (!html.includes(`<html lang="${page.locale}">`)) throw new Error(`${page.file}: missing locale lang`);
-  if (!html.includes(`rel="canonical" href="https://demo.paradisefinefoods.com${page.path}"`)) throw new Error(`${page.file}: missing canonical`);
+  if (!html.includes(`rel="canonical" href="https://paradisefinefoods.com${page.path}"`)) throw new Error(`${page.file}: missing canonical`);
   if (!html.includes('hreflang="en"') || !html.includes('hreflang="vi"')) throw new Error(`${page.file}: missing reciprocal alternates`);
   if (!html.includes('data-enquiry-form') || !html.includes('novalidate')) throw new Error(`${page.file}: missing enhanced form contract`);
   if (!html.includes('role="status"') || !html.includes('aria-live="polite"')) throw new Error(`${page.file}: missing live status`);
@@ -45,4 +45,4 @@ for (const page of pages) {
   if (/demo-data|mailto:|fetch\s*\(/i.test(html)) throw new Error(`${page.file}: leaks fixtures or an external delivery mechanism`);
 }
 
-console.log('Verified bilingual built enquiry pages, accessibility relationships, product options, and demo-only delivery.');
+console.log('Verified bilingual built enquiry pages, accessibility relationships, product options, and local submission behavior.');
