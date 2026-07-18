@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ui } from '../src/lib/i18n/ui';
 import { counterpartPath, localizedPath } from '../src/lib/i18n/routes';
+import { counterpartLocale, getLocaleStaticPaths } from '../src/lib/i18n/static-paths';
 import { buildMeta } from '../src/lib/seo/meta';
 
 describe('localized routes', () => {
@@ -39,6 +40,28 @@ test('configures adapterless demo redirects for legacy Vietnamese routes', () =>
   }
 });
 
+test('provides string-valued static paths with matching locale props', () => {
+  expect(getLocaleStaticPaths()).toEqual([
+    { params: { locale: 'en' }, props: { locale: 'en' } },
+    { params: { locale: 'vi' }, props: { locale: 'vi' } },
+  ]);
+});
+
+test('maps each locale to its reciprocal counterpart', () => {
+  expect(counterpartLocale('en')).toBe('vi');
+  expect(counterpartLocale('vi')).toBe('en');
+});
+
+test('imports canonical locale configuration values', () => {
+  const config = readFileSync(join(import.meta.dir, '..', 'astro.config.mjs'), 'utf8');
+
+  expect(config).toContain("import { defaultLocale, locales } from './src/lib/i18n/types.ts';");
+  expect(config).toContain('defaultLocale,');
+  expect(config).toContain('locales: [...locales],');
+  expect(config).not.toMatch(/defaultLocale:\s*'en'/);
+  expect(config).not.toMatch(/locales:\s*\['en',\s*'vi'\]/);
+});
+
 test('catalog includes distinct localized no-JavaScript guidance', () => {
   expect(ui.en.catalog.noScript.length).toBeGreaterThan(0);
   expect(ui.vi.catalog.noScript.length).toBeGreaterThan(0);
@@ -47,16 +70,16 @@ test('catalog includes distinct localized no-JavaScript guidance', () => {
 
 test('buildMeta returns canonical and reciprocal alternates', () => {
   const meta = buildMeta({
-    site: 'https://demo.paradisefinefoods.com',
+    site: 'https://paradisefinefoods.com',
     locale: 'en',
     title: 'Products',
     description: 'Demo catalog',
     pathname: '/en/products/',
     alternatePath: '/vi/products/',
   });
-  expect(meta.canonical).toBe('https://demo.paradisefinefoods.com/en/products/');
+  expect(meta.canonical).toBe('https://paradisefinefoods.com/en/products/');
   expect(meta.alternates).toEqual([
-    { locale: 'en', href: 'https://demo.paradisefinefoods.com/en/products/' },
-    { locale: 'vi', href: 'https://demo.paradisefinefoods.com/vi/products/' },
+    { locale: 'en', href: 'https://paradisefinefoods.com/en/products/' },
+    { locale: 'vi', href: 'https://paradisefinefoods.com/vi/products/' },
   ]);
 });
