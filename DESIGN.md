@@ -137,11 +137,11 @@ Catalog-derived strengths to preserve:
 
 - **White-space confidence** — pages 1–4 use large clean fields that make packaging and brand marks feel precise and premium.
 - **Product-first composition** — pack shots are isolated, legible, and given enough room to breathe instead of being buried in generic lifestyle photography.
-- **Culinary authority** — the chef image and “Tradition and Innovation” story on page 2 connect the product to professional craft.
+- **Culinary authority** — the chef image and “Tradition and Innovation" story on page 2 connect the product to professional craft.
 - **Clear technical proof** — pages 3–5 surface fat percentage, pack format, case configuration, shelf life, texture, yield, holding time, and professional benefits. This is exactly the information serious buyers need.
 - **Flexible brand expression** — Elle & Vire and Corman retain distinct colors and personalities while remaining inside one coherent brochure.
 - **Organic visual energy** — the colored droplets and photo apertures create movement without filling the page with decoration.
-- **Provenance signals** — the “Produced in France” seal and origin story make premium claims tangible.
+- **Provenance signals** — the “Produced in France" seal and origin story make premium claims tangible.
 - **Benefit-led product storytelling** — page 5 places the hero pack at the center and organizes performance claims around it, a strong pattern for selected product-detail pages.
 
 Catalog weaknesses the website should correct:
@@ -251,17 +251,17 @@ The experience should feel cultivated before a user notices any individual decor
 
 The master palette is intentionally compact and grounded in the Paradise identity plus the brochure's short blue, green and coral accents.
 
-| Token | Hex | Use |
-|---|---:|---|
+| Token             |       Hex | Use                                                     |
+| ----------------- | --------: | ------------------------------------------------------- |
 | `paradise-orange` | `#E46F2C` | Primary identity, important actions and connector rules |
-| `fresh-tangerine` | `#FA6C47` | Warm animated and decorative emphasis |
-| `savencia-blue` | `#0796D2` | Informational and partner-continuity accents |
-| `garden-green` | `#94C11F` | Organic accents and non-text positive cues |
-| `soft-coral` | `#D94D55` | Small expressive accents only |
-| `rice-paper` | `#FBFAF5` | Primary page surface |
-| `paper-white` | `#FFFFFF` | Product, form and reading surfaces |
-| `deep-herb` | `#28342B` | Primary text and dark contrast moments |
-| `mist-blue` | `#E8F6FA` | Quiet alternate section surface |
+| `fresh-tangerine` | `#FA6C47` | Warm animated and decorative emphasis                   |
+| `savencia-blue`   | `#0796D2` | Informational and partner-continuity accents            |
+| `garden-green`    | `#94C11F` | Organic accents and non-text positive cues              |
+| `soft-coral`      | `#D94D55` | Small expressive accents only                           |
+| `rice-paper`      | `#FBFAF5` | Primary page surface                                    |
+| `paper-white`     | `#FFFFFF` | Product, form and reading surfaces                      |
+| `deep-herb`       | `#28342B` | Primary text and dark contrast moments                  |
+| `mist-blue`       | `#E8F6FA` | Quiet alternate section surface                         |
 
 ### Color rules
 
@@ -287,19 +287,19 @@ Sources: [Newsreader repository](https://github.com/productiontype/Newsreader) a
 
 ### Type scale
 
-| Style | Desktop | Mobile | Weight | Line height |
-|---|---:|---:|---:|---:|
-| Display XL | 80px | 46px | 500 | 0.98 |
-| Display L | 64px | 40px | 500 | 1.02 |
-| H1 | 52px | 36px | 500 | 1.08 |
-| H2 | 40px | 30px | 500 | 1.12 |
-| H3 | 28px | 24px | 500 | 1.2 |
-| H4 | 22px | 20px | 600 | 1.3 |
-| Lead | 21px | 18px | 400 | 1.55 |
-| Body L | 18px | 17px | 400 | 1.65 |
-| Body | 16px | 16px | 400 | 1.65 |
-| Small | 14px | 14px | 500 | 1.5 |
-| Eyebrow | 12px | 12px | 700 | 1.2 |
+| Style      | Desktop | Mobile | Weight | Line height |
+| ---------- | ------: | -----: | -----: | ----------: |
+| Display XL |    80px |   46px |    500 |        0.98 |
+| Display L  |    64px |   40px |    500 |        1.02 |
+| H1         |    52px |   36px |    500 |        1.08 |
+| H2         |    40px |   30px |    500 |        1.12 |
+| H3         |    28px |   24px |    500 |         1.2 |
+| H4         |    22px |   20px |    600 |         1.3 |
+| Lead       |    21px |   18px |    400 |        1.55 |
+| Body L     |    18px |   17px |    400 |        1.65 |
+| Body       |    16px |   16px |    400 |        1.65 |
+| Small      |    14px |   14px |    500 |         1.5 |
+| Eyebrow    |    12px |   12px |    700 |         1.2 |
 
 ### Typography rules
 
@@ -342,14 +342,14 @@ Sources: [Newsreader repository](https://github.com/productiontype/Newsreader) a
 
 ### Image ratios
 
-| Usage | Ratio |
-|---|---:|
+| Usage                    |                                          Ratio |
+| ------------------------ | ---------------------------------------------: |
 | Living Hero illustration | 16:10 desktop; authored 4:5 mobile composition |
-| Editorial portrait | 4:5 |
-| Product card | 1:1 |
-| Brand feature | 3:2 |
-| News/event card | 4:3 |
-| Wide story band | 21:9 |
+| Editorial portrait       |                                            4:5 |
+| Product card             |                                            1:1 |
+| Brand feature            |                                            3:2 |
+| News/event card          |                                            4:3 |
+| Wide story band          |                                           21:9 |
 
 ### Never use
 
@@ -414,7 +414,7 @@ Origin and quality claims should appear as structured badges or seals only when 
 - Chilled / frozen / ambient
 - Technical performance claim
 
-Never fabricate medals, seals, flags, or “premium” badges.
+Never fabricate medals, seals, flags, or “premium" badges.
 
 ---
 
@@ -462,7 +462,7 @@ Typical section spacing:
 Suggested shadow:
 
 ```css
-box-shadow: 0 18px 50px rgba(23, 32, 25, 0.10);
+box-shadow: 0 18px 50px rgba(23, 32, 25, 0.1);
 ```
 
 ---
@@ -561,7 +561,7 @@ Launch search is deterministic matching across the published CMS fields above, p
 
 A minimal sticky header with a clear sales CTA. No top-bar clutter unless there is a genuine operational announcement.
 
-The homepage has one hero and no competing “mini heroes.” After it, the hierarchy is fixed: category discovery, one featured brand, operational proof, one culinary story, partner proof, and final sales conversion. Secondary modules act as catalog navigation and evidence rather than additional campaign stages.
+The homepage has one hero and no competing “mini heroes." After it, the hierarchy is fixed: category discovery, one featured brand, operational proof, one culinary story, partner proof, and final sales conversion. Secondary modules act as catalog navigation and evidence rather than additional campaign stages.
 
 ## 8.2 Hero
 
@@ -795,7 +795,7 @@ The public catalog is a lead-generation tool, not a fake consumer web shop.
 
 Do not include price sorting unless prices are genuinely public and consistently maintained.
 
-Launch search covers product name, SKU, brand, and category, with the filters listed above and deterministic zero-result guidance. “Advanced catalog search” means fuzzy matching, synonyms, document-content indexing, saved searches, recommendations, or an external search service; those capabilities are deferred.
+Launch search covers product name, SKU, brand, and category, with the filters listed above and deterministic zero-result guidance. “Advanced catalog search" means fuzzy matching, synonyms, document-content indexing, saved searches, recommendations, or an external search service; those capabilities are deferred.
 
 ### Product card anatomy
 
@@ -885,7 +885,7 @@ Pre-fill the selected product in the enquiry form. Do not force the user to rety
 - Logo
 - Country and origin story
 - Brand positioning
-- A concise “tradition and innovation” or equivalent brand thesis
+- A concise “tradition and innovation" or equivalent brand thesis
 - Why Paradise carries the brand
 - Product categories
 - Product grid
@@ -1242,7 +1242,7 @@ Requirements:
 - Lead with value, not company history
 - Prefer concrete nouns and verbs
 - Use shorter paragraphs
-- Avoid inflated phrases such as “best of the best,” “world-class excellence,” or “leading journey” unless backed by proof
+- Avoid inflated phrases such as “best of the best," “world-class excellence," or “leading journey" unless backed by proof
 - Explain why a product matters to a buyer or chef
 - Distinguish consumer formats from professional formats
 - State origin, use, handling, and pack information clearly
@@ -1526,7 +1526,7 @@ src/
 
 ### Component philosophy
 
-- Build sections from explicit components, not one universal “content block” with dozens of configuration switches
+- Build sections from explicit components, not one universal “content block" with dozens of configuration switches
 - Use design tokens from the start
 - Keep CMS flexibility inside guardrails
 - For the MVP, editors may update, feature, or hide approved optional content but may not reorder the fixed homepage sequence or manually control font sizes, arbitrary colors, spacing, camera, lighting, or motion
@@ -1674,7 +1674,7 @@ Even when the underlying fact remains valid, legacy headings, section order, par
 Do not build any of the following:
 
 - A rotating hero carousel
-- A black-and-gold “luxury” theme
+- A black-and-gold “luxury" theme
 - Massive looping background video
 - Floating glassmorphism cards
 - Fifty-pixel border radii everywhere
@@ -1721,7 +1721,7 @@ The MVP is a complete public catalog and lead-generation experience, not an inco
 - B2B ordering, prices, checkout, and account management
 - Additional immersive product viewers or automatic carousel behavior
 
-Do not delay the public rebuild to chase transactional or partner-portal capabilities. The first release is a sharp, maintainable catalog and lead engine; “MVP” does not excuse incomplete product information, placeholder copy, inaccessible interactions, or broken bilingual routes.
+Do not delay the public rebuild to chase transactional or partner-portal capabilities. The first release is a sharp, maintainable catalog and lead engine; “MVP" does not excuse incomplete product information, placeholder copy, inaccessible interactions, or broken bilingual routes.
 
 ### First-release assumptions
 

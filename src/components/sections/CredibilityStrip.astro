@@ -13,8 +13,8 @@ const { title, pillars } = Astro.props;
 
 <style>
   .credibility { background: var(--color-paper-white); border-block-end: 1px solid var(--color-mist-blue); padding-block: var(--space-6); }
-  .credibility__flow { align-items: center; display: grid; gap: var(--space-6); grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 2.2fr); }
-  .credibility h2 { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 700; max-inline-size: 24ch; }
+  .credibility__flow { align-items: center; display: grid; gap: var(--space-6); grid-template-columns: 1fr; }
+  .credibility h2 { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; line-height: 1.05; max-inline-size: 22ch; }
   .credibility ul { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); list-style: none; }
   .credibility li { align-items: center; display: flex; font-size: var(--text-xs); font-weight: 700; gap: var(--space-2); }
   .credibility li > span { background: var(--color-paradise-orange); block-size: 0.55rem; border-radius: 55% 45% 65% 35%; inline-size: 0.55rem; }

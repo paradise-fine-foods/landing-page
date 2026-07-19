@@ -73,6 +73,11 @@ describe('reviewed homepage contracts', () => {
     expect(service).toContain('<ol class="service-proof__pillars"');
     const credibility = source('src/components/sections/CredibilityStrip.astro');
     expect(credibility).not.toContain('background: var(--color-cold-chain-blue)');
+    expect(credibility).toContain('grid-template-columns: 1fr');
+    expect(credibility).toContain('font-family: var(--font-display)');
+    expect(credibility).toContain('font-size: var(--text-2xl)');
+    expect(credibility).not.toContain('grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 2.2fr)');
+    expect(credibility).not.toContain('font-family: var(--font-body)');
     expect(service).not.toMatch(/ledger|stage/i);
   });
 
