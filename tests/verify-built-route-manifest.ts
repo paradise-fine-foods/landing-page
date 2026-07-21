@@ -1,4 +1,4 @@
-import { demoBrands, demoProducts } from '../src/lib/cms/demo-data';
+import { demoBlogPosts, demoBrands, demoProducts } from '../src/lib/cms/demo-data';
 import { contactModes } from '../src/lib/enquiry/modes';
 import { locales } from '../src/lib/i18n/types';
 
@@ -11,11 +11,13 @@ export function expectedGeneratedHtmlRoutes(): string[] {
     routes.add(htmlRoute(locale));
     routes.add(htmlRoute(locale, 'products'));
     routes.add(htmlRoute(locale, 'brands'));
+    routes.add(htmlRoute(locale, 'blogs'));
     routes.add(htmlRoute(locale, 'contact'));
 
     for (const mode of contactModes) routes.add(htmlRoute(locale, 'contact', mode));
     for (const product of demoProducts) routes.add(htmlRoute(locale, 'products', product.slug[locale]));
     for (const brand of demoBrands) routes.add(htmlRoute(locale, 'brands', brand.slug[locale]));
+    for (const post of demoBlogPosts) routes.add(htmlRoute(locale, 'blogs', post.slug[locale]));
   }
 
   return [...routes].sort();

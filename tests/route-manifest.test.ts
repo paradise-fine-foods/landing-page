@@ -28,7 +28,7 @@ describe('generated HTML route manifest', () => {
     const dist = fixture();
     const routes = expectedGeneratedHtmlRoutes();
 
-    expect(routes).toHaveLength(32);
+    expect(routes).toHaveLength(42);
     expect(routes).toContain('index.html');
     expect(routes).toContain('404.html');
     expect(routes.some((route) => /vi\/(?:san-pham|thuong-hieu|lien-he)(?:\/|$)/.test(route))).toBe(false);
@@ -39,6 +39,7 @@ describe('generated HTML route manifest', () => {
     ['an unsupported locale', 'fr/index.html'],
     ['an unsupported contact mode', 'en/contact/partner/index.html'],
     ['an unknown product slug', 'vi/products/khong-ton-tai/index.html'],
+    ['an unknown blog slug', 'en/blogs/not-a-post/index.html'],
   ])('rejects %s', (_label, route) => {
     const dist = fixture();
     addRoute(dist, route);

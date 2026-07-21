@@ -1,0 +1,51 @@
+---
+import type { GetStaticPaths, InferGetStaticParamsType, InferGetStaticPropsType } from 'astro';
+import BlogArticle from '../../../components/blogs/BlogArticle.astro';
+import LatestBlogs from '../../../components/blogs/LatestBlogs.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { blogDetailPath, buildBlogRouteMaps, findBlogRoute } from '../../../lib/blogs/routes';
+import { getBlogPosts, getLatestBlogPosts } from '../../../lib/cms/queries';
+import { localizedPath } from '../../../lib/i18n/routes';
+import { counterpartLocale, getLocaleStaticPaths } from '../../../lib/i18n/static-paths';
+import { ui } from '../../../lib/i18n/ui';
+
+export const getStaticPaths = (async () => {
+  const [englishPosts, vietnamesePosts] = await Promise.all([getBlogPosts('en'), getBlogPosts('vi')]);
+  const routeMaps = buildBlogRouteMaps(englishPosts, vietnamesePosts);
+  const postsByLocale = { en: englishPosts, vi: vietnamesePosts };
+  const grouped = await Promise.all(getLocaleStaticPaths().map(async ({ props: { locale } }) =>
+    Promise.all(postsByLocale[locale].map(async (post) => {
+      const pathname = blogDetailPath(locale, post);
+      const alternateLocale = counterpartLocale(locale);
+      return {
+        params: { locale, slug: post.slug },
+        props: {
+          locale, post, pathname,
+          alternatePath: findBlogRoute(routeMaps, pathname, alternateLocale) ?? localizedPath(alternateLocale, 'blogs'),
+          suggestions: await getLatestBlogPosts(locale, 3, post.id),
+        },
+      };
+    })),
+  ));
+  return grouped.flat();
+}) satisfies GetStaticPaths;
+
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { locale, post, pathname, alternatePath, suggestions } = Astro.props as Props;
+const localeParam: Params['locale'] = Astro.params.locale;
+const slug: Params['slug'] = Astro.params.slug;
+void localeParam; void slug;
+const copy = ui[locale];
+---
+
+<SiteLayout {locale} title={`${post.title} | ${copy.siteName}`} description={post.excerpt} {pathname} {alternatePath} siteName={copy.siteName} image={post.image.src}>
+  <div class="blog-page container section-space">
+    <Breadcrumbs label={copy.blog.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.blogs, href: localizedPath(locale, 'blogs') }, { label: post.title }]} />
+    <BlogArticle {post} {locale} />
+  </div>
+  <LatestBlogs posts={suggestions} {locale} eyebrow={copy.blog.latestEyebrow} title={copy.blog.latestTitle} viewAllLabel={copy.blog.viewAll} />
+</SiteLayout>
+
+<style>.blog-page { min-inline-size: 0; }</style>

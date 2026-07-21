@@ -14,6 +14,8 @@ describe('localized routes', () => {
     expect(localizedPath('vi', 'products')).toBe('/vi/products/');
     expect(localizedPath('en', 'brands')).toBe('/en/brands/');
     expect(localizedPath('vi', 'brands')).toBe('/vi/brands/');
+    expect(localizedPath('en', 'blogs')).toBe('/en/blogs/');
+    expect(localizedPath('vi', 'blogs')).toBe('/vi/blogs/');
     expect(localizedPath('vi', 'contact')).toBe('/vi/contact/');
   });
 
@@ -56,6 +58,8 @@ test('consolidates every localized page shape under one static locale tree', () 
     'products/[slug].astro',
     'brands/index.astro',
     'brands/[slug].astro',
+    'blogs/index.astro',
+    'blogs/[slug].astro',
     'contact.astro',
     'contact/[mode].astro',
   ];
@@ -74,6 +78,7 @@ test('infers trusted locale props on every locale-only static page', () => {
     'index.astro',
     'products/index.astro',
     'brands/index.astro',
+    'blogs/index.astro',
     'contact.astro',
   ]) {
     const path = join(import.meta.dir, '..', 'src', 'pages', '[locale]', page);
