@@ -77,4 +77,18 @@ describe('bilingual blog data', () => {
       expect(() => validateDemoBlogPosts(invalid as never)).toThrow('temperature-discipline');
     }
   });
+
+  test('identifies sparse paragraphs and non-finite image dimensions by record ID', () => {
+    const mutations: Array<(post: Record<string, unknown>) => void> = [
+      (post) => { (post.sections as Record<string, unknown>).vi = [{ paragraphs: new Array(1) }]; },
+      (post) => { (post.image as Record<string, unknown>).width = Number.NaN; },
+      (post) => { (post.image as Record<string, unknown>).height = Infinity; },
+    ];
+
+    for (const mutate of mutations) {
+      const invalid = structuredClone(demoBlogPosts) as unknown as Array<Record<string, unknown>>;
+      mutate(invalid[0]!);
+      expect(() => validateDemoBlogPosts(invalid as never)).toThrow('temperature-discipline');
+    }
+  });
 });

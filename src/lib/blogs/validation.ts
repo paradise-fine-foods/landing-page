@@ -44,8 +44,8 @@ export const validateDemoBlogPosts = (posts: readonly DemoBlogPost[]): void => {
     if (!Number.isInteger(post.readingMinutes) || post.readingMinutes <= 0) fail(id, 'readingMinutes must be a positive integer');
     if (!isRecord(post.image)
       || !isNonBlankString(post.image.src)
-      || typeof post.image.width !== 'number' || post.image.width <= 0
-      || typeof post.image.height !== 'number' || post.image.height <= 0) fail(id, 'image is required');
+      || typeof post.image.width !== 'number' || !Number.isFinite(post.image.width) || post.image.width <= 0
+      || typeof post.image.height !== 'number' || !Number.isFinite(post.image.height) || post.image.height <= 0) fail(id, 'image is required');
 
     for (const locale of locales) {
       const slug = localizedText(id, post.slug, locale, 'slug');
@@ -64,7 +64,7 @@ export const validateDemoBlogPosts = (posts: readonly DemoBlogPost[]): void => {
         if (section.heading !== undefined && !isNonBlankString(section.heading)) fail(id, `${locale}.section heading must not be blank`);
         if (!Array.isArray(section.paragraphs)
           || section.paragraphs.length === 0
-          || section.paragraphs.some((paragraph) => !isNonBlankString(paragraph))) fail(id, `${locale}.section paragraphs must not be empty`);
+          || Array.from(section.paragraphs).some((paragraph) => !isNonBlankString(paragraph))) fail(id, `${locale}.section paragraphs must not be empty`);
       }
     }
   }
