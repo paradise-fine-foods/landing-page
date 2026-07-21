@@ -47,9 +47,11 @@ describe('homepage composition', () => {
     expect(page).toContain('getCategories');
     expect(page).toContain('getProducts');
     expect(page).toContain('getBrands');
+    expect(page).toContain('getLatestBlogPosts');
     expect(page).toContain('counterpartLocale');
     expect(page).toContain("import LivingHero from '../../components/sections/LivingHero.astro'");
     expect(page).toContain('<LivingHero');
+    expect(page).toContain('<LatestBlogs');
     expect(page).not.toMatch(/ProductStage|modelSrc|slot="stage"/);
     expect(page).not.toMatch(/locale\s*===|locale\s*!==/);
     expect(page).toContain('carousel={copy.home.carousel}');

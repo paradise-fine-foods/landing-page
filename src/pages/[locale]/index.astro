@@ -6,11 +6,12 @@ import CredibilityStrip from '../../components/sections/CredibilityStrip.astro';
 import CategoryDiscovery from '../../components/sections/CategoryDiscovery.astro';
 import FeaturedProducts from '../../components/sections/FeaturedProducts.astro';
 import FeaturedBrands from '../../components/sections/FeaturedBrands.astro';
+import LatestBlogs from '../../components/blogs/LatestBlogs.astro';
 import ServiceProof from '../../components/sections/ServiceProof.astro';
 import ChannelPathways from '../../components/sections/ChannelPathways.astro';
 import FinalCta from '../../components/sections/FinalCta.astro';
 import PartnerStrip from '../../components/sections/PartnerStrip.astro';
-import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getProducts } from '../../lib/cms/queries';
+import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getLatestBlogPosts, getProducts } from '../../lib/cms/queries';
 import { localizedPath } from '../../lib/i18n/routes';
 import { counterpartLocale, getLocaleStaticPaths } from '../../lib/i18n/static-paths';
 import { ui } from '../../lib/i18n/ui';
@@ -21,9 +22,9 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { locale } = Astro.props as Props;
 const pathname = localizedPath(locale, 'home');
 const alternatePath = localizedPath(counterpartLocale(locale), 'home');
-const [settings, featured, categories, products, brands] = await Promise.all([
+const [settings, featured, categories, products, brands, latestBlogs] = await Promise.all([
   getGlobalSettings(locale), getFeaturedContent(locale), getCategories(locale),
-  getProducts(locale, {}), getBrands(locale),
+  getProducts(locale, {}), getBrands(locale), getLatestBlogPosts(locale, 3),
 ]);
 const copy = ui[locale];
 const productsPath = localizedPath(locale, 'products');
@@ -48,6 +49,7 @@ const channels = [
   <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {categoryCounts} productLabel={copy.home.categoryProductLabel} {productsPath} />
   <FeaturedProducts eyebrow={copy.home.featuredProductsEyebrow} title={copy.home.featuredProductsTitle} products={products.filter((product) => product.featured)} locale={locale} carousel={copy.home.carousel} />
   <FeaturedBrands eyebrow={copy.home.featuredBrandsEyebrow} title={copy.home.featuredBrandsTitle} {selectedBrand} {selectedBrandProducts} {remainingBrands} locale={locale} />
+  <LatestBlogs posts={latestBlogs} {locale} eyebrow={copy.home.latestBlogsEyebrow} title={copy.home.latestBlogsTitle} viewAllLabel={copy.home.latestBlogsViewAll} />
   <PartnerStrip eyebrow={copy.home.partnersEyebrow} title={copy.home.partnersTitle} partners={settings.partners} />
   <ServiceProof eyebrow={copy.home.serviceEyebrow} title={copy.home.serviceTitle} description={copy.home.serviceDescription} temperatureLabel={copy.home.serviceTemperatureLabel} pillars={copy.home.operationalPillars} editorial={featured.editorial} />
   <ChannelPathways eyebrow={copy.home.channelsEyebrow} title={copy.home.channelsTitle} {channels} />
