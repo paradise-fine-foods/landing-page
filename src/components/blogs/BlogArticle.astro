@@ -1,0 +1,46 @@
+---
+import type { BlogPost } from '../../lib/cms/types';
+import { formatBlogDate, formatReadingTime } from '../../lib/blogs/presentation';
+import type { Locale } from '../../lib/i18n/types';
+import { ui } from '../../lib/i18n/ui';
+
+interface Props {
+  post: BlogPost;
+  locale: Locale;
+}
+
+const { post, locale } = Astro.props;
+const copy = ui[locale].blog;
+---
+
+<article class="blog-article" data-blog-article>
+  <header class="blog-article__header">
+    <div><p class="eyebrow">{post.category}</p><h1>{post.title}</h1><p class="blog-article__standfirst">{post.excerpt}</p></div>
+    <dl class="blog-article__label">
+      <div><dt class="visually-hidden">{copy.publishedLabel}</dt><dd><time datetime={post.publishedAt}>{formatBlogDate(locale, post.publishedAt)}</time></dd></div>
+      <div><dt class="visually-hidden">{copy.readingTimeLabel}</dt><dd>{formatReadingTime(copy.readingTime, post.readingMinutes)}</dd></div>
+      <div><dt class="visually-hidden">{copy.categoryLabel}</dt><dd>{post.category}</dd></div>
+    </dl>
+  </header>
+  <figure class="blog-article__visual"><img src={post.image.src} width={post.image.width} height={post.image.height} alt={post.image.alt} /></figure>
+  <div class="blog-article__body">
+    {post.sections.map((section) => <section>{section.heading && <h2>{section.heading}</h2>}{section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}</section>)}
+  </div>
+</article>
+
+<style>
+  .blog-article { min-inline-size: 0; }
+  .blog-article__header { display: grid; gap: clamp(var(--space-6), 7vw, var(--space-9)); grid-template-columns: minmax(0, 1fr) minmax(11rem, .25fr); padding-block: var(--space-7); }
+  .blog-article h1 { margin-block: var(--space-4); max-inline-size: 12ch; }
+  .blog-article__standfirst { font-family: var(--font-display); font-size: var(--text-xl); max-inline-size: 42ch; }
+  .blog-article__label { align-self: end; background: var(--color-mist-blue); border-radius: 2rem var(--radius-sm) var(--radius-sm) var(--radius-sm); display: grid; padding: var(--space-5); }
+  .blog-article__label div { border-block-end: 1px solid color-mix(in srgb, var(--color-paradise-blue) 35%, transparent); padding-block: var(--space-3); }
+  .blog-article__label div:last-child { border: 0; }
+  .blog-article__label dd { font-size: var(--text-sm); font-weight: 700; }
+  .blog-article__visual { aspect-ratio: 16 / 8; border-radius: var(--radius-sm) 6rem var(--radius-sm) var(--radius-sm); overflow: hidden; }
+  .blog-article__visual img { block-size: 100%; inline-size: 100%; object-fit: cover; }
+  .blog-article__body { display: grid; gap: var(--space-7); margin-inline: auto; max-inline-size: 46rem; padding-block: var(--space-8) var(--space-9); }
+  .blog-article__body section { display: grid; gap: var(--space-4); }
+  .blog-article__body section:first-child p:first-child { font-family: var(--font-display); font-size: var(--text-lg); }
+  @media (max-width: 42rem) { .blog-article__header { grid-template-columns: minmax(0, 1fr); } .blog-article__label { justify-self: start; } .blog-article__visual { aspect-ratio: 4 / 3; border-start-end-radius: 3rem; } }
+</style>

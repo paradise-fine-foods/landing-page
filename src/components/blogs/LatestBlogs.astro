@@ -1,0 +1,38 @@
+---
+import type { BlogPost } from '../../lib/cms/types';
+import type { Locale } from '../../lib/i18n/types';
+import { localizedPath } from '../../lib/i18n/routes';
+import BlogCard from './BlogCard.astro';
+
+interface Props {
+  posts: BlogPost[];
+  locale: Locale;
+  eyebrow: string;
+  title: string;
+  viewAllLabel: string;
+}
+
+const { posts, locale, eyebrow, title, viewAllLabel } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <section class="latest-blogs section-space" data-latest-blogs aria-labelledby="latest-blogs-title">
+    <div class="container">
+      <header class="latest-blogs__heading">
+        <div><p class="eyebrow">{eyebrow}</p><h2 id="latest-blogs-title">{title}</h2></div>
+        <a href={localizedPath(locale, 'blogs')}>{viewAllLabel}</a>
+      </header>
+      <div class="latest-blogs__grid">{posts.map((post) => <BlogCard {post} {locale} headingLevel="h3" />)}</div>
+    </div>
+  </section>
+)}
+
+<style>
+  .latest-blogs { background: color-mix(in srgb, var(--color-mist-blue) 38%, var(--color-rice-paper)); }
+  .latest-blogs__heading { align-items: end; display: flex; gap: var(--space-5); justify-content: space-between; margin-block-end: var(--space-7); }
+  .latest-blogs__heading h2 { margin-block-start: var(--space-3); }
+  .latest-blogs__heading > a { font-weight: 700; min-block-size: 2.75rem; padding-block: .65rem; }
+  .latest-blogs__grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 48rem) { .latest-blogs__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .latest-blogs__grid > :last-child { grid-column: 1 / -1; } }
+  @media (max-width: 34rem) { .latest-blogs__heading { align-items: start; flex-direction: column; } .latest-blogs__grid { grid-template-columns: minmax(0, 1fr); } .latest-blogs__grid > :last-child { grid-column: auto; } }
+</style>
