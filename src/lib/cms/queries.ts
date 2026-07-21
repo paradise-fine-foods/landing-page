@@ -3,17 +3,20 @@ import { filterProducts } from '../catalog/filter-products';
 import {
   demoBrands,
   demoBrandingAssets,
+  demoBlogPosts,
   demoCategories,
   demoFeaturedContent,
   demoGlobalSettings,
   demoProducts,
   type DemoBrand,
+  type DemoBlogPost,
   type DemoCategory,
   type DemoProduct,
 } from './demo-data';
 import type {
   Brand,
   BrandAccent,
+  BlogPost,
   Category,
   FeaturedContent,
   GlobalSettings,
@@ -23,6 +26,7 @@ import type {
   ProductQuery,
 } from './types';
 import { brandAccentTokens } from './types';
+import { validateDemoBlogPosts } from '../blogs/validation';
 export { submitEnquiry } from '../enquiry/submit';
 export { EnquiryValidationError } from '../enquiry/types';
 export type { EnquiryErrors, EnquiryInput, EnquirySuccess } from '../enquiry/types';
@@ -30,6 +34,8 @@ export type { EnquiryErrors, EnquiryInput, EnquirySuccess } from '../enquiry/typ
 type DemoImage = DemoProduct['image'];
 
 const defaultBrandAccent: BrandAccent = 'butter';
+
+validateDemoBlogPosts(demoBlogPosts);
 
 export const normalizeBrandAccent = (value: unknown): BrandAccent =>
   typeof value === 'string' && brandAccentTokens.includes(value as BrandAccent)
@@ -92,6 +98,21 @@ const localizeProduct = (product: DemoProduct, locale: Locale): Product => {
   };
 };
 
+const localizeBlogPost = (post: DemoBlogPost, locale: Locale): BlogPost => ({
+  id: post.id,
+  slug: post.slug[locale],
+  title: post.title[locale],
+  excerpt: post.excerpt[locale],
+  publishedAt: post.publishedAt,
+  readingMinutes: post.readingMinutes,
+  category: post.category[locale],
+  image: localizeImage(post.image, locale),
+  sections: post.sections[locale].map((section) => ({
+    ...(section.heading ? { heading: section.heading } : {}),
+    paragraphs: [...section.paragraphs],
+  })),
+});
+
 export const getGlobalSettings = async (locale: Locale): Promise<GlobalSettings> => ({
   siteName: demoGlobalSettings.siteName[locale],
   siteDescription: demoGlobalSettings.siteDescription[locale],
@@ -124,6 +145,26 @@ export const getProductBySlug = async (
 ): Promise<Product | undefined> => {
   const product = demoProducts.find((item) => item.slug[locale] === slug);
   return product ? localizeProduct(product, locale) : undefined;
+};
+
+export const getBlogPosts = async (locale: Locale): Promise<BlogPost[]> =>
+  demoBlogPosts.map((post) => localizeBlogPost(post, locale))
+    .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
+
+export const getLatestBlogPosts = async (
+  locale: Locale,
+  limit: number,
+  excludeId?: string,
+): Promise<BlogPost[]> => (await getBlogPosts(locale))
+  .filter(({ id }) => id !== excludeId)
+  .slice(0, Math.max(0, limit));
+
+export const getBlogPostBySlug = async (
+  locale: Locale,
+  slug: string,
+): Promise<BlogPost | undefined> => {
+  const post = demoBlogPosts.find((item) => item.slug[locale] === slug);
+  return post ? localizeBlogPost(post, locale) : undefined;
 };
 
 export const getBrands = async (locale: Locale): Promise<Brand[]> =>

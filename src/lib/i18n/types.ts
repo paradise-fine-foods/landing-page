@@ -1,4 +1,4 @@
-export type RouteKey = 'home' | 'products' | 'brands' | 'contact' | 'customerContact' | 'supplierContact';
+export type RouteKey = 'home' | 'products' | 'brands' | 'blogs' | 'contact' | 'customerContact' | 'supplierContact';
 
 export const locales = ['en', 'vi'] as const;
 

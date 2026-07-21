@@ -90,3 +90,20 @@ export interface ProductQuery {
   brand?: string[];
   application?: string[];
 }
+
+export interface BlogSection {
+  heading?: string;
+  paragraphs: string[];
+}
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  publishedAt: string;
+  readingMinutes: number;
+  category: string;
+  image: ImageAsset;
+  sections: BlogSection[];
+}

@@ -64,6 +64,19 @@ export interface DemoBrandingAsset {
   group: 'retail' | 'horeca' | 'ecommerce';
 }
 
+export interface DemoBlogSection { heading?: string; paragraphs: string[] }
+export interface DemoBlogPost {
+  id: string;
+  slug: LocalizedSlug;
+  title: LocalizedText;
+  excerpt: LocalizedText;
+  publishedAt: string;
+  readingMinutes: number;
+  category: LocalizedText;
+  image: DemoImageAsset;
+  sections: Record<'en' | 'vi', DemoBlogSection[]>;
+}
+
 const productImage = (en: string, vi: string): DemoImageAsset => ({
   src: productArtSrc,
   width: 1200,
@@ -295,3 +308,82 @@ export const demoFeaturedContent = {
     image: editorialImage('Abstract professional kitchen still life', 'Tĩnh vật bếp chuyên nghiệp trừu tượng'),
   },
 };
+
+export const demoBlogPosts: DemoBlogPost[] = [
+  {
+    id: 'temperature-discipline',
+    slug: { en: 'temperature-discipline-pastry', vi: 'ky-luat-nhiet-do-banh-ngot' },
+    title: { en: 'Why temperature discipline protects pastry performance', vi: 'VÃ¬ sao ká»· luáº­t nhiá»‡t Ä‘á»™ báº£o vá»‡ hiá»‡u suáº¥t lÃ m bÃ¡nh' },
+    excerpt: { en: 'Practical cold-chain notes for professional pastry teams.', vi: 'Ghi chÃº thá»±c táº¿ vá» chuá»—i láº¡nh cho Ä‘á»™i ngÅ© bÃ¡nh chuyÃªn nghiá»‡p.' },
+    publishedAt: '2026-07-12', readingMinutes: 6,
+    category: { en: 'Cold-chain notes', vi: 'Ghi chÃº chuá»—i láº¡nh' },
+    image: editorialImage('Professional pastry ingredients arranged for cold storage', 'NguyÃªn liá»‡u bÃ¡nh chuyÃªn nghiá»‡p Ä‘Æ°á»£c sáº¯p xáº¿p Ä‘á»ƒ báº£o quáº£n láº¡nh'),
+    sections: {
+      en: [
+        { paragraphs: ['Good pastry begins before the dough reaches the bench. Stable receiving and storage conditions help teams protect ingredient consistency.'] },
+        { heading: 'Make conditions visible', paragraphs: ['Record delivery temperatures, return chilled products promptly, and give every shift the same handling reference.'] },
+      ],
+      vi: [
+        { paragraphs: ['Má»™t máº» bÃ¡nh tá»‘t báº¯t Ä‘áº§u trÆ°á»›c khi bá»™t lÃªn bÃ n. Äiá»u kiá»‡n tiáº¿p nháº­n vÃ  báº£o quáº£n á»•n Ä‘á»‹nh giÃºp Ä‘á»™i ngÅ© duy trÃ¬ tÃ­nh nháº¥t quÃ¡n cá»§a nguyÃªn liá»‡u.'] },
+        { heading: 'LÃ m rÃµ Ä‘iá»u kiá»‡n báº£o quáº£n', paragraphs: ['Ghi nháº­n nhiá»‡t Ä‘á»™ khi giao hÃ ng, Ä‘Æ°a sáº£n pháº©m trá»Ÿ láº¡i kho láº¡nh ká»‹p thá»i vÃ  dÃ¹ng chung hÆ°á»›ng dáº«n xá»­ lÃ½ cho má»i ca lÃ m viá»‡c.'] },
+      ],
+    },
+  },
+  {
+    id: 'cream-for-service',
+    slug: { en: 'choosing-cream-for-service', vi: 'chon-kem-sua-cho-phuc-vu' },
+    title: { en: 'Choosing cream for a busy service', vi: 'Chá»n kem sá»¯a cho ca phá»¥c vá»¥ báº­n rá»™n' },
+    excerpt: { en: 'Match format and handling to the work your kitchen repeats every day.', vi: 'Káº¿t há»£p quy cÃ¡ch vÃ  cÃ¡ch xá»­ lÃ½ vá»›i cÃ´ng viá»‡c nhÃ  báº¿p láº·p láº¡i má»—i ngÃ y.' },
+    publishedAt: '2026-07-04', readingMinutes: 4,
+    category: { en: 'Application guide', vi: 'HÆ°á»›ng dáº«n á»©ng dá»¥ng' },
+    image: productImage('Cream carton on an abstract professional kitchen stage', 'Há»™p kem sá»¯a trÃªn bá»‘i cáº£nh báº¿p chuyÃªn nghiá»‡p trá»«u tÆ°á»£ng'),
+    sections: {
+      en: [
+        { paragraphs: ['The best cream choice starts with the task: whipping, sauces, finishing, or a combination across service.'] },
+        { heading: 'Choose for the workflow', paragraphs: ['Compare pack size, storage space, opening frequency, and the consistency your team needs during peak hours.'] },
+      ],
+      vi: [
+        { paragraphs: ['Lá»±a chá»n kem sá»¯a phÃ¹ há»£p báº¯t Ä‘áº§u tá»« cÃ´ng viá»‡c: Ä‘Ã¡nh bÃ´ng, lÃ m xá»‘t, hoÃ n thiá»‡n mÃ³n hoáº·c káº¿t há»£p trong suá»‘t ca phá»¥c vá»¥.'] },
+        { heading: 'Chá»n theo quy trÃ¬nh', paragraphs: ['So sÃ¡nh dung tÃ­ch, khÃ´ng gian báº£o quáº£n, táº§n suáº¥t má»Ÿ há»™p vÃ  Ä‘á»™ á»•n Ä‘á»‹nh Ä‘á»™i ngÅ© cáº§n trong giá» cao Ä‘iá»ƒm.'] },
+      ],
+    },
+  },
+  {
+    id: 'focused-dairy-house',
+    slug: { en: 'inside-a-focused-dairy-house', vi: 'ben-trong-nha-sua-chuyen-biet' },
+    title: { en: 'Inside a focused dairy house', vi: 'BÃªn trong má»™t nhÃ  sá»¯a chuyÃªn biá»‡t' },
+    excerpt: { en: 'Dependable professional formats begin with a clear production point of view.', vi: 'Quy cÃ¡ch chuyÃªn nghiá»‡p Ä‘Ã¡ng tin cáº­y báº¯t Ä‘áº§u tá»« Ä‘á»‹nh hÆ°á»›ng sáº£n xuáº¥t rÃµ rÃ ng.' },
+    publishedAt: '2026-06-26', readingMinutes: 5,
+    category: { en: 'Producer story', vi: 'CÃ¢u chuyá»‡n nhÃ  sáº£n xuáº¥t' },
+    image: livingHeroImage('Dairy producer presentation with professional ingredients', 'TrÃ¬nh bÃ y nhÃ  sáº£n xuáº¥t sá»¯a cÃ¹ng nguyÃªn liá»‡u chuyÃªn nghiá»‡p'),
+    sections: {
+      en: [
+        { paragraphs: ['A focused producer designs formats around repeatable kitchen work, not novelty alone.'] },
+        { heading: 'Clarity travels', paragraphs: ['Clear specifications help distributors and kitchen teams preserve the makerâ€™s intent through storage, delivery, and use.'] },
+      ],
+      vi: [
+        { paragraphs: ['Má»™t nhÃ  sáº£n xuáº¥t chuyÃªn biá»‡t xÃ¢y dá»±ng quy cÃ¡ch quanh cÃ´ng viá»‡c báº¿p cÃ³ thá»ƒ láº·p láº¡i, khÃ´ng chá»‰ quanh sá»± má»›i láº¡.'] },
+        { heading: 'Sá»± rÃµ rÃ ng Ä‘i cÃ¹ng sáº£n pháº©m', paragraphs: ['ThÃ´ng sá»‘ rÃµ rÃ ng giÃºp nhÃ  phÃ¢n phá»‘i vÃ  Ä‘á»™i ngÅ© báº¿p giá»¯ Ä‘Ãºng Ã½ Ä‘á»“ cá»§a nhÃ  sáº£n xuáº¥t trong báº£o quáº£n, giao hÃ ng vÃ  sá»­ dá»¥ng.'] },
+      ],
+    },
+  },
+  {
+    id: 'consistent-lamination',
+    slug: { en: 'consistent-lamination-workflows', vi: 'quy-trinh-can-lop-on-dinh' },
+    title: { en: 'Building a consistent lamination workflow', vi: 'XÃ¢y dá»±ng quy trÃ¬nh cÃ¡n lá»›p á»•n Ä‘á»‹nh' },
+    excerpt: { en: 'Small handling decisions make repeatable pastry work easier to sustain.', vi: 'Nhá»¯ng quyáº¿t Ä‘á»‹nh xá»­ lÃ½ nhá» giÃºp duy trÃ¬ cÃ´ng viá»‡c bÃ¡nh á»•n Ä‘á»‹nh hÆ¡n.' },
+    publishedAt: '2026-06-18', readingMinutes: 7,
+    category: { en: 'Kitchen notes', vi: 'Ghi chÃº nhÃ  báº¿p' },
+    image: editorialImage('Pastry lamination tools and butter on a work table', 'Dá»¥ng cá»¥ cÃ¡n lá»›p bÃ¡nh vÃ  bÆ¡ trÃªn bÃ n lÃ m viá»‡c'),
+    sections: {
+      en: [
+        { paragraphs: ['Consistency comes from controlling temperature, rest time, thickness, and the order in which each step happens.'] },
+        { heading: 'Write the repeatable version', paragraphs: ['Turn the successful sequence into a short shared method that every shift can follow and review.'] },
+      ],
+      vi: [
+        { paragraphs: ['TÃ­nh á»•n Ä‘á»‹nh Ä‘áº¿n tá»« viá»‡c kiá»ƒm soÃ¡t nhiá»‡t Ä‘á»™, thá»i gian nghá»‰, Ä‘á»™ dÃ y vÃ  thá»© tá»± cá»§a tá»«ng bÆ°á»›c.'] },
+        { heading: 'Ghi láº¡i phiÃªn báº£n cÃ³ thá»ƒ láº·p láº¡i', paragraphs: ['Chuyá»ƒn trÃ¬nh tá»± thÃ nh cÃ´ng thÃ nh phÆ°Æ¡ng phÃ¡p ngáº¯n gá»n Ä‘á»ƒ má»i ca lÃ m viá»‡c cÃ¹ng Ã¡p dá»¥ng vÃ  rÃ  soÃ¡t.'] },
+      ],
+    },
+  },
+];
