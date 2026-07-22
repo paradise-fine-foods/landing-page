@@ -228,11 +228,12 @@ describe('Precision Supply System identity', () => {
     expect(detail).toMatch(/@media \(max-width: 48rem\)[\s\S]*?\.product-detail__facts\s*\{[^}]*border-inline-start:\s*0/);
   });
 
-  test('derives organic brand-card fields from the CMS accent', () => {
+  test('keeps brand-card fields neutral instead of deriving presentation from CMS accents', () => {
     const card = source('src/components/brands/BrandCard.astro');
     expect(card).toContain('brand.accent');
-    expect(card).toContain('--brand-accent');
-    expect(card).toContain('color-mix(in srgb, var(--brand-accent)');
+    expect(cssRule(card, '.brand-card__organic-field')).toContain('background: var(--color-cold-paper)');
+    expect(cssRule(card, '.brand-card__organic-field')).toContain('border: 1px solid var(--color-brushed-steel)');
+    expect(card).not.toContain('--brand-accent');
   });
 
   test('uses the Living Ingredients thesis in both hero locales', () => {
@@ -324,6 +325,48 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card__organic-media')).toContain('border-radius: var(--radius-sm)');
     expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 2px solid var(--color-paradise-orange)');
     expect(card).not.toContain('var(--shape-drop)');
+  });
+
+  test('keeps remaining homepage sections neutral, rectangular, and shadow-free', () => {
+    const files = [
+      'src/components/sections/FeaturedBrands.astro',
+      'src/components/blogs/LatestBlogs.astro',
+      'src/components/blogs/BlogCard.astro',
+      'src/components/brands/BrandCard.astro',
+      'src/components/sections/PartnerStrip.astro',
+      'src/components/sections/ServiceProof.astro',
+      'src/components/sections/ChannelPathways.astro',
+      'src/components/sections/FinalCta.astro',
+    ];
+    for (const file of files) {
+      const component = source(file);
+      expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow/);
+    }
+    expect(source('src/components/sections/FinalCta.astro')).toContain('background: var(--color-graphite)');
+    expect(source('src/components/sections/FinalCta.astro')).toContain('color: var(--color-cold-paper)');
+  });
+
+  test('keeps remaining homepage reveal hooks visibly settled', () => {
+    const files = [
+      'src/components/sections/FeaturedBrands.astro',
+      'src/components/sections/PartnerStrip.astro',
+      'src/components/sections/ServiceProof.astro',
+      'src/components/sections/ChannelPathways.astro',
+      'src/components/sections/FinalCta.astro',
+    ];
+    for (const file of files) {
+      const component = source(file);
+      expect(component).not.toMatch(/600ms|700ms/);
+      for (const selector of [
+        ':global([data-motion-enhanced]) [data-reveal]',
+        ":global([data-motion-enhanced]) [data-reveal][data-revealed='true']",
+      ]) {
+        const declarations = cssRule(component, selector);
+        expect(declarations, `${file} ${selector}`).toContain('opacity: 1');
+        expect(declarations, `${file} ${selector}`).toContain('transform: none');
+        expect(declarations, `${file} ${selector}`).not.toContain('transition:');
+      }
+    }
   });
 
   test('isolates the product stage and orders the brand label above image layers', () => {

@@ -12,13 +12,12 @@ const { title, description, button, href } = Astro.props;
 </section>
 
 <style>
-  .final-cta { background: var(--color-paper-white); padding-block: var(--space-7) var(--space-9); }
-  .final-cta__shape { align-items: center; background: color-mix(in srgb, var(--color-paradise-orange) 14%, var(--color-rice-paper)); border-radius: 3rem 3rem 3rem 0.65rem; display: grid; gap: var(--space-6); grid-template-columns: 1fr auto; padding: clamp(var(--space-6), 6vw, var(--space-8)); position: relative; }
-  .final-cta__shape::before { background: var(--color-paradise-orange); block-size: 0.35rem; border-radius: 999px; content: ''; inline-size: clamp(4rem, 11vw, 8rem); inset-block-start: 0; inset-inline-start: clamp(var(--space-6), 6vw, var(--space-8)); position: absolute; }
+  .final-cta { background: var(--color-process-white); padding-block: var(--space-7) var(--space-9); }
+  .final-cta__shape { align-items: center; background: var(--color-graphite); border-radius: var(--radius-sm); color: var(--color-cold-paper); display: grid; gap: var(--space-6); grid-template-columns: 1fr auto; padding: clamp(var(--space-6), 6vw, var(--space-8)); position: relative; }
+  .final-cta__shape::before { background: var(--color-paradise-orange); block-size: 0.35rem; border-radius: var(--radius-sm); content: ''; inline-size: clamp(4rem, 11vw, 8rem); inset-block-start: 0; inset-inline-start: clamp(var(--space-6), 6vw, var(--space-8)); position: absolute; }
   .final-cta h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
   .final-cta h2 + p { margin-block-start: var(--space-2); max-inline-size: 42rem; }
-  :global([data-motion-enhanced]) [data-reveal] { opacity: 0; transform: translateY(1.5rem); }
-  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: opacity 600ms ease, transform 700ms cubic-bezier(.2,.75,.25,1); }
+  :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; }
+  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; }
   @media (max-width: 48rem) { .final-cta__shape { grid-template-columns: 1fr; } }
-  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } }
 </style>
