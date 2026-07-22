@@ -6,10 +6,16 @@ body {
 
 h1,
 h2,
-h3,
 .display-type {
   font-family: var(--font-display);
   font-weight: 500;
+  line-height: var(--leading-heading);
+  text-wrap: balance;
+}
+
+h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
   line-height: var(--leading-heading);
   text-wrap: balance;
 }
@@ -33,10 +39,10 @@ li {
 }
 
 .eyebrow {
-  color: var(--color-deep-herb);
+  color: var(--color-utility-grey);
   font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: var(--tracking-label);
+  letter-spacing: 0.03em;
   line-height: 1.4;
-  text-transform: uppercase;
+  text-transform: none;
 }

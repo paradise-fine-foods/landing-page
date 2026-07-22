@@ -5,8 +5,8 @@
 }
 
 html {
-  background: var(--color-rice-paper);
-  color: var(--color-deep-herb);
+  background: var(--color-cold-paper);
+  color: var(--color-graphite);
   overflow-x: clip;
   scroll-behavior: smooth;
 }
@@ -57,26 +57,26 @@ a {
 }
 
 a {
-  color: var(--color-deep-herb);
+  color: var(--color-graphite);
   text-decoration-thickness: 0.08em;
   text-underline-offset: 0.2em;
 }
 
 a:hover {
-  text-decoration-color: var(--color-paradise-blue);
+  text-decoration-color: var(--color-paradise-orange);
   text-decoration-thickness: 0.14em;
 }
 
 :focus-visible {
   border-radius: var(--radius-sm);
   box-shadow: var(--focus-ring);
-  outline: 2px solid var(--color-deep-herb);
+  outline: 2px solid var(--color-graphite);
   outline-offset: 3px;
 }
 
 ::selection {
-  background: var(--color-paradise-green);
-  color: var(--color-deep-herb);
+  background: color-mix(in srgb, var(--color-paradise-orange) 24%, var(--color-process-white));
+  color: var(--color-graphite);
 }
 
 .container {
@@ -85,7 +85,7 @@ a:hover {
 }
 
 .section-space {
-  padding-block: clamp(var(--space-8), 9vw, var(--space-9));
+  padding-block: clamp(var(--space-7), 7vw, var(--space-9));
 }
 
 .section-heading {

@@ -29,7 +29,7 @@ const contrastRatio = (foreground: string, background: string) => {
   return (values[0] + 0.05) / (values[1] + 0.05);
 };
 
-describe('Living Ingredients identity', () => {
+describe('Precision Supply System identity', () => {
   test('contains no 3D runtime, model, or stage contract', () => {
     const packageJson = JSON.parse(source('package.json'));
     expect(packageJson.dependencies?.three).toBeUndefined();
@@ -60,15 +60,28 @@ describe('Living Ingredients identity', () => {
     expect(source('src/components/global/Header.astro')).not.toContain('<span>Paradise</span>');
   });
 
-  test('defines the approved palette and organic mark primitive', () => {
+  test('defines the approved industrial palette and neutral compatibility mappings', () => {
     const tokens = source('src/styles/tokens.css').toLowerCase();
-    for (const value of ['#e46f2c', '#fa6c47', '#0796d2', '#94c11f', '#d94d55', '#fbfaf5', '#28342b', '#e8f6fa']) {
-      expect(tokens).toContain(value);
+    for (const declaration of [
+      '--color-process-white: #ffffff',
+      '--color-cold-paper: #f5f6f2',
+      '--color-brushed-steel: #d9dcd7',
+      '--color-graphite: #202522',
+      '--color-utility-grey: #68706a',
+      '--color-paradise-orange: #e46f2c',
+      '--color-success: #356146',
+      '--color-error: #9a3f38',
+    ]) expect(tokens).toContain(declaration);
+
+    for (const retiredHex of ['#fa6c47', '#0796d2', '#94c11f', '#d94d55', '#fbfaf5', '#28342b', '#e8f6fa']) {
+      expect(tokens).not.toContain(retiredHex);
     }
-    const mark = source('src/components/global/OrganicMark.astro');
-    expect(mark).toContain('aria-hidden="true"');
-    expect(mark).toContain('focusable="false"');
-    expect(mark).toContain("'drop' | 'seed' | 'petal'");
+
+    expect(tokens).toContain('--color-paper-white: var(--color-process-white)');
+    expect(tokens).toContain('--color-rice-paper: var(--color-cold-paper)');
+    expect(tokens).toContain('--color-mist-blue: var(--color-cold-paper)');
+    expect(tokens).toContain('--color-deep-herb: var(--color-graphite)');
+    expect(tokens).toContain('--shape-drop: var(--radius-sm)');
   });
 
   test('keeps the active palette free of retired compatibility aliases', () => {
@@ -89,7 +102,7 @@ describe('Living Ingredients identity', () => {
   });
 
   test('keeps small category and brand metadata text at contrast-safe deep herb', () => {
-    expect(contrastRatio('#28342b', '#ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#202522', '#ffffff')).toBeGreaterThanOrEqual(4.5);
     expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-deep-herb)');
     const brands = source('src/components/sections/FeaturedBrands.astro');
     expect(cssRule(brands, '.featured-brands__origin')).toContain('color: var(--color-deep-herb)');
@@ -116,7 +129,7 @@ describe('Living Ingredients identity', () => {
   });
 
   test('keeps small button and link text at WCAG AA contrast', () => {
-    expect(contrastRatio('#ffffff', '#28342b')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#ffffff', '#202522')).toBeGreaterThanOrEqual(4.5);
 
     const button = source('src/components/global/ButtonLink.astro');
     const primary = cssRule(button, '.button-link--primary');
@@ -128,8 +141,8 @@ describe('Living Ingredients identity', () => {
     expect(primaryHover).toContain('border-color: var(--color-paradise-tangerine)');
 
     const global = source('src/styles/global.css');
-    expect(cssRule(global, 'a')).toContain('color: var(--color-deep-herb)');
-    expect(cssRule(global, 'a:hover')).toContain('text-decoration-color: var(--color-paradise-blue)');
+    expect(cssRule(global, 'a')).toContain('color: var(--color-graphite)');
+    expect(cssRule(global, 'a:hover')).toContain('text-decoration-color: var(--color-paradise-orange)');
 
     const header = source('src/components/global/Header.astro');
     const navHover = cssRule(header, '.primary-nav a:hover');
@@ -143,8 +156,14 @@ describe('Living Ingredients identity', () => {
       .map(([, selector, declarations]) => ({ selector: selector.trim(), declarations }));
     expect(eyebrowRules.length).toBeGreaterThan(0);
     for (const { selector, declarations } of eyebrowRules) {
-      expect(declarations, `${selector} must use the contrast-safe text token`).toContain('color: var(--color-deep-herb)');
-      expect(declarations, `${selector} must not use bright blue as text`).not.toContain('color: var(--color-paradise-blue)');
+      expect(declarations, `${selector} must use the contrast-safe text token`).toContain('color: var(--color-utility-grey)');
+      for (const brightToken of [
+        '--color-paradise-orange',
+        '--color-paradise-tangerine',
+        '--color-paradise-blue',
+        '--color-paradise-green',
+        '--color-paradise-coral',
+      ]) expect(declarations, `${selector} must not use bright brand text`).not.toContain(brightToken);
     }
   });
 
