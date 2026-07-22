@@ -277,7 +277,6 @@ describe('Precision Supply System identity', () => {
       'var(--color-graphite)',
       'var(--color-brushed-steel)',
       'var(--color-paradise-orange)',
-      '160ms ease',
       'inline-size: 2.75rem',
       'block-size: 2.75rem',
       'inline-size: min(12rem, calc(100vw - 2.75rem))',
@@ -287,6 +286,9 @@ describe('Precision Supply System identity', () => {
     for (const removed of ['clip-path', 'drop-shadow', '@keyframes floating-rail-enter', '360ms cubic-bezier']) {
       expect(rail).not.toContain(removed);
     }
+
+    expect(rail).toContain('transition: translate var(--transition-base)');
+    expect(rail).toContain('transition: background-color var(--transition-fast)');
 
     expect(rail).not.toContain('linear-gradient');
     expect(rail).not.toContain('font-family: var(--font-display)');

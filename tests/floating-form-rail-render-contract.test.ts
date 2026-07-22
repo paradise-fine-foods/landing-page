@@ -23,6 +23,7 @@ describe('floating form rail rendering contract', () => {
       "[data-expanded='false'] {",
       'translate: calc(100% - 2.75rem) 0',
       'transition: translate var(--transition-base)',
+      'transition: background-color var(--transition-fast)',
       'initializeFloatingRail',
       'staticOnly?: boolean',
       "!staticOnly && <script>",
