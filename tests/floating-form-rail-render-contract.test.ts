@@ -4,6 +4,28 @@ import { readFile } from 'node:fs/promises';
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
 describe('floating form rail rendering contract', () => {
+  test('keeps a non-ready rail in normal flow without horizontal overflow', async () => {
+    const source = await read('../src/components/global/FloatingFormRail.astro');
+    const staticRail = source.match(/\.floating-form-rail:not\(\[data-ready\]\)\s*\{([^}]*)\}/)?.[1] ?? '';
+    const staticToggle = source.match(/\.floating-form-rail:not\(\[data-ready\]\) \.floating-form-rail__toggle\s*\{([^}]*)\}/)?.[1] ?? '';
+    const staticPanel = source.match(/\.floating-form-rail:not\(\[data-ready\]\) \.floating-form-rail__panel\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    for (const declaration of [
+      'position: static',
+      'transform: none',
+      'translate: none',
+      'inset: auto',
+      'inline-size: 100%',
+      'max-inline-size: var(--container-max)',
+      'margin-inline: auto',
+      'background: var(--color-cold-paper)',
+    ]) expect(staticRail).toContain(declaration);
+
+    expect(staticToggle).toContain('display: none');
+    expect(staticPanel).toContain('inline-size: 100%');
+    expect(staticPanel).toContain('max-inline-size: none');
+  });
+
   test('renders a label-free accessible server-side rail', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     for (const value of [

@@ -59,6 +59,29 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     z-index: 15;
   }
 
+  .floating-form-rail:not([data-ready]) {
+    align-items: stretch;
+    background: var(--color-cold-paper);
+    border-block-start: 1px solid var(--color-brushed-steel);
+    inset: auto;
+    inline-size: 100%;
+    margin-inline: auto;
+    max-inline-size: var(--container-max);
+    padding: var(--space-4) var(--container-inline);
+    pointer-events: auto;
+    position: static;
+    transform: none;
+    translate: none;
+    z-index: auto;
+  }
+
+  .floating-form-rail:not([data-ready]) .floating-form-rail__toggle { display: none; }
+
+  .floating-form-rail:not([data-ready]) .floating-form-rail__panel {
+    inline-size: 100%;
+    max-inline-size: none;
+  }
+
   .floating-form-rail[data-ready='true'][data-expanded='false'] {
     translate: calc(100% - 2.75rem) 0;
   }
