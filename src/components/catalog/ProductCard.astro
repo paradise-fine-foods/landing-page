@@ -34,8 +34,7 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
   .product-card { border: 0; display: grid; gap: var(--space-3); }
   .product-card__organic-media { aspect-ratio: 1 / 1; background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: block; isolation: isolate; overflow: hidden; position: relative; }
   .product-card__organic-media::before { background: var(--color-cold-paper); border-radius: var(--radius-sm); content: ''; inset: 12%; position: absolute; z-index: -1; }
-  .product-card__image img { block-size: 100%; inline-size: 100%; object-fit: cover; transition: transform var(--transition-base); }
-  .product-card:hover .product-card__image img { transform: scale(1.018); }
+  .product-card__image img { block-size: 100%; inline-size: 100%; object-fit: cover; }
   .product-card__meta { border-block-start: 2px solid var(--color-paradise-orange); color: var(--color-graphite); display: flex; font-size: 0.68rem; font-weight: 700; justify-content: space-between; letter-spacing: 0.05em; padding-block-start: var(--space-3); text-transform: uppercase; }
   .product-card :is(h2, h3) { font-size: clamp(1.45rem, 2vw, 1.9rem); }
   .product-card :is(h2, h3) a { align-items: center; color: var(--color-graphite); display: flex; min-block-size: 2.75rem; text-decoration: none; }

@@ -156,7 +156,7 @@ Replace the color, radius, focus, transition, and upper spacing portions of `src
   --radius-sm: 0;
   --radius-md: 0.25rem;
   --shape-drop: var(--radius-sm);
-  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-paradise-orange) 55%, transparent);
+  --focus-ring: 0 0 0 3px var(--color-paradise-orange);
   --transition-fast: 120ms ease;
   --transition-base: 160ms ease;
 }

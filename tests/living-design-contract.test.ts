@@ -84,6 +84,22 @@ describe('Precision Supply System identity', () => {
     expect(tokens).toContain('--shape-drop: var(--radius-sm)');
   });
 
+  test('uses an opaque Paradise-orange focus ring that contrasts with graphite', () => {
+    expect(contrastRatio('#e46f2c', '#202522')).toBeGreaterThanOrEqual(3);
+
+    const tokens = source('src/styles/tokens.css');
+    expect(tokens).toContain('--focus-ring: 0 0 0 3px var(--color-paradise-orange)');
+    expect(tokens).not.toMatch(/--focus-ring:[^;]*color-mix\(/);
+
+    const global = source('src/styles/global.css');
+    expect(cssRule(global, ':focus-visible')).toContain('box-shadow: var(--focus-ring)');
+    expect(cssRule(global, ':focus-visible')).toContain('outline: 2px solid var(--color-graphite)');
+
+    const plan = source('docs/superpowers/plans/2026-07-22-industrial-styling.md');
+    expect(plan).toContain('--focus-ring: 0 0 0 3px var(--color-paradise-orange);');
+    expect(plan).not.toMatch(/--focus-ring:[^;]*color-mix\(/);
+  });
+
   test('keeps the active palette free of retired compatibility aliases', () => {
     const tokens = source('src/styles/tokens.css').toLowerCase();
     expect(tokens).not.toContain('--color-cold-chain-blue');
@@ -125,6 +141,19 @@ describe('Precision Supply System identity', () => {
     expect(navRules.length).toBeGreaterThan(0);
     for (const { selector, declarations } of navRules) {
       expect(declarations, `${selector} must reserve Newsreader for display text`).not.toContain('var(--font-display)');
+    }
+
+    for (const [file, selector] of [
+      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__copy strong'],
+      ['src/components/sections/ChannelPathways.astro', '.channel-pathways__links strong'],
+      ['src/components/sections/ServiceProof.astro', '.service-proof__editorial strong'],
+      ['src/components/blogs/BlogArticle.astro', '.blog-article__standfirst'],
+      ['src/components/blogs/BlogArticle.astro', '.blog-article__body section:first-child p:first-child'],
+      ['src/pages/404.astro', '.not-found__art strong'],
+    ] as const) {
+      const declarations = cssRule(source(file), selector);
+      expect(declarations, `${file} ${selector} must use body type`).toContain('font-family: var(--font-body)');
+      expect(declarations, `${file} ${selector} must not use display type`).not.toContain('var(--font-display)');
     }
   });
 
@@ -200,7 +229,7 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(source('src/components/catalog/ProductMetadata.astro'), '.product-metadata')).toContain('border-inline-start: 2px solid var(--color-paradise-orange)');
   });
 
-  test('keeps inner-page accents organic and removes industrial presentation tokens', () => {
+  test('keeps industrial inner-page styling free of retired presentation tokens', () => {
     for (const file of [
       'src/components/catalog/CatalogFilters.astro',
       'src/components/catalog/ProductCard.astro',
@@ -303,6 +332,23 @@ describe('Precision Supply System identity', () => {
   });
 
   test('keeps standalone navigation targets and enquiry consent at 44px', () => {
+    const headerLink = cssRule(source('src/components/global/Header.astro'), '.primary-nav a');
+    expect(headerLink).toContain('align-items: center');
+    expect(headerLink).toContain('display: inline-flex');
+    expect(headerLink).toContain('min-block-size: 2.75rem');
+
+    const footerLink = cssRule(source('src/components/global/Footer.astro'), '.site-footer a');
+    expect(footerLink).toContain('align-items: center');
+    expect(footerLink).toContain('display: inline-flex');
+    expect(footerLink).toContain('min-block-size: 2.75rem');
+
+    for (const selector of ['.blog-card h2 a', '.blog-card h3 a']) {
+      const headlineLink = cssRule(source('src/components/blogs/BlogCard.astro'), selector);
+      expect(headlineLink, selector).toContain('align-items: center');
+      expect(headlineLink, selector).toContain('display: flex');
+      expect(headlineLink, selector).toContain('min-block-size: 2.75rem');
+    }
+
     expect(source('src/components/catalog/ProductCard.astro')).toMatch(/\.product-card :is\(h2, h3\) a\s*\{[^}]*min-block-size:\s*2\.75rem/);
     expect(cssRule(source('src/components/sections/FeaturedBrands.astro'), '.featured-brands__products a')).toContain('min-block-size: 2.75rem');
     expect(cssRule(source('src/components/global/Breadcrumbs.astro'), '.breadcrumbs a')).toContain('min-block-size: 2.75rem');
@@ -319,6 +365,22 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card__organic-media')).toContain('border-radius: var(--radius-sm)');
     expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 2px solid var(--color-paradise-orange)');
     expect(card).not.toContain('var(--shape-drop)');
+  });
+
+  test('keeps card and discovery images free of scale and transform motion', () => {
+    for (const [file, imageSelector, interactionSelector] of [
+      ['src/components/catalog/ProductCard.astro', '.product-card__image img', '.product-card:hover .product-card__image img'],
+      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__media img', '.category-discovery__item:hover img'],
+      ['src/components/blogs/BlogCard.astro', '.blog-card__image img', '.blog-card:hover .blog-card__image img'],
+    ] as const) {
+      const component = source(file);
+      const imageRule = cssRule(component, imageSelector);
+      const interactionRule = cssRule(component, interactionSelector);
+      expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/transition\s*:[^;]*(?:transform|scale)/);
+      expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      expect(interactionRule, `${file} ${interactionSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      expect(component, `${file} must not scale scoped imagery`).not.toMatch(/scale\s*\(/);
+    }
   });
 
   test('keeps remaining homepage sections neutral, rectangular, and shadow-free', () => {
