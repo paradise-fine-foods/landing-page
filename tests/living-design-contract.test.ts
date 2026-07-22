@@ -103,7 +103,7 @@ describe('Precision Supply System identity', () => {
 
   test('keeps small category and brand metadata text at contrast-safe graphite', () => {
     expect(contrastRatio('#202522', '#ffffff')).toBeGreaterThanOrEqual(4.5);
-    expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-deep-herb)');
+    expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-graphite)');
     const brands = source('src/components/sections/FeaturedBrands.astro');
     expect(cssRule(brands, '.featured-brands__origin')).toContain('color: var(--color-deep-herb)');
     expect(cssRule(brands, '.featured-brands__secondary article > p:first-child')).toContain('color: var(--color-deep-herb)');
@@ -314,10 +314,16 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.field--consent label')).toContain('min-block-size: 2.75rem');
   });
 
-  test('uses the defined mist-blue token for the Living Hero art backplate', () => {
+  test('uses neutral rectangular hero and product stages', () => {
     const hero = source('src/components/sections/LivingHero.astro');
-    expect(hero).toContain('background: var(--color-mist-blue)');
-    expect(hero).not.toContain('--color-morning-mist');
+    expect(cssRule(hero, '.living-hero__art')).toContain('background: var(--color-cold-paper)');
+    expect(cssRule(hero, '[data-living-canvas]')).toContain('display: none');
+    expect(hero).not.toContain('drop-shadow');
+
+    const card = source('src/components/catalog/ProductCard.astro');
+    expect(cssRule(card, '.product-card__organic-media')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 2px solid var(--color-paradise-orange)');
+    expect(card).not.toContain('var(--shape-drop)');
   });
 
   test('isolates the product stage and orders the brand label above image layers', () => {
