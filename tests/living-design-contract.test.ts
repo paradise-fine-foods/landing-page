@@ -377,4 +377,32 @@ describe('Precision Supply System identity', () => {
     expect(label).toContain('inset-block-start: 16%');
     expect(label).toContain('inset-inline-start: 36%');
   });
+
+  test('removes legacy decorative presentation from every active styled surface', () => {
+    const styledFiles = filesBelow('src/components')
+      .filter((path) => path.endsWith('.astro') && path !== 'src/components/global/OrganicMark.astro');
+    const pageFiles = filesBelow('src/pages').filter((path) => path.endsWith('.astro'));
+
+    for (const file of [...styledFiles, ...pageFiles]) {
+      const component = source(file);
+      expect(component, file).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow\s*:\s*(?!\s*none\s*;)|linear-gradient|color-mix\(|clip-path/);
+      expect(component, file).not.toMatch(/border-radius:\s*(?:[5-9]px|[1-9]\d+px|(?:0\.[3-9]|[1-9]\d*(?:\.\d+)?)rem|[1-9]\d*%|999px)/);
+      expect(component, file).not.toMatch(/(?:[2-9]\d\d|[1-9]\d{3,})ms/);
+    }
+
+    expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');
+    expect(source('src/components/sections/LivingHero.astro')).toMatch(/\[data-living-canvas\]\s*\{[^}]*display:\s*none/);
+  });
+
+  test('preserves the exact homepage section order', () => {
+    const page = source('src/pages/[locale]/index.astro');
+    const sections = [
+      '<LivingHero', '<CredibilityStrip', '<CategoryDiscovery', '<FeaturedProducts',
+      '<FeaturedBrands', '<LatestBlogs', '<PartnerStrip', '<ServiceProof',
+      '<ChannelPathways', '<FinalCta',
+    ];
+    const positions = sections.map((section) => page.indexOf(section));
+    expect(positions.every((position) => position >= 0)).toBe(true);
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  });
 });
