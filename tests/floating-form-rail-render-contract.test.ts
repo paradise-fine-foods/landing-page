@@ -22,16 +22,15 @@ describe('floating form rail rendering contract', () => {
       'align-items: flex-start',
       "[data-expanded='false'] {",
       'translate: calc(100% - 2.75rem) 0',
-      'transition: translate 360ms cubic-bezier(0.22, 1, 0.36, 1)',
+      'transition: translate var(--transition-base)',
       'initializeFloatingRail',
       'staticOnly?: boolean',
       "!staticOnly && <script>",
       "[data-ready='true'] .floating-form-rail__toggle",
       ".floating-form-rail__panel[inert]",
-      'drop-shadow',
       'inline-size: 2.75rem',
       'block-size: 2.75rem',
-      'inline-size: min(14rem, calc(100vw - 2.75rem))',
+      'inline-size: min(12rem, calc(100vw - 2.75rem))',
       'inline-size: min(16.75rem, calc(100vw - 2rem))',
       'min-block-size: 2.75rem',
     ]) expect(source).toContain(value);
@@ -45,6 +44,10 @@ describe('floating form rail rendering contract', () => {
     expect(source).not.toContain("[data-expanded='false'] .floating-form-rail__panel");
     expect(source).not.toContain('animation: floating-rail-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both');
     expect(source).not.toContain('translate: 1rem 0');
+    expect(source).not.toContain('clip-path');
+    expect(source).not.toContain('drop-shadow');
+    expect(source).not.toContain('@keyframes floating-rail-enter');
+    expect(source).not.toContain('360ms cubic-bezier');
 
     for (const obsolete of [
       'data-floating-rail-label',

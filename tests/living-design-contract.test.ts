@@ -11,7 +11,7 @@ const filesBelow = (directory: string): string[] => readdirSync(join(root, direc
     const path = `${directory}/${entry.name}`;
     return entry.isDirectory() ? filesBelow(path) : [path];
   });
-const cssRule = (css: string, selector: string) => [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+const cssRule = (css: string, selector: string) => [...(css.includes('<style>') ? css.slice(css.lastIndexOf('<style>') + '<style>'.length) : css).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .filter(([, selectors]) => selectors.split(',').some((item) => item.trim() === selector))
   .at(-1)?.[2] ?? '';
 
@@ -101,7 +101,7 @@ describe('Precision Supply System identity', () => {
     expect(activeFiles.filter((path) => source(path).includes('--color-cold-chain-blue'))).toEqual([]);
   });
 
-  test('keeps small category and brand metadata text at contrast-safe deep herb', () => {
+  test('keeps small category and brand metadata text at contrast-safe graphite', () => {
     expect(contrastRatio('#202522', '#ffffff')).toBeGreaterThanOrEqual(4.5);
     expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-deep-herb)');
     const brands = source('src/components/sections/FeaturedBrands.astro');
@@ -134,11 +134,11 @@ describe('Precision Supply System identity', () => {
     const button = source('src/components/global/ButtonLink.astro');
     const primary = cssRule(button, '.button-link--primary');
     const primaryHover = cssRule(button, '.button-link--primary:hover');
-    expect(primary).toContain('background: var(--color-deep-herb)');
-    expect(primary).toContain('color: var(--color-paper-white)');
+    expect(primary).toContain('background: var(--color-graphite)');
+    expect(primary).toContain('color: var(--color-process-white)');
     expect(primary).toContain('border-color: var(--color-paradise-orange)');
-    expect(primaryHover).toContain('background: var(--color-deep-herb)');
-    expect(primaryHover).toContain('border-color: var(--color-paradise-tangerine)');
+    expect(primaryHover).toContain('background: var(--color-graphite)');
+    expect(primaryHover).toContain('border-color: var(--color-paradise-orange)');
 
     const global = source('src/styles/global.css');
     expect(cssRule(global, 'a')).toContain('color: var(--color-graphite)');
@@ -146,8 +146,13 @@ describe('Precision Supply System identity', () => {
 
     const header = source('src/components/global/Header.astro');
     const navHover = cssRule(header, '.primary-nav a:hover');
-    expect(navHover).toContain('color: var(--color-deep-herb)');
-    expect(navHover).toContain('text-decoration-color: var(--color-paradise-blue)');
+    expect(navHover).toContain('color: var(--color-graphite)');
+    expect(navHover).toContain('text-decoration-color: var(--color-paradise-orange)');
+
+    expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');
+    expect(cssRule(button, '.button-link--primary')).toContain('background: var(--color-graphite)');
+    expect(cssRule(button, '.button-link--primary')).toContain('border-color: var(--color-paradise-orange)');
+    expect(cssRule(header, '.site-header')).toContain('border-bottom: 1px solid var(--color-brushed-steel)');
   });
 
   test('keeps every global eyebrow text rule at safe contrast', () => {
@@ -264,24 +269,24 @@ describe('Precision Supply System identity', () => {
     expect(page.indexOf('</footer>')).toBeLessThan(page.indexOf(rail));
   });
 
-  test('styles the floating rail as one simple animated ingredient label', () => {
+  test('styles the floating rail as a neutral industrial action panel', () => {
     const rail = source('src/components/global/FloatingFormRail.astro');
-    for (const token of [
-      'var(--color-rice-paper)',
-      'var(--color-paper-white)',
-      'var(--color-deep-herb)',
+    for (const value of [
+      'var(--color-cold-paper)',
+      'var(--color-process-white)',
+      'var(--color-graphite)',
+      'var(--color-brushed-steel)',
       'var(--color-paradise-orange)',
-      'var(--color-mist-blue)',
-      'clip-path',
-      '360ms cubic-bezier(0.22, 1, 0.36, 1)',
-      '@keyframes floating-rail-enter',
-      '@media (prefers-reduced-motion: reduce)',
-      'min-block-size: 2.75rem',
-      'block-size: 2.75rem',
+      '160ms ease',
       'inline-size: 2.75rem',
-      'inset-inline-end: 0',
-      'drop-shadow(0 0.75rem 1.25rem',
-    ]) expect(rail).toContain(token);
+      'block-size: 2.75rem',
+      'inline-size: min(12rem, calc(100vw - 2.75rem))',
+      '@media (prefers-reduced-motion: reduce)',
+    ]) expect(rail).toContain(value);
+
+    for (const removed of ['clip-path', 'drop-shadow', '@keyframes floating-rail-enter', '360ms cubic-bezier']) {
+      expect(rail).not.toContain(removed);
+    }
 
     expect(rail).not.toContain('linear-gradient');
     expect(rail).not.toContain('font-family: var(--font-display)');
