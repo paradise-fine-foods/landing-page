@@ -4,6 +4,16 @@ import { readFile } from 'node:fs/promises';
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
 describe('floating form rail rendering contract', () => {
+  test('anchors the ready desktop rail below the header and clear of mid-page controls', async () => {
+    const source = await read('../src/components/global/FloatingFormRail.astro');
+    const desktopRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(desktopRail).toContain('top: calc(5rem + var(--space-6))');
+    expect(desktopRail).toContain('transform: none');
+    expect(desktopRail).not.toContain('top: 50%');
+    expect(desktopRail).not.toContain('translateY(-50%)');
+  });
+
   test('keeps a non-ready rail in normal flow without horizontal overflow', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     const staticRail = source.match(/\.floating-form-rail:not\(\[data-ready\]\)\s*\{([^}]*)\}/)?.[1] ?? '';
