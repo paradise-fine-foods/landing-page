@@ -286,7 +286,7 @@ Make only CSS changes inside the listed Astro files. Use these exact presentatio
 /* Rail */
 .floating-form-rail { filter: none; transition: translate var(--transition-base); }
 .floating-form-rail__toggle { background: var(--color-graphite); border: 0; border-inline-start: 2px solid var(--color-paradise-orange); color: var(--color-process-white); filter: none; transition: background-color var(--transition-fast); }
-.floating-form-rail__panel { background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-block-start: 2px solid var(--color-paradise-orange); clip-path: none; filter: none; inline-size: min(12rem, calc(100vw - 2.75rem)); padding: var(--space-1) var(--space-3); }
+.floating-form-rail__panel { background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-block-start: 2px solid var(--color-paradise-orange); filter: none; inline-size: min(12rem, calc(100vw - 2.75rem)); padding: var(--space-1) var(--space-3); }
 .floating-form-rail__panel a { border-block-end: 1px solid var(--color-brushed-steel); color: var(--color-graphite); transition: background-color var(--transition-fast), color var(--transition-fast); }
 .floating-form-rail__panel a:hover,
 .floating-form-rail__panel a:focus-visible { background: var(--color-cold-paper); color: var(--color-graphite); }
