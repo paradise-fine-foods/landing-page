@@ -227,12 +227,14 @@ for (const value of [
   'var(--color-graphite)',
   'var(--color-brushed-steel)',
   'var(--color-paradise-orange)',
-  '160ms ease',
   'inline-size: 2.75rem',
   'block-size: 2.75rem',
   'inline-size: min(12rem, calc(100vw - 2.75rem))',
   '@media (prefers-reduced-motion: reduce)',
 ]) expect(rail).toContain(value);
+
+expect(cssRule(rail, '.floating-form-rail')).toContain('transition: translate var(--transition-base)');
+expect(cssRule(rail, '.floating-form-rail__toggle')).toContain('transition: background-color var(--transition-fast)');
 
 for (const removed of ['clip-path', 'drop-shadow', '@keyframes floating-rail-enter', '360ms cubic-bezier']) {
   expect(rail).not.toContain(removed);
