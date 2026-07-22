@@ -13,6 +13,9 @@ node_modules/
 # isolated agent worktrees
 .worktrees/
 
+# subagent-driven development scratch ledger
+.superpowers/sdd/
+
 # logs
 npm-debug.log*
 yarn-debug.log*
