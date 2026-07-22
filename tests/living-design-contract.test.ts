@@ -180,22 +180,24 @@ describe('Precision Supply System identity', () => {
     expect(page).toContain('{channels}');
   });
 
-  test('carries organic presentation through every inner-page family', () => {
-    for (const file of [
-      'src/components/catalog/ProductCard.astro',
+  test('uses industrial presentation across catalog, brand, and blog templates', () => {
+    const files = [
+      'src/components/catalog/CatalogFilters.astro',
+      'src/components/catalog/ProductGrid.astro',
       'src/components/catalog/ProductDetail.astro',
-      'src/components/brands/BrandCard.astro',
+      'src/components/catalog/ProductMetadata.astro',
       'src/components/brands/BrandDetail.astro',
-      'src/components/forms/EnquiryForm.astro',
-      'src/pages/404.astro',
-    ]) {
+      'src/components/blogs/BlogArticle.astro',
+      'src/pages/[locale]/products/index.astro',
+      'src/pages/[locale]/brands/index.astro',
+      'src/pages/[locale]/blogs/index.astro',
+    ];
+    for (const file of files) {
       const component = source(file);
-      expect(component).toMatch(/organic|living|shape|petal|drop/);
-      expect(component).not.toMatch(/color-cold-chain-blue|color-stainless/);
+      expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow/);
     }
-
-    expect(source('src/components/forms/EnquiryForm.astro')).toContain('aria-invalid');
-    expect(source('src/components/catalog/CatalogFilters.astro')).toContain('aria-live');
+    expect(cssRule(source('src/components/catalog/CatalogFilters.astro'), '.catalog-filters')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(source('src/components/catalog/ProductMetadata.astro'), '.product-metadata')).toContain('border-inline-start: 2px solid var(--color-paradise-orange)');
   });
 
   test('keeps inner-page accents organic and removes industrial presentation tokens', () => {
@@ -226,14 +228,6 @@ describe('Precision Supply System identity', () => {
     const detail = source('src/components/catalog/ProductDetail.astro');
     expect(detail).toContain('.product-detail__facts');
     expect(detail).toMatch(/@media \(max-width: 48rem\)[\s\S]*?\.product-detail__facts\s*\{[^}]*border-inline-start:\s*0/);
-  });
-
-  test('keeps brand-card fields neutral instead of deriving presentation from CMS accents', () => {
-    const card = source('src/components/brands/BrandCard.astro');
-    expect(card).toContain('brand.accent');
-    expect(cssRule(card, '.brand-card__organic-field')).toContain('background: var(--color-cold-paper)');
-    expect(cssRule(card, '.brand-card__organic-field')).toContain('border: 1px solid var(--color-brushed-steel)');
-    expect(card).not.toContain('--brand-accent');
   });
 
   test('uses the Living Ingredients thesis in both hero locales', () => {

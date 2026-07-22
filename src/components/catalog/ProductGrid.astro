@@ -41,10 +41,10 @@ const { products, locale, copy, showEmptyState = true, cardHeadingLevel = 'h3' }
 
 <style>
   .product-grid { display: grid; gap: clamp(var(--space-6), 4vw, var(--space-8)) var(--space-5); grid-template-columns: repeat(3, minmax(0, 1fr)); padding-block: var(--space-7); }
-  .catalog-empty { background: var(--color-mist-blue); border-radius: var(--shape-drop); padding: var(--space-8); text-align: center; }
+  .catalog-empty { background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); padding: var(--space-8); text-align: center; }
   .catalog-empty h2 { font-size: var(--text-xl); }
   .catalog-empty p { margin: var(--space-3) auto var(--space-5); max-inline-size: var(--measure); }
-  .catalog-empty button { background: var(--color-deep-herb); border: 1px solid var(--color-paradise-orange); color: var(--color-paper-white); cursor: pointer; min-block-size: 2.75rem; padding: var(--space-3) var(--space-5); }
+  .catalog-empty button { background: var(--color-graphite); border: 1px solid var(--color-brushed-steel); color: var(--color-process-white); cursor: pointer; min-block-size: 2.75rem; padding: var(--space-3) var(--space-5); }
   @media (max-width: 52rem) { .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 36rem) { .product-grid { grid-template-columns: minmax(0, 1fr); } }
 </style>
