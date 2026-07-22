@@ -64,6 +64,7 @@ describe('bilingual blog data', () => {
     const unsafeSlugs = [
       ' story', 'story ', '.', '..', 'story/next', 'story\\next', 'story?query', 'story#fragment',
       'story%2Fnext', 'story%5Cnext', 'story%3Fquery', 'story%23fragment', 'story%00',
+      '%2e', '%2E', '%2e%2e', '%2E%2E',
     ];
 
     for (const slug of unsafeSlugs) {

@@ -30,7 +30,7 @@ const isSingleRouteSegment = (value: string): boolean =>
   && value !== '.'
   && value !== '..'
   && !/[\\/?#;\u0000-\u001F\u007F]/.test(value)
-  && !/%(?:0[0-9a-f]|1[0-9a-f]|23|2f|3f|3b|5c|7f)/i.test(value);
+  && !/%(?:0[0-9a-f]|1[0-9a-f]|23|2e|2f|3f|3b|5c|7f)/i.test(value);
 
 export const validateDemoBlogPosts = (posts: readonly DemoBlogPost[]): void => {
   const ids = new Set<string>();
