@@ -60,6 +60,19 @@ describe('bilingual blog data', () => {
     expect(() => validateDemoBlogPosts(emptySections)).toThrow('temperature-discipline');
   });
 
+  test('rejects unsafe localized route-segment slugs by record ID', () => {
+    const unsafeSlugs = [
+      ' story', 'story ', '.', '..', 'story/next', 'story\\next', 'story?query', 'story#fragment',
+      'story%2Fnext', 'story%5Cnext', 'story%3Fquery', 'story%23fragment', 'story%00',
+    ];
+
+    for (const slug of unsafeSlugs) {
+      const invalid = structuredClone(demoBlogPosts);
+      invalid[0]!.slug.en = slug;
+      expect(() => validateDemoBlogPosts(invalid)).toThrow('temperature-discipline');
+    }
+  });
+
   test('identifies malformed nested content by record ID', () => {
     const mutations: Array<(post: Record<string, unknown>) => void> = [
       (post) => { post.image = undefined; },

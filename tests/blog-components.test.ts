@@ -16,7 +16,7 @@ describe('blog components', () => {
     }
   });
 
-  test('renders semantic cards with localized time, image, and descriptive links', () => {
+  test('renders semantic cards with title-specific localized links and deferred non-lead images', () => {
     const card = source('src/components/blogs/BlogCard.astro');
     expect(card).toContain('<article');
     expect(card).toContain('<time datetime={post.publishedAt}>');
@@ -25,6 +25,17 @@ describe('blog components', () => {
     expect(card).toContain('alt={post.image.alt}');
     expect(card).toContain('blog-card--lead');
     expect(card).toContain('blog-card__label');
+    expect(card).toContain('const storyLinkLabel = `${copy.readStory}: ${post.title}`;');
+    expect(card.match(/aria-label=\{storyLinkLabel\}/g)).toHaveLength(2);
+    expect(card).toContain("const imageLoading = variant === 'lead' ? 'eager' : 'lazy';");
+    expect(card).toContain('loading={imageLoading}');
+    expect(card).toContain('decoding="async"');
+  });
+
+  test('uses a contrast-safe category text color', () => {
+    const card = source('src/components/blogs/BlogCard.astro');
+    expect(card).toContain('.blog-card__meta span:first-child { color: var(--color-deep-herb); }');
+    expect(card).not.toContain('.blog-card__meta span:first-child { color: var(--color-paradise-blue); }');
   });
 
   test('omits empty latest sections and keeps article heading hierarchy', () => {

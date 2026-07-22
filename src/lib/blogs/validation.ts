@@ -25,6 +25,13 @@ const localizedText = (
   return fail(id, `${locale}.${field} is required`);
 };
 
+const isSingleRouteSegment = (value: string): boolean =>
+  value === value.trim()
+  && value !== '.'
+  && value !== '..'
+  && !/[\\/?#;\u0000-\u001F\u007F]/.test(value)
+  && !/%(?:0[0-9a-f]|1[0-9a-f]|23|2f|3f|3b|5c|7f)/i.test(value);
+
 export const validateDemoBlogPosts = (posts: readonly DemoBlogPost[]): void => {
   const ids = new Set<string>();
   const slugs = { en: new Set<string>(), vi: new Set<string>() };
@@ -49,6 +56,7 @@ export const validateDemoBlogPosts = (posts: readonly DemoBlogPost[]): void => {
 
     for (const locale of locales) {
       const slug = localizedText(id, post.slug, locale, 'slug');
+      if (!isSingleRouteSegment(slug)) fail(id, `${locale}.slug must be a single route segment`);
       localizedText(id, post.title, locale, 'title');
       localizedText(id, post.excerpt, locale, 'excerpt');
       localizedText(id, post.category, locale, 'category');

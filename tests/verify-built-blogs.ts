@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { blogDetailPath } from '../src/lib/blogs/routes';
 import { getBlogPosts, getLatestBlogPosts } from '../src/lib/cms/queries';
 import type { BlogPost } from '../src/lib/cms/types';
+import { ui } from '../src/lib/i18n/ui';
 
 export const extractLatestBlogSection = (html: string): string =>
   html.match(/<section\b[^>]*data-latest-blogs[^>]*>[\s\S]*?<\/section>/)?.[0] ?? '';
@@ -31,12 +32,17 @@ export const assertSemanticDate = (html: string, publishedAt: string): void => {
   assert.match(html, new RegExp(`<time\\b[^>]*\\bdatetime="${publishedAt}"`), `semantic date missing for ${publishedAt}`);
 };
 
+export const extractBlogArticle = (html: string): string =>
+  html.match(/<article\b(?=[^>]*\bdata-blog-article(?:\s|=|>))[^>]*>[\s\S]*?<\/article>/)?.[0] ?? '';
+
 export const assertLocalizedArticleOutput = (
   html: string,
   post: Pick<BlogPost, 'title' | 'excerpt' | 'sections'>,
 ): void => {
+  const scoped = extractBlogArticle(html);
+  assert.ok(scoped, 'blog article is missing');
   for (const text of [post.title, post.excerpt, ...post.sections.flatMap((section) => [section.heading, ...section.paragraphs])]) {
-    if (text) assert.ok(html.includes(text), `localized article content is missing ${text}`);
+    if (text) assert.ok(scoped.includes(text), `localized article content is missing ${text}`);
   }
 };
 
@@ -45,6 +51,7 @@ export const assertArticleMetadata = (
   locale: 'en' | 'vi',
   path: string,
   alternatePath: string,
+  post?: Pick<BlogPost, 'title' | 'excerpt'>,
 ): void => {
   const origin = 'https://paradisefinefoods.com';
   const alternateLocale = locale === 'en' ? 'vi' : 'en';
@@ -53,6 +60,17 @@ export const assertArticleMetadata = (
   assert.ok(html.includes(`<link rel="alternate" hreflang="${alternateLocale}" href="${origin}${alternatePath}">`), `${path} ${alternateLocale} alternate missing`);
   const escapedPath = alternatePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   assert.match(html, new RegExp(`<a\\b(?=[^>]*\\bhref="${escapedPath}")(?=[^>]*\\bhreflang="${alternateLocale}")[^>]*>`), `${path} language-switch counterpart missing`);
+  if (post) {
+    const title = `${post.title} | ${ui[locale].siteName}`;
+    const articleImage = extractBlogArticle(html).match(/<img\b[^>]*\bsrc="([^"]+)"/)?.[1];
+    assert.ok(articleImage, `${path} article image missing`);
+    const image = new URL(articleImage, origin).toString();
+    assert.ok(html.includes(`<title>${title}</title>`), `${path} title metadata missing`);
+    assert.ok(html.includes(`<meta name="description" content="${post.excerpt}">`), `${path} description metadata missing`);
+    assert.ok(html.includes(`<meta property="og:title" content="${title}">`), `${path} Open Graph title missing`);
+    assert.ok(html.includes(`<meta property="og:description" content="${post.excerpt}">`), `${path} Open Graph description missing`);
+    assert.ok(html.includes(`<meta property="og:image" content="${image}">`), `${path} Open Graph image missing`);
+  }
 };
 
 export const verifyBuiltBlogs = async (dist = join(import.meta.dir, '..', 'dist')): Promise<void> => {
@@ -79,7 +97,7 @@ export const verifyBuiltBlogs = async (dist = join(import.meta.dir, '..', 'dist'
       assert.ok(html.includes('data-blog-article'), `${path} article marker missing`);
       assertSemanticDate(html, post.publishedAt);
       assertLocalizedArticleOutput(html, post);
-      assertArticleMetadata(html, locale, path, alternatePath);
+      assertArticleMetadata(html, locale, path, alternatePath, post);
       assertLatestBlogSection(html, (await getLatestBlogPosts(locale, 3, post.id)).map((item) => blogDetailPath(locale, item)), path);
       assert.doesNotMatch(html, /\bundefined\b|file:\/\/\/|src\/assets\/|demo-data/);
     }
