@@ -18,40 +18,38 @@ const { href, variant = 'primary', class: className } = Astro.props;
 <style>
   .button-link {
     align-items: center;
-    border: 1px solid var(--color-deep-herb);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-sm);
     display: inline-flex;
     font-size: var(--text-sm);
     font-weight: 600;
     gap: var(--space-5);
     justify-content: space-between;
-    min-block-size: 3rem;
+    min-block-size: 2.75rem;
     padding: var(--space-3) var(--space-4);
     text-decoration: none;
-    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-  }
-
-  .button-link:hover,
-  .button-link:focus-visible {
-    transform: translateY(-2px);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
   }
 
   .button-link--primary {
-    background: var(--color-deep-herb);
+    background: var(--color-graphite);
     border-color: var(--color-paradise-orange);
-    color: var(--color-paper-white);
+    color: var(--color-process-white);
   }
 
   .button-link--primary:hover {
-    background: var(--color-deep-herb);
-    border-color: var(--color-paradise-tangerine);
+    background: var(--color-graphite);
+    border-color: var(--color-paradise-orange);
+    color: var(--color-process-white);
   }
 
   .button-link--secondary {
-    background: transparent;
-    color: var(--color-deep-herb);
+    background: var(--color-process-white);
+    border-color: var(--color-graphite);
+    color: var(--color-graphite);
   }
 
   .button-link--secondary:hover {
-    background: var(--color-mist-blue);
+    background: var(--color-cold-paper);
   }
 </style>

@@ -89,8 +89,8 @@ const links = [
 
 <style>
   .site-header {
-    background: color-mix(in srgb, var(--color-rice-paper) 94%, transparent);
-    border-bottom: 1px solid var(--color-mist-blue);
+    background: var(--color-cold-paper);
+    border-bottom: 1px solid var(--color-brushed-steel);
     position: relative;
     z-index: 20;
   }
@@ -99,7 +99,7 @@ const links = [
     align-items: center;
     display: grid;
     grid-template-columns: minmax(10rem, 1fr) auto;
-    min-block-size: 6rem;
+    min-block-size: 5rem;
   }
 
   .wordmark {
@@ -108,7 +108,7 @@ const links = [
     text-decoration: none;
   }
 
-  .wordmark img { block-size: auto; inline-size: 5.75rem; }
+  .wordmark img { block-size: auto; inline-size: 5.25rem; }
 
   .primary-nav,
   .primary-nav ul {
@@ -118,18 +118,18 @@ const links = [
 
   .primary-nav { font-family: var(--font-body); gap: var(--space-6); }
   .primary-nav ul { gap: var(--space-5); list-style: none; }
-  .primary-nav a { color: var(--color-deep-herb); font-size: var(--text-sm); font-weight: 500; text-decoration: none; }
+  .primary-nav a { align-items: center; color: var(--color-graphite); display: inline-flex; font-size: var(--text-sm); font-weight: 500; min-block-size: 2.75rem; text-decoration: none; }
   .primary-nav a:hover {
-    color: var(--color-deep-herb);
+    color: var(--color-graphite);
     text-decoration: underline;
-    text-decoration-color: var(--color-paradise-blue);
+    text-decoration-color: var(--color-paradise-orange);
   }
 
   .menu-toggle,
   .noscript-nav { display: none; }
 
   @media (max-width: 48rem) {
-    .site-header__bar { min-block-size: 5.5rem; }
+    .site-header__bar { min-block-size: 5rem; }
     .site-header--enhanced .menu-toggle {
       align-items: center;
       background: transparent;
@@ -145,8 +145,8 @@ const links = [
     .menu-toggle[aria-expanded='true'] .menu-toggle__icon--close { display: inline-flex; }
     .site-header--enhanced .primary-nav {
       align-items: stretch;
-      background: var(--color-rice-paper);
-      border-top: 1px solid var(--color-mist-blue);
+      background: var(--color-cold-paper);
+      border-top: 1px solid var(--color-brushed-steel);
       display: none;
       grid-column: 1 / -1;
       inset-inline: 0;
@@ -156,7 +156,7 @@ const links = [
     }
     .site-header--enhanced .primary-nav[data-open='true'] { display: grid; gap: var(--space-4); }
     .site-header--enhanced .primary-nav ul { align-items: stretch; flex-direction: column; gap: 0; }
-    .site-header--enhanced .primary-nav li { border-bottom: 1px solid var(--color-mist-blue); }
+    .site-header--enhanced .primary-nav li { border-bottom: 1px solid var(--color-brushed-steel); }
     .site-header--enhanced .primary-nav li a { display: block; font-family: var(--font-body); font-size: var(--text-lg); font-weight: 600; padding-block: var(--space-3); }
   }
 </style>

@@ -11,7 +11,7 @@ const filesBelow = (directory: string): string[] => readdirSync(join(root, direc
     const path = `${directory}/${entry.name}`;
     return entry.isDirectory() ? filesBelow(path) : [path];
   });
-const cssRule = (css: string, selector: string) => [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+const cssRule = (css: string, selector: string) => [...(css.includes('<style>') ? css.slice(css.lastIndexOf('<style>') + '<style>'.length) : css).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .filter(([, selectors]) => selectors.split(',').some((item) => item.trim() === selector))
   .at(-1)?.[2] ?? '';
 
@@ -29,7 +29,7 @@ const contrastRatio = (foreground: string, background: string) => {
   return (values[0] + 0.05) / (values[1] + 0.05);
 };
 
-describe('Living Ingredients identity', () => {
+describe('Precision Supply System identity', () => {
   test('contains no 3D runtime, model, or stage contract', () => {
     const packageJson = JSON.parse(source('package.json'));
     expect(packageJson.dependencies?.three).toBeUndefined();
@@ -60,15 +60,44 @@ describe('Living Ingredients identity', () => {
     expect(source('src/components/global/Header.astro')).not.toContain('<span>Paradise</span>');
   });
 
-  test('defines the approved palette and organic mark primitive', () => {
+  test('defines the approved industrial palette and neutral compatibility mappings', () => {
     const tokens = source('src/styles/tokens.css').toLowerCase();
-    for (const value of ['#e46f2c', '#fa6c47', '#0796d2', '#94c11f', '#d94d55', '#fbfaf5', '#28342b', '#e8f6fa']) {
-      expect(tokens).toContain(value);
+    for (const declaration of [
+      '--color-process-white: #ffffff',
+      '--color-cold-paper: #f5f6f2',
+      '--color-brushed-steel: #d9dcd7',
+      '--color-graphite: #202522',
+      '--color-utility-grey: #68706a',
+      '--color-paradise-orange: #e46f2c',
+      '--color-success: #356146',
+      '--color-error: #9a3f38',
+    ]) expect(tokens).toContain(declaration);
+
+    for (const retiredHex of ['#fa6c47', '#0796d2', '#94c11f', '#d94d55', '#fbfaf5', '#28342b', '#e8f6fa']) {
+      expect(tokens).not.toContain(retiredHex);
     }
-    const mark = source('src/components/global/OrganicMark.astro');
-    expect(mark).toContain('aria-hidden="true"');
-    expect(mark).toContain('focusable="false"');
-    expect(mark).toContain("'drop' | 'seed' | 'petal'");
+
+    expect(tokens).toContain('--color-paper-white: var(--color-process-white)');
+    expect(tokens).toContain('--color-rice-paper: var(--color-cold-paper)');
+    expect(tokens).toContain('--color-mist-blue: var(--color-cold-paper)');
+    expect(tokens).toContain('--color-deep-herb: var(--color-graphite)');
+    expect(tokens).toContain('--shape-drop: var(--radius-sm)');
+  });
+
+  test('uses an opaque Paradise-orange focus ring that contrasts with graphite', () => {
+    expect(contrastRatio('#e46f2c', '#202522')).toBeGreaterThanOrEqual(3);
+
+    const tokens = source('src/styles/tokens.css');
+    expect(tokens).toContain('--focus-ring: 0 0 0 3px var(--color-paradise-orange)');
+    expect(tokens).not.toMatch(/--focus-ring:[^;]*color-mix\(/);
+
+    const global = source('src/styles/global.css');
+    expect(cssRule(global, ':focus-visible')).toContain('box-shadow: var(--focus-ring)');
+    expect(cssRule(global, ':focus-visible')).toContain('outline: 2px solid var(--color-graphite)');
+
+    const plan = source('docs/superpowers/plans/2026-07-22-industrial-styling.md');
+    expect(plan).toContain('--focus-ring: 0 0 0 3px var(--color-paradise-orange);');
+    expect(plan).not.toMatch(/--focus-ring:[^;]*color-mix\(/);
   });
 
   test('keeps the active palette free of retired compatibility aliases', () => {
@@ -88,9 +117,9 @@ describe('Living Ingredients identity', () => {
     expect(activeFiles.filter((path) => source(path).includes('--color-cold-chain-blue'))).toEqual([]);
   });
 
-  test('keeps small category and brand metadata text at contrast-safe deep herb', () => {
-    expect(contrastRatio('#28342b', '#ffffff')).toBeGreaterThanOrEqual(4.5);
-    expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-deep-herb)');
+  test('keeps small category and brand metadata text at contrast-safe graphite', () => {
+    expect(contrastRatio('#202522', '#ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-graphite)');
     const brands = source('src/components/sections/FeaturedBrands.astro');
     expect(cssRule(brands, '.featured-brands__origin')).toContain('color: var(--color-deep-herb)');
     expect(cssRule(brands, '.featured-brands__secondary article > p:first-child')).toContain('color: var(--color-deep-herb)');
@@ -113,28 +142,46 @@ describe('Living Ingredients identity', () => {
     for (const { selector, declarations } of navRules) {
       expect(declarations, `${selector} must reserve Newsreader for display text`).not.toContain('var(--font-display)');
     }
+
+    for (const [file, selector] of [
+      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__copy strong'],
+      ['src/components/sections/ChannelPathways.astro', '.channel-pathways__links strong'],
+      ['src/components/sections/ServiceProof.astro', '.service-proof__editorial strong'],
+      ['src/components/blogs/BlogArticle.astro', '.blog-article__standfirst'],
+      ['src/components/blogs/BlogArticle.astro', '.blog-article__body section:first-child p:first-child'],
+      ['src/pages/404.astro', '.not-found__art strong'],
+    ] as const) {
+      const declarations = cssRule(source(file), selector);
+      expect(declarations, `${file} ${selector} must use body type`).toContain('font-family: var(--font-body)');
+      expect(declarations, `${file} ${selector} must not use display type`).not.toContain('var(--font-display)');
+    }
   });
 
   test('keeps small button and link text at WCAG AA contrast', () => {
-    expect(contrastRatio('#ffffff', '#28342b')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#ffffff', '#202522')).toBeGreaterThanOrEqual(4.5);
 
     const button = source('src/components/global/ButtonLink.astro');
     const primary = cssRule(button, '.button-link--primary');
     const primaryHover = cssRule(button, '.button-link--primary:hover');
-    expect(primary).toContain('background: var(--color-deep-herb)');
-    expect(primary).toContain('color: var(--color-paper-white)');
+    expect(primary).toContain('background: var(--color-graphite)');
+    expect(primary).toContain('color: var(--color-process-white)');
     expect(primary).toContain('border-color: var(--color-paradise-orange)');
-    expect(primaryHover).toContain('background: var(--color-deep-herb)');
-    expect(primaryHover).toContain('border-color: var(--color-paradise-tangerine)');
+    expect(primaryHover).toContain('background: var(--color-graphite)');
+    expect(primaryHover).toContain('border-color: var(--color-paradise-orange)');
 
     const global = source('src/styles/global.css');
-    expect(cssRule(global, 'a')).toContain('color: var(--color-deep-herb)');
-    expect(cssRule(global, 'a:hover')).toContain('text-decoration-color: var(--color-paradise-blue)');
+    expect(cssRule(global, 'a')).toContain('color: var(--color-graphite)');
+    expect(cssRule(global, 'a:hover')).toContain('text-decoration-color: var(--color-paradise-orange)');
 
     const header = source('src/components/global/Header.astro');
     const navHover = cssRule(header, '.primary-nav a:hover');
-    expect(navHover).toContain('color: var(--color-deep-herb)');
-    expect(navHover).toContain('text-decoration-color: var(--color-paradise-blue)');
+    expect(navHover).toContain('color: var(--color-graphite)');
+    expect(navHover).toContain('text-decoration-color: var(--color-paradise-orange)');
+
+    expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');
+    expect(cssRule(button, '.button-link--primary')).toContain('background: var(--color-graphite)');
+    expect(cssRule(button, '.button-link--primary')).toContain('border-color: var(--color-paradise-orange)');
+    expect(cssRule(header, '.site-header')).toContain('border-bottom: 1px solid var(--color-brushed-steel)');
   });
 
   test('keeps every global eyebrow text rule at safe contrast', () => {
@@ -143,8 +190,14 @@ describe('Living Ingredients identity', () => {
       .map(([, selector, declarations]) => ({ selector: selector.trim(), declarations }));
     expect(eyebrowRules.length).toBeGreaterThan(0);
     for (const { selector, declarations } of eyebrowRules) {
-      expect(declarations, `${selector} must use the contrast-safe text token`).toContain('color: var(--color-deep-herb)');
-      expect(declarations, `${selector} must not use bright blue as text`).not.toContain('color: var(--color-paradise-blue)');
+      expect(declarations, `${selector} must use the contrast-safe text token`).toContain('color: var(--color-utility-grey)');
+      for (const brightToken of [
+        '--color-paradise-orange',
+        '--color-paradise-tangerine',
+        '--color-paradise-blue',
+        '--color-paradise-green',
+        '--color-paradise-coral',
+      ]) expect(declarations, `${selector} must not use bright brand text`).not.toContain(brightToken);
     }
   });
 
@@ -156,25 +209,27 @@ describe('Living Ingredients identity', () => {
     expect(page).toContain('{channels}');
   });
 
-  test('carries organic presentation through every inner-page family', () => {
-    for (const file of [
-      'src/components/catalog/ProductCard.astro',
+  test('uses industrial presentation across catalog, brand, and blog templates', () => {
+    const files = [
+      'src/components/catalog/CatalogFilters.astro',
+      'src/components/catalog/ProductGrid.astro',
       'src/components/catalog/ProductDetail.astro',
-      'src/components/brands/BrandCard.astro',
+      'src/components/catalog/ProductMetadata.astro',
       'src/components/brands/BrandDetail.astro',
-      'src/components/forms/EnquiryForm.astro',
-      'src/pages/404.astro',
-    ]) {
+      'src/components/blogs/BlogArticle.astro',
+      'src/pages/[locale]/products/index.astro',
+      'src/pages/[locale]/brands/index.astro',
+      'src/pages/[locale]/blogs/index.astro',
+    ];
+    for (const file of files) {
       const component = source(file);
-      expect(component).toMatch(/organic|living|shape|petal|drop/);
-      expect(component).not.toMatch(/color-cold-chain-blue|color-stainless/);
+      expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow/);
     }
-
-    expect(source('src/components/forms/EnquiryForm.astro')).toContain('aria-invalid');
-    expect(source('src/components/catalog/CatalogFilters.astro')).toContain('aria-live');
+    expect(cssRule(source('src/components/catalog/CatalogFilters.astro'), '.catalog-filters')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(source('src/components/catalog/ProductMetadata.astro'), '.product-metadata')).toContain('border-inline-start: 2px solid var(--color-paradise-orange)');
   });
 
-  test('keeps inner-page accents organic and removes industrial presentation tokens', () => {
+  test('keeps industrial inner-page styling free of retired presentation tokens', () => {
     for (const file of [
       'src/components/catalog/CatalogFilters.astro',
       'src/components/catalog/ProductCard.astro',
@@ -202,13 +257,6 @@ describe('Living Ingredients identity', () => {
     const detail = source('src/components/catalog/ProductDetail.astro');
     expect(detail).toContain('.product-detail__facts');
     expect(detail).toMatch(/@media \(max-width: 48rem\)[\s\S]*?\.product-detail__facts\s*\{[^}]*border-inline-start:\s*0/);
-  });
-
-  test('derives organic brand-card fields from the CMS accent', () => {
-    const card = source('src/components/brands/BrandCard.astro');
-    expect(card).toContain('brand.accent');
-    expect(card).toContain('--brand-accent');
-    expect(card).toContain('color-mix(in srgb, var(--brand-accent)');
   });
 
   test('uses the Living Ingredients thesis in both hero locales', () => {
@@ -245,24 +293,26 @@ describe('Living Ingredients identity', () => {
     expect(page.indexOf('</footer>')).toBeLessThan(page.indexOf(rail));
   });
 
-  test('styles the floating rail as one simple animated ingredient label', () => {
+  test('styles the floating rail as a neutral industrial action panel', () => {
     const rail = source('src/components/global/FloatingFormRail.astro');
-    for (const token of [
-      'var(--color-rice-paper)',
-      'var(--color-paper-white)',
-      'var(--color-deep-herb)',
+    for (const value of [
+      'var(--color-cold-paper)',
+      'var(--color-process-white)',
+      'var(--color-graphite)',
+      'var(--color-brushed-steel)',
       'var(--color-paradise-orange)',
-      'var(--color-mist-blue)',
-      'clip-path',
-      '360ms cubic-bezier(0.22, 1, 0.36, 1)',
-      '@keyframes floating-rail-enter',
-      '@media (prefers-reduced-motion: reduce)',
-      'min-block-size: 2.75rem',
-      'block-size: 2.75rem',
       'inline-size: 2.75rem',
-      'inset-inline-end: 0',
-      'drop-shadow(0 0.75rem 1.25rem',
-    ]) expect(rail).toContain(token);
+      'block-size: 2.75rem',
+      'inline-size: min(12rem, calc(100vw - 2.75rem))',
+      '@media (prefers-reduced-motion: reduce)',
+    ]) expect(rail).toContain(value);
+
+    for (const removed of ['clip-path', 'drop-shadow', '@keyframes floating-rail-enter', '360ms cubic-bezier']) {
+      expect(rail).not.toContain(removed);
+    }
+
+    expect(rail).toContain('transition: translate var(--transition-base)');
+    expect(rail).toContain('transition: background-color var(--transition-fast)');
 
     expect(rail).not.toContain('linear-gradient');
     expect(rail).not.toContain('font-family: var(--font-display)');
@@ -282,16 +332,97 @@ describe('Living Ingredients identity', () => {
   });
 
   test('keeps standalone navigation targets and enquiry consent at 44px', () => {
+    const headerLink = cssRule(source('src/components/global/Header.astro'), '.primary-nav a');
+    expect(headerLink).toContain('align-items: center');
+    expect(headerLink).toContain('display: inline-flex');
+    expect(headerLink).toContain('min-block-size: 2.75rem');
+
+    const footerLink = cssRule(source('src/components/global/Footer.astro'), '.site-footer a');
+    expect(footerLink).toContain('align-items: center');
+    expect(footerLink).toContain('display: inline-flex');
+    expect(footerLink).toContain('min-block-size: 2.75rem');
+
+    for (const selector of ['.blog-card h2 a', '.blog-card h3 a']) {
+      const headlineLink = cssRule(source('src/components/blogs/BlogCard.astro'), selector);
+      expect(headlineLink, selector).toContain('align-items: center');
+      expect(headlineLink, selector).toContain('display: flex');
+      expect(headlineLink, selector).toContain('min-block-size: 2.75rem');
+    }
+
     expect(source('src/components/catalog/ProductCard.astro')).toMatch(/\.product-card :is\(h2, h3\) a\s*\{[^}]*min-block-size:\s*2\.75rem/);
     expect(cssRule(source('src/components/sections/FeaturedBrands.astro'), '.featured-brands__products a')).toContain('min-block-size: 2.75rem');
     expect(cssRule(source('src/components/global/Breadcrumbs.astro'), '.breadcrumbs a')).toContain('min-block-size: 2.75rem');
     expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.field--consent label')).toContain('min-block-size: 2.75rem');
   });
 
-  test('uses the defined mist-blue token for the Living Hero art backplate', () => {
+  test('uses neutral rectangular hero and product stages', () => {
     const hero = source('src/components/sections/LivingHero.astro');
-    expect(hero).toContain('background: var(--color-mist-blue)');
-    expect(hero).not.toContain('--color-morning-mist');
+    expect(cssRule(hero, '.living-hero__art')).toContain('background: var(--color-cold-paper)');
+    expect(cssRule(hero, '[data-living-canvas]')).toContain('display: none');
+    expect(hero).not.toContain('drop-shadow');
+
+    const card = source('src/components/catalog/ProductCard.astro');
+    expect(cssRule(card, '.product-card__organic-media')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 2px solid var(--color-paradise-orange)');
+    expect(card).not.toContain('var(--shape-drop)');
+  });
+
+  test('keeps card and discovery images free of scale and transform motion', () => {
+    for (const [file, imageSelector, interactionSelector] of [
+      ['src/components/catalog/ProductCard.astro', '.product-card__image img', '.product-card:hover .product-card__image img'],
+      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__media img', '.category-discovery__item:hover img'],
+      ['src/components/blogs/BlogCard.astro', '.blog-card__image img', '.blog-card:hover .blog-card__image img'],
+    ] as const) {
+      const component = source(file);
+      const imageRule = cssRule(component, imageSelector);
+      const interactionRule = cssRule(component, interactionSelector);
+      expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/transition\s*:[^;]*(?:transform|scale)/);
+      expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      expect(interactionRule, `${file} ${interactionSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      expect(component, `${file} must not scale scoped imagery`).not.toMatch(/scale\s*\(/);
+    }
+  });
+
+  test('keeps remaining homepage sections neutral, rectangular, and shadow-free', () => {
+    const files = [
+      'src/components/sections/FeaturedBrands.astro',
+      'src/components/blogs/LatestBlogs.astro',
+      'src/components/blogs/BlogCard.astro',
+      'src/components/brands/BrandCard.astro',
+      'src/components/sections/PartnerStrip.astro',
+      'src/components/sections/ServiceProof.astro',
+      'src/components/sections/ChannelPathways.astro',
+      'src/components/sections/FinalCta.astro',
+    ];
+    for (const file of files) {
+      const component = source(file);
+      expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow/);
+    }
+    expect(source('src/components/sections/FinalCta.astro')).toContain('background: var(--color-graphite)');
+    expect(source('src/components/sections/FinalCta.astro')).toContain('color: var(--color-cold-paper)');
+  });
+
+  test('keeps remaining homepage reveal hooks visibly settled', () => {
+    const files = [
+      'src/components/sections/FeaturedBrands.astro',
+      'src/components/sections/PartnerStrip.astro',
+      'src/components/sections/ServiceProof.astro',
+      'src/components/sections/ChannelPathways.astro',
+      'src/components/sections/FinalCta.astro',
+    ];
+    for (const file of files) {
+      const component = source(file);
+      expect(component).not.toMatch(/600ms|700ms/);
+      for (const selector of [
+        ':global([data-motion-enhanced]) [data-reveal]',
+        ":global([data-motion-enhanced]) [data-reveal][data-revealed='true']",
+      ]) {
+        const declarations = cssRule(component, selector);
+        expect(declarations, `${file} ${selector}`).toContain('opacity: 1');
+        expect(declarations, `${file} ${selector}`).toContain('transform: none');
+        expect(declarations, `${file} ${selector}`).not.toContain('transition:');
+      }
+    }
   });
 
   test('isolates the product stage and orders the brand label above image layers', () => {
@@ -307,5 +438,33 @@ describe('Living Ingredients identity', () => {
     const label = cssRule(source('src/components/catalog/ProductDetail.astro'), '.product-detail__stage > span');
     expect(label).toContain('inset-block-start: 16%');
     expect(label).toContain('inset-inline-start: 36%');
+  });
+
+  test('removes legacy decorative presentation from every active styled surface', () => {
+    const styledFiles = filesBelow('src/components')
+      .filter((path) => path.endsWith('.astro') && path !== 'src/components/global/OrganicMark.astro');
+    const pageFiles = filesBelow('src/pages').filter((path) => path.endsWith('.astro'));
+
+    for (const file of [...styledFiles, ...pageFiles]) {
+      const component = source(file);
+      expect(component, file).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow\s*:\s*(?!\s*none\s*;)|linear-gradient|color-mix\(|clip-path/);
+      expect(component, file).not.toMatch(/border-radius:\s*(?:[5-9]px|[1-9]\d+px|(?:0\.[3-9]|[1-9]\d*(?:\.\d+)?)rem|[1-9]\d*%|999px)/);
+      expect(component, file).not.toMatch(/(?:[2-9]\d\d|[1-9]\d{3,})ms/);
+    }
+
+    expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');
+    expect(source('src/components/sections/LivingHero.astro')).toMatch(/\[data-living-canvas\]\s*\{[^}]*display:\s*none/);
+  });
+
+  test('preserves the exact homepage section order', () => {
+    const page = source('src/pages/[locale]/index.astro');
+    const sections = [
+      '<LivingHero', '<CredibilityStrip', '<CategoryDiscovery', '<FeaturedProducts',
+      '<FeaturedBrands', '<LatestBlogs', '<PartnerStrip', '<ServiceProof',
+      '<ChannelPathways', '<FinalCta',
+    ];
+    const positions = sections.map((section) => page.indexOf(section));
+    expect(positions.every((position) => position >= 0)).toBe(true);
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 });

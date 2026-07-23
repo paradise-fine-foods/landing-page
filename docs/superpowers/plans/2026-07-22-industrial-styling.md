@@ -156,7 +156,7 @@ Replace the color, radius, focus, transition, and upper spacing portions of `src
   --radius-sm: 0;
   --radius-md: 0.25rem;
   --shape-drop: var(--radius-sm);
-  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-paradise-orange) 55%, transparent);
+  --focus-ring: 0 0 0 3px var(--color-paradise-orange);
   --transition-fast: 120ms ease;
   --transition-base: 160ms ease;
 }
@@ -227,12 +227,14 @@ for (const value of [
   'var(--color-graphite)',
   'var(--color-brushed-steel)',
   'var(--color-paradise-orange)',
-  '160ms ease',
   'inline-size: 2.75rem',
   'block-size: 2.75rem',
   'inline-size: min(12rem, calc(100vw - 2.75rem))',
   '@media (prefers-reduced-motion: reduce)',
 ]) expect(rail).toContain(value);
+
+expect(cssRule(rail, '.floating-form-rail')).toContain('transition: translate var(--transition-base)');
+expect(cssRule(rail, '.floating-form-rail__toggle')).toContain('transition: background-color var(--transition-fast)');
 
 for (const removed of ['clip-path', 'drop-shadow', '@keyframes floating-rail-enter', '360ms cubic-bezier']) {
   expect(rail).not.toContain(removed);
@@ -286,7 +288,7 @@ Make only CSS changes inside the listed Astro files. Use these exact presentatio
 /* Rail */
 .floating-form-rail { filter: none; transition: translate var(--transition-base); }
 .floating-form-rail__toggle { background: var(--color-graphite); border: 0; border-inline-start: 2px solid var(--color-paradise-orange); color: var(--color-process-white); filter: none; transition: background-color var(--transition-fast); }
-.floating-form-rail__panel { background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-block-start: 2px solid var(--color-paradise-orange); clip-path: none; filter: none; inline-size: min(12rem, calc(100vw - 2.75rem)); padding: var(--space-1) var(--space-3); }
+.floating-form-rail__panel { background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-block-start: 2px solid var(--color-paradise-orange); filter: none; inline-size: min(12rem, calc(100vw - 2.75rem)); padding: var(--space-1) var(--space-3); }
 .floating-form-rail__panel a { border-block-end: 1px solid var(--color-brushed-steel); color: var(--color-graphite); transition: background-color var(--transition-fast), color var(--transition-fast); }
 .floating-form-rail__panel a:hover,
 .floating-form-rail__panel a:focus-visible { background: var(--color-cold-paper); color: var(--color-graphite); }
@@ -381,7 +383,7 @@ For CredibilityStrip, CategoryDiscovery, and FeaturedProducts:
 - Change every media/control/card radius to `var(--radius-sm)` or `var(--radius-md)`.
 - Replace organic bullets with `0.5rem` square graphite/steel markers; orange is allowed only for the active datum or interaction state.
 - Remove component `filter`, `drop-shadow`, and decorative color-mix declarations.
-- Keep every `data-reveal`, `data-carousel*`, ARIA attribute, item order, and responsive grid/overflow rule.
+- Keep every `data-reveal`, `data-carousel*`, ARIA attribute, item order, and responsive grid/overflow rule. Preserve the reveal hooks, but keep both the base and revealed CSS visibly settled with `opacity: 1`, `transform: none`, and no reveal transition; remove the legacy 600ms/700ms reveal transitions.
 - Set carousel control transitions to `var(--transition-fast)` and keep `min-block-size: 2.75rem`.
 
 - [ ] **Step 4: Run hero, discovery, carousel, and structure tests**
@@ -453,8 +455,8 @@ Use the following exact decisions in the listed component-scoped style blocks:
 /* Featured brand and brand cards */
 .featured-brands__story-mask,
 .brand-card__organic-field { background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); }
-.featured-brands__products,
-.brand-card a { border-block-start: 2px solid var(--color-paradise-orange); }
+.featured-brands__products { border-block-start: 2px solid var(--color-paradise-orange); }
+.brand-card a { border-block-start: 1px solid var(--color-brushed-steel); }
 
 /* Blog cards */
 .latest-blogs { background: var(--color-cold-paper); }
@@ -474,7 +476,7 @@ Use the following exact decisions in the listed component-scoped style blocks:
 .final-cta__shape::before { background: var(--color-paradise-orange); border-radius: var(--radius-sm); }
 ```
 
-Remove per-brand accent backgrounds, organic masks, colored decorative marks, alternating channel fills, and non-semantic green dots. Preserve authentic `<img>`/`<Image>` output, article/brand data, link destinations, `data-reveal` hooks, section markup, and responsive grids.
+Remove per-brand accent backgrounds, organic masks, colored decorative marks, alternating channel fills, and non-semantic green dots. Preserve authentic `<img>`/`<Image>` output, article/brand data, link destinations, `data-reveal` hooks, section markup, and responsive grids. Keep both the base and revealed CSS visibly settled with `opacity: 1`, `transform: none`, and no reveal transition; remove the legacy 600ms/700ms reveal transitions.
 
 - [ ] **Step 4: Run homepage, brand-card, and blog-card tests**
 
@@ -601,8 +603,9 @@ test('removes legacy decorative presentation from every active styled surface', 
 
   for (const file of [...styledFiles, ...pageFiles]) {
     const component = source(file);
-    expect(component, file).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow|linear-gradient|color-mix\(|clip-path/);
+    expect(component, file).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow\s*:\s*(?!none\b)|linear-gradient|color-mix\(|clip-path/);
     expect(component, file).not.toMatch(/border-radius:\s*(?:[5-9]px|[1-9]\d+px|(?:0\.[3-9]|[1-9]\d*(?:\.\d+)?)rem|[1-9]\d*%|999px)/);
+    expect(component, file).not.toMatch(/(?:[2-9]\d\d|[1-9]\d{3,})ms/);
   }
 
   expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');

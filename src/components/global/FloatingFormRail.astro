@@ -51,19 +51,39 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     inset-inline-end: 0;
     pointer-events: none;
     position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
+    top: calc(5rem + var(--space-6));
+    transform: none;
     translate: 0 0;
-    transition: translate 360ms cubic-bezier(0.22, 1, 0.36, 1);
+    filter: none;
+    transition: translate var(--transition-base);
     z-index: 15;
+  }
+
+  .floating-form-rail:not([data-ready]) {
+    align-items: stretch;
+    background: var(--color-cold-paper);
+    border-block-start: 1px solid var(--color-brushed-steel);
+    inset: auto;
+    inline-size: 100%;
+    margin-inline: auto;
+    max-inline-size: var(--container-max);
+    padding: var(--space-4) var(--container-inline);
+    pointer-events: auto;
+    position: static;
+    transform: none;
+    translate: none;
+    z-index: auto;
+  }
+
+  .floating-form-rail:not([data-ready]) .floating-form-rail__toggle { display: none; }
+
+  .floating-form-rail:not([data-ready]) .floating-form-rail__panel {
+    inline-size: 100%;
+    max-inline-size: none;
   }
 
   .floating-form-rail[data-ready='true'][data-expanded='false'] {
     translate: calc(100% - 2.75rem) 0;
-  }
-
-  .floating-form-rail[data-ready='true'] {
-    animation: floating-rail-enter 360ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .floating-form-rail__toggle,
@@ -77,10 +97,10 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
   }
 
   .floating-form-rail__toggle {
-    background: var(--color-deep-herb);
+    background: var(--color-graphite);
     border: 0;
-    border-inline-start: 0.1875rem solid var(--color-paradise-orange);
-    color: var(--color-paper-white);
+    border-inline-start: 2px solid var(--color-paradise-orange);
+    color: var(--color-process-white);
     cursor: pointer;
     display: none;
     block-size: 2.75rem;
@@ -88,30 +108,30 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     justify-content: center;
     padding: 0;
     pointer-events: auto;
-    filter: drop-shadow(0 0.75rem 1.25rem rgb(40 52 43 / 0.16)) drop-shadow(0 0.125rem 0.25rem rgb(40 52 43 / 0.12));
-    transition: background-color 160ms ease;
+    filter: none;
+    transition: background-color var(--transition-fast);
   }
 
   .floating-form-rail[data-ready='true'] .floating-form-rail__toggle { display: flex; }
 
   .floating-form-rail__toggle:hover,
   .floating-form-rail__toggle:focus-visible {
-    background: var(--color-deep-herb);
+    background: var(--color-graphite);
   }
 
-  .floating-form-rail__toggle-icon { align-items: center; display: inline-flex; transition: opacity 360ms cubic-bezier(0.22, 1, 0.36, 1), transform 360ms cubic-bezier(0.22, 1, 0.36, 1); }
+  .floating-form-rail__toggle-icon { align-items: center; display: inline-flex; }
   .floating-form-rail__toggle-icon--expanded { display: none; }
   .floating-form-rail[data-expanded='true'] .floating-form-rail__toggle-icon--collapsed { display: none; }
   .floating-form-rail[data-expanded='true'] .floating-form-rail__toggle-icon--expanded { display: inline-flex; }
 
   .floating-form-rail__panel {
-    background: var(--color-rice-paper);
-    border-block-start: 0.1875rem solid var(--color-paradise-orange);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 1rem 100%, 0 calc(100% - 1rem));
+    background: var(--color-process-white);
+    border: 1px solid var(--color-brushed-steel);
+    border-block-start: 2px solid var(--color-paradise-orange);
     display: grid;
-    filter: drop-shadow(0 0.75rem 1.25rem rgb(40 52 43 / 0.16)) drop-shadow(0 0.125rem 0.25rem rgb(40 52 43 / 0.12));
-    inline-size: min(14rem, calc(100vw - 2.75rem));
-    padding: 0.25rem 0.75rem 0.5rem;
+    filter: none;
+    inline-size: min(12rem, calc(100vw - 2.75rem));
+    padding: var(--space-1) var(--space-3);
     pointer-events: auto;
   }
 
@@ -121,30 +141,20 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
 
   .floating-form-rail__panel a {
     background: transparent;
-    border-block-end: 1px solid color-mix(in srgb, var(--color-deep-herb) 16%, transparent);
-    color: var(--color-deep-herb);
+    border-block-end: 1px solid var(--color-brushed-steel);
+    color: var(--color-graphite);
     justify-content: space-between;
     min-block-size: 2.75rem;
     padding-inline: 0.25rem;
-    transition: background-color 160ms ease, color 160ms ease;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
   }
 
   .floating-form-rail__panel a:last-child { border-block-end: 0; }
 
   .floating-form-rail__panel a:hover,
   .floating-form-rail__panel a:focus-visible {
-    background: var(--color-mist-blue);
-    color: var(--color-deep-herb);
-  }
-
-  @keyframes floating-rail-enter {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
+    background: var(--color-cold-paper);
+    color: var(--color-graphite);
   }
 
   @media (max-width: 48rem) {
@@ -158,14 +168,11 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
       transform: none;
     }
 
-    .floating-form-rail__panel {
-      inline-size: min(14rem, calc(100vw - 2.75rem));
-      max-block-size: 16rem;
-    }
+    .floating-form-rail__panel { max-block-size: 16rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .floating-form-rail[data-ready='true'] { animation: none; transition: none; }
+    .floating-form-rail[data-ready='true'] { transition: none; }
 
     .floating-form-rail__panel,
     .floating-form-rail__toggle,

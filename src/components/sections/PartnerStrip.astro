@@ -25,13 +25,12 @@ const { eyebrow, title, partners } = Astro.props;
 </section>
 
 <style>
-  .partner-strip { background: var(--color-rice-paper); border-block-start: 1px solid var(--color-mist-blue); overflow: hidden; }
+  .partner-strip { background: var(--color-cold-paper); border-block-start: 1px solid var(--color-brushed-steel); overflow: hidden; }
   .partner-strip__heading { align-items: end; display: grid; gap: var(--space-5); grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr); margin-block-end: var(--space-6); }
   .partner-strip__grid { align-items: center; display: grid; gap: 1px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .partner-strip__asset { align-items: center; background: var(--color-paper-white); display: flex; justify-content: center; min-block-size: 5.5rem; padding: var(--space-4); }
+  .partner-strip__asset { align-items: center; background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); display: flex; justify-content: center; min-block-size: 5.5rem; padding: var(--space-4); }
   .partner-strip__asset img { block-size: 2.75rem; inline-size: min(100%, 9rem); object-fit: contain; }
-  :global([data-motion-enhanced]) [data-reveal] { opacity: 0; transform: translateY(1.5rem); }
-  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: opacity 600ms ease, transform 700ms cubic-bezier(.2,.75,.25,1); }
+  :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; }
+  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; }
   @media (max-width: 44rem) { .partner-strip__heading { grid-template-columns: 1fr; } .partner-strip__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } }
 </style>

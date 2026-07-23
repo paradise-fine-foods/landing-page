@@ -67,9 +67,9 @@ for (const decoration of ['drop', 'petal']) {
   if (!new RegExp(`<svg\\b[^>]*class="[^"]*not-found__${decoration}[^"]*"`).test(html)) {
     throw new Error(`${file}: generated ${decoration} decoration is missing its HTML class`);
   }
-  if (!css.includes(`.not-found__${decoration}{`)) {
-    throw new Error(`${file}: generated ${decoration} decoration CSS is not global across the OrganicMark boundary`);
-  }
+}
+if (!/\.organic-mark(?:\[[^\]]+\])?\{display:none\}/.test(html)) {
+  throw new Error(`${file}: generated organic decorations must be explicitly hidden`);
 }
 
 const canonicalLocalizedPages = generatedHtml

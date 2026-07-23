@@ -68,25 +68,22 @@ const accentClasses: Record<BrandAccent, string> = {
 
 <style>
   .brand-detail { min-inline-size: 0; }
-  .brand-detail--butter { --brand-accent: var(--color-paradise-green); }
-  .brand-detail--bordeaux { --brand-accent: var(--color-paradise-coral); }
-  .brand-detail--cold-chain { --brand-accent: var(--color-paradise-blue); }
   .brand-detail__hero { display: grid; gap: clamp(var(--space-6), 7vw, var(--space-9)); grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); padding-block: var(--space-7) var(--space-9); }
   .brand-detail__identity { align-content: center; display: grid; gap: var(--space-5); }
   .brand-detail__eyebrow, .brand-detail__label { color: var(--color-deep-herb); font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .brand-detail h1 { font-size: clamp(3rem, 8vw, 7rem); line-height: var(--leading-tight); max-inline-size: 10ch; }
-  .brand-detail__badge { border-block-end: 0.25rem solid var(--brand-accent); display: grid; gap: var(--space-2); inline-size: fit-content; padding: var(--space-3) var(--space-5) var(--space-3) 0; }
-  .brand-detail__badge dt { color: var(--color-deep-herb); font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; }
-  .brand-detail__badge dd { color: var(--color-deep-herb); font-weight: 600; }
-  .brand-detail__visual { aspect-ratio: 3 / 2; background: var(--color-paper-white); border-radius: var(--shape-drop); overflow: hidden; position: relative; }
-  .brand-detail__visual span { background: var(--brand-accent); block-size: clamp(4rem, 12vw, 9rem); border-radius: 50% 45% 55% 42%; inline-size: clamp(4rem, 12vw, 9rem); inset-block-start: var(--space-5); inset-inline-end: var(--space-5); opacity: 0.22; position: absolute; z-index: 1; }
+  .brand-detail__badge { border-block-end: 2px solid var(--color-brushed-steel); display: grid; gap: var(--space-2); inline-size: fit-content; padding: var(--space-3) var(--space-5) var(--space-3) 0; }
+  .brand-detail__badge dt { color: var(--color-graphite); font-size: var(--text-xs); font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .brand-detail__badge dd { color: var(--color-graphite); font-weight: 600; }
+  .brand-detail__visual { aspect-ratio: 3 / 2; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); overflow: hidden; position: relative; }
+  .brand-detail__visual span { display: none; }
   .brand-detail__visual img { block-size: 100%; inline-size: 100%; object-fit: cover; }
-  .brand-detail__editorial { background: color-mix(in srgb, var(--brand-accent) 8%, var(--color-paper-white)); border-radius: 3rem 0 3rem 0; display: grid; gap: var(--space-8); grid-template-columns: minmax(0, 1.25fr) minmax(14rem, 0.75fr); padding: clamp(var(--space-6), 5vw, var(--space-8)); }
+  .brand-detail__editorial { background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: grid; gap: var(--space-8); grid-template-columns: minmax(0, 1.25fr) minmax(14rem, 0.75fr); padding: clamp(var(--space-6), 5vw, var(--space-8)); }
   .brand-detail__editorial section { align-content: start; display: grid; gap: var(--space-4); }
   .brand-detail__editorial h2, .brand-detail__section-heading h2 { font-size: var(--text-2xl); }
   .brand-detail__story { font-size: var(--text-lg); max-inline-size: var(--measure); }
   .brand-detail__categories { display: grid; gap: var(--space-2); list-style: none; }
-  .brand-detail__categories li { border-block-end: 2px solid color-mix(in srgb, var(--brand-accent) 45%, transparent); color: var(--color-deep-herb); padding-block: var(--space-3); }
+  .brand-detail__categories li { border-block-end: 2px solid var(--color-brushed-steel); color: var(--color-graphite); padding-block: var(--space-3); }
   .brand-detail__products { padding-block: var(--space-9); }
   .brand-detail__section-heading { display: grid; gap: var(--space-5); grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr); margin-block-end: var(--space-7); }
   .brand-detail__grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(3, minmax(0, 1fr)); }

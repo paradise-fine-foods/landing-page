@@ -1,20 +1,51 @@
-# Task 3 report: expose floating rail across locales
+# Task 3 Report: Industrial Hero and Product Discovery
 
-Commit: `feat: expose floating rail across locales`
+## RED
 
-## Delivered
+Added the hero/product-stage contract and canvas presentation-suppression assertion, then ran:
 
-- Rendered `FloatingFormRail` once in `SiteLayout.astro`, after the footer and outside the main landmark, with the locale-specific contact path and UI copy.
-- Added source assertions for the shared-layout imports, exact invocation, placement, and the English/Vietnamese buy, sell, and contact labels.
-- Extended the built-MVP verifier to inspect 26 canonical localized pages for the rail marker, retail and other enquiry destinations, and the panel control relationship. Windows glob paths are normalized only for route filtering.
-- Added the rail copy family to the parseable production ownership manifest so every new localized UI leaf has exactly one owner.
+```text
+bun test tests/living-design-contract.test.ts tests/homepage-composition.test.ts tests/product-card.test.ts tests/carousel.test.ts
+```
 
-## Verification
+Result: **37 pass, 2 fail** (expected failures for the visible canvas and legacy mist-blue/organic hero stage).
 
-- `bun test tests/living-design-contract.test.ts tests/mvp-completion.test.ts` — 25 passed, 0 failed.
-- `bun run check` — 0 errors, 0 warnings, 0 hints.
-- `bun run build` — passed; built-output verification reported the existing MVP line and `Verified floating rail on 26 canonical localized pages.`
+## GREEN
 
-## Concern
+Restyled the hero, credibility strip, category discovery, featured-products carousel, and product card with canonical industrial tokens. Canvas and decorative organic marks remain in the DOM but are presentation-suppressed; carousel markup, controls, data attributes, and behavior are unchanged. Reveal hooks now remain visibly settled without reveal timing.
 
-- Astro continues to emit its existing root-route-priority warning during the build; it does not affect this task or the passing verifiers.
+Focused verification:
+
+```text
+bun test tests/living-design-contract.test.ts tests/homepage-composition.test.ts tests/homepage-contract.test.ts tests/product-card.test.ts tests/carousel.test.ts tests/motion.test.ts
+```
+
+Result: **62 pass, 0 fail**.
+
+Full verification:
+
+```text
+bun test
+```
+
+Result: **188 pass, 0 fail**.
+
+## Changed Files
+
+- `tests/living-design-contract.test.ts`
+- `tests/homepage-composition.test.ts`
+- `src/components/sections/LivingHero.astro`
+- `src/components/sections/CredibilityStrip.astro`
+- `src/components/sections/CategoryDiscovery.astro`
+- `src/components/sections/FeaturedProducts.astro`
+- `src/components/catalog/ProductCard.astro`
+
+## Self-Review
+
+- Scope is styling and matching design-contract coverage only; markup, data flow, ARIA, imports, controller setup, carousel behavior, route behavior, and reveal hooks were preserved.
+- Confirmed the scoped components have no legacy bright/mist/deep-herb consumers, `var(--shape-drop)`, filters, drop shadows, decorative `color-mix`, clip paths, 600ms/700ms reveal timings, or fully rounded carousel controls.
+- No outstanding concerns.
+
+## Commit
+
+`style: industrialize hero and product discovery`

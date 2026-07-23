@@ -59,7 +59,7 @@ describe('reviewed homepage contracts', () => {
     expect(component).not.toMatch(/autoplay|setInterval|setTimeout|cloneNode|infinite/i);
   });
 
-  test('uses authored organic section compositions without industrial rails', () => {
+  test('preserves authored section markup while applying industrial presentation', () => {
     const categories = source('src/components/sections/CategoryDiscovery.astro');
     expect(categories).toContain('category-discovery__loose-table');
     expect(categories).toContain('<OrganicMark');

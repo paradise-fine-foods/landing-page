@@ -4,6 +4,38 @@ import { readFile } from 'node:fs/promises';
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
 describe('floating form rail rendering contract', () => {
+  test('anchors the ready desktop rail below the header and clear of mid-page controls', async () => {
+    const source = await read('../src/components/global/FloatingFormRail.astro');
+    const desktopRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(desktopRail).toContain('top: calc(5rem + var(--space-6))');
+    expect(desktopRail).toContain('transform: none');
+    expect(desktopRail).not.toContain('top: 50%');
+    expect(desktopRail).not.toContain('translateY(-50%)');
+  });
+
+  test('keeps a non-ready rail in normal flow without horizontal overflow', async () => {
+    const source = await read('../src/components/global/FloatingFormRail.astro');
+    const staticRail = source.match(/\.floating-form-rail:not\(\[data-ready\]\)\s*\{([^}]*)\}/)?.[1] ?? '';
+    const staticToggle = source.match(/\.floating-form-rail:not\(\[data-ready\]\) \.floating-form-rail__toggle\s*\{([^}]*)\}/)?.[1] ?? '';
+    const staticPanel = source.match(/\.floating-form-rail:not\(\[data-ready\]\) \.floating-form-rail__panel\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    for (const declaration of [
+      'position: static',
+      'transform: none',
+      'translate: none',
+      'inset: auto',
+      'inline-size: 100%',
+      'max-inline-size: var(--container-max)',
+      'margin-inline: auto',
+      'background: var(--color-cold-paper)',
+    ]) expect(staticRail).toContain(declaration);
+
+    expect(staticToggle).toContain('display: none');
+    expect(staticPanel).toContain('inline-size: 100%');
+    expect(staticPanel).toContain('max-inline-size: none');
+  });
+
   test('renders a label-free accessible server-side rail', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     for (const value of [
@@ -22,16 +54,16 @@ describe('floating form rail rendering contract', () => {
       'align-items: flex-start',
       "[data-expanded='false'] {",
       'translate: calc(100% - 2.75rem) 0',
-      'transition: translate 360ms cubic-bezier(0.22, 1, 0.36, 1)',
+      'transition: translate var(--transition-base)',
+      'transition: background-color var(--transition-fast)',
       'initializeFloatingRail',
       'staticOnly?: boolean',
       "!staticOnly && <script>",
       "[data-ready='true'] .floating-form-rail__toggle",
       ".floating-form-rail__panel[inert]",
-      'drop-shadow',
       'inline-size: 2.75rem',
       'block-size: 2.75rem',
-      'inline-size: min(14rem, calc(100vw - 2.75rem))',
+      'inline-size: min(12rem, calc(100vw - 2.75rem))',
       'inline-size: min(16.75rem, calc(100vw - 2rem))',
       'min-block-size: 2.75rem',
     ]) expect(source).toContain(value);
@@ -45,6 +77,10 @@ describe('floating form rail rendering contract', () => {
     expect(source).not.toContain("[data-expanded='false'] .floating-form-rail__panel");
     expect(source).not.toContain('animation: floating-rail-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both');
     expect(source).not.toContain('translate: 1rem 0');
+    expect(source).not.toContain('clip-path');
+    expect(source).not.toContain('drop-shadow');
+    expect(source).not.toContain('@keyframes floating-rail-enter');
+    expect(source).not.toContain('360ms cubic-bezier');
 
     for (const obsolete of [
       'data-floating-rail-label',

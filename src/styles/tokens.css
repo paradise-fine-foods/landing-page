@@ -1,16 +1,21 @@
 :root {
+  --color-process-white: #ffffff;
+  --color-cold-paper: #f5f6f2;
+  --color-brushed-steel: #d9dcd7;
+  --color-graphite: #202522;
+  --color-utility-grey: #68706a;
   --color-paradise-orange: #e46f2c;
-  --color-paradise-tangerine: #fa6c47;
-  --color-paradise-blue: #0796d2;
-  --color-paradise-green: #94c11f;
-  --color-paradise-coral: #d94d55;
-  --color-rice-paper: #fbfaf5;
-  --color-paper-white: #ffffff;
-  --color-deep-herb: #28342b;
-  --color-mist-blue: #e8f6fa;
-
   --color-success: #356146;
   --color-error: #9a3f38;
+
+  --color-paper-white: var(--color-process-white);
+  --color-rice-paper: var(--color-cold-paper);
+  --color-mist-blue: var(--color-cold-paper);
+  --color-deep-herb: var(--color-graphite);
+  --color-paradise-tangerine: var(--color-paradise-orange);
+  --color-paradise-blue: var(--color-brushed-steel);
+  --color-paradise-green: var(--color-brushed-steel);
+  --color-paradise-coral: var(--color-brushed-steel);
 
   --font-display: 'Newsreader', Georgia, serif;
   --font-body: 'Nunito', system-ui, sans-serif;
@@ -21,9 +26,9 @@
   --space-4: 1rem;
   --space-5: 1.5rem;
   --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 6rem;
+  --space-7: 2.5rem;
+  --space-8: 3.5rem;
+  --space-9: 5rem;
 
   --container-inline: clamp(1rem, 4vw, 4rem);
   --container-max: 80rem;
@@ -32,20 +37,20 @@
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;
-  --text-lg: clamp(1.125rem, 1.5vw, 1.25rem);
-  --text-xl: clamp(1.5rem, 2.5vw, 2rem);
-  --text-2xl: clamp(2rem, 5vw, 4rem);
-  --text-hero: clamp(2.75rem, 7vw, 6.5rem);
+  --text-lg: clamp(1.0625rem, 1.35vw, 1.2rem);
+  --text-xl: clamp(1.375rem, 2vw, 1.75rem);
+  --text-2xl: clamp(1.875rem, 4vw, 3.5rem);
+  --text-hero: clamp(2.5rem, 6vw, 5rem);
 
-  --leading-tight: 0.98;
-  --leading-heading: 1.1;
-  --leading-body: 1.65;
-  --tracking-label: 0.08em;
+  --leading-tight: 1;
+  --leading-heading: 1.08;
+  --leading-body: 1.6;
+  --tracking-label: 0.07em;
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.75rem;
-  --shape-drop: 62% 38% 55% 45% / 48% 58% 42% 52%;
-  --focus-ring: 0 0 0 3px var(--color-paradise-tangerine);
-  --transition-fast: 140ms ease;
-  --transition-base: 220ms ease;
+  --radius-sm: 0;
+  --radius-md: 0.25rem;
+  --shape-drop: var(--radius-sm);
+  --focus-ring: 0 0 0 3px var(--color-paradise-orange);
+  --transition-fast: 120ms ease;
+  --transition-base: 160ms ease;
 }

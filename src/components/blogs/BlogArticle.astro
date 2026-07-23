@@ -32,15 +32,15 @@ const copy = ui[locale].blog;
   .blog-article { min-inline-size: 0; }
   .blog-article__header { display: grid; gap: clamp(var(--space-6), 7vw, var(--space-9)); grid-template-columns: minmax(0, 1fr) minmax(11rem, .25fr); padding-block: var(--space-7); }
   .blog-article h1 { margin-block: var(--space-4); max-inline-size: 12ch; }
-  .blog-article__standfirst { font-family: var(--font-display); font-size: var(--text-xl); max-inline-size: 42ch; }
-  .blog-article__label { align-self: end; background: var(--color-mist-blue); border-radius: 2rem var(--radius-sm) var(--radius-sm) var(--radius-sm); display: grid; padding: var(--space-5); }
-  .blog-article__label div { border-block-end: 1px solid color-mix(in srgb, var(--color-paradise-blue) 35%, transparent); padding-block: var(--space-3); }
+  .blog-article__standfirst { font-family: var(--font-body); font-size: var(--text-xl); max-inline-size: 42ch; }
+  .blog-article__label { align-self: end; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: grid; padding: var(--space-5); }
+  .blog-article__label div { border-block-end: 1px solid var(--color-brushed-steel); padding-block: var(--space-3); }
   .blog-article__label div:last-child { border: 0; }
   .blog-article__label dd { font-size: var(--text-sm); font-weight: 700; }
-  .blog-article__visual { aspect-ratio: 16 / 8; border-radius: var(--radius-sm) 6rem var(--radius-sm) var(--radius-sm); overflow: hidden; }
+  .blog-article__visual { aspect-ratio: 16 / 8; border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); overflow: hidden; }
   .blog-article__visual img { block-size: 100%; inline-size: 100%; object-fit: cover; }
   .blog-article__body { display: grid; gap: var(--space-7); margin-inline: auto; max-inline-size: 46rem; padding-block: var(--space-8) var(--space-9); }
   .blog-article__body section { display: grid; gap: var(--space-4); }
-  .blog-article__body section:first-child p:first-child { font-family: var(--font-display); font-size: var(--text-lg); }
-  @media (max-width: 42rem) { .blog-article__header { grid-template-columns: minmax(0, 1fr); } .blog-article__label { justify-self: start; } .blog-article__visual { aspect-ratio: 4 / 3; border-start-end-radius: 3rem; } }
+  .blog-article__body section:first-child p:first-child { font-family: var(--font-body); font-size: var(--text-lg); }
+  @media (max-width: 42rem) { .blog-article__header { grid-template-columns: minmax(0, 1fr); } .blog-article__label { justify-self: start; } .blog-article__visual { aspect-ratio: 4 / 3; } }
 </style>

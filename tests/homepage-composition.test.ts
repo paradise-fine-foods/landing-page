@@ -34,6 +34,7 @@ describe('homepage composition', () => {
     expect(hero).toContain('<figcaption>{product.name}</figcaption>');
     expect(hero).toContain('data-living-canvas');
     expect(hero).toContain('aria-hidden="true"');
+    expect(hero).toMatch(/\[data-living-canvas\]\s*\{[^}]*display:\s*none/);
     expect(hero).not.toMatch(/slot name="stage"|ProductStage|modelSrc/);
     expect(hero).toContain('shouldDisposePage(event)');
     expect(hero).not.toMatch(/addEventListener\('pagehide',[\s\S]{0,240}\{ once: true \}/);
