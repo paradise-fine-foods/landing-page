@@ -31,7 +31,7 @@ Homepage source order remains:
 - Latest blogs: existing `BlogCard` interiors are untouched and organized by steel dividers at the section level.
 - Partners: existing local partner assets remain in a compact neutral grid.
 - Service proof: the authentic editorial image and temperature label lead a direct image/editorial split followed by a straight operational ledger; the decorative path and stagger are removed.
-- Channels and final CTA: compact divided pathways lead to one graphite CTA with a functional orange edge locator.
+- Channels and final CTA: compact divided pathways lead to one graphite CTA with a neutral brushed-steel boundary.
 
 ## TDD evidence
 
@@ -361,3 +361,51 @@ rg -n "font-weight:\s*700|font-size:\s*(?:var\(--text-2xl\)|var\(--text-xl\)|cla
 ### Follow-up concerns
 
 - No new functional or structural concerns were found. Browser crop review remains deferred to Task 5 as previously recorded.
+
+## Final-head production build
+
+Verified commit before this report-only update:
+
+```text
+95bb3f1 fix: enforce homepage type hierarchy
+```
+
+Exact command:
+
+```text
+bun run build
+```
+
+Final-head result:
+
+```text
+Exit code: 0
+42 page(s) built in 6.47s
+Complete!
+```
+
+All build-script verifiers completed successfully:
+
+```text
+CMS asset verifier:
+PASS en: hero, product-art, and editorial-table emitted assets resolve
+PASS vi: hero, product-art, and editorial-table emitted assets resolve
+
+Living design verified: 6 canonical routes, 1 initial JS files and 2 inline JS bodies
+(1710 gzip bytes), 3 homepage SVG files (1666 gzip bytes),
+2 reachable interaction files (1677 gzip bytes).
+
+Catalog build verified: localized search corpus and contextual card headings are correct.
+Brand build verified: reciprocal metadata, localized content, product links, and assets are correct.
+Blog build verified: bilingual indexes, articles, metadata, and latest-story exclusions are correct.
+Verified bilingual built enquiry pages, accessibility relationships, product options, and local submission behavior.
+Verified 42 generated pages plus bilingual 404 metadata, landmarks, direct locale links, and no-JavaScript contract.
+Verified floating rail on 40 canonical localized pages.
+Verified exact 42-page generated HTML route manifest.
+```
+
+The allowed pre-existing Astro warning was emitted and did not affect the successful route-manifest verification:
+
+```text
+Could not render `` from route `/` as it conflicts with higher priority route `/`.
+```
