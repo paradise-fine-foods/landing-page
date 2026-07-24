@@ -14,8 +14,8 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
 ---
 
 <article class="product-card">
-  <a class="product-card__media" href={href} tabindex="-1" aria-hidden="true">
-    <img src={product.image.src} width={product.image.width} height={product.image.height} alt="" loading="lazy" />
+  <a class="product-card__media" href={href} tabindex="-1">
+    <img src={product.image.src} width={product.image.width} height={product.image.height} alt={product.image.alt} loading="lazy" />
   </a>
   <div class="product-card__meta">
     <span>{product.brand.name}</span>
@@ -33,7 +33,8 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
 <style>
   .product-card { display: grid; gap: var(--space-3); }
   .product-card__media { aspect-ratio: 1 / 1; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: block; overflow: hidden; }
-  .product-card__media img { block-size: 100%; inline-size: 100%; object-fit: cover; }
+  .product-card__media img { block-size: 100%; inline-size: 100%; object-fit: cover; transition: opacity var(--transition-fast); }
+  .product-card:hover .product-card__media img { opacity: 0.92; }
   .product-card__meta { border-block-start: 1px solid var(--color-brushed-steel); color: var(--color-utility-grey); display: flex; font-size: 0.68rem; font-weight: 600; justify-content: space-between; letter-spacing: var(--tracking-label); padding-block-start: var(--space-3); text-transform: uppercase; }
   .product-card :is(h2, h3) { font-size: var(--text-h3); }
   .product-card :is(h2, h3) a { align-items: center; color: var(--color-graphite); display: flex; min-block-size: 2.75rem; text-decoration: none; }

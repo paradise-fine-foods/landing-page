@@ -40,4 +40,12 @@ describe('ProductCard metadata', () => {
     expect(card).not.toContain('product-card__organic-media');
     expect(card).not.toMatch(/product-card__media::before|color-paradise-orange/);
   });
+
+  test('keeps its image link exposed with the product image name', () => {
+    const card = source('src/components/catalog/ProductCard.astro');
+
+    expect(card).toContain('class="product-card__media"');
+    expect(card).toContain('alt={product.image.alt}');
+    expect(card).not.toMatch(/<a class="product-card__media"[^>]*aria-hidden/);
+  });
 });

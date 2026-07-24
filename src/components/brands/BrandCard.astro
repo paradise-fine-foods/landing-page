@@ -17,8 +17,8 @@ const accentClasses: Record<Brand['accent'], string> = {
 ---
 
 <article class:list={['brand-card', accentClasses[brand.accent]]}>
-  <a class="brand-card__media" href={href} tabindex="-1" aria-hidden="true">
-    <img src={brand.image.src} width={brand.image.width} height={brand.image.height} alt="" loading="lazy" />
+  <a class="brand-card__media" href={href} tabindex="-1">
+    <img src={brand.image.src} width={brand.image.width} height={brand.image.height} alt={brand.image.alt} loading="lazy" />
   </a>
   <div class="brand-card__copy">
     <p class="brand-card__origin">{brand.origin}</p>

@@ -56,3 +56,31 @@ No whitespace errors
 ## Concerns
 
 None. Brand accent classes remain in the markup to preserve the normalized CMS accent contract, but the redesigned neutral surfaces intentionally do not use accent color styling.
+
+## Important follow-up fixes
+
+### RED evidence
+
+Added focused source contracts for the current `.product-card__media img` and `.product-card:hover .product-card__media img` selectors, including non-empty extracted-rule assertions. Added contracts requiring the product and brand media anchors to omit `aria-hidden` and to use their existing image `alt` values as link names.
+
+```text
+bun test tests/living-design-contract.test.ts tests/product-card.test.ts tests/brand-routes.test.ts
+48 pass, 3 fail, 479 expectations
+```
+
+The three expected failures were: missing `alt={product.image.alt}`, missing `alt={brand.image.alt}`, and no rule for `.product-card:hover .product-card__media img` after replacing the retired selector.
+
+### GREEN evidence
+
+- Removed `aria-hidden="true"` from both media anchors while preserving `tabindex="-1"` for the existing single-tab-stop pattern.
+- Used `product.image.alt` and `brand.image.alt` to name the exposed image links.
+- Added a minimal opacity-only product-media hover rule; the contract explicitly verifies the present rule does not use transform or scale.
+- Kept the category and blog media checks on their existing base-image rules so no out-of-scope styling changed.
+
+```text
+bun test tests/living-design-contract.test.ts tests/product-card.test.ts tests/brand-routes.test.ts
+51 pass, 0 fail, 493 expectations
+
+bun run check
+Result (104 files): 0 errors, 0 warnings, 0 hints
+```

@@ -483,16 +483,20 @@ describe('Precision Supply System identity', () => {
 
   test('keeps card and discovery images free of scale and transform motion', () => {
     for (const [file, imageSelector, interactionSelector] of [
-      ['src/components/catalog/ProductCard.astro', '.product-card__image img', '.product-card:hover .product-card__image img'],
-      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__media img', '.category-discovery__item:hover img'],
-      ['src/components/blogs/BlogCard.astro', '.blog-card__image img', '.blog-card:hover .blog-card__image img'],
+      ['src/components/catalog/ProductCard.astro', '.product-card__media img', '.product-card:hover .product-card__media img'],
+      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__media img'],
+      ['src/components/blogs/BlogCard.astro', '.blog-card__image img'],
     ] as const) {
       const component = source(file);
       const imageRule = cssRule(component, imageSelector);
-      const interactionRule = cssRule(component, interactionSelector);
+      expect(imageRule, `${file} ${imageSelector} must exist`).not.toBe('');
       expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/transition\s*:[^;]*(?:transform|scale)/);
       expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
-      expect(interactionRule, `${file} ${interactionSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      if (interactionSelector) {
+        const interactionRule = cssRule(component, interactionSelector);
+        expect(interactionRule, `${file} ${interactionSelector} must exist`).not.toBe('');
+        expect(interactionRule, `${file} ${interactionSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      }
       expect(component, `${file} must not scale scoped imagery`).not.toMatch(/scale\s*\(/);
     }
   });
