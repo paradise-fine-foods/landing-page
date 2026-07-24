@@ -16,6 +16,9 @@ node_modules/
 # subagent-driven development scratch ledger
 .superpowers/sdd/
 
+# brainstorming visual-companion scratch
+.superpowers/brainstorm/
+
 # logs
 npm-debug.log*
 yarn-debug.log*
