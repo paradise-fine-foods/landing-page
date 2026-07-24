@@ -186,6 +186,35 @@ describe('floating enquiry rail', () => {
     expect(panel.inert).toBe(false);
     expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
   });
+
+  test('falls back to expanded when window exists without matchMedia', () => {
+    const previousWindow = Object.getOwnPropertyDescriptor(globalThis, 'window');
+    Object.defineProperty(globalThis, 'window', { configurable: true, value: {} });
+    const toggle = {
+      addEventListener() {},
+      removeEventListener() {},
+      dataset: { openLabel: 'Open enquiries', closeLabel: 'Close enquiries' },
+      setAttribute(this: { attributes: Record<string, string> }, name: string, value: string) { this.attributes[name] = value; },
+      attributes: {} as Record<string, string>,
+    } as unknown as HTMLButtonElement & { attributes: Record<string, string> };
+    const panel = { inert: true } as HTMLElement;
+    const root = {
+      dataset: {} as Record<string, string>,
+      querySelector: (selector: string) => selector === '[data-floating-rail-toggle]' ? toggle : selector === '#floating-rail-panel' ? panel : null,
+    } as unknown as HTMLElement;
+    const documentTarget = { addEventListener() {}, removeEventListener() {} };
+
+    try {
+      initializeFloatingRail(root, { document: documentTarget as FloatingRailDependencies['document'] });
+    } finally {
+      if (previousWindow) Object.defineProperty(globalThis, 'window', previousWindow);
+      else Reflect.deleteProperty(globalThis, 'window');
+    }
+
+    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'true' });
+    expect(panel.inert).toBe(false);
+    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
+  });
 });
 
 type SetupFailure = 'observe' | 'resize' | 'request';

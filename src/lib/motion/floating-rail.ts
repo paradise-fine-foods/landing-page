@@ -14,7 +14,9 @@ export function initializeFloatingRail(
   const toggle = root.querySelector<HTMLButtonElement>('[data-floating-rail-toggle]');
   const panel = root.querySelector<HTMLElement>('#floating-rail-panel');
   const documentTarget = dependencies.document ?? (typeof document !== 'undefined' ? document : undefined);
-  const matchMedia = dependencies.matchMedia ?? (typeof window !== 'undefined' ? window.matchMedia.bind(window) : undefined);
+  const matchMedia = dependencies.matchMedia ?? (typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+    ? window.matchMedia.bind(window)
+    : undefined);
   if (!toggle || !panel || !documentTarget) return noopController;
 
   const setExpanded = (expanded: boolean) => {
