@@ -87,4 +87,17 @@ describe('localized product routes', () => {
     expect(detailRoute).toContain('params: { locale, slug: product.slug }');
     expect(detailRoute).toContain('buildProductRouteMaps(englishProducts, vietnameseProducts)');
   });
+
+  test('keeps catalog controls compact and reserves orange for product facts', () => {
+    const filters = source('src/components/catalog/CatalogFilters.astro');
+    const metadata = source('src/components/catalog/ProductMetadata.astro');
+    const grid = source('src/components/catalog/ProductGrid.astro');
+
+    expect(filters).toContain('border-block: 1px solid var(--color-brushed-steel)');
+    expect(filters).toContain('min-block-size: 2.75rem');
+    expect(filters).not.toContain('background: var(--color-cold-paper)');
+    expect(metadata).toContain('border-inline-start: 2px solid var(--color-paradise-orange)');
+    expect(grid).toContain('border-block: 1px solid var(--color-brushed-steel)');
+    expect(grid).not.toContain('background: var(--color-cold-paper)');
+  });
 });

@@ -20,7 +20,7 @@ const { product, copy } = Astro.props;
 <style>
   .product-metadata { border-inline-start: 2px solid var(--color-paradise-orange); display: grid; gap: var(--space-4); grid-template-columns: repeat(2, minmax(0, 1fr)); padding-inline-start: var(--space-6); }
   .product-metadata div { min-inline-size: 0; }
-  .product-metadata dt { color: var(--color-deep-herb); font-size: 0.66rem; font-weight: 700; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .product-metadata dt { color: var(--color-utility-grey); font-size: 0.66rem; font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .product-metadata dd { margin-block-start: var(--space-2); overflow-wrap: anywhere; }
   @media (max-width: 48rem) { .product-metadata:is(.product-metadata) { border-inline-start: 0; padding-inline-start: 0; } }
   @media (max-width: 28rem) { .product-metadata:is(.product-metadata) { grid-template-columns: 1fr; } }

@@ -339,7 +339,7 @@ describe('Precision Supply System identity', () => {
       const component = source(file);
       expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow/);
     }
-    expect(cssRule(source('src/components/catalog/CatalogFilters.astro'), '.catalog-filters')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(source('src/components/catalog/CatalogFilters.astro'), '.catalog-filters')).toContain('border-block: 1px solid var(--color-brushed-steel)');
     expect(cssRule(source('src/components/catalog/ProductMetadata.astro'), '.product-metadata')).toContain('border-inline-start: 2px solid var(--color-paradise-orange)');
   });
 
@@ -476,8 +476,8 @@ describe('Precision Supply System identity', () => {
     expect(hero).not.toContain('drop-shadow');
 
     const card = source('src/components/catalog/ProductCard.astro');
-    expect(cssRule(card, '.product-card__organic-media')).toContain('border-radius: var(--radius-sm)');
-    expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 2px solid var(--color-paradise-orange)');
+    expect(cssRule(card, '.product-card__media')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 1px solid var(--color-brushed-steel)');
     expect(card).not.toContain('var(--shape-drop)');
   });
 
@@ -539,19 +539,10 @@ describe('Precision Supply System identity', () => {
     }
   });
 
-  test('isolates the product stage and orders the brand label above image layers', () => {
+  test('keeps product detail media unmasked and square', () => {
     const detail = source('src/components/catalog/ProductDetail.astro');
-    expect(cssRule(detail, '.product-detail__organic-stage')).toContain('isolation: isolate');
-    expect(cssRule(detail, '.product-detail__stage::before')).toContain('z-index: 0');
-    expect(cssRule(detail, '.product-detail__stage img')).toContain('position: relative');
-    expect(cssRule(detail, '.product-detail__stage img')).toContain('z-index: 1');
-    expect(cssRule(detail, '.product-detail__stage > span')).toContain('z-index: 2');
-  });
-
-  test('keeps the product-stage brand label inside the organic mask safe area', () => {
-    const label = cssRule(source('src/components/catalog/ProductDetail.astro'), '.product-detail__stage > span');
-    expect(label).toContain('inset-block-start: 16%');
-    expect(label).toContain('inset-inline-start: 36%');
+    expect(baseCssRule(detail, '.product-detail__stage')).toContain('aspect-ratio: 1 / 1');
+    expect(detail).not.toMatch(/product-detail__organic-stage|product-detail__stage::before|product-detail__stage > span/);
   });
 
   test('removes legacy decorative presentation from every active styled surface', () => {
