@@ -4,14 +4,19 @@ import { readFile } from 'node:fs/promises';
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
 describe('floating form rail rendering contract', () => {
-  test('anchors the ready desktop rail below the header and clear of mid-page controls', async () => {
+  test('anchors the enhanced rail above the lower-right safe edge at every viewport', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
-    const desktopRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
+    const sharedRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
 
-    expect(desktopRail).toContain('top: calc(5rem + var(--space-6))');
-    expect(desktopRail).toContain('transform: none');
-    expect(desktopRail).not.toContain('top: 50%');
-    expect(desktopRail).not.toContain('translateY(-50%)');
+    for (const declaration of [
+      'align-items: flex-end',
+      'inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px))',
+      'inset-inline-end: calc(1rem + env(safe-area-inset-right, 0px))',
+      'top: auto',
+      'transform: none',
+    ]) expect(sharedRail).toContain(declaration);
+
+    expect(sharedRail).not.toContain('top: calc(5rem + var(--space-6))');
   });
 
   test('keeps a non-ready rail in normal flow without horizontal overflow', async () => {
@@ -36,19 +41,14 @@ describe('floating form rail rendering contract', () => {
     expect(staticPanel).toContain('max-inline-size: none');
   });
 
-  test('latches the mobile rail to the lower-right safe edge', async () => {
+  test('keeps only compact sizing in the mobile rail override', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     const mobileRail = source.match(/@media \(max-width: 48rem\)\s*\{\s*\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
 
-    for (const declaration of [
-      'align-items: flex-end',
-      'flex-direction: row',
-      'inset-block-end: env(safe-area-inset-bottom, 0px)',
-      'inset-inline-end: env(safe-area-inset-right, 0px)',
-      'inline-size: min(14.75rem, 100vw)',
-      'top: auto',
-      'transform: none',
-    ]) expect(mobileRail).toContain(declaration);
+    expect(mobileRail).toContain('inline-size: min(14.75rem, 100vw)');
+    for (const duplicate of ['align-items:', 'inset-block-end:', 'inset-inline-end:', 'top:', 'transform:']) {
+      expect(mobileRail).not.toContain(duplicate);
+    }
   });
 
   test('renders a label-free accessible server-side rail', async () => {
@@ -66,7 +66,7 @@ describe('floating form rail rendering contract', () => {
       'href={customerPath}',
       'href={supplierPath}',
       'flex-direction: row',
-      'align-items: flex-start',
+      'align-items: flex-end',
       "[data-expanded='false'] {",
       'translate: calc(100% - 2.75rem) 0',
       'transition: translate var(--transition-base)',
