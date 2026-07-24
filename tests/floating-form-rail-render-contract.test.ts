@@ -36,6 +36,21 @@ describe('floating form rail rendering contract', () => {
     expect(staticPanel).toContain('max-inline-size: none');
   });
 
+  test('latches the mobile rail to the lower-right safe edge', async () => {
+    const source = await read('../src/components/global/FloatingFormRail.astro');
+    const mobileRail = source.match(/@media \(max-width: 48rem\)\s*\{\s*\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    for (const declaration of [
+      'align-items: flex-end',
+      'flex-direction: row',
+      'inset-block-end: env(safe-area-inset-bottom, 0px)',
+      'inset-inline-end: env(safe-area-inset-right, 0px)',
+      'inline-size: min(14.75rem, 100vw)',
+      'top: auto',
+      'transform: none',
+    ]) expect(mobileRail).toContain(declaration);
+  });
+
   test('renders a label-free accessible server-side rail', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     for (const value of [
@@ -64,13 +79,11 @@ describe('floating form rail rendering contract', () => {
       'inline-size: 2.75rem',
       'block-size: 2.75rem',
       'inline-size: min(12rem, calc(100vw - 2.75rem))',
-      'inline-size: min(16.75rem, calc(100vw - 2rem))',
       'min-block-size: 2.75rem',
     ]) expect(source).toContain(value);
 
     expect(source).not.toContain('lucide:plus');
     expect(source).not.toContain('lucide:minus');
-    expect(source).not.toContain('align-items: flex-end');
     expect(source).not.toContain('3.25rem');
     expect(source).not.toContain('inline-size: min(17rem');
     expect(source).not.toContain('inline-size: min(20rem');
