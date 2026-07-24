@@ -75,8 +75,8 @@ a:hover {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-paradise-orange) 24%, var(--color-process-white));
-  color: var(--color-graphite);
+  background: var(--color-paradise-orange);
+  color: var(--color-process-white);
 }
 
 .container {
@@ -85,7 +85,7 @@ a:hover {
 }
 
 .section-space {
-  padding-block: clamp(var(--space-7), 7vw, var(--space-9));
+  padding-block: clamp(2.5rem, 5vw, 4rem);
 }
 
 .section-heading {

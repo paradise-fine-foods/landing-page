@@ -30,6 +30,55 @@ const contrastRatio = (foreground: string, background: string) => {
 };
 
 describe('Precision Supply System identity', () => {
+  test('defines the approved product-led minimal type, spacing, and geometry tokens', () => {
+    const tokens = source('src/styles/tokens.css');
+    const typography = source('src/styles/typography.css');
+    const global = source('src/styles/global.css');
+
+    for (const declaration of [
+      '--text-h1: clamp(2.25rem, 5vw, 4.25rem)',
+      '--text-h2: clamp(1.75rem, 3vw, 2.75rem)',
+      '--text-h3: clamp(1.125rem, 1.5vw, 1.35rem)',
+      '--text-hero: var(--text-h1)',
+      '--text-2xl: var(--text-h2)',
+      '--text-xl: var(--text-h3)',
+      '--radius-sm: 0',
+      '--radius-md: 2px',
+    ]) expect(tokens).toContain(declaration);
+
+    expect(cssRule(typography, 'h1')).toContain('font-size: var(--text-h1)');
+    expect(cssRule(typography, 'h2')).toContain('font-size: var(--text-h2)');
+    expect(cssRule(typography, 'h3')).toContain('font-size: var(--text-h3)');
+    expect(cssRule(global, '.section-space')).toContain('padding-block: clamp(2.5rem, 5vw, 4rem)');
+  });
+
+  test('keeps shared chrome compact, square, and free of decorative effects', () => {
+    const header = source('src/components/global/Header.astro');
+    const footer = source('src/components/global/Footer.astro');
+    const button = source('src/components/global/ButtonLink.astro');
+    const switcher = source('src/components/global/LanguageSwitcher.astro');
+
+    expect(cssRule(header, '.site-header__bar')).toContain('min-block-size: 4.5rem');
+    expect(cssRule(footer, '.site-footer')).toContain('padding-block: var(--space-7) var(--space-5)');
+
+    for (const component of [button, switcher]) {
+      expect(component).toContain('min-block-size: 2.75rem');
+      expect(component).toContain('border-radius: var(--radius-sm)');
+    }
+
+    for (const file of [
+      'src/styles/global.css',
+      'src/components/global/Header.astro',
+      'src/components/global/Footer.astro',
+      'src/components/global/ButtonLink.astro',
+      'src/components/global/LanguageSwitcher.astro',
+      'src/components/global/FloatingFormRail.astro',
+    ]) {
+      const component = source(file);
+      expect(component, file).not.toMatch(/linear-gradient|radial-gradient|color-mix\(/);
+    }
+  });
+
   test('contains no 3D runtime, model, or stage contract', () => {
     const packageJson = JSON.parse(source('package.json'));
     expect(packageJson.dependencies?.three).toBeUndefined();

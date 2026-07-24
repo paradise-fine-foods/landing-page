@@ -80,6 +80,7 @@ describe('floating form rail rendering contract', () => {
       'block-size: 2.75rem',
       'inline-size: min(12rem, calc(100vw - 2.75rem))',
       'min-block-size: 2.75rem',
+      'border-radius: var(--radius-sm)',
     ]) expect(source).toContain(value);
 
     expect(source).not.toContain('lucide:plus');
@@ -92,6 +93,7 @@ describe('floating form rail rendering contract', () => {
     expect(source).not.toContain('translate: 1rem 0');
     expect(source).not.toContain('clip-path');
     expect(source).not.toContain('drop-shadow');
+    expect(source).not.toMatch(/linear-gradient|radial-gradient|box-shadow/);
     expect(source).not.toContain('@keyframes floating-rail-enter');
     expect(source).not.toContain('360ms cubic-bezier');
 
