@@ -79,6 +79,11 @@ describe('Precision Supply System identity', () => {
     }
   });
 
+  test('uses graphite selection text with contrast-safe Paradise orange', () => {
+    expect(contrastRatio('#202522', '#e46f2c')).toBeGreaterThanOrEqual(4.5);
+    expect(cssRule(source('src/styles/global.css'), '::selection')).toContain('color: var(--color-graphite)');
+  });
+
   test('contains no 3D runtime, model, or stage contract', () => {
     const packageJson = JSON.parse(source('package.json'));
     expect(packageJson.dependencies?.three).toBeUndefined();

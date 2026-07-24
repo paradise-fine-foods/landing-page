@@ -76,7 +76,7 @@ a:hover {
 
 ::selection {
   background: var(--color-paradise-orange);
-  color: var(--color-process-white);
+  color: var(--color-graphite);
 }
 
 .container {

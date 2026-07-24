@@ -80,6 +80,7 @@ describe('floating form rail rendering contract', () => {
       'block-size: 2.75rem',
       'inline-size: min(12rem, calc(100vw - 2.75rem))',
       'min-block-size: 2.75rem',
+      'font-weight: 600',
       'border-radius: var(--radius-sm)',
     ]) expect(source).toContain(value);
 
