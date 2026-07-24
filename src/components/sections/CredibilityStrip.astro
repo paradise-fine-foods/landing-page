@@ -14,11 +14,11 @@ const { title, pillars } = Astro.props;
 <style>
   .credibility { background: var(--color-cold-paper); border-block-end: 1px solid var(--color-brushed-steel); padding-block: var(--space-5); }
   .credibility__flow { display: grid; gap: var(--space-5); grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 2.3fr); }
-  .credibility h2 { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; line-height: 1.05; max-inline-size: 22ch; }
+  .credibility h2 { font-family: var(--font-display); font-size: var(--text-h2); font-weight: 500; line-height: 1.05; max-inline-size: 22ch; }
   .credibility ul { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; }
   .credibility li { border-inline-start: 1px solid var(--color-brushed-steel); display: grid; gap: var(--space-2); padding-inline: var(--space-4); }
   .credibility li:first-child { border-inline-start-color: var(--color-paradise-orange); }
-  .credibility strong { font-size: var(--text-sm); }
+  .credibility strong { font-size: var(--text-sm); font-weight: 600; }
   .credibility li p { color: var(--color-utility-grey); font-size: var(--text-xs); line-height: 1.45; }
   @media (max-width: 58rem) { .credibility__flow { grid-template-columns: 1fr; } .credibility h2 { max-inline-size: none; } }
   @media (max-width: 38rem) { .credibility ul { grid-template-columns: 1fr 1fr; } .credibility li { border-block-start: 1px solid var(--color-brushed-steel); border-inline-start: 0; padding: var(--space-3); } .credibility li:first-child { border-block-start-color: var(--color-paradise-orange); } }

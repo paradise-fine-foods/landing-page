@@ -254,3 +254,110 @@ Report:
 - Browser screenshot QA is intentionally deferred to Task 5. The code-level review found no hierarchy contradiction, but crop balance of the 4:3 category images and 16:10 service image should be inspected at intermediate tablet widths.
 - The Astro root-route priority warning remains pre-existing and route-manifest-safe.
 - Existing CMS demo SVG imagery remains because the brief explicitly requires reuse of authentic/demo media and forbids replacement artwork in this task.
+
+## Important finding follow-up
+
+Date: 2026-07-25
+
+### Corrections
+
+- `CredibilityStrip` now pins its local Newsreader H2 to `var(--text-h2)` at weight 500.
+- `CredibilityStrip` fact labels now declare weight 600 rather than inheriting the browser's heavier default for `strong`.
+- Both primary and secondary `FeaturedBrands` H3 rules now use the exact `var(--text-h3)` token.
+- `FeaturedBrands` utility links and `LatestBlogs` utility links are capped at Nunito weight 600.
+- `ServiceProof` editorial and pillar labels now have explicit weights of 500 and 600 respectively.
+- `FinalCta` now uses the exact `var(--text-h2)` token and a neutral brushed-steel border. The orange edge was removed because the CTA is not a product-fact surface.
+- The `::selection` contract now extracts one rule and requires both `background: var(--color-paradise-orange)` and `color: var(--color-graphite)` from that same rule.
+- Nine separate component-level tests cover these distinct invariants; the obsolete broad `--text-2xl` alias assertion was removed rather than duplicated.
+
+### Follow-up RED
+
+Exact command:
+
+```text
+bun test tests/homepage-composition.test.ts tests/homepage-contract.test.ts tests/living-design-contract.test.ts
+```
+
+Before production edits, the selector helper was corrected to inspect base component rules where responsive overrides also matched. The corrected RED result was:
+
+```text
+9 tests failed:
+(fail) Precision Supply System identity > keeps the credibility heading on the approved local H2 display role
+(fail) Precision Supply System identity > keeps the credibility display heading at the approved medium weight
+(fail) Precision Supply System identity > keeps every featured-brand heading on the approved local H3 scale
+(fail) Precision Supply System identity > keeps the final CTA heading on the approved local H2 scale
+(fail) Precision Supply System identity > caps latest-blog Nunito utility weights at semibold
+(fail) Precision Supply System identity > caps featured-brand Nunito utility weights at semibold
+(fail) Precision Supply System identity > gives credibility fact labels an explicit semibold ceiling
+(fail) Precision Supply System identity > gives service-proof labels explicit weights no heavier than semibold
+(fail) Precision Supply System identity > uses only a neutral boundary on the non-fact final CTA surface
+
+47 pass
+9 fail
+548 expect() calls
+Ran 56 tests across 3 files. [157.00ms]
+```
+
+The strengthened selection-pairing test passed during RED because the production declarations were already correct; the finding was a missing same-rule regression assertion, not missing CSS.
+
+### Follow-up GREEN
+
+Exact command:
+
+```text
+bun test tests/homepage-composition.test.ts tests/homepage-contract.test.ts tests/living-design-contract.test.ts
+```
+
+Exact result:
+
+```text
+56 pass
+0 fail
+545 expect() calls
+Ran 56 tests across 3 files. [172.00ms]
+```
+
+### Follow-up verification
+
+Astro diagnostics:
+
+```text
+bun run check
+
+Result (104 files):
+- 0 errors
+- 0 warnings
+- 0 hints
+```
+
+Full suite, run once before the follow-up commit:
+
+```text
+bun test
+
+201 pass
+0 fail
+1241 expect() calls
+Ran 201 tests across 28 files. [2.63s]
+```
+
+The planned 199-test floor is exceeded by two meaningful contracts; obsolete reveal/Canvas lifecycle tests remain removed.
+
+Diff and source audit:
+
+```text
+git diff --check
+# exit code 0
+
+rg -n "font-weight:\s*700|font-size:\s*(?:var\(--text-2xl\)|var\(--text-xl\)|clamp\(2rem, 4vw, 3.5rem\))|final-cta[^\r\n]*color-paradise-orange" \
+  src/components/sections/CredibilityStrip.astro \
+  src/components/sections/FeaturedBrands.astro \
+  src/components/sections/FinalCta.astro \
+  src/components/sections/ServiceProof.astro \
+  src/components/blogs/LatestBlogs.astro
+# no matches
+```
+
+### Follow-up concerns
+
+- No new functional or structural concerns were found. Browser crop review remains deferred to Task 5 as previously recorded.

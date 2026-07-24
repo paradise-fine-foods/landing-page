@@ -14,6 +14,9 @@ const filesBelow = (directory: string): string[] => readdirSync(join(root, direc
 const cssRule = (css: string, selector: string) => [...(css.includes('<style>') ? css.slice(css.lastIndexOf('<style>') + '<style>'.length) : css).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .filter(([, selectors]) => selectors.split(',').some((item) => item.trim() === selector))
   .at(-1)?.[2] ?? '';
+const baseCssRule = (css: string, selector: string) => [...(css.includes('<style>') ? css.slice(css.lastIndexOf('<style>') + '<style>'.length) : css).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+  .filter(([, selectors]) => selectors.split(',').some((item) => item.trim() === selector))
+  .at(0)?.[2] ?? '';
 
 const primaryNavRules = (css: string) => [...css.matchAll(/([^{}]*\.primary-nav[^{}]*)\{([^{}]*)\}/g)]
   .map(([, selector, declarations]) => ({ selector: selector.trim(), declarations }));
@@ -81,7 +84,64 @@ describe('Precision Supply System identity', () => {
 
   test('uses graphite selection text with contrast-safe Paradise orange', () => {
     expect(contrastRatio('#202522', '#e46f2c')).toBeGreaterThanOrEqual(4.5);
-    expect(cssRule(source('src/styles/global.css'), '::selection')).toContain('color: var(--color-graphite)');
+    const selection = cssRule(source('src/styles/global.css'), '::selection');
+    expect(selection).toContain('background: var(--color-paradise-orange)');
+    expect(selection).toContain('color: var(--color-graphite)');
+  });
+
+  test('keeps the credibility heading on the approved local H2 display role', () => {
+    const heading = baseCssRule(source('src/components/sections/CredibilityStrip.astro'), '.credibility h2');
+    expect(heading).toContain('font-family: var(--font-display)');
+    expect(heading).toContain('font-size: var(--text-h2)');
+  });
+
+  test('keeps the credibility display heading at the approved medium weight', () => {
+    expect(baseCssRule(source('src/components/sections/CredibilityStrip.astro'), '.credibility h2'))
+      .toContain('font-weight: 500');
+  });
+
+  test('keeps every featured-brand heading on the approved local H3 scale', () => {
+    const brands = source('src/components/sections/FeaturedBrands.astro');
+    expect(cssRule(brands, '.featured-brands__copy h3')).toContain('font-size: var(--text-h3)');
+    expect(cssRule(brands, '.featured-brands__secondary h3')).toContain('font-size: var(--text-h3)');
+  });
+
+  test('keeps the final CTA heading on the approved local H2 scale', () => {
+    expect(cssRule(source('src/components/sections/FinalCta.astro'), '.final-cta h2'))
+      .toContain('font-size: var(--text-h2)');
+  });
+
+  test('caps latest-blog Nunito utility weights at semibold', () => {
+    const component = source('src/components/blogs/LatestBlogs.astro');
+    const weights = [...component.matchAll(/font-weight:\s*(\d+)/g)].map(([, weight]) => Number(weight));
+    expect(weights.length).toBeGreaterThan(0);
+    expect(Math.max(...weights)).toBeLessThanOrEqual(600);
+  });
+
+  test('caps featured-brand Nunito utility weights at semibold', () => {
+    const component = source('src/components/sections/FeaturedBrands.astro');
+    const weights = [...component.matchAll(/font-weight:\s*(\d+)/g)].map(([, weight]) => Number(weight));
+    expect(weights.length).toBeGreaterThan(0);
+    expect(Math.max(...weights)).toBeLessThanOrEqual(600);
+  });
+
+  test('gives credibility fact labels an explicit semibold ceiling', () => {
+    expect(cssRule(source('src/components/sections/CredibilityStrip.astro'), '.credibility strong'))
+      .toContain('font-weight: 600');
+  });
+
+  test('gives service-proof labels explicit weights no heavier than semibold', () => {
+    const service = source('src/components/sections/ServiceProof.astro');
+    expect(cssRule(service, '.service-proof__editorial strong')).toContain('font-weight: 500');
+    expect(cssRule(service, '.service-proof__pillars strong')).toContain('font-weight: 600');
+  });
+
+  test('uses only a neutral boundary on the non-fact final CTA surface', () => {
+    const finalCta = source('src/components/sections/FinalCta.astro');
+    const shape = baseCssRule(finalCta, '.final-cta__shape');
+    expect(shape).toContain('border: 1px solid var(--color-brushed-steel)');
+    expect(shape).not.toContain('var(--color-paradise-orange)');
+    expect(finalCta).not.toMatch(/\.final-cta[^{}]*\{[^}]*color-paradise-orange/);
   });
 
   test('contains no 3D runtime, model, or stage contract', () => {
