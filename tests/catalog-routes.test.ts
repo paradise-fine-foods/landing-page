@@ -101,9 +101,11 @@ describe('localized product routes', () => {
     expect(grid).not.toContain('background: var(--color-cold-paper)');
   });
 
-  test('reserves a control-safe inline channel beside the collapsed floating rail', () => {
+  test('reserves state-aware control clearance beside collapsed and expanded rails', () => {
     const filters = source('src/components/catalog/CatalogFilters.astro');
 
     expect(filters).toContain('padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px))');
+    expect(filters).toContain(":global(html:has([data-floating-rail][data-expanded='true'])) .catalog-filters { padding-inline-end: calc(14.75rem + 1rem + env(safe-area-inset-right, 0px)); }");
+    expect(filters).toContain("@media (max-width: 48rem) { :global(html:has([data-floating-rail][data-expanded='true'])) .catalog-filters { padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px)); } }");
   });
 });

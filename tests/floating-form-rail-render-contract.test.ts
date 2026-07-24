@@ -51,6 +51,23 @@ describe('floating form rail rendering contract', () => {
     }
   });
 
+  test('uses a non-obscuring horizontal top dock when expanded on mobile', async () => {
+    const source = await read('../src/components/global/FloatingFormRail.astro');
+
+    for (const value of [
+      ".floating-form-rail[data-ready='true'][data-expanded='true'] {",
+      'block-size: 3rem',
+      'inset-block-start: 0',
+      'inset-block-end: auto',
+      'inset-inline: 0',
+      'inline-size: 100%',
+      'grid-template-columns: repeat(3, minmax(0, 1fr))',
+      ":global(html:has([data-floating-rail][data-ready='true'][data-expanded='true'])) body { padding-block-start: 3rem; }",
+    ]) expect(source).toContain(value);
+
+    expect(source).toContain(".floating-form-rail[data-expanded='true'] .floating-form-rail__panel a { border-block-end: 0; min-block-size: 2.75rem; }");
+  });
+
   test('renders a label-free accessible server-side rail', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     for (const value of [

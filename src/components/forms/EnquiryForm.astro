@@ -212,6 +212,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
   .enquiry__description { font-size: var(--text-lg); max-inline-size: 34rem; }
   .enquiry__organic-mark { display: none; }
   .enquiry__panel { border-block: 1px solid var(--color-brushed-steel); border-inline: 0; padding-block: clamp(var(--space-5), 5vw, var(--space-8)); padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px)); }
+  :global(html:has([data-floating-rail][data-expanded='true'])) .enquiry__panel { padding-inline-end: calc(14.75rem + 1rem + env(safe-area-inset-right, 0px)); }
   .enquiry__required, .enquiry__noscript { font-size: var(--text-sm); }
   .enquiry__noscript { border-inline-start: 0.25rem solid var(--color-brushed-steel); margin-block: var(--space-4) var(--space-6); padding: var(--space-3) var(--space-4); }
   .enquiry-form { display: grid; gap: var(--space-5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -235,6 +236,7 @@ const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
   .enquiry-success__mark { color: var(--color-success); font-size: var(--text-2xl); }
   .enquiry-success h2 { font-size: var(--text-2xl); margin-block: var(--space-3); }
   .enquiry-success p + p { margin-block-start: var(--space-3); }
+  @media (max-width: 48rem) { :global(html:has([data-floating-rail][data-expanded='true'])) .enquiry__panel { padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px)); } }
   @media (max-width: 48rem) {
     .enquiry { grid-template-columns: minmax(0, 1fr); }
     .enquiry__intro { position: static; }

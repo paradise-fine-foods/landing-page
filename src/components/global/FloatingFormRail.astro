@@ -165,6 +165,33 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
       inline-size: min(14.75rem, 100vw);
     }
 
+    .floating-form-rail[data-ready='true'][data-expanded='true'] {
+      align-items: stretch;
+      block-size: 3rem;
+      inset-block-start: 0;
+      inset-block-end: auto;
+      inset-inline: 0;
+      inline-size: 100%;
+      translate: 0 0;
+    }
+
+    .floating-form-rail[data-expanded='true'] .floating-form-rail__toggle {
+      block-size: 3rem;
+      flex: 0 0 2.75rem;
+    }
+
+    .floating-form-rail[data-expanded='true'] .floating-form-rail__panel {
+      block-size: 3rem;
+      flex: 1 1 auto;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      inline-size: auto;
+      max-block-size: none;
+      padding: 0;
+    }
+
+    .floating-form-rail[data-expanded='true'] .floating-form-rail__panel a { border-block-end: 0; min-block-size: 2.75rem; }
+    :global(html:has([data-floating-rail][data-ready='true'][data-expanded='true'])) body { padding-block-start: 3rem; }
+
     .floating-form-rail__panel { max-block-size: 16rem; }
   }
 
