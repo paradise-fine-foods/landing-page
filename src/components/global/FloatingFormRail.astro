@@ -45,13 +45,14 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
 
 <style>
   .floating-form-rail {
-    align-items: flex-start;
+    align-items: flex-end;
     display: flex;
     flex-direction: row;
-    inset-inline-end: 0;
+    inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px));
+    inset-inline-end: calc(1rem + env(safe-area-inset-right, 0px));
     pointer-events: none;
     position: fixed;
-    top: calc(5rem + var(--space-6));
+    top: auto;
     transform: none;
     translate: 0 0;
     filter: none;
@@ -159,13 +160,7 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
 
   @media (max-width: 48rem) {
     .floating-form-rail {
-      align-items: flex-end;
-      flex-direction: row;
-      inset-block-end: env(safe-area-inset-bottom, 0px);
-      inset-inline-end: env(safe-area-inset-right, 0px);
       inline-size: min(14.75rem, 100vw);
-      top: auto;
-      transform: none;
     }
 
     .floating-form-rail__panel { max-block-size: 16rem; }
