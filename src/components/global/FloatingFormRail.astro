@@ -159,11 +159,11 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
 
   @media (max-width: 48rem) {
     .floating-form-rail {
-      align-items: flex-start;
+      align-items: flex-end;
       flex-direction: row;
-      inset-block-end: 1rem;
-      inset-inline-end: 1rem;
-      inline-size: min(16.75rem, calc(100vw - 2rem));
+      inset-block-end: env(safe-area-inset-bottom, 0px);
+      inset-inline-end: env(safe-area-inset-right, 0px);
+      inline-size: min(14.75rem, 100vw);
       top: auto;
       transform: none;
     }
