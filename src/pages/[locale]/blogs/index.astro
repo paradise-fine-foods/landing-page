@@ -30,7 +30,7 @@ const alternatePath = localizedPath(counterpartLocale(locale), 'blogs');
   .blog-index__intro { display: grid; gap: var(--space-5); grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr); padding-block: var(--space-6) var(--space-8); }
   .blog-index__intro h1 { max-inline-size: 12ch; }
   .blog-index__intro > p:last-child { font-size: var(--text-lg); grid-column: 2; max-inline-size: var(--measure); }
-  .blog-index__grid { display: grid; gap: var(--space-6); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .blog-index__empty { background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: grid; gap: var(--space-4); padding: var(--space-7); }
+  .blog-index__grid { display: grid; gap: var(--space-5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .blog-index__empty { border-block: 1px solid var(--color-brushed-steel); display: grid; gap: var(--space-4); padding-block: var(--space-7); }
   @media (max-width: 42rem) { .blog-index__intro, .blog-index__grid { grid-template-columns: minmax(0, 1fr); } .blog-index__intro > p:last-child { grid-column: auto; } }
 </style>

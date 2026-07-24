@@ -576,4 +576,19 @@ describe('Precision Supply System identity', () => {
     expect(positions.every((position) => position >= 0)).toBe(true);
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
+
+  test('keeps editorial, enquiry, and 404 surfaces square, flat, and free of decorative masks', () => {
+    for (const file of [
+      'src/components/blogs/BlogCard.astro',
+      'src/components/blogs/BlogArticle.astro',
+      'src/components/forms/EnquiryForm.astro',
+      'src/pages/404.astro',
+    ]) {
+      const component = source(file);
+      expect(component, file).not.toMatch(/box-shadow|clip-path|mask-image|OrganicMark|var\(--color-paradise-orange\)/);
+    }
+
+    expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.enquiry-form__actions button'))
+      .toContain('min-block-size: 2.75rem');
+  });
 });

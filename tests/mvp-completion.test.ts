@@ -30,6 +30,10 @@ describe('production completion contracts', () => {
     expect(page).toContain('.not-found__link');
     expect(page.match(/class="[^"]*not-found__link/g)).toHaveLength(5);
     expect(page).toContain('min-block-size: 2.75rem');
+    expect(page).toContain('.not-found__art { align-items: center; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel);');
+    expect(page).toContain('.not-found__art strong { color: var(--color-graphite);');
+    expect(page).not.toContain('OrganicMark');
+    expect(page).not.toContain('var(--color-paradise-orange)');
   });
 
   test('keeps the browser checklist on the generated Vietnamese brand route', () => {
@@ -47,5 +51,14 @@ describe('production completion contracts', () => {
     expect(existsSync(join(root, 'tests/verify-built-living-design.ts'))).toBe(true);
     expect(existsSync(join(root, 'tests/verify-built-route-manifest.ts'))).toBe(true);
     expect(existsSync(join(root, 'tests/production-copy.test.ts'))).toBe(true);
+  });
+
+  test('verifies the generated 404 against the restrained product-led recovery stage', () => {
+    const verifier = source('tests/verify-built-mvp.ts');
+
+    expect(verifier).toContain('generated recovery stage is missing its neutral boundary');
+    expect(verifier).toContain('generated 404 stage must not restore decorative artwork');
+    expect(verifier).not.toContain('not-found__drop');
+    expect(verifier).not.toContain('not-found__petal');
   });
 });

@@ -41,4 +41,15 @@ describe('enquiry rendering contract', () => {
     expect(routes[1]).toContain('contactModes.map((mode)');
     expect(routes[1]).toContain('params: { locale, mode }');
   });
+
+  test('uses flat, touch-safe fields with direct error feedback', async () => {
+    const source = await read('../src/components/forms/EnquiryForm.astro');
+
+    expect(source).toContain('.enquiry__panel { border-block: 1px solid var(--color-brushed-steel); border-inline: 0;');
+    expect(source).toContain('.field input:not([type=\'checkbox\']), .field select, .field textarea { background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-md);');
+    expect(source).toContain('min-block-size: 2.75rem;');
+    expect(source).toContain('.field__error { border-inline-start: 2px solid var(--color-error);');
+    expect(source).toContain('.field__error:empty { border-color: transparent; padding-inline-start: 0; }');
+    expect(source).not.toContain('.enquiry__panel { background: var(--color-process-white); border: 1px solid');
+  });
 });
