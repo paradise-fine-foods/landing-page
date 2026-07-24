@@ -100,4 +100,10 @@ describe('localized product routes', () => {
     expect(grid).toContain('border-block: 1px solid var(--color-brushed-steel)');
     expect(grid).not.toContain('background: var(--color-cold-paper)');
   });
+
+  test('reserves a control-safe inline channel beside the collapsed floating rail', () => {
+    const filters = source('src/components/catalog/CatalogFilters.astro');
+
+    expect(filters).toContain('padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px))');
+  });
 });

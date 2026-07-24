@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { initializeFloatingRail, type FloatingRailDependencies } from '../src/lib/motion/floating-rail';
 
 describe('floating enquiry rail', () => {
-  test('starts mobile rails visible, collapsed, inert, and labelled to open', () => {
+  test('starts rails visible, collapsed, inert, and labelled to open', () => {
     const toggle = {
       addEventListener() {},
       removeEventListener() {},
@@ -16,20 +16,16 @@ describe('floating enquiry rail', () => {
       querySelector: (selector: string) => selector === '[data-floating-rail-toggle]' ? toggle : selector === '#floating-rail-panel' ? panel : null,
     } as unknown as HTMLElement;
     const documentTarget = { addEventListener() {}, removeEventListener() {} };
-    let mediaQuery = '';
-
     initializeFloatingRail(root, {
       document: documentTarget as FloatingRailDependencies['document'],
-      matchMedia(query) { mediaQuery = query; return { matches: true }; },
     });
 
-    expect(mediaQuery).toBe('(max-width: 48rem)');
     expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'false' });
     expect(panel.inert).toBe(true);
     expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'false', 'aria-label': 'Open enquiries' });
   });
 
-  test('starts desktop rails visible and expanded, toggles accessibly, and disposes each listener once', () => {
+  test('starts desktop rails visible and collapsed, toggles accessibly, and disposes each listener once', () => {
     const listeners = new Map<string, EventListener>();
     const removals: string[] = [];
     const createTarget = () => ({
@@ -52,19 +48,18 @@ describe('floating enquiry rail', () => {
     const documentTarget = createTarget();
     const dependencies: FloatingRailDependencies = {
       document: documentTarget as FloatingRailDependencies['document'],
-      matchMedia: () => ({ matches: false }),
     };
 
     const controller = initializeFloatingRail(root, dependencies);
-    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'true' });
-    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
+    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'false' });
+    expect(panel.inert).toBe(true);
+    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'false', 'aria-label': 'Open enquiries' });
     expect([...listeners.keys()].sort()).toEqual(['click', 'keydown']);
 
     listeners.get('click')?.(new Event('click'));
-    expect(root.dataset.expanded).toBe('false');
-    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'false', 'aria-label': 'Open enquiries' });
+    expect(root.dataset.expanded).toBe('true');
+    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
 
-    listeners.get('click')?.(new Event('click'));
     listeners.get('keydown')?.({ key: 'Escape' } as KeyboardEvent);
     expect(root.dataset.expanded).toBe('false');
     expect(toggle.focusCalls).toBe(1);
@@ -74,7 +69,7 @@ describe('floating enquiry rail', () => {
     expect(removals.sort()).toEqual(['click', 'keydown']);
   });
 
-  test('starts visible and expanded when matchMedia is unavailable', () => {
+  test('starts visible and collapsed without browser globals', () => {
     const toggle = {
       addEventListener() {},
       removeEventListener() {},
@@ -91,12 +86,12 @@ describe('floating enquiry rail', () => {
 
     initializeFloatingRail(root, { document: documentTarget as FloatingRailDependencies['document'] });
 
-    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'true' });
-    expect(panel.inert).toBe(false);
-    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
+    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'false' });
+    expect(panel.inert).toBe(true);
+    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'false', 'aria-label': 'Open enquiries' });
   });
 
-  test('falls back to expanded when window exists without matchMedia', () => {
+  test('stays collapsed when window exists without matchMedia', () => {
     const previousWindow = Object.getOwnPropertyDescriptor(globalThis, 'window');
     Object.defineProperty(globalThis, 'window', { configurable: true, value: {} });
     const toggle = {
@@ -120,8 +115,8 @@ describe('floating enquiry rail', () => {
       else Reflect.deleteProperty(globalThis, 'window');
     }
 
-    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'true' });
-    expect(panel.inert).toBe(false);
-    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'true', 'aria-label': 'Close enquiries' });
+    expect(root.dataset).toMatchObject({ ready: 'true', visible: 'true', expanded: 'false' });
+    expect(panel.inert).toBe(true);
+    expect(toggle.attributes).toMatchObject({ 'aria-expanded': 'false', 'aria-label': 'Open enquiries' });
   });
 });

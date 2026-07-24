@@ -2,7 +2,6 @@ export interface FloatingRailController { dispose(): void }
 
 export interface FloatingRailDependencies {
   document?: Pick<Document, 'addEventListener' | 'removeEventListener'>;
-  matchMedia?: (query: string) => Pick<MediaQueryList, 'matches'>;
 }
 
 const noopController: FloatingRailController = { dispose() {} };
@@ -14,9 +13,6 @@ export function initializeFloatingRail(
   const toggle = root.querySelector<HTMLButtonElement>('[data-floating-rail-toggle]');
   const panel = root.querySelector<HTMLElement>('#floating-rail-panel');
   const documentTarget = dependencies.document ?? (typeof document !== 'undefined' ? document : undefined);
-  const matchMedia = dependencies.matchMedia ?? (typeof window !== 'undefined' && typeof window.matchMedia === 'function'
-    ? window.matchMedia.bind(window)
-    : undefined);
   if (!toggle || !panel || !documentTarget) return noopController;
 
   const setExpanded = (expanded: boolean) => {
@@ -34,7 +30,7 @@ export function initializeFloatingRail(
 
   root.dataset.ready = 'true';
   root.dataset.visible = 'true';
-  setExpanded(!matchMedia?.('(max-width: 48rem)').matches);
+  setExpanded(false);
   toggle.addEventListener('click', onClick);
   documentTarget.addEventListener('keydown', onKeydown);
 

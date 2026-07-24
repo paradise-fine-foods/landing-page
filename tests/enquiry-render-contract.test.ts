@@ -52,4 +52,13 @@ describe('enquiry rendering contract', () => {
     expect(source).toContain('.field__error:empty { border-color: transparent; padding-inline-start: 0; }');
     expect(source).not.toContain('.enquiry__panel { background: var(--color-process-white); border: 1px solid');
   });
+
+  test('keeps controls clear of the collapsed rail and gives consent a labelled 44px hit area', async () => {
+    const source = await read('../src/components/forms/EnquiryForm.astro');
+
+    expect(source).toContain('.enquiry__panel { border-block: 1px solid var(--color-brushed-steel); border-inline: 0; padding-block: clamp(var(--space-5), 5vw, var(--space-8)); padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px)); }');
+    expect(source).toContain('<input id="enquiry-consent" name="consent" type="checkbox"');
+    expect(source).toContain('<label for="enquiry-consent">');
+    expect(source).toContain('.field--consent label { align-items: center; display: flex; margin: 0; min-block-size: 2.75rem; }');
+  });
 });
