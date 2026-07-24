@@ -2,7 +2,6 @@
 import type { Product } from '../../lib/cms/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import ButtonLink from '../global/ButtonLink.astro';
-import OrganicMark from '../global/OrganicMark.astro';
 
 interface Props {
   copy: UiCopy['hero'];
@@ -44,10 +43,6 @@ const metadata = [
           loading="eager"
           fetchpriority="high"
         />
-        <OrganicMark variant="drop" color="orange" class="living-hero__mark living-hero__mark--one" />
-        <OrganicMark variant="seed" color="blue" class="living-hero__mark living-hero__mark--two" />
-        <OrganicMark variant="petal" color="green" class="living-hero__mark living-hero__mark--trio" />
-        <canvas data-living-canvas aria-hidden="true"></canvas>
       </div>
       <figcaption>{product.name}</figcaption>
     </figure>
@@ -55,19 +50,12 @@ const metadata = [
 </section>
 
 <script>
-  import { shouldDisposePage, shouldEnhanceMotion } from '../../lib/motion/preferences';
-
-  interface NavigatorWithConnection extends Navigator {
-    connection?: { saveData?: boolean };
-  }
-
   const reduceMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? true;
-  const saveData = Boolean((navigator as NavigatorWithConnection).connection?.saveData);
   const controllers: Array<{ dispose(): void }> = [];
   let pageDisposed = false;
 
   globalThis.addEventListener('pagehide', (event) => {
-    if (!shouldDisposePage(event)) return;
+    if ('persisted' in event && event.persisted) return;
     pageDisposed = true;
     for (const controller of controllers) controller.dispose();
   });
@@ -79,45 +67,23 @@ const metadata = [
         .map((carousel) => createCarousel(carousel, { reduceMotion })));
     })
     .catch(() => undefined);
-
-  if (shouldEnhanceMotion({ reduceMotion, saveData })) {
-    import('../../lib/motion/living-canvas')
-      .then(({ mountLivingCanvas }) => {
-        if (pageDisposed) return;
-        controllers.push(...[...document.querySelectorAll<HTMLCanvasElement>('[data-living-canvas]')]
-          .map((canvas) => mountLivingCanvas(canvas)));
-      })
-      .catch(() => undefined);
-
-    import('../../lib/motion/reveal')
-      .then(({ installReveals }) => {
-        if (pageDisposed) return;
-        const root = document.querySelector<HTMLElement>('main');
-        if (!root) return;
-        root.dataset.motionEnhanced = 'true';
-        controllers.push(installReveals(root));
-      })
-      .catch(() => undefined);
-  }
 </script>
 
 <style>
   .living-hero { background: var(--color-process-white); border-block-end: 1px solid var(--color-brushed-steel); overflow: hidden; }
-  .living-hero__content { display: grid; grid-template-columns: minmax(18rem, 5fr) minmax(28rem, 7fr); min-block-size: min(44rem, calc(100vh - 6rem)); }
-  .living-hero__copy { align-self: center; display: flex; flex-direction: column; gap: var(--space-5); padding: var(--space-8) clamp(var(--space-6), 5vw, var(--space-9)) var(--space-8) 0; position: relative; z-index: 2; }
-  .living-hero h1 { font-size: clamp(2.75rem, 5vw, 5rem); max-inline-size: 10ch; }
+  .living-hero__content { display: grid; grid-template-columns: minmax(18rem, 4fr) minmax(30rem, 8fr); min-block-size: min(42rem, calc(100vh - 4.5rem)); }
+  .living-hero__copy { align-self: center; display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-8) clamp(var(--space-6), 4vw, var(--space-8)) var(--space-8) 0; }
+  .living-hero h1 { font-size: var(--text-hero); max-inline-size: 11ch; }
   .living-hero__description { max-inline-size: 34rem; }
   .living-hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-block-start: var(--space-2); }
-  .living-hero__metadata { border-block-start: 2px solid var(--color-paradise-orange); display: grid; grid-template-columns: 1fr 1fr; margin: var(--space-4) 0 0; }
+  .living-hero__metadata { border-block-start: 2px solid var(--color-paradise-orange); display: grid; grid-template-columns: 1fr 1fr; margin: var(--space-3) 0 0; }
   .living-hero__metadata div { border-block-end: 1px solid var(--color-brushed-steel); min-inline-size: 0; padding: var(--space-3) var(--space-3) var(--space-3) 0; }
   .living-hero__metadata dt { color: var(--color-utility-grey); font-size: 0.7rem; font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .living-hero__metadata dd { font-size: 0.82rem; margin-block-start: var(--space-1); overflow-wrap: anywhere; }
   .living-hero__art { align-self: stretch; background: var(--color-cold-paper); border-inline: 1px solid var(--color-brushed-steel); display: grid; grid-template-rows: 1fr auto; margin: 0; min-inline-size: 0; position: relative; }
-  .living-hero__image-frame { min-block-size: 35rem; overflow: hidden; position: relative; }
+  .living-hero__image-frame { min-block-size: 36rem; overflow: hidden; position: relative; }
   .living-hero__image-frame > img { block-size: 100%; inline-size: 100%; object-fit: cover; position: absolute; }
   .living-hero__art figcaption { background: var(--color-graphite); color: var(--color-process-white); font-size: 0.78rem; font-weight: 600; letter-spacing: var(--tracking-label); padding: var(--space-3) var(--space-4); text-transform: uppercase; }
-  :global(.living-hero__mark),
-  [data-living-canvas] { display: none; }
   @media (max-width: 64rem) { .living-hero__content { grid-template-columns: 1fr; } .living-hero__copy { padding-inline-end: 0; } .living-hero__art { border-block-start: 1px solid var(--color-brushed-steel); } }
   @media (max-width: 36rem) { .living-hero__content { inline-size: 100%; } .living-hero__copy { padding-inline: var(--container-inline); } .living-hero__actions { align-items: stretch; flex-direction: column; } .living-hero__art { background: var(--color-cold-paper); border-inline: 0; } .living-hero__image-frame { min-block-size: 30rem; } }
 </style>

@@ -4,22 +4,22 @@ interface Props { title: string; pillars: Pillar[] }
 const { title, pillars } = Astro.props;
 ---
 
-<section class="credibility" aria-labelledby="credibility-title" data-reveal>
+<section class="credibility" aria-labelledby="credibility-title">
   <div class="container credibility__flow">
     <h2 id="credibility-title">{title}</h2>
-    <ul>{pillars.map(({ title: pillarTitle }) => <li><span aria-hidden="true"></span>{pillarTitle}</li>)}</ul>
+    <ul>{pillars.map(({ title: pillarTitle, description }) => <li><strong>{pillarTitle}</strong><p>{description}</p></li>)}</ul>
   </div>
 </section>
 
 <style>
-  .credibility { background: var(--color-process-white); border-block-end: 1px solid var(--color-brushed-steel); padding-block: var(--space-6); }
-  .credibility__flow { align-items: center; display: grid; gap: var(--space-6); grid-template-columns: 1fr; }
+  .credibility { background: var(--color-cold-paper); border-block-end: 1px solid var(--color-brushed-steel); padding-block: var(--space-5); }
+  .credibility__flow { display: grid; gap: var(--space-5); grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 2.3fr); }
   .credibility h2 { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; line-height: 1.05; max-inline-size: 22ch; }
-  .credibility ul { align-items: center; display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); list-style: none; }
-  .credibility li { align-items: center; display: flex; font-size: var(--text-xs); font-weight: 700; gap: var(--space-2); }
-  .credibility li > span { background: var(--color-graphite); block-size: 0.5rem; inline-size: 0.5rem; }
-  :global([data-motion-enhanced]) [data-reveal],
-  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: none; }
-  @media (max-width: 44rem) { .credibility__flow { grid-template-columns: 1fr; } .credibility h2 { max-inline-size: none; } .credibility ul { align-items: start; flex-direction: column; } }
-  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } }
+  .credibility ul { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; }
+  .credibility li { border-inline-start: 1px solid var(--color-brushed-steel); display: grid; gap: var(--space-2); padding-inline: var(--space-4); }
+  .credibility li:first-child { border-inline-start-color: var(--color-paradise-orange); }
+  .credibility strong { font-size: var(--text-sm); }
+  .credibility li p { color: var(--color-utility-grey); font-size: var(--text-xs); line-height: 1.45; }
+  @media (max-width: 58rem) { .credibility__flow { grid-template-columns: 1fr; } .credibility h2 { max-inline-size: none; } }
+  @media (max-width: 38rem) { .credibility ul { grid-template-columns: 1fr 1fr; } .credibility li { border-block-start: 1px solid var(--color-brushed-steel); border-inline-start: 0; padding: var(--space-3); } .credibility li:first-child { border-block-start-color: var(--color-paradise-orange); } }
 </style>

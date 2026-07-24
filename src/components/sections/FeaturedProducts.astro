@@ -11,7 +11,7 @@ const initialStatus = carousel.status.replace('{current}', '1').replace('{total}
 ---
 
 <section class="featured-products section-space" aria-labelledby="featured-products-title" aria-roledescription="carousel" aria-label={carousel.label} data-carousel>
-  <div class="container featured-products__heading" data-reveal>
+  <div class="container featured-products__heading">
     <div><p class="eyebrow">{eyebrow}</p><h2 id="featured-products-title">{title}</h2></div>
     <div class="featured-products__controls" data-carousel-controls hidden>
       <button type="button" data-carousel-previous aria-label={carousel.previous}><Icon name="lucide:chevron-left" size="1.1em" /><span>{carousel.previous}</span></button>
@@ -19,7 +19,7 @@ const initialStatus = carousel.status.replace('{current}', '1').replace('{total}
       <button type="button" data-carousel-next aria-label={carousel.next}><span>{carousel.next}</span><Icon name="lucide:chevron-right" size="1.1em" /></button>
     </div>
   </div>
-  <div class="featured-products__viewport" data-carousel-viewport tabindex="0" data-reveal>
+  <div class="featured-products__viewport" data-carousel-viewport tabindex="0">
     {products.map((product) => <div class="featured-products__item" data-carousel-item><ProductCard {product} {locale} /></div>)}
   </div>
 </section>
@@ -36,9 +36,7 @@ const initialStatus = carousel.status.replace('{current}', '1').replace('{total}
   .featured-products__controls p { font-size: var(--text-xs); font-variant-numeric: tabular-nums; min-inline-size: 3rem; text-align: center; }
   .featured-products__viewport { display: grid; gap: clamp(var(--space-5), 4vw, var(--space-7)); grid-auto-columns: minmax(18rem, calc((100vw - (2 * var(--container-inline)) - (2 * var(--space-7))) / 3)); grid-auto-flow: column; inline-size: min(100% - (2 * var(--container-inline)), var(--container-max)); margin-inline: auto; overflow-x: auto; overscroll-behavior-inline: contain; padding-block: var(--space-2) var(--space-5); scroll-snap-type: inline mandatory; scrollbar-color: var(--color-paradise-orange) var(--color-brushed-steel); }
   .featured-products__item { border-block-start: 1px solid var(--color-brushed-steel); min-inline-size: 0; padding-block-start: var(--space-3); scroll-snap-align: start; }
-  :global([data-motion-enhanced]) [data-reveal],
-  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: none; }
   @media (max-width: 50rem) { .featured-products__viewport { grid-auto-columns: minmax(17rem, 72vw); } }
   @media (max-width: 38rem) { .featured-products__heading { align-items: start; flex-direction: column; } .featured-products__controls { inline-size: 100%; justify-content: space-between; } .featured-products__controls button span:not([aria-hidden]) { display: none; } }
-  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } [data-carousel-viewport] { scroll-behavior: auto; } }
+  @media (prefers-reduced-motion: reduce) { [data-carousel-viewport] { scroll-behavior: auto; } }
 </style>

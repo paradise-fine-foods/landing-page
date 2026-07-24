@@ -68,7 +68,7 @@ for (const decoration of ['drop', 'petal']) {
     throw new Error(`${file}: generated ${decoration} decoration is missing its HTML class`);
   }
 }
-if (!/\.organic-mark(?:\[[^\]]+\])?\{display:none\}/.test(html)) {
+if (!/\.organic-mark(?:\[[^\]]+\])?\{display:none\}/.test(css)) {
   throw new Error(`${file}: generated organic decorations must be explicitly hidden`);
 }
 

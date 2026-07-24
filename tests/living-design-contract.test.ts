@@ -412,7 +412,7 @@ describe('Precision Supply System identity', () => {
   test('uses neutral rectangular hero and product stages', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     expect(cssRule(hero, '.living-hero__art')).toContain('background: var(--color-cold-paper)');
-    expect(cssRule(hero, '[data-living-canvas]')).toContain('display: none');
+    expect(hero).not.toMatch(/data-living-canvas|<canvas/);
     expect(hero).not.toContain('drop-shadow');
 
     const card = source('src/components/catalog/ProductCard.astro');
@@ -456,9 +456,14 @@ describe('Precision Supply System identity', () => {
     expect(source('src/components/sections/FinalCta.astro')).toContain('color: var(--color-cold-paper)');
   });
 
-  test('keeps remaining homepage reveal hooks visibly settled', () => {
+  test('keeps the homepage free of reveal and ambient canvas contracts', () => {
     const files = [
+      'src/components/sections/LivingHero.astro',
+      'src/components/sections/CredibilityStrip.astro',
+      'src/components/sections/CategoryDiscovery.astro',
+      'src/components/sections/FeaturedProducts.astro',
       'src/components/sections/FeaturedBrands.astro',
+      'src/components/blogs/LatestBlogs.astro',
       'src/components/sections/PartnerStrip.astro',
       'src/components/sections/ServiceProof.astro',
       'src/components/sections/ChannelPathways.astro',
@@ -466,16 +471,11 @@ describe('Precision Supply System identity', () => {
     ];
     for (const file of files) {
       const component = source(file);
-      expect(component).not.toMatch(/600ms|700ms/);
-      for (const selector of [
-        ':global([data-motion-enhanced]) [data-reveal]',
-        ":global([data-motion-enhanced]) [data-reveal][data-revealed='true']",
-      ]) {
-        const declarations = cssRule(component, selector);
-        expect(declarations, `${file} ${selector}`).toContain('opacity: 1');
-        expect(declarations, `${file} ${selector}`).toContain('transform: none');
-        expect(declarations, `${file} ${selector}`).not.toContain('transition:');
-      }
+      expect(component, file).not.toMatch(/data-reveal|data-revealed|data-motion-enhanced|data-living-canvas|<canvas/);
+      expect(component, file).not.toMatch(/motion\/(?:reveal|living-canvas|preferences)/);
+    }
+    for (const file of ['src/lib/motion/reveal.ts', 'src/lib/motion/living-canvas.ts', 'src/lib/motion/preferences.ts']) {
+      expect(existsSync(join(root, file)), file).toBe(false);
     }
   });
 
@@ -507,7 +507,7 @@ describe('Precision Supply System identity', () => {
     }
 
     expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');
-    expect(source('src/components/sections/LivingHero.astro')).toMatch(/\[data-living-canvas\]\s*\{[^}]*display:\s*none/);
+    expect(source('src/components/sections/LivingHero.astro')).not.toMatch(/data-living-canvas|<canvas/);
   });
 
   test('preserves the exact homepage section order', () => {

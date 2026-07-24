@@ -5,6 +5,8 @@ import { gzipSync } from 'node:zlib';
 const root = join(import.meta.dir, '..');
 const configuredOrigin = 'https://paradisefinefoods.com';
 const forbidden = /(?:three(?:\.module)?|webgl|\.glb|model-src|product-stage)/i;
+const decorativeMotionForbidden = /(?:data-(?:reveal|revealed|motion-enhanced|living-canvas)|installReveals|mountLivingCanvas|shouldEnhanceMotion)/i;
+const decorativeMotionChunk = /(?:^|[\\/])(?:reveal|living-canvas|preferences)(?:[.-])/i;
 const canonicalRoutes = [
   '/en/products/',
   '/vi/products/',
@@ -231,13 +233,17 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
   if (!existsSync(dist)) throw new Error('dist is missing; run the production build first');
   const files = filesBelow(dist);
   for (const file of files.filter((path) => /\.(?:html|css|js|json)$/.test(path))) {
-    if (forbidden.test(readFileSync(file, 'utf8'))) throw new Error(`3D residue in ${relative(dist, file)}`);
+    const emitted = readFileSync(file, 'utf8');
+    if (forbidden.test(emitted)) throw new Error(`3D residue in ${relative(dist, file)}`);
+    if (decorativeMotionForbidden.test(emitted) || decorativeMotionChunk.test(relative(dist, file))) {
+      throw new Error(`Decorative motion residue in ${relative(dist, file)}`);
+    }
   }
   for (const route of canonicalRoutes) {
     if (!existsSync(join(dist, route.slice(1), 'index.html'))) throw new Error(`Missing canonical route ${route}`);
   }
 
-  const enhancementFiles = new Set<string>();
+  const interactionFiles = new Set<string>();
   const criticalInitialFiles = new Set<string>();
   const criticalInitialInlineBodies = new Set<string>();
   const authoredSvgFiles = new Set<string>();
@@ -245,7 +251,7 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
     const html = readFileSync(join(dist, locale, 'index.html'), 'utf8');
     assertHomepageLogo(html, dist, locale);
     assertCarousel(html, locale);
-    for (const file of collectReachableJs(dist, homepageEntry(html, locale))) enhancementFiles.add(file);
+    for (const file of collectReachableJs(dist, homepageEntry(html, locale))) interactionFiles.add(file);
     const initialJs = collectHomepageInitialJs(dist, html);
     for (const file of initialJs.files) criticalInitialFiles.add(file);
     for (const body of initialJs.inlineBodies) criticalInitialInlineBodies.add(body);
@@ -257,11 +263,11 @@ export const verifyBuiltLivingDesign = (dist: string): number => {
   );
   if (criticalInitialGzip > 120_000) throw new Error(`Critical initial JavaScript are ${criticalInitialGzip} gzip bytes (budget 120000)`);
   const authoredSvgGzip = assertGzipBudget(authoredSvgFiles, 80_000, 'Homepage authored SVG graphics');
-  const enhancementGzip = assertGzipBudget(enhancementFiles, 35_000, 'Enhancements');
+  const interactionGzip = assertGzipBudget(interactionFiles, 12_000, 'Homepage interactions');
   console.log(
-    `Living design verified: ${canonicalRoutes.length} canonical routes, ${criticalInitialFiles.size} initial JS files and ${criticalInitialInlineBodies.size} inline JS bodies (${criticalInitialGzip} gzip bytes), ${authoredSvgFiles.size} homepage SVG files (${authoredSvgGzip} gzip bytes), ${enhancementFiles.size} reachable enhancement files (${enhancementGzip} gzip bytes).`,
+    `Living design verified: ${canonicalRoutes.length} canonical routes, ${criticalInitialFiles.size} initial JS files and ${criticalInitialInlineBodies.size} inline JS bodies (${criticalInitialGzip} gzip bytes), ${authoredSvgFiles.size} homepage SVG files (${authoredSvgGzip} gzip bytes), ${interactionFiles.size} reachable interaction files (${interactionGzip} gzip bytes).`,
   );
-  return enhancementGzip;
+  return interactionGzip;
 };
 
 if (resolve(process.argv[1] ?? '') === resolve(import.meta.path)) verifyBuiltLivingDesign(join(root, 'dist'));

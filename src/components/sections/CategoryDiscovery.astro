@@ -1,29 +1,21 @@
 ---
 import type { Category } from '../../lib/cms/types';
-import OrganicMark from '../global/OrganicMark.astro';
 
 interface Props { eyebrow: string; title: string; description: string; categories: Category[]; categoryCounts: Record<string, number>; productLabel: string; productsPath: string }
 const { eyebrow, title, description, categories, categoryCounts, productLabel, productsPath } = Astro.props;
-const marks = [
-  { variant: 'drop', color: 'orange' },
-  { variant: 'seed', color: 'blue' },
-  { variant: 'petal', color: 'green' },
-  { variant: 'seed', color: 'coral' },
-] as const;
 ---
 
 <section class="category-discovery section-space" aria-labelledby="category-title">
-  <div class="container category-discovery__heading" data-reveal>
+  <div class="container category-discovery__heading">
     <p class="eyebrow">{eyebrow}</p>
     <h2 id="category-title">{title}</h2>
     <p>{description}</p>
   </div>
   <div class="container category-discovery__loose-table">
-    {categories.map((category, index) => (
-      <a class:list={['category-discovery__item', index === 0 && 'category-discovery__feature']} href={`${productsPath}?category=${category.slug}`} data-reveal>
+    {categories.map((category) => (
+      <a class="category-discovery__item" href={`${productsPath}?category=${category.slug}`}>
         <div class="category-discovery__media">
           <img src={category.image.src} width={category.image.width} height={category.image.height} alt={category.image.alt} loading="lazy" />
-          <OrganicMark variant={marks[index % marks.length].variant} color={marks[index % marks.length].color} class="category-discovery__mark" />
         </div>
         <div class="category-discovery__copy">
           <strong>{category.name}</strong>
@@ -37,23 +29,18 @@ const marks = [
 
 <style>
   .category-discovery { background: var(--color-process-white); overflow: hidden; }
-  .category-discovery__heading { display: grid; gap: var(--space-5); grid-template-columns: 1fr 2fr 2fr; margin-block-end: var(--space-8); }
+  .category-discovery__heading { display: grid; gap: var(--space-5); grid-template-columns: 1fr 2fr 2fr; margin-block-end: var(--space-7); }
   .category-discovery__heading > p:last-child { max-inline-size: var(--measure); }
-  .category-discovery__loose-table { display: grid; gap: clamp(var(--space-6), 7vw, var(--space-9)); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .category-discovery__item { color: var(--color-graphite); display: grid; gap: var(--space-4); grid-template-columns: minmax(8rem, 0.75fr) minmax(10rem, 1fr); text-decoration: none; }
-  .category-discovery__item:nth-child(2) { translate: 0 var(--space-8); }
-  .category-discovery__item:nth-child(3) { margin-inline-start: clamp(0rem, 5vw, 5rem); }
-  .category-discovery__item:nth-child(4) { margin-inline-end: clamp(0rem, 4vw, 4rem); translate: 0 var(--space-6); }
-  .category-discovery__media { aspect-ratio: 1 / 0.92; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); overflow: hidden; position: relative; }
+  .category-discovery__loose-table { border-block-end: 1px solid var(--color-brushed-steel); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .category-discovery__item { border-block-start: 1px solid var(--color-brushed-steel); color: var(--color-graphite); display: grid; gap: var(--space-4); grid-template-columns: minmax(9rem, 0.75fr) minmax(10rem, 1fr); padding-block: var(--space-4); text-decoration: none; }
+  .category-discovery__item:nth-of-type(odd) { border-inline-end: 1px solid var(--color-brushed-steel); padding-inline-end: var(--space-5); }
+  .category-discovery__item:nth-of-type(even) { padding-inline-start: var(--space-5); }
+  .category-discovery__media { aspect-ratio: 4 / 3; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); overflow: hidden; }
   .category-discovery__media img { block-size: 100%; inline-size: 100%; object-fit: cover; }
-  :global(.category-discovery__mark) { display: none; }
-  .category-discovery__copy { align-content: center; border-block-start: 1px solid var(--color-brushed-steel); display: grid; gap: var(--space-2); padding-block-start: var(--space-3); }
+  .category-discovery__copy { align-content: center; display: grid; gap: var(--space-2); }
   .category-discovery__copy strong { font-family: var(--font-body); font-size: var(--text-xl); font-weight: 500; }
   .category-discovery__copy small { font-size: var(--text-sm); line-height: 1.55; }
   .category-discovery__copy span { color: var(--color-graphite); font-size: var(--text-xs); font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
-  :global([data-motion-enhanced]) [data-reveal],
-  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; transition: none; }
-  @media (max-width: 50rem) { .category-discovery__heading, .category-discovery__loose-table { grid-template-columns: 1fr; } .category-discovery__item, .category-discovery__item:nth-child(n) { margin: 0; translate: none; } }
+  @media (max-width: 50rem) { .category-discovery__heading, .category-discovery__loose-table { grid-template-columns: 1fr; } .category-discovery__item:nth-of-type(n) { border-inline: 0; padding-inline: 0; } }
   @media (max-width: 34rem) { .category-discovery__item { grid-template-columns: 7.5rem 1fr; } }
-  @media (prefers-reduced-motion: reduce) { :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; transition: none; } }
 </style>
