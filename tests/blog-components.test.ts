@@ -60,4 +60,12 @@ describe('blog components', () => {
     expect(article).toContain('padding-block: var(--space-3);');
     expect(article).not.toContain('.blog-article__label { align-self: end; background:');
   });
+
+  test('gives index-card H2 headings the approved H2 scale instead of the H3 utility scale', () => {
+    const card = source('src/components/blogs/BlogCard.astro');
+
+    expect(card).toContain('.blog-card h2 { font-size: var(--text-h2); }');
+    expect(card).toContain('.blog-card h3 { font-size: var(--text-h3); }');
+    expect(card).not.toContain('.blog-card h2, .blog-card h3 { font-size: var(--text-xl); }');
+  });
 });

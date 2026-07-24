@@ -61,4 +61,15 @@ describe('production completion contracts', () => {
     expect(verifier).not.toContain('not-found__drop');
     expect(verifier).not.toContain('not-found__petal');
   });
+
+  test('binds standalone recovery headings separately to the approved H1 and H2 scales', () => {
+    const page = source('src/pages/404.astro');
+    const tokens = source('src/styles/tokens.css');
+
+    expect(page).toContain('.not-found__content h1 { font-size: var(--text-h1);');
+    expect(page).toContain('.not-found__content h2 { font-size: var(--text-h2);');
+    expect(page).not.toContain('.not-found__content h1, .not-found__content h2 { font-size: clamp(');
+    expect(tokens).toContain('--text-h1: clamp(2.25rem, 5vw, 4.25rem)');
+    expect(tokens).toContain('--text-h2: clamp(1.75rem, 3vw, 2.75rem)');
+  });
 });
