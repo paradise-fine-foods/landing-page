@@ -63,13 +63,11 @@ const css = (await Promise.all(stylesheetUrls.map((url) => Bun.file(`dist${url}`
 if (!/\.not-found__link[^}]*min-block-size:2\.75rem/.test(css)) {
   throw new Error(`${file}: generated recovery-link CSS does not preserve the 44px target floor`);
 }
-for (const decoration of ['drop', 'petal']) {
-  if (!new RegExp(`<svg\\b[^>]*class="[^"]*not-found__${decoration}[^"]*"`).test(html)) {
-    throw new Error(`${file}: generated ${decoration} decoration is missing its HTML class`);
-  }
+if (!/\.not-found__art(?:\[[^\]]+\])?\{[^}]*border:1px solid var\(--color-brushed-steel\)/.test(css)) {
+  throw new Error(`${file}: generated recovery stage is missing its neutral boundary`);
 }
-if (!/\.organic-mark(?:\[[^\]]+\])?\{display:none\}/.test(html)) {
-  throw new Error(`${file}: generated organic decorations must be explicitly hidden`);
+if (/not-found__(?:drop|petal)|organic-mark/.test(html)) {
+  throw new Error(`${file}: generated 404 stage must not restore decorative artwork`);
 }
 
 const canonicalLocalizedPages = generatedHtml

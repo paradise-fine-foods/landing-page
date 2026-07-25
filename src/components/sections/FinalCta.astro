@@ -5,7 +5,7 @@ const { title, description, button, href } = Astro.props;
 ---
 
 <section class="final-cta" aria-labelledby="final-cta-title">
-  <div class="container final-cta__shape" data-reveal>
+  <div class="container final-cta__shape">
     <div><h2 id="final-cta-title">{title}</h2><p>{description}</p></div>
     <ButtonLink {href}>{button}</ButtonLink>
   </div>
@@ -13,11 +13,8 @@ const { title, description, button, href } = Astro.props;
 
 <style>
   .final-cta { background: var(--color-process-white); padding-block: var(--space-7) var(--space-9); }
-  .final-cta__shape { align-items: center; background: var(--color-graphite); border-radius: var(--radius-sm); color: var(--color-cold-paper); display: grid; gap: var(--space-6); grid-template-columns: 1fr auto; padding: clamp(var(--space-6), 6vw, var(--space-8)); position: relative; }
-  .final-cta__shape::before { background: var(--color-paradise-orange); block-size: 0.35rem; border-radius: var(--radius-sm); content: ''; inline-size: clamp(4rem, 11vw, 8rem); inset-block-start: 0; inset-inline-start: clamp(var(--space-6), 6vw, var(--space-8)); position: absolute; }
-  .final-cta h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
+  .final-cta__shape { align-items: center; background: var(--color-graphite); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); color: var(--color-cold-paper); display: grid; gap: var(--space-6); grid-template-columns: 1fr auto; padding: clamp(var(--space-6), 6vw, var(--space-8)); }
+  .final-cta h2 { font-size: var(--text-h2); }
   .final-cta h2 + p { margin-block-start: var(--space-2); max-inline-size: 42rem; }
-  :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; }
-  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; }
   @media (max-width: 48rem) { .final-cta__shape { grid-template-columns: 1fr; } }
 </style>

@@ -21,16 +21,16 @@ h3 {
 }
 
 h1 {
-  font-size: var(--text-hero);
+  font-size: var(--text-h1);
   line-height: var(--leading-tight);
 }
 
 h2 {
-  font-size: var(--text-2xl);
+  font-size: var(--text-h2);
 }
 
 h3 {
-  font-size: var(--text-xl);
+  font-size: var(--text-h3);
 }
 
 p,

@@ -14,6 +14,9 @@ const filesBelow = (directory: string): string[] => readdirSync(join(root, direc
 const cssRule = (css: string, selector: string) => [...(css.includes('<style>') ? css.slice(css.lastIndexOf('<style>') + '<style>'.length) : css).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
   .filter(([, selectors]) => selectors.split(',').some((item) => item.trim() === selector))
   .at(-1)?.[2] ?? '';
+const baseCssRule = (css: string, selector: string) => [...(css.includes('<style>') ? css.slice(css.lastIndexOf('<style>') + '<style>'.length) : css).matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+  .filter(([, selectors]) => selectors.split(',').some((item) => item.trim() === selector))
+  .at(0)?.[2] ?? '';
 
 const primaryNavRules = (css: string) => [...css.matchAll(/([^{}]*\.primary-nav[^{}]*)\{([^{}]*)\}/g)]
   .map(([, selector, declarations]) => ({ selector: selector.trim(), declarations }));
@@ -30,6 +33,117 @@ const contrastRatio = (foreground: string, background: string) => {
 };
 
 describe('Precision Supply System identity', () => {
+  test('defines the approved product-led minimal type, spacing, and geometry tokens', () => {
+    const tokens = source('src/styles/tokens.css');
+    const typography = source('src/styles/typography.css');
+    const global = source('src/styles/global.css');
+
+    for (const declaration of [
+      '--text-h1: clamp(2.25rem, 5vw, 4.25rem)',
+      '--text-h2: clamp(1.75rem, 3vw, 2.75rem)',
+      '--text-h3: clamp(1.125rem, 1.5vw, 1.35rem)',
+      '--text-hero: var(--text-h1)',
+      '--text-2xl: var(--text-h2)',
+      '--text-xl: var(--text-h3)',
+      '--radius-sm: 0',
+      '--radius-md: 2px',
+    ]) expect(tokens).toContain(declaration);
+
+    expect(cssRule(typography, 'h1')).toContain('font-size: var(--text-h1)');
+    expect(cssRule(typography, 'h2')).toContain('font-size: var(--text-h2)');
+    expect(cssRule(typography, 'h3')).toContain('font-size: var(--text-h3)');
+    expect(cssRule(global, '.section-space')).toContain('padding-block: clamp(2.5rem, 5vw, 4rem)');
+  });
+
+  test('keeps shared chrome compact, square, and free of decorative effects', () => {
+    const header = source('src/components/global/Header.astro');
+    const footer = source('src/components/global/Footer.astro');
+    const button = source('src/components/global/ButtonLink.astro');
+    const switcher = source('src/components/global/LanguageSwitcher.astro');
+
+    expect(cssRule(header, '.site-header__bar')).toContain('min-block-size: 4.5rem');
+    expect(cssRule(footer, '.site-footer')).toContain('padding-block: var(--space-7) var(--space-5)');
+
+    for (const component of [button, switcher]) {
+      expect(component).toContain('min-block-size: 2.75rem');
+      expect(component).toContain('border-radius: var(--radius-sm)');
+    }
+
+    for (const file of [
+      'src/styles/global.css',
+      'src/components/global/Header.astro',
+      'src/components/global/Footer.astro',
+      'src/components/global/ButtonLink.astro',
+      'src/components/global/LanguageSwitcher.astro',
+      'src/components/global/FloatingFormRail.astro',
+    ]) {
+      const component = source(file);
+      expect(component, file).not.toMatch(/linear-gradient|radial-gradient|color-mix\(/);
+    }
+  });
+
+  test('uses graphite selection text with contrast-safe Paradise orange', () => {
+    expect(contrastRatio('#202522', '#e46f2c')).toBeGreaterThanOrEqual(4.5);
+    const selection = cssRule(source('src/styles/global.css'), '::selection');
+    expect(selection).toContain('background: var(--color-paradise-orange)');
+    expect(selection).toContain('color: var(--color-graphite)');
+  });
+
+  test('keeps the credibility heading on the approved local H2 display role', () => {
+    const heading = baseCssRule(source('src/components/sections/CredibilityStrip.astro'), '.credibility h2');
+    expect(heading).toContain('font-family: var(--font-display)');
+    expect(heading).toContain('font-size: var(--text-h2)');
+  });
+
+  test('keeps the credibility display heading at the approved medium weight', () => {
+    expect(baseCssRule(source('src/components/sections/CredibilityStrip.astro'), '.credibility h2'))
+      .toContain('font-weight: 500');
+  });
+
+  test('keeps every featured-brand heading on the approved local H3 scale', () => {
+    const brands = source('src/components/sections/FeaturedBrands.astro');
+    expect(cssRule(brands, '.featured-brands__copy h3')).toContain('font-size: var(--text-h3)');
+    expect(cssRule(brands, '.featured-brands__secondary h3')).toContain('font-size: var(--text-h3)');
+  });
+
+  test('keeps the final CTA heading on the approved local H2 scale', () => {
+    expect(cssRule(source('src/components/sections/FinalCta.astro'), '.final-cta h2'))
+      .toContain('font-size: var(--text-h2)');
+  });
+
+  test('caps latest-blog Nunito utility weights at semibold', () => {
+    const component = source('src/components/blogs/LatestBlogs.astro');
+    const weights = [...component.matchAll(/font-weight:\s*(\d+)/g)].map(([, weight]) => Number(weight));
+    expect(weights.length).toBeGreaterThan(0);
+    expect(Math.max(...weights)).toBeLessThanOrEqual(600);
+  });
+
+  test('caps featured-brand Nunito utility weights at semibold', () => {
+    const component = source('src/components/sections/FeaturedBrands.astro');
+    const weights = [...component.matchAll(/font-weight:\s*(\d+)/g)].map(([, weight]) => Number(weight));
+    expect(weights.length).toBeGreaterThan(0);
+    expect(Math.max(...weights)).toBeLessThanOrEqual(600);
+  });
+
+  test('gives credibility fact labels an explicit semibold ceiling', () => {
+    expect(cssRule(source('src/components/sections/CredibilityStrip.astro'), '.credibility strong'))
+      .toContain('font-weight: 600');
+  });
+
+  test('gives service-proof labels explicit weights no heavier than semibold', () => {
+    const service = source('src/components/sections/ServiceProof.astro');
+    expect(cssRule(service, '.service-proof__editorial strong')).toContain('font-weight: 500');
+    expect(cssRule(service, '.service-proof__pillars strong')).toContain('font-weight: 600');
+  });
+
+  test('uses only a neutral boundary on the non-fact final CTA surface', () => {
+    const finalCta = source('src/components/sections/FinalCta.astro');
+    const shape = baseCssRule(finalCta, '.final-cta__shape');
+    expect(shape).toContain('border: 1px solid var(--color-brushed-steel)');
+    expect(shape).not.toContain('var(--color-paradise-orange)');
+    expect(finalCta).not.toMatch(/\.final-cta[^{}]*\{[^}]*color-paradise-orange/);
+  });
+
   test('contains no 3D runtime, model, or stage contract', () => {
     const packageJson = JSON.parse(source('package.json'));
     expect(packageJson.dependencies?.three).toBeUndefined();
@@ -225,7 +339,7 @@ describe('Precision Supply System identity', () => {
       const component = source(file);
       expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow/);
     }
-    expect(cssRule(source('src/components/catalog/CatalogFilters.astro'), '.catalog-filters')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(source('src/components/catalog/CatalogFilters.astro'), '.catalog-filters')).toContain('border-block: 1px solid var(--color-brushed-steel)');
     expect(cssRule(source('src/components/catalog/ProductMetadata.astro'), '.product-metadata')).toContain('border-inline-start: 2px solid var(--color-paradise-orange)');
   });
 
@@ -358,27 +472,31 @@ describe('Precision Supply System identity', () => {
   test('uses neutral rectangular hero and product stages', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     expect(cssRule(hero, '.living-hero__art')).toContain('background: var(--color-cold-paper)');
-    expect(cssRule(hero, '[data-living-canvas]')).toContain('display: none');
+    expect(hero).not.toMatch(/data-living-canvas|<canvas/);
     expect(hero).not.toContain('drop-shadow');
 
     const card = source('src/components/catalog/ProductCard.astro');
-    expect(cssRule(card, '.product-card__organic-media')).toContain('border-radius: var(--radius-sm)');
-    expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 2px solid var(--color-paradise-orange)');
+    expect(cssRule(card, '.product-card__media')).toContain('border-radius: var(--radius-sm)');
+    expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 1px solid var(--color-brushed-steel)');
     expect(card).not.toContain('var(--shape-drop)');
   });
 
   test('keeps card and discovery images free of scale and transform motion', () => {
     for (const [file, imageSelector, interactionSelector] of [
-      ['src/components/catalog/ProductCard.astro', '.product-card__image img', '.product-card:hover .product-card__image img'],
-      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__media img', '.category-discovery__item:hover img'],
-      ['src/components/blogs/BlogCard.astro', '.blog-card__image img', '.blog-card:hover .blog-card__image img'],
+      ['src/components/catalog/ProductCard.astro', '.product-card__media img', '.product-card:hover .product-card__media img'],
+      ['src/components/sections/CategoryDiscovery.astro', '.category-discovery__media img'],
+      ['src/components/blogs/BlogCard.astro', '.blog-card__image img'],
     ] as const) {
       const component = source(file);
       const imageRule = cssRule(component, imageSelector);
-      const interactionRule = cssRule(component, interactionSelector);
+      expect(imageRule, `${file} ${imageSelector} must exist`).not.toBe('');
       expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/transition\s*:[^;]*(?:transform|scale)/);
       expect(imageRule, `${file} ${imageSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
-      expect(interactionRule, `${file} ${interactionSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      if (interactionSelector) {
+        const interactionRule = cssRule(component, interactionSelector);
+        expect(interactionRule, `${file} ${interactionSelector} must exist`).not.toBe('');
+        expect(interactionRule, `${file} ${interactionSelector}`).not.toMatch(/(?:transform|scale)\s*:/);
+      }
       expect(component, `${file} must not scale scoped imagery`).not.toMatch(/scale\s*\(/);
     }
   });
@@ -402,9 +520,14 @@ describe('Precision Supply System identity', () => {
     expect(source('src/components/sections/FinalCta.astro')).toContain('color: var(--color-cold-paper)');
   });
 
-  test('keeps remaining homepage reveal hooks visibly settled', () => {
+  test('keeps the homepage free of reveal and ambient canvas contracts', () => {
     const files = [
+      'src/components/sections/LivingHero.astro',
+      'src/components/sections/CredibilityStrip.astro',
+      'src/components/sections/CategoryDiscovery.astro',
+      'src/components/sections/FeaturedProducts.astro',
       'src/components/sections/FeaturedBrands.astro',
+      'src/components/blogs/LatestBlogs.astro',
       'src/components/sections/PartnerStrip.astro',
       'src/components/sections/ServiceProof.astro',
       'src/components/sections/ChannelPathways.astro',
@@ -412,32 +535,18 @@ describe('Precision Supply System identity', () => {
     ];
     for (const file of files) {
       const component = source(file);
-      expect(component).not.toMatch(/600ms|700ms/);
-      for (const selector of [
-        ':global([data-motion-enhanced]) [data-reveal]',
-        ":global([data-motion-enhanced]) [data-reveal][data-revealed='true']",
-      ]) {
-        const declarations = cssRule(component, selector);
-        expect(declarations, `${file} ${selector}`).toContain('opacity: 1');
-        expect(declarations, `${file} ${selector}`).toContain('transform: none');
-        expect(declarations, `${file} ${selector}`).not.toContain('transition:');
-      }
+      expect(component, file).not.toMatch(/data-reveal|data-revealed|data-motion-enhanced|data-living-canvas|<canvas/);
+      expect(component, file).not.toMatch(/motion\/(?:reveal|living-canvas|preferences)/);
+    }
+    for (const file of ['src/lib/motion/reveal.ts', 'src/lib/motion/living-canvas.ts', 'src/lib/motion/preferences.ts']) {
+      expect(existsSync(join(root, file)), file).toBe(false);
     }
   });
 
-  test('isolates the product stage and orders the brand label above image layers', () => {
+  test('keeps product detail media unmasked and square', () => {
     const detail = source('src/components/catalog/ProductDetail.astro');
-    expect(cssRule(detail, '.product-detail__organic-stage')).toContain('isolation: isolate');
-    expect(cssRule(detail, '.product-detail__stage::before')).toContain('z-index: 0');
-    expect(cssRule(detail, '.product-detail__stage img')).toContain('position: relative');
-    expect(cssRule(detail, '.product-detail__stage img')).toContain('z-index: 1');
-    expect(cssRule(detail, '.product-detail__stage > span')).toContain('z-index: 2');
-  });
-
-  test('keeps the product-stage brand label inside the organic mask safe area', () => {
-    const label = cssRule(source('src/components/catalog/ProductDetail.astro'), '.product-detail__stage > span');
-    expect(label).toContain('inset-block-start: 16%');
-    expect(label).toContain('inset-inline-start: 36%');
+    expect(baseCssRule(detail, '.product-detail__stage')).toContain('aspect-ratio: 1 / 1');
+    expect(detail).not.toMatch(/product-detail__organic-stage|product-detail__stage::before|product-detail__stage > span/);
   });
 
   test('removes legacy decorative presentation from every active styled surface', () => {
@@ -453,7 +562,7 @@ describe('Precision Supply System identity', () => {
     }
 
     expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');
-    expect(source('src/components/sections/LivingHero.astro')).toMatch(/\[data-living-canvas\]\s*\{[^}]*display:\s*none/);
+    expect(source('src/components/sections/LivingHero.astro')).not.toMatch(/data-living-canvas|<canvas/);
   });
 
   test('preserves the exact homepage section order', () => {
@@ -466,5 +575,20 @@ describe('Precision Supply System identity', () => {
     const positions = sections.map((section) => page.indexOf(section));
     expect(positions.every((position) => position >= 0)).toBe(true);
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  });
+
+  test('keeps editorial, enquiry, and 404 surfaces square, flat, and free of decorative masks', () => {
+    for (const file of [
+      'src/components/blogs/BlogCard.astro',
+      'src/components/blogs/BlogArticle.astro',
+      'src/components/forms/EnquiryForm.astro',
+      'src/pages/404.astro',
+    ]) {
+      const component = source(file);
+      expect(component, file).not.toMatch(/box-shadow|clip-path|mask-image|OrganicMark|var\(--color-paradise-orange\)/);
+    }
+
+    expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.enquiry-form__actions button'))
+      .toContain('min-block-size: 2.75rem');
   });
 });

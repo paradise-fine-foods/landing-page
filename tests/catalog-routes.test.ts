@@ -87,4 +87,25 @@ describe('localized product routes', () => {
     expect(detailRoute).toContain('params: { locale, slug: product.slug }');
     expect(detailRoute).toContain('buildProductRouteMaps(englishProducts, vietnameseProducts)');
   });
+
+  test('keeps catalog controls compact and reserves orange for product facts', () => {
+    const filters = source('src/components/catalog/CatalogFilters.astro');
+    const metadata = source('src/components/catalog/ProductMetadata.astro');
+    const grid = source('src/components/catalog/ProductGrid.astro');
+
+    expect(filters).toContain('border-block: 1px solid var(--color-brushed-steel)');
+    expect(filters).toContain('min-block-size: 2.75rem');
+    expect(filters).not.toContain('background: var(--color-cold-paper)');
+    expect(metadata).toContain('border-inline-start: 2px solid var(--color-paradise-orange)');
+    expect(grid).toContain('border-block: 1px solid var(--color-brushed-steel)');
+    expect(grid).not.toContain('background: var(--color-cold-paper)');
+  });
+
+  test('reserves state-aware control clearance beside collapsed and expanded rails', () => {
+    const filters = source('src/components/catalog/CatalogFilters.astro');
+
+    expect(filters).toContain('padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px))');
+    expect(filters).toContain(":global(html:has([data-floating-rail][data-expanded='true'])) .catalog-filters { padding-inline-end: calc(14.75rem + 1rem + env(safe-area-inset-right, 0px)); }");
+    expect(filters).toContain("@media (max-width: 48rem) { :global(html:has([data-floating-rail][data-expanded='true'])) .catalog-filters { padding-inline-end: calc(2.75rem + 1rem + env(safe-area-inset-right, 0px)); } }");
+  });
 });

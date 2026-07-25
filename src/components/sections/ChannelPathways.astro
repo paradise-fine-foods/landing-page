@@ -6,10 +6,10 @@ const { eyebrow, title, channels } = Astro.props;
 ---
 
 <section class="channel-pathways section-space" aria-labelledby="channels-title">
-  <div class="container channel-pathways__heading" data-reveal><p class="eyebrow">{eyebrow}</p><h2 id="channels-title">{title}</h2></div>
+  <div class="container channel-pathways__heading"><p class="eyebrow">{eyebrow}</p><h2 id="channels-title">{title}</h2></div>
   <div class="container channel-pathways__links">
     {channels.map(({ label, description, href }) => (
-      <a href={href} data-reveal>
+      <a href={href}>
         <strong>{label}</strong><p>{description}</p><Icon name="lucide:arrow-right" size="1.15em" />
       </a>
     ))}
@@ -19,12 +19,11 @@ const { eyebrow, title, channels } = Astro.props;
 <style>
   .channel-pathways { background: var(--color-process-white); overflow: hidden; }
   .channel-pathways__heading { display: grid; gap: var(--space-5); grid-template-columns: 1fr 3fr; margin-block-end: var(--space-7); }
-  .channel-pathways__links { display: grid; gap: var(--space-5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .channel-pathways__links a { background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); color: var(--color-deep-herb); display: grid; gap: var(--space-3); grid-template-columns: 1fr auto; min-block-size: 13rem; padding: clamp(var(--space-5), 4vw, var(--space-7)); text-decoration: none; }
+  .channel-pathways__links { border-block-end: 1px solid var(--color-brushed-steel); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .channel-pathways__links a { background: var(--color-process-white); border-block-start: 1px solid var(--color-brushed-steel); color: var(--color-deep-herb); display: grid; gap: var(--space-3); grid-template-columns: 1fr auto; min-block-size: 11rem; padding: var(--space-5); text-decoration: none; }
+  .channel-pathways__links a:nth-of-type(odd) { border-inline-end: 1px solid var(--color-brushed-steel); }
   .channel-pathways__links strong { font-family: var(--font-body); font-size: var(--text-xl); font-weight: 500; }
   .channel-pathways__links p { grid-column: 1 / -1; max-inline-size: 32rem; }
   .channel-pathways__links b { align-self: start; font-size: var(--text-lg); }
-  :global([data-motion-enhanced]) [data-reveal] { opacity: 1; transform: none; }
-  :global([data-motion-enhanced]) [data-reveal][data-revealed='true'] { opacity: 1; transform: none; }
-  @media (max-width: 46rem) { .channel-pathways__heading, .channel-pathways__links { grid-template-columns: 1fr; } }
+  @media (max-width: 46rem) { .channel-pathways__heading, .channel-pathways__links { grid-template-columns: 1fr; } .channel-pathways__links a:nth-of-type(n) { border-inline: 0; } }
 </style>

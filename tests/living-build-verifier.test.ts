@@ -97,4 +97,23 @@ describe('living build verifier semantics', () => {
     writeFileSync(join(dist, '_astro', 'critical-preload.js'), `export default ${JSON.stringify(safeRandomPayload(125_000))};`);
     expect(() => verifyBuiltLivingDesign(dist)).toThrow('Critical initial JavaScript');
   });
+
+  test('rejects decorative reveal and canvas hooks in generated homepage markup', () => {
+    for (const residue of ['data-reveal', 'data-revealed="true"', 'data-motion-enhanced="true"', 'data-living-canvas']) {
+      const dist = verifierFixture(`<div ${residue}></div>`);
+      expect(() => verifyBuiltLivingDesign(dist), residue).toThrow('Decorative motion residue');
+    }
+  });
+
+  test('rejects emitted reveal, canvas, and preference chunks even when unreachable', () => {
+    for (const [name, content] of [
+      ['reveal.fixture.js', 'export const installReveals = () => {};'],
+      ['living-canvas.fixture.js', 'export const mountLivingCanvas = () => {};'],
+      ['preferences.fixture.js', 'export const shouldEnhanceMotion = () => true;'],
+    ] as const) {
+      const dist = verifierFixture();
+      writeFileSync(join(dist, '_astro', name), content);
+      expect(() => verifyBuiltLivingDesign(dist), name).toThrow('Decorative motion residue');
+    }
+  });
 });

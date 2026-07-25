@@ -35,4 +35,12 @@ describe('localized blog routes', () => {
     expect(detail).toContain('post.image.src');
     expect(`${index}\n${detail}`).toContain('<Breadcrumbs');
   });
+
+  test('keeps editorial index stages flat and image-forward without changing the route data flow', () => {
+    const index = source('src/pages/[locale]/blogs/index.astro');
+
+    expect(index).toContain('.blog-index__grid { display: grid; gap: var(--space-5);');
+    expect(index).toContain('.blog-index__empty { border-block: 1px solid var(--color-brushed-steel);');
+    expect(index).not.toContain('.blog-index__empty { background: var(--color-cold-paper); border: 1px solid');
+  });
 });

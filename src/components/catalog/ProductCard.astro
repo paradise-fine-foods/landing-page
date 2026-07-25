@@ -14,8 +14,8 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
 ---
 
 <article class="product-card">
-  <a class="product-card__image product-card__organic-media" href={href} tabindex="-1" aria-hidden="true">
-    <img src={product.image.src} width={product.image.width} height={product.image.height} alt="" loading="lazy" />
+  <a class="product-card__media" href={href} tabindex="-1">
+    <img src={product.image.src} width={product.image.width} height={product.image.height} alt={product.image.alt} loading="lazy" />
   </a>
   <div class="product-card__meta">
     <span>{product.brand.name}</span>
@@ -31,16 +31,17 @@ const categoryApplications = getProductCardMetadata(product, ui[locale].product.
 </article>
 
 <style>
-  .product-card { border: 0; display: grid; gap: var(--space-3); }
-  .product-card__organic-media { aspect-ratio: 1 / 1; background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: block; isolation: isolate; overflow: hidden; position: relative; }
-  .product-card__organic-media::before { background: var(--color-cold-paper); border-radius: var(--radius-sm); content: ''; inset: 12%; position: absolute; z-index: -1; }
-  .product-card__image img { block-size: 100%; inline-size: 100%; object-fit: cover; }
-  .product-card__meta { border-block-start: 2px solid var(--color-paradise-orange); color: var(--color-graphite); display: flex; font-size: 0.68rem; font-weight: 700; justify-content: space-between; letter-spacing: 0.05em; padding-block-start: var(--space-3); text-transform: uppercase; }
-  .product-card :is(h2, h3) { font-size: clamp(1.45rem, 2vw, 1.9rem); }
+  .product-card { display: grid; gap: var(--space-3); }
+  .product-card__media { aspect-ratio: 1 / 1; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: block; overflow: hidden; }
+  .product-card__media img { block-size: 100%; inline-size: 100%; object-fit: cover; transition: opacity var(--transition-fast); }
+  .product-card:hover .product-card__media img { opacity: 0.92; }
+  .product-card__meta { border-block-start: 1px solid var(--color-brushed-steel); color: var(--color-utility-grey); display: flex; font-size: 0.68rem; font-weight: 600; justify-content: space-between; letter-spacing: var(--tracking-label); padding-block-start: var(--space-3); text-transform: uppercase; }
+  .product-card h2 { font-size: var(--text-h2); }
+  .product-card h3 { font-size: var(--text-h3); }
   .product-card :is(h2, h3) a { align-items: center; color: var(--color-graphite); display: flex; min-block-size: 2.75rem; text-decoration: none; }
   .product-card__specs { margin: 0; }
-  .product-card__specs div { display: grid; gap: var(--space-3); grid-template-columns: 5.5rem 1fr; padding-block: var(--space-2); }
-  .product-card__specs dt { color: var(--color-utility-grey); font-size: 0.63rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .product-card__specs div { border-block-end: 1px solid var(--color-brushed-steel); display: grid; gap: var(--space-3); grid-template-columns: 5.5rem 1fr; padding-block: var(--space-2); }
+  .product-card__specs dt { color: var(--color-utility-grey); font-size: 0.63rem; font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .product-card__specs dd { font-size: var(--text-xs); line-height: 1.45; }
-  .product-card__link { align-items: center; color: var(--color-graphite); display: flex; font-size: var(--text-sm); font-weight: 700; justify-content: space-between; margin-block-start: auto; min-block-size: 2.75rem; padding-block-start: var(--space-2); text-decoration: none; }
+  .product-card__link { align-items: center; color: var(--color-graphite); display: flex; font-size: var(--text-sm); font-weight: 600; justify-content: space-between; margin-block-start: auto; min-block-size: 2.75rem; padding-block-start: var(--space-2); text-decoration: none; }
 </style>

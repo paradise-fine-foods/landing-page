@@ -25,12 +25,13 @@ describe('reviewed homepage contracts', () => {
     }
   });
 
-  test('category discovery is image-led, count-aware, and asymmetric', () => {
+  test('category discovery is image-led, count-aware, and orderly', () => {
     const component = source('src/components/sections/CategoryDiscovery.astro');
     expect(component).toContain('category.image.src');
     expect(component).toContain('categoryCounts[category.id]');
-    expect(component).toContain('category-discovery__feature');
-    expect(component).not.toContain('repeat(4, 1fr)');
+    expect(component).toContain('category-discovery__media');
+    expect(component).toContain('border-block-start: 1px solid var(--color-brushed-steel)');
+    expect(component).not.toMatch(/translate:|nth-child\(|OrganicMark/);
   });
 
   test('featured brands distinguishes one producer story from the secondary list', () => {
@@ -59,26 +60,18 @@ describe('reviewed homepage contracts', () => {
     expect(component).not.toMatch(/autoplay|setInterval|setTimeout|cloneNode|infinite/i);
   });
 
-  test('preserves authored section markup while applying industrial presentation', () => {
+  test('uses product imagery and fact locators instead of decorative authored shapes', () => {
     const categories = source('src/components/sections/CategoryDiscovery.astro');
     expect(categories).toContain('category-discovery__loose-table');
-    expect(categories).toContain('<OrganicMark');
-    expect(categories).toContain("variant={marks[index % marks.length].variant}");
+    expect(categories).not.toContain('<OrganicMark');
     const brands = source('src/components/sections/FeaturedBrands.astro');
     expect(brands).toContain('featured-brands__story-mask');
+    expect(brands).not.toContain('<OrganicMark');
     const service = source('src/components/sections/ServiceProof.astro');
-    expect(service).toContain('service-proof__journey');
-    expect(service).toContain('aria-hidden="true"');
-    expect(service).toContain('focusable="false"');
+    expect(service).toContain('service-proof__media');
+    expect(service).not.toContain('<svg');
     expect(service).toContain('<ol class="service-proof__pillars"');
-    const credibility = source('src/components/sections/CredibilityStrip.astro');
-    expect(credibility).not.toContain('background: var(--color-cold-chain-blue)');
-    expect(credibility).toContain('grid-template-columns: 1fr');
-    expect(credibility).toContain('font-family: var(--font-display)');
-    expect(credibility).toContain('font-size: var(--text-2xl)');
-    expect(credibility).not.toContain('grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 2.2fr)');
-    expect(credibility).not.toContain('font-family: var(--font-body)');
-    expect(service).not.toMatch(/ledger|stage/i);
+    expect(service).not.toMatch(/journey|translate:|nth-child\(/i);
   });
 
   test('product cards use a square stage and buyer metadata', () => {

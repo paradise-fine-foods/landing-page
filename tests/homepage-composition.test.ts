@@ -23,7 +23,7 @@ describe('homepage composition', () => {
     expect(layout).toContain('<main id="main-content">');
   });
 
-  test('living hero server-renders its image, actions, caption, and decorative canvas', () => {
+  test('living hero server-renders one image-forward product stage and compact facts', () => {
     const hero = source('src/components/sections/LivingHero.astro');
 
     expect(hero).toContain('interface Props');
@@ -32,11 +32,13 @@ describe('homepage composition', () => {
     expect(hero).toContain('height={product.image.height}');
     expect(hero).toContain('living-hero__actions');
     expect(hero).toContain('<figcaption>{product.name}</figcaption>');
-    expect(hero).toContain('data-living-canvas');
-    expect(hero).toContain('aria-hidden="true"');
-    expect(hero).toMatch(/\[data-living-canvas\]\s*\{[^}]*display:\s*none/);
+    expect(hero).toContain('living-hero__metadata');
+    expect(hero).toContain('loading="eager"');
+    expect(hero).toContain('fetchpriority="high"');
+    expect(hero).not.toMatch(/data-living-canvas|<canvas|OrganicMark/);
     expect(hero).not.toMatch(/slot name="stage"|ProductStage|modelSrc/);
-    expect(hero).toContain('shouldDisposePage(event)');
+    expect(hero).toContain("import('../../lib/carousel/controller')");
+    expect(hero).not.toMatch(/motion\/|shouldEnhanceMotion|data-motion-enhanced/);
     expect(hero).not.toMatch(/addEventListener\('pagehide',[\s\S]{0,240}\{ once: true \}/);
   });
 
@@ -57,8 +59,9 @@ describe('homepage composition', () => {
     expect(page).not.toMatch(/locale\s*===|locale\s*!==/);
     expect(page).toContain('carousel={copy.home.carousel}');
     const hero = source('src/components/sections/LivingHero.astro');
-    expect(hero).toContain("import('../../lib/motion/reveal')");
     expect(hero).toContain("import('../../lib/carousel/controller')");
+    expect(hero).not.toContain("import('../../lib/motion/reveal')");
+    expect(hero).not.toContain("import('../../lib/motion/living-canvas')");
   });
 
   test('derives hero preloads from the same CMS image rendered by the hero', () => {
@@ -70,19 +73,17 @@ describe('homepage composition', () => {
     expect(page).toContain('image={featured.hero.image.src}');
   });
 
-  test('limits reveals to selected authored section elements and provides settled reduced motion', () => {
-    const sections = [
-      'CategoryDiscovery.astro', 'FeaturedProducts.astro', 'FeaturedBrands.astro',
-      'ServiceProof.astro', 'ChannelPathways.astro', 'CredibilityStrip.astro', 'FinalCta.astro',
-    ].map((file) => source(`src/components/sections/${file}`)).join('\n');
-    const hooks = sections.match(/<[^>]+data-reveal(?:[\s>])/g) ?? [];
-    expect(hooks.length).toBeGreaterThanOrEqual(7);
-    expect(hooks.length).toBeLessThanOrEqual(18);
-    expect(sections).toContain(':global([data-motion-enhanced]) [data-reveal]');
-    expect(sections).toContain("[data-reveal][data-revealed='true']");
-    expect(sections).toMatch(/prefers-reduced-motion:\s*reduce/);
-    expect(sections).toMatch(/opacity:\s*1/);
-    expect(sections).toMatch(/transform:\s*none/);
-    expect(sections).toMatch(/transition:\s*none/);
+  test('keeps all ten homepage sections near-static and free of decorative motion hooks', () => {
+    const files = [
+      'sections/LivingHero.astro', 'sections/CredibilityStrip.astro',
+      'sections/CategoryDiscovery.astro', 'sections/FeaturedProducts.astro',
+      'sections/FeaturedBrands.astro', 'blogs/LatestBlogs.astro',
+      'sections/PartnerStrip.astro', 'sections/ServiceProof.astro',
+      'sections/ChannelPathways.astro', 'sections/FinalCta.astro',
+    ];
+    const components = files.map((file) => source(`src/components/${file}`)).join('\n');
+    expect(components).not.toMatch(/data-reveal|data-revealed|data-motion-enhanced|data-living-canvas|<canvas/);
+    expect(components).not.toMatch(/motion\/(?:reveal|living-canvas|preferences)/);
+    expect(components).not.toMatch(/IntersectionObserver|requestAnimationFrame/);
   });
 });

@@ -110,4 +110,25 @@ describe('localized brand routes', () => {
     expect(routeSources.match(/headingLevel="h2"/g)).toHaveLength(1);
     expect(routeSources).not.toMatch(/locale\s*===|locale\s*\?/);
   });
+
+  test('uses neutral square brand media without a decorative card surround', () => {
+    const card = source('src/components/brands/BrandCard.astro');
+    const detail = source('src/components/brands/BrandDetail.astro');
+
+    expect(card).toContain('class="brand-card__media"');
+    expect(card).toContain('aspect-ratio: 1 / 1');
+    expect(card).toContain('border-block-end: 1px solid var(--color-brushed-steel)');
+    expect(card).not.toContain('brand-card__organic-field');
+    expect(detail).toContain('aspect-ratio: 1 / 1');
+    expect(detail).not.toContain('<span aria-hidden="true"></span>');
+    expect(`${card}\n${detail}`).not.toMatch(/color-paradise-orange|box-shadow|linear-gradient/);
+  });
+
+  test('keeps its image link exposed with the brand image name', () => {
+    const card = source('src/components/brands/BrandCard.astro');
+
+    expect(card).toContain('class="brand-card__media"');
+    expect(card).toContain('alt={brand.image.alt}');
+    expect(card).not.toMatch(/<a class="brand-card__media"[^>]*aria-hidden/);
+  });
 });
