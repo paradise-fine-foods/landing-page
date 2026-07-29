@@ -21,6 +21,7 @@ export interface MetaOutput {
     description: string;
     url: string;
     locale: 'en_US' | 'vi_VN';
+    alternateLocale: 'en_US' | 'vi_VN';
     type: 'website';
     image?: string;
   };
@@ -50,6 +51,7 @@ export const buildMeta = (input: MetaInput): MetaOutput => {
       description: input.description,
       url: canonical,
       locale: input.locale === 'en' ? 'en_US' : 'vi_VN',
+      alternateLocale: input.locale === 'en' ? 'vi_VN' : 'en_US',
       type: 'website',
       ...(input.image ? { image: absoluteUrl(input.image, input.site) } : {}),
     },

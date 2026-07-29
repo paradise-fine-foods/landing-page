@@ -1,7 +1,6 @@
 import {
   getBlogPostBySlug,
   getGlobalSettings,
-  getLatestBlogPosts,
   type CmsQueries,
 } from '../cms/queries';
 import { loadCmsPageData } from '../cms/page-state';
@@ -22,18 +21,17 @@ export const blogAlternatePath = (
 
 type BlogDetailQueries = Pick<
   CmsQueries,
-  'getGlobalSettings' | 'getBlogPostBySlug' | 'getLatestBlogPosts'
+  'getGlobalSettings' | 'getBlogPostBySlug'
 >;
 
 export type BlogDetailPageData =
-  | { status: 200; settings: GlobalSettings; post: BlogPost; suggestions: BlogPost[] }
+  | { status: 200; settings: GlobalSettings; post: BlogPost }
   | { status: 404 }
   | { status: 503 };
 
 const productionBlogDetailQueries: BlogDetailQueries = {
   getGlobalSettings,
   getBlogPostBySlug,
-  getLatestBlogPosts,
 };
 
 export const loadBlogDetailPageData = async (
@@ -50,16 +48,10 @@ export const loadBlogDetailPageData = async (
   const [settings, post] = primaryData.data;
   if (!post) return { status: 404 };
 
-  const suggestionsData = await loadCmsPageData(
-    () => queries.getLatestBlogPosts(locale, 3, post.id),
-  );
-  if (!suggestionsData.ok) return { status: 503 };
-
   return {
     status: 200,
     settings,
     post,
-    suggestions: suggestionsData.data[0],
   };
 };
 

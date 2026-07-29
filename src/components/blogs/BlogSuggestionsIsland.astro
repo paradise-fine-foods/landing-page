@@ -1,0 +1,23 @@
+---
+import { loadBlogSuggestions } from '../../lib/blogs/suggestions';
+import type { Locale } from '../../lib/i18n/types';
+import { ui } from '../../lib/i18n/ui';
+import LatestBlogs from './LatestBlogs.astro';
+
+interface Props {
+  locale: Locale;
+  currentPostId: string;
+}
+
+const { locale, currentPostId } = Astro.props;
+const posts = await loadBlogSuggestions(locale, currentPostId);
+const copy = ui[locale].blog;
+---
+
+<LatestBlogs
+  {posts}
+  {locale}
+  eyebrow={copy.latestEyebrow}
+  title={copy.latestTitle}
+  viewAllLabel={copy.viewAll}
+/>

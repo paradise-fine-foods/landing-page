@@ -1,37 +1,38 @@
-import { demoBlogPosts, demoBrands, demoProducts } from './fixtures/demo-content';
-import { contactModes } from '../src/lib/enquiry/modes';
-import { locales } from '../src/lib/i18n/types';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
-const htmlRoute = (...segments: string[]) => `${segments.join('/')}/index.html`;
-
-export function expectedGeneratedHtmlRoutes(): string[] {
-  const routes = new Set<string>(['index.html', '404.html']);
-
-  for (const locale of locales) {
-    routes.add(htmlRoute(locale));
-    routes.add(htmlRoute(locale, 'products'));
-    routes.add(htmlRoute(locale, 'brands'));
-    routes.add(htmlRoute(locale, 'blogs'));
-    routes.add(htmlRoute(locale, 'contact'));
-
-    for (const mode of contactModes) routes.add(htmlRoute(locale, 'contact', mode));
-    for (const product of demoProducts) routes.add(htmlRoute(locale, 'products', product.slug[locale]));
-    for (const brand of demoBrands) routes.add(htmlRoute(locale, 'brands', brand.slug[locale]));
-    for (const post of demoBlogPosts) routes.add(htmlRoute(locale, 'blogs', post.slug[locale]));
-  }
-
-  return [...routes].sort();
+export function expectedRuntimeRouteFiles(): string[] {
+  return [
+    'src/pages/404.astro',
+    'src/pages/503.astro',
+    'src/pages/[locale]/blogs/[slug].astro',
+    'src/pages/[locale]/blogs/index.astro',
+    'src/pages/[locale]/brands/[slug].astro',
+    'src/pages/[locale]/brands/index.astro',
+    'src/pages/[locale]/contact/[mode].astro',
+    'src/pages/[locale]/contact.astro',
+    'src/pages/[locale]/index.astro',
+    'src/pages/[locale]/products/[slug].astro',
+    'src/pages/[locale]/products/index.astro',
+    'src/pages/api/revalidate.ts',
+    'src/pages/index.astro',
+    'src/pages/sitemap.xml.ts',
+  ];
 }
 
-export function generatedHtmlRoutes(distDir: string): string[] {
-  return Array.from(new Bun.Glob('**/*.html').scanSync({ cwd: distDir, onlyFiles: true }))
+export function runtimeRouteFiles(projectRoot: string): string[] {
+  return Array.from(new Bun.Glob('src/pages/**/*').scanSync({
+    cwd: projectRoot,
+    onlyFiles: true,
+  }))
     .map((route) => route.replaceAll('\\', '/'))
+    .filter((route) => route.endsWith('.astro') || route.endsWith('.ts'))
     .sort();
 }
 
-export function assertExactRouteManifest(distDir: string): void {
-  const expected = new Set(expectedGeneratedHtmlRoutes());
-  const actual = new Set(generatedHtmlRoutes(distDir));
+export function assertRuntimeRouteManifest(projectRoot: string): void {
+  const expected = new Set(expectedRuntimeRouteFiles());
+  const actual = new Set(runtimeRouteFiles(projectRoot));
   const missing = [...expected].filter((route) => !actual.has(route));
   const unexpected = [...actual].filter((route) => !expected.has(route));
 
@@ -41,10 +42,12 @@ export function assertExactRouteManifest(distDir: string): void {
     ...missing.map((route) => `Missing: ${route}`),
     ...unexpected.map((route) => `Unexpected: ${route}`),
   ];
-  throw new Error(`Generated HTML route manifest mismatch.\n${details.join('\n')}`);
+  throw new Error(`Runtime route manifest mismatch.\n${details.join('\n')}`);
 }
 
 if (import.meta.main) {
-  assertExactRouteManifest('dist');
-  console.log(`Verified exact ${expectedGeneratedHtmlRoutes().length}-page generated HTML route manifest.`);
+  const projectRoot = join(import.meta.dir, '..');
+  if (!existsSync(join(projectRoot, 'src/pages'))) throw new Error('Missing src/pages.');
+  assertRuntimeRouteManifest(projectRoot);
+  console.log(`Verified exact ${expectedRuntimeRouteFiles().length}-file runtime route manifest.`);
 }

@@ -53,6 +53,8 @@ describe('server-rendered blog components', () => {
     expect(html).toContain(`width="${post.image.width}"`);
     expect(html).toContain(`height="${post.image.height}"`);
     expect(html).toContain(`alt="${post.image.alt}"`);
+    expect(html).toContain('loading="eager"');
+    expect(html).toContain('fetchpriority="high"');
     expect(html.indexOf('<h1')).toBeLessThan(html.indexOf('<h2>Safe heading</h2>'));
     expect(html).not.toMatch(/<script|onclick=|javascript:|<img[^>]+evil\.test/i);
   });

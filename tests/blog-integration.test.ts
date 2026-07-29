@@ -30,7 +30,7 @@ describe('blog shell and homepage integration', () => {
     expect(partners).toBeGreaterThan(blogs);
   });
 
-  test('keeps homepage, index, and article blog content in primary SSR output', () => {
+  test('keeps homepage, index, and article body in primary SSR output while deferring only suggestions', () => {
     const routes = [
       source('src/pages/[locale]/index.astro'),
       source('src/pages/[locale]/blogs/index.astro'),
@@ -40,6 +40,9 @@ describe('blog shell and homepage integration', () => {
     expect(routes[0]).toContain('<LatestBlogs');
     expect(routes[1]).toContain('<BlogCard');
     expect(routes[2]).toContain('<BlogArticle');
-    expect(routes.join('\n')).not.toContain('server:defer');
+    expect(routes[0]).not.toContain('server:defer');
+    expect(routes[1]).not.toContain('server:defer');
+    expect(routes[2]).toContain('<BlogSuggestionsIsland server:defer');
+    expect(routes[2].indexOf('<BlogArticle')).toBeLessThan(routes[2].indexOf('<BlogSuggestionsIsland'));
   });
 });

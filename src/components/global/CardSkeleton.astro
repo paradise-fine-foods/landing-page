@@ -1,0 +1,52 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  count?: number;
+  inset?: boolean;
+  tone?: 'plain' | 'muted';
+}
+
+const { label, title, count = 3, inset = false, tone = 'plain' } = Astro.props;
+const cards = Array.from({ length: Math.max(1, Math.floor(count)) });
+---
+
+<section
+  class:list={['card-skeleton', `card-skeleton--${tone}`, { 'card-skeleton--inset': inset }]}
+  role="status"
+  aria-live="polite"
+  aria-busy="true"
+  aria-label={label}
+  data-card-skeleton
+>
+  <div class:list={['card-skeleton__inner', { container: !inset }]}>
+    <h2>{title}</h2>
+    <div class="card-skeleton__grid" aria-hidden="true">
+      {cards.map(() => (
+        <div class="card-skeleton__card" data-card-skeleton-card>
+          <span class="card-skeleton__image"></span>
+          <span class="card-skeleton__line card-skeleton__line--short"></span>
+          <span class="card-skeleton__line"></span>
+          <span class="card-skeleton__line"></span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .card-skeleton { border-block-start: 1px solid var(--color-brushed-steel); padding-block: var(--space-8); }
+  .card-skeleton--muted { background: var(--color-cold-paper); }
+  .card-skeleton__inner > h2 { font-size: var(--text-h2); margin-block-end: var(--space-7); }
+  .card-skeleton__grid { border-block: 1px solid var(--color-brushed-steel); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card-skeleton__card { display: grid; gap: var(--space-4); min-block-size: 22rem; padding: var(--space-4); }
+  .card-skeleton__card + .card-skeleton__card { border-inline-start: 1px solid var(--color-brushed-steel); }
+  .card-skeleton__image, .card-skeleton__line { animation: skeleton-pulse 1.4s ease-in-out infinite alternate; background: var(--color-brushed-steel); display: block; }
+  .card-skeleton__image { aspect-ratio: 4 / 3; inline-size: 100%; }
+  .card-skeleton__line { block-size: .75rem; inline-size: 100%; }
+  .card-skeleton__line--short { inline-size: 45%; }
+  @keyframes skeleton-pulse { to { opacity: .45; } }
+  @media (prefers-reduced-motion: reduce) { .card-skeleton__image, .card-skeleton__line { animation: none; } }
+  @media (max-width: 48rem) { .card-skeleton__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .card-skeleton__card:last-child { border-block-start: 1px solid var(--color-brushed-steel); border-inline-start: 0; grid-column: 1 / -1; } }
+  @media (max-width: 34rem) { .card-skeleton__grid { grid-template-columns: minmax(0, 1fr); } .card-skeleton__card + .card-skeleton__card { border-block-start: 1px solid var(--color-brushed-steel); border-inline-start: 0; } .card-skeleton__card:last-child { grid-column: auto; } }
+</style>

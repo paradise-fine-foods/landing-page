@@ -26,7 +26,9 @@ describe('localized blog routes', () => {
     expect(index).toContain('getBlogPosts(locale)');
     expect(detail).toContain('loadBlogDetailPageData(locale, slug)');
     expect(routeData).toContain('queries.getBlogPostBySlug(locale, slug)');
-    expect(routeData).toContain('queries.getLatestBlogPosts(locale, 3, post.id)');
+    expect(routeData).not.toContain('getLatestBlogPosts');
+    expect(source('src/components/blogs/BlogSuggestionsIsland.astro'))
+      .toContain('await loadBlogSuggestions(locale, currentPostId)');
     expect(detail).toContain('blogAlternatePath(locale, post)');
     expect(detail).not.toContain('counterpartPosts');
     expect(detail).toContain("return Astro.rewrite('/404')");
@@ -67,7 +69,6 @@ describe('localized blog routes', () => {
     expect(found.status).toBe(200);
     if (found.status !== 200) throw new Error(`expected runtime post, received ${found.status}`);
     expect(found.post.id).toBe('published-after-start');
-    expect(found.suggestions.every(({ id }) => id !== 'published-after-start')).toBe(true);
     expect((await loadBlogDetailPageData('en', 'draft-story', queries)).status).toBe(404);
     expect((await loadBlogDetailPageData('en', 'missing-story', queries)).status).toBe(404);
   });
@@ -80,7 +81,7 @@ describe('localized blog routes', () => {
     expect(index).toContain('posts.length > 0');
     expect(index).toContain("variant={index === 0 ? 'lead' : 'standard'}");
     expect(detail).toContain('<BlogArticle');
-    expect(detail).toContain('<LatestBlogs');
+    expect(detail).toContain('<BlogSuggestionsIsland');
     expect(detail).toContain('post.image.src');
     expect(`${index}\n${detail}`).toContain('<Breadcrumbs');
   });

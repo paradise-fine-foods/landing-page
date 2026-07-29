@@ -3,55 +3,48 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
-  assertExactRouteManifest,
-  expectedGeneratedHtmlRoutes,
+  assertRuntimeRouteManifest,
+  expectedRuntimeRouteFiles,
 } from './verify-built-route-manifest';
 
 const fixture = () => {
-  const dist = mkdtempSync(join(tmpdir(), 'route-manifest-'));
-  for (const route of expectedGeneratedHtmlRoutes()) {
-    const file = join(dist, route);
+  const projectRoot = mkdtempSync(join(tmpdir(), 'runtime-route-manifest-'));
+  for (const route of expectedRuntimeRouteFiles()) {
+    const file = join(projectRoot, route);
     mkdirSync(join(file, '..'), { recursive: true });
-    writeFileSync(file, '<!doctype html>');
+    writeFileSync(file, '');
   }
-  return dist;
+  return projectRoot;
 };
 
-const addRoute = (dist: string, route: string) => {
-  const file = join(dist, route);
-  mkdirSync(join(file, '..'), { recursive: true });
-  writeFileSync(file, '<!doctype html>');
-};
+describe('Astro runtime route manifest', () => {
+  test('accepts exactly the server route shapes and runtime sitemap endpoint', () => {
+    const projectRoot = join(import.meta.dir, '..');
+    const routes = expectedRuntimeRouteFiles();
 
-describe('generated HTML route manifest', () => {
-  test('accepts exactly the closed canonical route set', () => {
-    const dist = fixture();
-    const routes = expectedGeneratedHtmlRoutes();
-
-    expect(routes).toHaveLength(42);
-    expect(routes).toContain('index.html');
-    expect(routes).toContain('404.html');
-    expect(routes.some((route) => /vi\/(?:san-pham|thuong-hieu|lien-he)(?:\/|$)/.test(route))).toBe(false);
-    expect(() => assertExactRouteManifest(dist)).not.toThrow();
+    expect(routes).toHaveLength(14);
+    expect(routes).toContain('src/pages/sitemap.xml.ts');
+    expect(routes).toContain('src/pages/[locale]/products/[slug].astro');
+    expect(routes).toContain('src/pages/[locale]/blogs/[slug].astro');
+    expect(routes.some((route) => /src\/pages\/(?:en|vi)\//.test(route))).toBe(false);
+    expect(() => assertRuntimeRouteManifest(projectRoot)).not.toThrow();
   });
 
-  test.each([
-    ['an unsupported locale', 'fr/index.html'],
-    ['an unsupported contact mode', 'en/contact/partner/index.html'],
-    ['an unknown product slug', 'vi/products/khong-ton-tai/index.html'],
-    ['an unknown blog slug', 'en/blogs/not-a-post/index.html'],
-  ])('rejects %s', (_label, route) => {
-    const dist = fixture();
-    addRoute(dist, route);
+  test('rejects an unsupported runtime route file', () => {
+    const projectRoot = fixture();
+    const extra = join(projectRoot, 'src/pages/[locale]/products/preview.astro');
+    mkdirSync(join(extra, '..'), { recursive: true });
+    writeFileSync(extra, '');
 
-    expect(() => assertExactRouteManifest(dist)).toThrow(`Unexpected: ${route}`);
+    expect(() => assertRuntimeRouteManifest(projectRoot))
+      .toThrow('Unexpected: src/pages/[locale]/products/preview.astro');
   });
 
-  test('rejects a missing expected route', () => {
-    const dist = fixture();
-    const missing = 'en/contact/supplier/index.html';
-    rmSync(join(dist, missing));
+  test('rejects a missing runtime route file', () => {
+    const projectRoot = fixture();
+    const missing = 'src/pages/[locale]/contact/[mode].astro';
+    rmSync(join(projectRoot, missing));
 
-    expect(() => assertExactRouteManifest(dist)).toThrow(`Missing: ${missing}`);
+    expect(() => assertRuntimeRouteManifest(projectRoot)).toThrow(`Missing: ${missing}`);
   });
 });

@@ -1,7 +1,8 @@
 ---
 import BlogArticle from '../../../components/blogs/BlogArticle.astro';
-import LatestBlogs from '../../../components/blogs/LatestBlogs.astro';
+import BlogSuggestionsIsland from '../../../components/blogs/BlogSuggestionsIsland.astro';
 import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import CardSkeleton from '../../../components/global/CardSkeleton.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { blogAlternatePath, blogDetailPath, loadBlogDetailPageData } from '../../../lib/blogs/routes';
 import { markNotFound } from '../../../lib/cms/page-state';
@@ -22,18 +23,20 @@ if (pageData.status === 404) {
   markNotFound(Astro.response);
   return Astro.rewrite('/404');
 }
-const { settings, post, suggestions } = pageData;
+const { settings, post } = pageData;
 const pathname = blogDetailPath(locale, post);
 const alternatePath = blogAlternatePath(locale, post);
 const copy = ui[locale];
 ---
 
-<SiteLayout {locale} title={`${post.title} | ${settings.siteName}`} description={post.excerpt} {pathname} {alternatePath} settings={settings} image={post.image.src}>
+<SiteLayout {locale} title={`${post.title} | ${settings.siteName}`} description={post.excerpt} {pathname} {alternatePath} settings={settings} image={post.image.src} preloadImages={[{ href: post.image.src }]}>
   <div class="blog-page container section-space">
     <Breadcrumbs label={copy.blog.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.blogs, href: localizedPath(locale, 'blogs') }, { label: post.title }]} />
     <BlogArticle {post} {locale} />
   </div>
-  <LatestBlogs posts={suggestions} {locale} eyebrow={copy.blog.latestEyebrow} title={copy.blog.latestTitle} viewAllLabel={copy.blog.viewAll} />
+  <BlogSuggestionsIsland server:defer {locale} currentPostId={post.id}>
+    <CardSkeleton slot="fallback" label={copy.blog.latestTitle} title={copy.blog.latestTitle} tone="muted" />
+  </BlogSuggestionsIsland>
 </SiteLayout>
 
 <style>.blog-page { min-inline-size: 0; }</style>

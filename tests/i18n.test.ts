@@ -125,4 +125,34 @@ test('buildMeta returns canonical and reciprocal alternates', () => {
     { locale: 'en', href: 'https://paradisefinefoods.com/en/products/' },
     { locale: 'vi', href: 'https://paradisefinefoods.com/vi/products/' },
   ]);
+  expect(meta.openGraph).toMatchObject({
+    title: 'Products',
+    description: 'Demo catalog',
+    url: 'https://paradisefinefoods.com/en/products/',
+    locale: 'en_US',
+    alternateLocale: 'vi_VN',
+  });
+
+  const vietnameseMeta = buildMeta({
+    site: 'https://paradisefinefoods.com',
+    locale: 'vi',
+    title: 'Products VI',
+    description: 'Catalog VI',
+    pathname: '/vi/products/bo-lat/',
+    alternatePath: '/en/products/butter-sheet/',
+    image: '/images/butter.webp',
+  });
+  expect(vietnameseMeta.alternates).toEqual([
+    { locale: 'en', href: 'https://paradisefinefoods.com/en/products/butter-sheet/' },
+    { locale: 'vi', href: 'https://paradisefinefoods.com/vi/products/bo-lat/' },
+  ]);
+  expect(vietnameseMeta.openGraph).toMatchObject({
+    url: vietnameseMeta.canonical,
+    locale: 'vi_VN',
+    alternateLocale: 'en_US',
+    image: 'https://paradisefinefoods.com/images/butter.webp',
+  });
+
+  const layout = readFileSync(join(import.meta.dir, '..', 'src/layouts/SiteLayout.astro'), 'utf8');
+  expect(layout).toContain('<meta property="og:locale:alternate" content={meta.openGraph.alternateLocale} />');
 });

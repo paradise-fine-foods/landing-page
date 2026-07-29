@@ -1,20 +1,16 @@
 ---
 import type { Product } from '../../lib/cms/types';
-import type { Locale } from '../../lib/i18n/types';
 import type { UiCopy } from '../../lib/i18n/ui';
-import ProductGrid from './ProductGrid.astro';
 import ProductMetadata from './ProductMetadata.astro';
 import Icon from '../global/Icon.astro';
 
 interface Props {
   product: Product;
-  relatedProducts: Product[];
-  locale: Locale;
   copy: UiCopy;
   enquiryPath: string;
 }
 
-const { product, relatedProducts, locale, copy, enquiryPath } = Astro.props;
+const { product, copy, enquiryPath } = Astro.props;
 ---
 
 <article class="product-detail">
@@ -40,13 +36,6 @@ const { product, relatedProducts, locale, copy, enquiryPath } = Astro.props;
   </div>
 </article>
 
-{relatedProducts.length > 0 && (
-  <section class="related-products" aria-labelledby="related-products-title">
-    <h2 id="related-products-title">{copy.product.relatedTitle}</h2>
-    <ProductGrid products={relatedProducts.slice(0, 3)} {locale} copy={copy.catalog} showEmptyState={false} />
-  </section>
-)}
-
 <style>
   .product-detail { display: grid; gap: clamp(var(--space-6), 6vw, var(--space-9)); grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr); padding-block: var(--space-7) var(--space-9); }
   .product-detail__stage { align-self: start; aspect-ratio: 1 / 1; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); overflow: hidden; position: sticky; inset-block-start: var(--space-5); }
@@ -59,8 +48,6 @@ const { product, relatedProducts, locale, copy, enquiryPath } = Astro.props;
   .product-detail__lists h2 { font-family: var(--font-body); font-size: var(--text-sm); font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
   .product-detail__lists ul { display: grid; gap: var(--space-2); margin-block-start: var(--space-3); padding-inline-start: 1.1rem; }
   .product-detail__enquire { align-items: center; background: var(--color-graphite); border: 1px solid var(--color-graphite); border-radius: var(--radius-md); color: var(--color-process-white); display: flex; font-weight: 600; justify-content: space-between; min-block-size: 3rem; padding: var(--space-4) var(--space-5); text-decoration: none; }
-  .related-products { border-block-start: 1px solid var(--color-brushed-steel); padding-block: var(--space-8); }
-  .related-products > h2 { font-size: var(--text-h2); }
   @media (max-width: 48rem) { .product-detail { grid-template-columns: minmax(0, 1fr); } .product-detail__stage { position: relative; inset-block-start: auto; } .product-detail__facts { border-inline-start: 0; padding-inline-start: 0; } }
   @media (max-width: 28rem) { .product-detail__lists { grid-template-columns: minmax(0, 1fr); } }
 </style>

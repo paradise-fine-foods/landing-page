@@ -22,7 +22,7 @@ const copy = ui[locale].blog;
       <div><dt class="visually-hidden">{copy.categoryLabel}</dt><dd>{post.category}</dd></div>
     </dl>
   </header>
-  <figure class="blog-article__visual"><img src={post.image.src} width={post.image.width} height={post.image.height} alt={post.image.alt} /></figure>
+  <figure class="blog-article__visual"><img src={post.image.src} width={post.image.width} height={post.image.height} alt={post.image.alt} loading="eager" fetchpriority="high" /></figure>
   <div class="blog-article__body" set:html={post.bodyHtml}></div>
 </article>
 
