@@ -1,16 +1,17 @@
 ---
-import type { Product } from '../../lib/cms/types';
+import type { FeaturedContent } from '../../lib/cms/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import ButtonLink from '../global/ButtonLink.astro';
 
 interface Props {
   copy: UiCopy['hero'];
-  product: Product;
+  content: FeaturedContent['hero'];
   productsPath: string;
   contactPath: string;
 }
 
-const { copy, product, productsPath, contactPath } = Astro.props;
+const { copy, content, productsPath, contactPath } = Astro.props;
+const { product } = content;
 const metadata = [
   { label: copy.brand, value: product.brand.name },
   { label: copy.origin, value: product.origin },
@@ -22,9 +23,9 @@ const metadata = [
 <section class="living-hero" aria-labelledby="hero-title" data-living-hero>
   <div class="living-hero__content container">
     <div class="living-hero__copy">
-      <p class="eyebrow">{copy.eyebrow}</p>
-      <h1 id="hero-title">{copy.title}</h1>
-      <p class="living-hero__description">{copy.description}</p>
+      <p class="eyebrow">{content.eyebrow}</p>
+      <h1 id="hero-title">{content.title}</h1>
+      <p class="living-hero__description">{content.body}</p>
       <div class="living-hero__actions">
         <ButtonLink href={productsPath}>{copy.primaryCta}</ButtonLink>
         <ButtonLink href={contactPath} variant="secondary">{copy.secondaryCta}</ButtonLink>
@@ -36,10 +37,10 @@ const metadata = [
     <figure class="living-hero__art">
       <div class="living-hero__image-frame">
         <img
-          src={product.image.src}
-          alt={product.image.alt}
-          width={product.image.width}
-          height={product.image.height}
+          src={content.image.src}
+          alt={content.image.alt}
+          width={content.image.width}
+          height={content.image.height}
           loading="eager"
           fetchpriority="high"
         />

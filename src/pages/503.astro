@@ -1,0 +1,43 @@
+---
+import '@fontsource/newsreader/500.css';
+import '@fontsource/nunito/400.css';
+import '../styles/tokens.css';
+import '../styles/typography.css';
+import '../styles/global.css';
+
+Astro.response.status = 503;
+Astro.response.statusText = 'Service Unavailable';
+Astro.response.headers.set('Cache-Control', 'no-store');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Service temporarily unavailable | Paradise Fine Foods</title>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>
+    <main class="service-unavailable">
+      <section lang="en">
+        <p>503</p>
+        <h1>Service temporarily unavailable</h1>
+        <p>Our catalog cannot be loaded right now. Please try again shortly.</p>
+      </section>
+      <section lang="vi">
+        <p>503</p>
+        <h2>Dịch vụ tạm thời không khả dụng</h2>
+        <p>Hiện chưa thể tải danh mục. Vui lòng thử lại sau.</p>
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  .service-unavailable { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: auto; max-inline-size: var(--container-max); min-block-size: 100vh; }
+  .service-unavailable section { align-content: center; display: grid; gap: var(--space-4); padding: clamp(var(--space-6), 8vw, var(--space-9)); }
+  .service-unavailable section + section { background: var(--color-cold-paper); border-inline-start: 1px solid var(--color-brushed-steel); }
+  .service-unavailable :is(h1, h2) { font-size: var(--text-h1); }
+  @media (max-width: 42rem) { .service-unavailable { grid-template-columns: 1fr; } .service-unavailable section + section { border-block-start: 1px solid var(--color-brushed-steel); border-inline-start: 0; } }
+</style>

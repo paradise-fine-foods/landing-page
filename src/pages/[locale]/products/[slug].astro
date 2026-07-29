@@ -5,27 +5,33 @@ import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { productDetailPath } from '../../../lib/catalog/routes';
 import { getGlobalSettings, getProductBySlug, getProducts } from '../../../lib/cms/queries';
 import { localizedPath } from '../../../lib/i18n/routes';
-import { counterpartLocale } from '../../../lib/i18n/static-paths';
 import { isLocale } from '../../../lib/i18n/types';
 import { ui } from '../../../lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
 const slug = Astro.params.slug;
-if (!localeParam || !isLocale(localeParam) || !slug) return Astro.rewrite('/404');
+if (!localeParam || !isLocale(localeParam) || !slug) {
+  markNotFound(Astro.response);
+  return Astro.rewrite('/404');
+}
 const locale = localeParam;
-const product = await getProductBySlug(locale, slug);
-if (!product) return Astro.rewrite('/404');
-const alternateLocale = counterpartLocale(locale);
-const [settings, products, counterpartProducts] = await Promise.all([
-  getGlobalSettings(locale),
-  getProducts(locale),
-  getProducts(alternateLocale),
-]);
-const counterpart = counterpartProducts.find(({ id }) => id === product.id);
+const pageData = await loadCmsPageData(async () => {
+  const [settings, product, products] = await Promise.all([
+    getGlobalSettings(locale), getProductBySlug(locale, slug), getProducts(locale),
+  ]);
+  return { settings, product, products };
+});
+if (!pageData.ok) return Astro.rewrite('/503');
+const { settings, product, products } = pageData.data;
+if (!product) {
+  markNotFound(Astro.response);
+  return Astro.rewrite('/404');
+}
 const pathname = productDetailPath(locale, product);
-const alternatePath = counterpart
-  ? productDetailPath(alternateLocale, counterpart)
-  : localizedPath(alternateLocale, 'products');
+const alternatePath = product.counterpart
+  ? productDetailPath(product.counterpart.locale, product.counterpart)
+  : undefined;
 const relatedProducts = products
   .filter((candidate) => candidate.id !== product.id && (
     candidate.brand.id === product.brand.id
@@ -35,7 +41,7 @@ const relatedProducts = products
 const copy = ui[locale];
 ---
 
-<SiteLayout {locale} title={`${product.name} | ${settings.siteName}`} description={product.description} {pathname} {alternatePath} siteName={settings.siteName} image={product.image.src}>
+<SiteLayout {locale} title={`${product.name} | ${settings.siteName}`} description={product.description} {pathname} {alternatePath} settings={settings} image={product.image.src}>
   <div class="product-page container section-space">
     <Breadcrumbs label={copy.product.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.products, href: localizedPath(locale, 'products') }, { label: product.name }]} />
     <ProductDetail {product} {relatedProducts} {locale} {copy} enquiryPath={localizedPath(locale, 'customerContact')} />

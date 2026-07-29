@@ -41,8 +41,43 @@ describe('localized SSR routes', () => {
     expect(blog).toContain('getBlogPostBySlug(locale, slug)');
     expect(contactMode).toContain('isContactMode(modeParam)');
 
-    for (const route of [product, brand, blog, contactMode]) {
+    for (const route of [product, brand, contactMode]) {
+      expect(route).toContain('markNotFound(Astro.response)');
       expect(route).toContain("return Astro.rewrite('/404')");
+    }
+  });
+
+  test('maps CMS failures to the noindex 503 route and supplies CMS settings to layouts', () => {
+    for (const routePath of localizedRoutes) {
+      const route = source(routePath);
+      expect(route).toContain('loadCmsPageData');
+      expect(route).toContain("return Astro.rewrite('/503')");
+      expect(route).toContain('settings={settings}');
+    }
+
+    const unavailable = source('src/pages/503.astro');
+    expect(unavailable).toContain('Astro.response.status = 503');
+    expect(unavailable).toContain('<meta name="robots" content="noindex"');
+  });
+
+  test('uses stable detail counterparts without querying a second locale index', () => {
+    const product = source('src/pages/[locale]/products/[slug].astro');
+    const brand = source('src/pages/[locale]/brands/[slug].astro');
+
+    expect(product).toContain('product.counterpart');
+    expect(product).not.toContain('counterpartProducts');
+    expect(brand).toContain('brand.counterpart');
+    expect(brand).not.toContain('counterpartBrands');
+  });
+
+  test('renders localized CMS store information through the shared layout footer', () => {
+    const layout = source('src/layouts/SiteLayout.astro');
+    const footer = source('src/components/global/Footer.astro');
+
+    expect(layout).toContain('settings: GlobalSettings');
+    expect(layout).toContain('store={settings.store}');
+    for (const field of ['store.address', 'store.email', 'store.phone', 'store.footerCopy']) {
+      expect(footer).toContain(field);
     }
   });
 });

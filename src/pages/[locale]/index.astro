@@ -15,25 +15,33 @@ import { localizedPath } from '../../lib/i18n/routes';
 import { counterpartLocale } from '../../lib/i18n/static-paths';
 import { isLocale } from '../../lib/i18n/types';
 import { ui } from '../../lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '../../lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
-if (!localeParam || !isLocale(localeParam)) return Astro.rewrite('/404');
+if (!localeParam || !isLocale(localeParam)) {
+  markNotFound(Astro.response);
+  return Astro.rewrite('/404');
+}
 const locale = localeParam;
 const pathname = localizedPath(locale, 'home');
 const alternatePath = localizedPath(counterpartLocale(locale), 'home');
-const [settings, featured, categories, products, brands, latestBlogs] = await Promise.all([
-  getGlobalSettings(locale), getFeaturedContent(locale), getCategories(locale),
-  getProducts(locale, {}), getBrands(locale), getLatestBlogPosts(locale, 3),
-]);
+const pageData = await loadCmsPageData(async () => {
+  const [settings, featured, categories, products, brands, latestBlogs] = await Promise.all([
+    getGlobalSettings(locale), getFeaturedContent(locale), getCategories(locale),
+    getProducts(locale, {}), getBrands(locale), getLatestBlogPosts(locale, 3),
+  ]);
+  return { settings, featured, categories, products, brands, latestBlogs };
+});
+if (!pageData.ok) return Astro.rewrite('/503');
+const { settings, featured, categories, products, brands, latestBlogs } = pageData.data;
 const copy = ui[locale];
 const productsPath = localizedPath(locale, 'products');
 const contactPath = localizedPath(locale, 'contact');
 const categoryCounts = Object.fromEntries(categories.map((category) => [category.id, products.filter((product) => product.categories.some(({ id }) => id === category.id)).length]));
-const selectedBrand = brands.find(({ id }) => id === featured.hero.product.brand.id) ?? brands[0];
-if (!selectedBrand) throw new Error('Featured brand is required');
+const selectedBrand = brands.find(({ id }) => id === featured.hero.product.brand.id) ?? featured.hero.product.brand;
 const selectedBrandProducts = products.filter((product) => product.brand.id === selectedBrand.id).slice(0, 3);
 const remainingBrands = brands.filter(({ id }) => id !== selectedBrand.id);
-const preloadImages = [{ href: featured.hero.image.src, media: '(min-width: 36.001rem)' }, { href: featured.hero.image.src, media: '(max-width: 36rem)' }];
+const preloadImages = [{ href: featured.hero.image.src }];
 const channels = [
   { ...copy.home.channels.retail, href: `${contactPath}?interest=retail` },
   { ...copy.home.channels.horeca, href: `${contactPath}?interest=horeca` },
@@ -42,8 +50,8 @@ const channels = [
 ];
 ---
 
-<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} siteName={settings.siteName} image={featured.hero.image.src} {preloadImages}>
-  <LivingHero copy={copy.hero} product={featured.hero.product} {productsPath} {contactPath} />
+<SiteLayout locale={locale} title={settings.siteName} description={settings.siteDescription} {pathname} {alternatePath} settings={settings} image={featured.hero.image.src} {preloadImages}>
+  <LivingHero copy={copy.hero} content={featured.hero} {productsPath} {contactPath} />
   <CredibilityStrip title={copy.home.credibilityTitle} pillars={copy.home.operationalPillars} />
   <CategoryDiscovery eyebrow={copy.home.categoryEyebrow} title={copy.home.categoryTitle} description={copy.home.categoryDescription} {categories} {categoryCounts} productLabel={copy.home.categoryProductLabel} {productsPath} />
   <FeaturedProducts eyebrow={copy.home.featuredProductsEyebrow} title={copy.home.featuredProductsTitle} products={products.filter((product) => product.featured)} locale={locale} carousel={copy.home.carousel} />

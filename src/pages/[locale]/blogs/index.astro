@@ -2,22 +2,31 @@
 import BlogCard from '../../../components/blogs/BlogCard.astro';
 import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { getBlogPosts } from '../../../lib/cms/queries';
+import { getBlogPosts, getGlobalSettings } from '../../../lib/cms/queries';
+import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
 import { localizedPath } from '../../../lib/i18n/routes';
 import { counterpartLocale } from '../../../lib/i18n/static-paths';
 import { isLocale } from '../../../lib/i18n/types';
 import { ui } from '../../../lib/i18n/ui';
 
 const localeParam = Astro.params.locale;
-if (!localeParam || !isLocale(localeParam)) return Astro.rewrite('/404');
+if (!localeParam || !isLocale(localeParam)) {
+  markNotFound(Astro.response);
+  return Astro.rewrite('/404');
+}
 const locale = localeParam;
 const copy = ui[locale];
-const posts = await getBlogPosts(locale);
+const pageData = await loadCmsPageData(async () => {
+  const [settings, posts] = await Promise.all([getGlobalSettings(locale), getBlogPosts(locale)]);
+  return { settings, posts };
+});
+if (!pageData.ok) return Astro.rewrite('/503');
+const { settings, posts } = pageData.data;
 const pathname = localizedPath(locale, 'blogs');
 const alternatePath = localizedPath(counterpartLocale(locale), 'blogs');
 ---
 
-<SiteLayout {locale} title={`${copy.blog.title} | ${copy.siteName}`} description={copy.blog.description} {pathname} {alternatePath} siteName={copy.siteName} image={posts[0]?.image.src}>
+<SiteLayout {locale} title={`${copy.blog.title} | ${settings.siteName}`} description={copy.blog.description} {pathname} {alternatePath} settings={settings} image={posts[0]?.image.src}>
   <div class="blog-index container section-space" data-blog-index>
     <Breadcrumbs label={copy.blog.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.blogs }]} />
     <header class="blog-index__intro"><p class="eyebrow">{copy.blog.eyebrow}</p><h1>{copy.blog.title}</h1><p>{copy.blog.description}</p></header>

@@ -4,9 +4,10 @@ import paradiseLogo from '../../assets/brand/paradise-fine-foods-logo.png';
 import type { Locale } from '../../lib/i18n/types';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
+import type { StoreInformation } from '../../lib/cms/types';
 
-interface Props { locale: Locale; siteName: string }
-const { locale, siteName } = Astro.props;
+interface Props { locale: Locale; siteName: string; store: StoreInformation }
+const { locale, siteName, store } = Astro.props;
 const copy = ui[locale];
 ---
 
@@ -14,7 +15,7 @@ const copy = ui[locale];
   <div class="site-footer__grid container">
     <div class="site-footer__brand">
       <Image class="site-footer__logo" src={paradiseLogo} alt={siteName} />
-      <p>{copy.footer.tagline}</p>
+      <p>{store.footerCopy}</p>
     </div>
     <nav aria-label={copy.footer.navigation}>
       <p class="site-footer__label">{copy.footer.navigation}</p>
@@ -23,6 +24,9 @@ const copy = ui[locale];
     </nav>
     <div>
       <p class="site-footer__label">{copy.footer.contact}</p>
+      {store.address && <address>{store.address}</address>}
+      {store.email && <a href={`mailto:${store.email}`}>{store.email}</a>}
+      {store.phone && <a href={`tel:${store.phone}`}>{store.phone}</a>}
       <a href={localizedPath(locale, 'contact')}>{copy.header.contact}</a>
     </div>
     <div class="site-footer__legal">
@@ -39,6 +43,7 @@ const copy = ui[locale];
   .site-footer__logo { block-size: auto; inline-size: 7.5rem; margin-block-end: var(--space-3); }
   .site-footer__label { color: var(--color-brushed-steel); font-size: var(--text-xs); letter-spacing: var(--tracking-label); margin-block-end: var(--space-3); text-transform: uppercase; }
   .site-footer a { align-items: center; color: inherit; display: inline-flex; inline-size: max-content; margin-block-end: var(--space-2); min-block-size: 2.75rem; }
+  .site-footer address { font-style: normal; margin-block-end: var(--space-2); max-inline-size: 28ch; }
   .site-footer__legal { border-top: 1px solid var(--color-brushed-steel); display: flex; font-size: var(--text-xs); gap: var(--space-4); grid-column: 1 / -1; justify-content: space-between; padding-block-start: var(--space-5); }
   @media (max-width: 44rem) { .site-footer__grid { grid-template-columns: 1fr 1fr; } .site-footer__brand, .site-footer__legal { grid-column: 1 / -1; } .site-footer__legal { flex-direction: column; } }
 </style>

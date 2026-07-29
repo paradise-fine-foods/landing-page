@@ -373,14 +373,18 @@ describe('Precision Supply System identity', () => {
     expect(detail).toMatch(/@media \(max-width: 48rem\)[\s\S]*?\.product-detail__facts\s*\{[^}]*border-inline-start:\s*0/);
   });
 
-  test('uses the Living Ingredients thesis in both hero locales', () => {
-    expect(ui.en.hero.eyebrow).toBe('Living ingredients');
-    expect(ui.vi.hero.eyebrow).toBe('Nguyên liệu sống động');
+  test('keeps hero editorial copy at the CMS boundary rather than in UI controls', () => {
+    expect(ui.en.hero).not.toHaveProperty('eyebrow');
+    expect(ui.en.hero).not.toHaveProperty('title');
+    expect(ui.en.hero).not.toHaveProperty('description');
+    expect(ui.vi.hero).not.toHaveProperty('eyebrow');
+    expect(ui.vi.hero).not.toHaveProperty('title');
+    expect(ui.vi.hero).not.toHaveProperty('description');
   });
 
   test('places the localized floating enquiry rail after the shared footer', () => {
     const layout = source('src/layouts/SiteLayout.astro');
-    const footer = '<Footer {locale} {siteName} />';
+    const footer = '<Footer {locale} {siteName} store={settings.store} />';
     const rail = '<FloatingFormRail locale={locale} contactPath={localizedPath(locale, \'contact\')} customerPath={localizedPath(locale, \'customerContact\')} supplierPath={localizedPath(locale, \'supplierContact\')} copy={ui[locale].floatingRail} />';
 
     expect(layout).toContain("import { localizedPath } from '../lib/i18n/routes';");

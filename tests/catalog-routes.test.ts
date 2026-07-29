@@ -84,9 +84,18 @@ describe('localized product routes', () => {
     expect(detailRoute).toContain('Astro.params');
     expect(detailRoute).toContain('isLocale(localeParam)');
     expect(detailRoute).toContain('getProductBySlug(locale, slug)');
-    expect(detailRoute).toContain('counterpartProducts.find(({ id }) => id === product.id)');
+    expect(detailRoute).toContain('product.counterpart');
+    expect(detailRoute).not.toContain('counterpartProducts');
+    expect(detailRoute).toContain('markNotFound(Astro.response)');
     expect(detailRoute).toContain("return Astro.rewrite('/404')");
     expect(detailRoute).not.toContain('getStaticPaths');
+  });
+
+  test('renders the localized empty state when the runtime catalog is valid but empty', () => {
+    const grid = source('src/components/catalog/ProductGrid.astro');
+    expect(grid).toContain('hidden={products.length > 0}');
+    expect(grid).toContain('{copy.noResultsTitle}');
+    expect(grid).toContain('{copy.noResultsDescription}');
   });
 
   test('keeps catalog controls compact and reserves orange for product facts', () => {

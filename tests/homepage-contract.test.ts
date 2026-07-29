@@ -106,6 +106,24 @@ describe('reviewed homepage contracts', () => {
     expect(page).toContain('product.brand.id === selectedBrand.id');
   });
 
+  test('renders schema-backed home editorial copy instead of UI business copy', () => {
+    const page = source('src/pages/[locale]/index.astro');
+    const hero = source('src/components/sections/LivingHero.astro');
+
+    expect(page).toContain('featured.hero');
+    expect(page).toContain('content={featured.hero}');
+    expect(hero).toContain('content: FeaturedContent[\'hero\']');
+    expect(hero).toContain('{content.eyebrow}');
+    expect(hero).toContain('{content.title}');
+    expect(hero).toContain('{content.body}');
+    expect(ui.en.hero).not.toHaveProperty('eyebrow');
+    expect(ui.en.hero).not.toHaveProperty('title');
+    expect(ui.en.hero).not.toHaveProperty('description');
+    expect(ui.vi.hero).not.toHaveProperty('eyebrow');
+    expect(ui.vi.hero).not.toHaveProperty('title');
+    expect(ui.vi.hero).not.toHaveProperty('description');
+  });
+
   test('utility labels are localized and navigation never uses the display face', () => {
     const files = [
       'src/components/global/Header.astro',

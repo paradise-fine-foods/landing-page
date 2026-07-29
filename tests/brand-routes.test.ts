@@ -92,9 +92,18 @@ describe('localized brand routes', () => {
     expect(detailRoute).toContain('Astro.params');
     expect(detailRoute).toContain('isLocale(localeParam)');
     expect(detailRoute).toContain('getBrandBySlug(locale, slug)');
-    expect(detailRoute).toContain('counterpartBrands.find(({ id }) => id === brand.id)');
+    expect(detailRoute).toContain('brand.counterpart');
+    expect(detailRoute).not.toContain('counterpartBrands');
+    expect(detailRoute).toContain('markNotFound(Astro.response)');
     expect(detailRoute).toContain("return Astro.rewrite('/404')");
     expect(detailRoute).not.toContain('getStaticPaths');
+  });
+
+  test('renders a localized empty state for a valid empty brand index', () => {
+    const index = source('src/pages/[locale]/brands/index.astro');
+    expect(index).toContain('brands.length > 0');
+    expect(index).toContain('copy.brand.emptyTitle');
+    expect(index).toContain('copy.brand.emptyDescription');
   });
 
   test('centralizes locale copy and preserves accessible detail structure', () => {

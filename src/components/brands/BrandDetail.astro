@@ -35,7 +35,7 @@ const accentClasses: Record<BrandAccent, string> = {
       </dl>
     </div>
     <figure class="brand-detail__visual">
-      <img src={brand.image.src} width={brand.image.width} height={brand.image.height} alt={brand.image.alt} />
+      <img src={brand.image.src} width={brand.image.width} height={brand.image.height} alt={brand.image.alt} loading="eager" fetchpriority="high" />
     </figure>
   </header>
 

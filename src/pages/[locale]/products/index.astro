@@ -8,23 +8,29 @@ import { localizedPath } from '../../../lib/i18n/routes';
 import { counterpartLocale } from '../../../lib/i18n/static-paths';
 import { isLocale } from '../../../lib/i18n/types';
 import { ui } from '../../../lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
-if (!localeParam || !isLocale(localeParam)) return Astro.rewrite('/404');
+if (!localeParam || !isLocale(localeParam)) {
+  markNotFound(Astro.response);
+  return Astro.rewrite('/404');
+}
 const locale = localeParam;
 const pathname = localizedPath(locale, 'products');
 const alternatePath = localizedPath(counterpartLocale(locale), 'products');
-const [settings, products, categories, brands] = await Promise.all([
-  getGlobalSettings(locale),
-  getProducts(locale),
-  getCategories(locale),
-  getBrands(locale),
-]);
+const pageData = await loadCmsPageData(async () => {
+  const [settings, products, categories, brands] = await Promise.all([
+    getGlobalSettings(locale), getProducts(locale), getCategories(locale), getBrands(locale),
+  ]);
+  return { settings, products, categories, brands };
+});
+if (!pageData.ok) return Astro.rewrite('/503');
+const { settings, products, categories, brands } = pageData.data;
 const copy = ui[locale];
 const applications = [...new Set(products.flatMap(({ applications }) => applications))].sort();
 ---
 
-<SiteLayout {locale} title={`${copy.catalog.title} | ${settings.siteName}`} description={copy.catalog.description} {pathname} {alternatePath} siteName={settings.siteName}>
+<SiteLayout {locale} title={`${copy.catalog.title} | ${settings.siteName}`} description={copy.catalog.description} {pathname} {alternatePath} settings={settings}>
   <div class="catalog-page container section-space" data-catalog>
     <Breadcrumbs label={copy.product.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.products }]} />
     <header class="catalog-page__intro">

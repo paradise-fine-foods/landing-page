@@ -19,7 +19,7 @@ const { product, relatedProducts, locale, copy, enquiryPath } = Astro.props;
 
 <article class="product-detail">
   <div class="product-detail__stage">
-    <img src={product.image.src} width={product.image.width} height={product.image.height} alt={product.image.alt} />
+    <img src={product.image.src} width={product.image.width} height={product.image.height} alt={product.image.alt} loading="eager" fetchpriority="high" />
   </div>
   <div class="product-detail__content">
     <p class="product-detail__eyebrow">{product.brand.name} / {product.origin}</p>

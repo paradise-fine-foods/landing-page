@@ -27,9 +27,9 @@ describe('homepage composition', () => {
     const hero = source('src/components/sections/LivingHero.astro');
 
     expect(hero).toContain('interface Props');
-    expect(hero).toContain('product.image.alt');
-    expect(hero).toContain('width={product.image.width}');
-    expect(hero).toContain('height={product.image.height}');
+    expect(hero).toContain('content.image.alt');
+    expect(hero).toContain('width={content.image.width}');
+    expect(hero).toContain('height={content.image.height}');
     expect(hero).toContain('living-hero__actions');
     expect(hero).toContain('<figcaption>{product.name}</figcaption>');
     expect(hero).toContain('living-hero__metadata');

@@ -7,17 +7,26 @@ import { localizedPath } from '../../lib/i18n/routes';
 import { counterpartLocale } from '../../lib/i18n/static-paths';
 import { isLocale } from '../../lib/i18n/types';
 import { ui } from '../../lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '../../lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
-if (!localeParam || !isLocale(localeParam)) return Astro.rewrite('/404');
+if (!localeParam || !isLocale(localeParam)) {
+  markNotFound(Astro.response);
+  return Astro.rewrite('/404');
+}
 const locale = localeParam;
 const pathname = localizedPath(locale, 'contact');
 const alternatePath = localizedPath(counterpartLocale(locale), 'contact');
-const [settings, products] = await Promise.all([getGlobalSettings(locale), getProducts(locale)]);
+const pageData = await loadCmsPageData(async () => {
+  const [settings, products] = await Promise.all([getGlobalSettings(locale), getProducts(locale)]);
+  return { settings, products };
+});
+if (!pageData.ok) return Astro.rewrite('/503');
+const { settings, products } = pageData.data;
 const copy = ui[locale];
 ---
 
-<SiteLayout {locale} title={`${copy.form.title} | ${settings.siteName}`} description={copy.form.description} {pathname} {alternatePath} siteName={settings.siteName}>
+<SiteLayout {locale} title={`${copy.form.title} | ${settings.siteName}`} description={copy.form.description} {pathname} {alternatePath} settings={settings}>
   <div class="contact-page container section-space">
     <Breadcrumbs label={copy.header.contact} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.contact }]} />
     <EnquiryForm {locale} {products} {copy} />

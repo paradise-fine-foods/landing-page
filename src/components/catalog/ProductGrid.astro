@@ -32,7 +32,7 @@ const { products, locale, copy, showEmptyState = true, cardHeadingLevel = 'h3' }
   ))}
 </div>
 {showEmptyState && (
-  <section class="catalog-empty" data-empty-state hidden aria-labelledby="catalog-empty-title">
+  <section class="catalog-empty" data-empty-state hidden={products.length > 0} aria-labelledby="catalog-empty-title">
     <h2 id="catalog-empty-title">{copy.noResultsTitle}</h2>
     <p>{copy.noResultsDescription}</p>
     <button type="button" data-reset-filters>{copy.resetFilters}</button>
