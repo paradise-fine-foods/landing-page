@@ -98,6 +98,13 @@ Create an untracked JSON manifest such as:
     {
       "path": "/en/products/release-product/",
       "lang": "en",
+      "seo": {
+        "canonical": "https://paradisefinefoods.com/en/products/release-product/",
+        "alternates": {
+          "en": "https://paradisefinefoods.com/en/products/release-product/",
+          "vi": "https://paradisefinefoods.com/vi/products/san-pham-phat-hanh/"
+        }
+      },
       "primary": "Release product",
       "footer": "Ho Chi Minh City",
       "islandFallback": true
@@ -105,6 +112,13 @@ Create an untracked JSON manifest such as:
     {
       "path": "/vi/products/san-pham-phat-hanh/",
       "lang": "vi",
+      "seo": {
+        "canonical": "https://paradisefinefoods.com/vi/products/san-pham-phat-hanh/",
+        "alternates": {
+          "en": "https://paradisefinefoods.com/en/products/release-product/",
+          "vi": "https://paradisefinefoods.com/vi/products/san-pham-phat-hanh/"
+        }
+      },
       "primary": "Sản phẩm phát hành",
       "footer": "Thành phố Hồ Chí Minh",
       "islandFallback": true
@@ -116,11 +130,22 @@ Create an untracked JSON manifest such as:
 Run native Python Playwright with the server already running. The script uses
 headless Chromium, waits for `networkidle` before DOM inspection, and covers
 desktop/mobile, keyboard focus, JavaScript disabled, reduced motion,
-horizontal overflow, image dimensions, initial HTML, and reciprocal SEO:
+horizontal overflow, image dimensions, initial HTML, and reciprocal SEO. Each
+manifest route must declare an absolute canonical URL plus exact `en` and `vi`
+alternate targets. The runner parses raw initial HTML without regex-based tag
+matching and asserts one exact target for each relation; it repeats the exact
+checks against the browser DOM. Screenshot names include a readable sanitized
+route identifier, a path digest, locale, and viewport so same-locale routes
+cannot overwrite each other:
 
 ```powershell
 py -3 scripts/browser-release-smoke.py --base-url http://127.0.0.1:4322 --manifest <untracked-manifest.json> --evidence-dir <untracked-evidence-directory>
 ```
+
+The fake asset is a real 1200x800 PNG so this matrix proves image decoding and
+layout dimensions. Its uniformly colored, highly compressible fixture bytes
+and local Worker delivery do not predict production CDN/media transfer weight;
+recorded Lighthouse scores are release-gate evidence only.
 
 Run Lighthouse SEO/performance only when the CLI is installed and retain the
 JSON/HTML report outside the repository unless it has been checked for URLs or

@@ -1,8 +1,44 @@
 #!/usr/bin/env node
 import { createServer } from 'node:http';
 import { pathToFileURL } from 'node:url';
+import { deflateSync } from 'node:zlib';
 
-const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64');
+const crc32 = (data) => {
+  let crc = 0xffffffff;
+  for (const byte of data) {
+    crc ^= byte;
+    for (let bit = 0; bit < 8; bit += 1) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+};
+
+const pngChunk = (type, data) => {
+  const typeBytes = Buffer.from(type, 'ascii');
+  const chunk = Buffer.alloc(12 + data.length);
+  chunk.writeUInt32BE(data.length, 0);
+  typeBytes.copy(chunk, 4);
+  data.copy(chunk, 8);
+  chunk.writeUInt32BE(crc32(Buffer.concat([typeBytes, data])), 8 + data.length);
+  return chunk;
+};
+
+const createPng = (width, height) => {
+  const header = Buffer.alloc(13);
+  header.writeUInt32BE(width, 0);
+  header.writeUInt32BE(height, 4);
+  header[8] = 8;
+  header[9] = 2;
+  const pixels = Buffer.alloc(height * (1 + width * 3));
+  for (let row = 0; row < height; row += 1) pixels[row * (1 + width * 3)] = 0;
+  return Buffer.concat([
+    Buffer.from('\x89PNG\r\n\x1a\n', 'binary'),
+    pngChunk('IHDR', header),
+    pngChunk('IDAT', deflateSync(pixels)),
+    pngChunk('IEND', Buffer.alloc(0)),
+  ]);
+};
+
+const PNG = createPng(1200, 800);
 const file = Object.freeze({
   id: '92000000-0000-4000-8000-000000000001',
   width: 1200,

@@ -81,7 +81,7 @@ describe('Task 9 release gate contract', () => {
     })).toEqual([]);
   });
 
-  test('ships a native headless Chromium matrix with network-idle DOM inspection', async () => {
+  test('ships exact raw/DOM SEO assertions and collision-proof route screenshot names', async () => {
     const source = await readFile(new URL('../scripts/browser-release-smoke.py', import.meta.url), 'utf8');
     for (const contract of [
       'sync_playwright',
@@ -95,6 +95,11 @@ describe('Task 9 release gate contract', () => {
       'link[rel="canonical"]',
       'link[rel="alternate"][hreflang="en"]',
       'link[rel="alternate"][hreflang="vi"]',
+      'assert_initial_metadata(html, route, url)',
+      'screenshot_name(route, \'desktop\')',
+      'class MetadataParser(HTMLParser)',
+      'path_digest = hashlib.sha256(path.encode("utf-8")).hexdigest()\n    return',
+      'return f"{readable_path}-{path_digest}--{route[\'lang\']}--{viewport}.png"',
     ]) expect(source).toContain(contract);
   });
 });

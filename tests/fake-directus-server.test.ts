@@ -49,6 +49,11 @@ describe('mutable fake Directus release server', () => {
     const asset = await fetch(products[0]!.image.src);
     expect(asset.status).toBe(200);
     expect(asset.headers.get('content-type')).toBe('image/png');
+    const image = new Uint8Array(await asset.arrayBuffer());
+    expect(new TextDecoder().decode(image.slice(12, 16))).toBe('IHDR');
+    const header = new DataView(image.buffer, image.byteOffset, image.byteLength);
+    expect(header.getUint32(16)).toBe(1200);
+    expect(header.getUint32(20)).toBe(800);
   });
 
   test('adds a bilingual product and blog through the guarded post-build mutation without restart', async () => {

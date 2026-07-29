@@ -23,6 +23,20 @@ never counted as a pass.
 - Added release gates and a native Python Playwright matrix for response state,
   initial HTML, reciprocal SEO, desktop/mobile layout, keyboard focus,
   JavaScript-disabled behavior, reduced motion, image dimensions, and overflow.
+- Strengthened the browser manifest contract so raw initial HTML and the
+  browser DOM each require the route's exact absolute canonical URL and exact
+  English/Vietnamese alternate targets. Screenshot evidence now uses a
+  sanitized path plus a path digest, locale, and viewport to prevent
+  same-locale route collisions.
+- Replaced the fake Directus one-pixel PNG with a real 1200x800 PNG and added
+  an IHDR assertion against the served asset, preserving the declared CMS
+  dimensions end-to-end.
+
+The generated fixture proves image decoding and the declared layout dimensions,
+but its uniformly colored, highly compressible pixels and local Wrangler
+delivery are not a production CDN/media-weight prediction. The recorded
+Lighthouse scores remain gate evidence for this fixture, not representative
+image-transfer performance claims.
 
 ## TDD evidence
 
