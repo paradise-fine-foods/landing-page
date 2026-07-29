@@ -50,6 +50,15 @@ describe('blog components', () => {
     expect(article).not.toContain('<script');
   });
 
+  test('uses set:html only for mapper-sanitized blog body HTML', () => {
+    const article = source('src/components/blogs/BlogArticle.astro');
+    const mapper = source('src/lib/cms/directus/mappers.ts');
+
+    expect(article.match(/set:html=/g)).toHaveLength(1);
+    expect(article).toContain('set:html={post.bodyHtml}');
+    expect(mapper).toContain('bodyHtml: sanitizeBlogHtml(requiredString(localized.body');
+  });
+
   test('makes authentic blog media lead flat cards and keeps article facts compact', () => {
     const card = source('src/components/blogs/BlogCard.astro');
     const article = source('src/components/blogs/BlogArticle.astro');

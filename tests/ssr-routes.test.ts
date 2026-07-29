@@ -34,14 +34,16 @@ describe('localized SSR routes', () => {
     const product = source('src/pages/[locale]/products/[slug].astro');
     const brand = source('src/pages/[locale]/brands/[slug].astro');
     const blog = source('src/pages/[locale]/blogs/[slug].astro');
+    const blogData = source('src/lib/blogs/routes.ts');
     const contactMode = source('src/pages/[locale]/contact/[mode].astro');
 
     expect(product).toContain('getProductBySlug(locale, slug)');
     expect(brand).toContain('getBrandBySlug(locale, slug)');
-    expect(blog).toContain('getBlogPostBySlug(locale, slug)');
+    expect(blog).toContain('loadBlogDetailPageData(locale, slug)');
+    expect(blogData).toContain('queries.getBlogPostBySlug(locale, slug)');
     expect(contactMode).toContain('isContactMode(modeParam)');
 
-    for (const route of [product, brand, contactMode]) {
+    for (const route of [product, brand, blog, contactMode]) {
       expect(route).toContain('markNotFound(Astro.response)');
       expect(route).toContain("return Astro.rewrite('/404')");
     }
@@ -50,7 +52,12 @@ describe('localized SSR routes', () => {
   test('maps CMS failures to the noindex 503 route and supplies CMS settings to layouts', () => {
     for (const routePath of localizedRoutes) {
       const route = source(routePath);
-      expect(route).toContain('loadCmsPageData');
+      if (routePath.endsWith('blogs/[slug].astro')) {
+        expect(route).toContain('loadBlogDetailPageData');
+        expect(source('src/lib/blogs/routes.ts')).toContain('loadCmsPageData');
+      } else {
+        expect(route).toContain('loadCmsPageData');
+      }
       expect(route).toContain("return Astro.rewrite('/503')");
       expect(route).toContain('settings={settings}');
     }
@@ -63,11 +70,14 @@ describe('localized SSR routes', () => {
   test('uses stable detail counterparts without querying a second locale index', () => {
     const product = source('src/pages/[locale]/products/[slug].astro');
     const brand = source('src/pages/[locale]/brands/[slug].astro');
+    const blog = source('src/pages/[locale]/blogs/[slug].astro');
 
     expect(product).toContain('productAlternatePath(locale, product)');
     expect(product).not.toContain('counterpartProducts');
     expect(brand).toContain('brandAlternatePath(locale, brand)');
     expect(brand).not.toContain('counterpartBrands');
+    expect(blog).toContain('blogAlternatePath(locale, post)');
+    expect(blog).not.toContain('counterpartPosts');
   });
 
   test('renders localized CMS store information through the shared layout footer', () => {

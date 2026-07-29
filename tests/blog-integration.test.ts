@@ -29,4 +29,17 @@ describe('blog shell and homepage integration', () => {
     expect(blogs).toBeGreaterThan(brands);
     expect(partners).toBeGreaterThan(blogs);
   });
+
+  test('keeps homepage, index, and article blog content in primary SSR output', () => {
+    const routes = [
+      source('src/pages/[locale]/index.astro'),
+      source('src/pages/[locale]/blogs/index.astro'),
+      source('src/pages/[locale]/blogs/[slug].astro'),
+    ];
+
+    expect(routes[0]).toContain('<LatestBlogs');
+    expect(routes[1]).toContain('<BlogCard');
+    expect(routes[2]).toContain('<BlogArticle');
+    expect(routes.join('\n')).not.toContain('server:defer');
+  });
 });
