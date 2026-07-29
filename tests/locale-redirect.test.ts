@@ -48,6 +48,8 @@ describe('locale redirect decisions', () => {
       '/_image',
       '/api/enquiry',
       '/404',
+      '/503',
+      '/503/',
       '/favicon.svg',
       '/sitemap-index.xml',
     ]) {
@@ -88,6 +90,8 @@ describe('Astro locale middleware', () => {
     ['localized', '/en/contact/', 'GET'],
     ['asset', '/_astro/site.css', 'GET'],
     ['API', '/api/enquiry', 'GET'],
+    ['service-unavailable rewrite', '/503', 'GET'],
+    ['service-unavailable rewrite with slash', '/503/', 'GET'],
     ['file', '/favicon.svg', 'GET'],
     ['mutating', '/contact/', 'POST'],
   ])('delegates %s requests exactly to Astro rendering', async (_kind, pathname, method) => {
@@ -128,6 +132,14 @@ test('uses the Astro Cloudflare adapter for server output', async () => {
   expect(astroConfig).toContain("from '@astrojs/cloudflare'");
   expect(astroConfig).toContain("adapter: cloudflare({ imageService: 'passthrough' })");
   expect(astroConfig).toContain("output: 'server'");
+});
+
+test('uses manual Astro i18n routing so the custom middleware preserves unprefixed error rewrites', async () => {
+  const astroConfig = await read('../astro.config.mjs');
+
+  expect(astroConfig).toContain("routing: 'manual'");
+  expect(astroConfig).not.toContain('prefixDefaultLocale');
+  expect(astroConfig).not.toContain('redirectToDefaultLocale');
 });
 
 test('deploys the adapter-generated Worker and removes the custom Worker', async () => {

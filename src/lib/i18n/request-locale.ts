@@ -39,6 +39,8 @@ export function shouldRedirectToLocale(request: Request): boolean {
     || pathname.startsWith('/api/')
     || pathname === '/404'
     || pathname === '/404/'
+    || pathname === '/503'
+    || pathname === '/503/'
   ) return false;
 
   const lastSegment = pathname.split('/').filter(Boolean).at(-1) ?? '';
