@@ -56,11 +56,10 @@ image-transfer performance claims.
 
 ### GREEN
 
-- Fake Directus: 4 passed, 0 failed, 18 assertions. The final regression proves
+- Fake Directus: 4 passed, 0 failed, 21 expect/assertion calls. The final regression proves
   exact filter-field matching: `published_at` and composite fields cannot be
   mistaken for the stable `id` field, and English/Vietnamese blog details load
   through the production query/repository/mapper path.
-- Focused routing/SSR/CMS-state scope: 29 passed, 0 failed, 168 assertions.
 - Python Playwright harness: Python 3.13 syntax compilation passed.
 - Full Astro suite: 292 passed, 0 failed, 1,833 assertions across 38 files.
 
