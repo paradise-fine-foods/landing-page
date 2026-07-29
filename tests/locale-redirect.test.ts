@@ -58,6 +58,15 @@ describe('locale redirect decisions', () => {
     expect(shouldRedirectToLocale(request('/contact/', { method: 'POST' }))).toBe(false);
   });
 
+  test.each([
+    ['root GET', '/_server-islands', 'GET'],
+    ['descendant GET', '/_server-islands/related', 'GET'],
+    ['root HEAD', '/_server-islands', 'HEAD'],
+    ['descendant HEAD', '/_server-islands/related', 'HEAD'],
+  ])('bypasses Astro server-island %s requests', (_kind, pathname, method) => {
+    expect(shouldRedirectToLocale(request(pathname, { method }))).toBe(false);
+  });
+
   test('prefixes the locale while preserving path, slash, and query', () => {
     expect(localizedRedirectLocation(new URL('https://paradisefinefoods.com/'), 'en')).toBe('/en/');
     expect(localizedRedirectLocation(new URL('https://paradisefinefoods.com/contact/?source=hero'), 'vi')).toBe('/vi/contact/?source=hero');

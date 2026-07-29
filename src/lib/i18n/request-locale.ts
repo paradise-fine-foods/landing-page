@@ -33,6 +33,8 @@ export function shouldRedirectToLocale(request: Request): boolean {
   if (
     pathname === '/_astro'
     || pathname.startsWith('/_astro/')
+    || pathname === '/_server-islands'
+    || pathname.startsWith('/_server-islands/')
     || pathname === '/_image'
     || pathname.startsWith('/_image/')
     || pathname === '/api'
