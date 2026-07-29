@@ -62,14 +62,14 @@ image-transfer performance claims.
   through the production query/repository/mapper path.
 - Focused routing/SSR/CMS-state scope: 29 passed, 0 failed, 168 assertions.
 - Python Playwright harness: Python 3.13 syntax compilation passed.
-- Full Astro suite: 288 passed, 0 failed, 1,821 assertions across 38 files.
+- Full Astro suite: 292 passed, 0 failed, 1,833 assertions across 38 files.
 
 ## Exactly-once Worker boundary
 
 The final Cloudflare build exited 0 and verified 14 source routes and 15
-emitted Worker routes. `dist/server/entry.mjs` was 298,571 bytes with SHA-256
-`ADB50125F28E2861475547CE401671DB566C6AD83598673EA1DE35E01B54E7B1` and
-mtime `2026-07-29T06:32:34.2439487Z`; all three remained unchanged after the
+emitted Worker routes. `dist/server/entry.mjs` was 295,151 bytes with SHA-256
+`5D9D83319927FB07F696DEF1C97D3458AA3088F5ACA42DCE02207C83CBBE9E6B` and
+mtime `2026-07-29T07:57:13.787Z`; all three remained unchanged after the
 post-build mutation.
 
 Before mutation, the English/Vietnamese product and blog details all returned
@@ -81,10 +81,10 @@ explicit image dimensions. An unknown slug returned 404. With fake Directus
 outage enabled, the direct request returned 503 with `noindex` and
 `Cache-Control: no-store`.
 
-The Playwright matrix had one transient first-run timeout; its diagnostic
-network-idle check showed zero outstanding requests, and an unchanged rerun passed 4
-routes and 16 desktop/mobile, keyboard, no-JavaScript, reduced-motion, layout,
-image, initial-HTML, and SEO checks.
+The Playwright matrix passed exactly 4 routes and 16 desktop/mobile, keyboard,
+no-JavaScript, reduced-motion, layout, image, initial-HTML, and SEO checks. It
+produced exactly 8 uniquely named screenshots: one desktop and one mobile
+capture for each route.
 
 ## Deployment gates
 
@@ -96,17 +96,18 @@ image, initial-HTML, and SEO checks.
   deployment.
 - Live custom Directus hook and revalidation Flow: **BLOCKED** on the local
   fallback runtime because its extension loader did not load the hooks.
-- Lighthouse passed performance/SEO at 100/100 for both product and blog. The
-  product run carried a slow-load incomplete warning; the blog rerun had no
-  warning.
+- Lighthouse 13.4.1 passed performance/SEO at 100/100 for both product and
+  blog with no `runWarnings`. Both commands used quoted
+  `--only-categories="performance,seo"`, desktop 1200x800 emulation, and the
+  fake Directus asset whose PNG IHDR is 1200x800.
 - Revalidation authentication passed: the same-origin JSON bad secret returned
-  401 without disclosure. The configured local request returned 502/503 rather
-  than 204 because the Cloudflare purge could not complete locally, so the
-  successful purge remains **BLOCKED** until the configured deployment.
+  401 without disclosure. A correct-secret request was not sent with
+  placeholder local zone/token values, so successful purge remains **BLOCKED**
+  until the configured deployment.
 
 ## Verification
 
-- Full `bun test`: 288 passed, 0 failed, 1,821 assertions across 38 files.
+- Full `bun test`: 292 passed, 0 failed, 1,833 assertions across 38 files.
 - `bun run check`: 136 files, 0 errors, 0 warnings, 0 hints. Wrangler
   emitted its known sandbox-only log-write `EPERM` diagnostic; the check still
   exited successfully.

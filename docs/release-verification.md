@@ -154,17 +154,25 @@ environment data. Record an absent CLI as a blocked gate.
 ## Task 9 recorded local result
 
 The final build exited `0`, verified 14 source and 15 emitted Worker routes,
-and produced a 298,571-byte `dist/server/entry.mjs` with SHA-256
-`ADB50125F28E2861475547CE401671DB566C6AD83598673EA1DE35E01B54E7B1`.
-Its fingerprint and timestamp remained unchanged after the guarded mutation.
-Baseline and post-build English/Vietnamese product/blog details, fresh-key
-indexes, and sitemap passed without a rebuild; unknown content returned 404
-and an uncached outage returned a no-store/noindex 503.
+and produced a 295,151-byte `dist/server/entry.mjs` with SHA-256
+`5D9D83319927FB07F696DEF1C97D3458AA3088F5ACA42DCE02207C83CBBE9E6B`
+and mtime `2026-07-29T07:57:13.787Z`. Its byte count, hash, and timestamp
+remained unchanged after the guarded mutation.
 
-The unchanged Playwright rerun passed 4 routes/16 checks after one transient
-first-run timeout. Lighthouse product and blog performance/SEO scores were
-100/100; the product run recorded a slow-load incomplete warning and the blog
-run did not. Bad-secret revalidation returned 401. The configured local purge
-ended at 502/503, so successful purge remains a deployment-blocked gate rather
-than a pass. Docker and licensed Directus public reads were also unavailable
-locally and remain explicitly blocked.
+Before mutation, four English/Vietnamese product/blog details returned 200.
+After mutation, four new localized details, four fresh-cache-key indexes, and
+the sitemap returned 200 without a rebuild. Initial HTML contained localized
+footer data, exact canonical/reciprocal hreflang metadata, stable island
+fallbacks, and explicit image dimensions. Unknown content returned 404; an
+uncached outage returned a no-store/noindex 503. A direct server-island request
+returned 200 without a locale redirect, and a same-origin JSON request with a
+bad revalidation secret returned 401.
+
+Playwright passed exactly 4 routes/16 checks and produced exactly 8 uniquely
+named desktop/mobile screenshots. Lighthouse 13.4.1 ran with quoted
+`--only-categories="performance,seo"`, a 1200x800 desktop emulation, and the
+fake Directus 1200x800 PNG. Product and blog both scored 100 performance and
+100 SEO with no `runWarnings`. A correct-secret Cloudflare purge was not run
+with placeholder local credentials, so successful purge remains a deployment
+gate. Docker, licensed Directus anonymous reads, and live hook/Flow execution
+also remain explicitly blocked locally.
