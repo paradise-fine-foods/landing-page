@@ -86,7 +86,10 @@ describe('runtime cache behavior', () => {
   test('returns a cached response without rendering', async () => {
     const cache = new MemoryCache();
     cache.response = new Response('<main>Cached</main>', {
-      headers: { 'Content-Type': 'text/html' },
+      headers: {
+        'Content-Type': 'text/html',
+        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+      },
     });
     let renderCount = 0;
 
@@ -100,11 +103,14 @@ describe('runtime cache behavior', () => {
     );
 
     expect(await response.text()).toBe('<main>Cached</main>');
+    expect(response.headers.get('Cache-Control')).toBe('public, max-age=0');
+    expect(cache.response.headers.get('Cache-Control'))
+      .toBe('public, max-age=3600, stale-while-revalidate=86400');
     expect(renderCount).toBe(0);
     expect(cache.matches).toHaveLength(1);
   });
 
-  test('stores successful HTML with browser revalidation and Cloudflare stale revalidation', async () => {
+  test('stores edge policy while returning browser revalidation policy', async () => {
     const cache = new MemoryCache();
 
     const response = await withRuntimeCache(
@@ -116,17 +122,17 @@ describe('runtime cache behavior', () => {
     );
 
     const browserPolicy = response.headers.get('Cache-Control');
-    const edgePolicy = response.headers.get('CDN-Cache-Control');
+    const storedPolicy = cache.puts[0]?.response.headers.get('Cache-Control');
     expect(browserPolicy).toBe('public, max-age=0');
-    expect(edgePolicy).toContain('max-age=3600');
-    expect(edgePolicy).toContain('stale-while-revalidate=86400');
-    expect(edgePolicy).not.toContain('s-maxage');
-    expect(edgePolicy).not.toContain('must-revalidate');
-    expect(edgePolicy).not.toContain('proxy-revalidate');
+    expect(response.headers.get('CDN-Cache-Control')).toBeNull();
     expect(cache.puts).toHaveLength(1);
     expect(cache.puts[0]?.request.method).toBe('GET');
-    expect(cache.puts[0]?.response.headers.get('Cache-Control')).toBe(browserPolicy);
-    expect(cache.puts[0]?.response.headers.get('CDN-Cache-Control')).toBe(edgePolicy);
+    expect(storedPolicy).toContain('max-age=3600');
+    expect(storedPolicy).toContain('stale-while-revalidate=86400');
+    expect(storedPolicy).not.toContain('s-maxage');
+    expect(storedPolicy).not.toContain('must-revalidate');
+    expect(storedPolicy).not.toContain('proxy-revalidate');
+    expect(cache.puts[0]?.response.headers.get('CDN-Cache-Control')).toBeNull();
     expect(await cache.puts[0]?.response.text()).toBe('<main>Products</main>');
   });
 

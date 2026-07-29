@@ -37,10 +37,22 @@ function cacheKey(request: Request) {
   });
 }
 
-function withCacheHeaders(response: Response) {
+function withBrowserCacheHeaders(response: Response) {
   const headers = new Headers(response.headers);
   headers.set('Cache-Control', BROWSER_CACHE_CONTROL);
-  headers.set('CDN-Cache-Control', EDGE_CACHE_CONTROL);
+  headers.delete('CDN-Cache-Control');
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+function withStoredCacheHeaders(response: Response) {
+  const headers = new Headers(response.headers);
+  headers.set('Cache-Control', EDGE_CACHE_CONTROL);
+  headers.delete('CDN-Cache-Control');
 
   return new Response(response.body, {
     status: response.status,
@@ -120,7 +132,8 @@ export async function withRuntimeCache(
   const key = cacheKey(request);
   const cached = await cache?.match(key);
   if (cached) {
-    return request.method === 'HEAD' ? withoutBody(cached) : cached;
+    const browserResponse = withBrowserCacheHeaders(cached);
+    return request.method === 'HEAD' ? withoutBody(browserResponse) : browserResponse;
   }
 
   const response = await next();
@@ -128,10 +141,10 @@ export async function withRuntimeCache(
     return response.status >= 400 ? withNoStore(response) : response;
   }
 
-  const cacheableResponse = withCacheHeaders(response);
+  const browserResponse = withBrowserCacheHeaders(response);
   if (request.method === 'GET') {
-    await cache?.put(key, cacheableResponse.clone());
+    await cache?.put(key, withStoredCacheHeaders(browserResponse.clone()));
   }
 
-  return cacheableResponse;
+  return browserResponse;
 }
