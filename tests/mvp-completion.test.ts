@@ -42,11 +42,11 @@ describe('production completion contracts', () => {
     expect(plan).not.toContain('/vi/brands/nha-sua-mau/');
   });
 
-  test('wires generated-output and production-copy verifiers into the project', () => {
+  test('runs production contracts in the test suite without static-output build verifiers', () => {
     const packageJson = source('package.json');
-    expect(packageJson).toContain('tests/verify-built-mvp.ts');
-    expect(packageJson).toContain('tests/verify-built-living-design.ts');
-    expect(packageJson).toContain('tests/verify-built-route-manifest.ts');
+    expect(packageJson).toContain('"build": "astro build"');
+    expect(packageJson).toContain('"test": "bun test"');
+    expect(packageJson).not.toContain('tests/verify-built-mvp.ts');
     expect(existsSync(join(root, 'tests/verify-built-mvp.ts'))).toBe(true);
     expect(existsSync(join(root, 'tests/verify-built-living-design.ts'))).toBe(true);
     expect(existsSync(join(root, 'tests/verify-built-route-manifest.ts'))).toBe(true);

@@ -1,0 +1,11 @@
+export interface RuntimeEnv {
+  readonly DIRECTUS_URL: string;
+  readonly CMS_REVALIDATE_SECRET: string;
+  readonly CLOUDFLARE_ZONE_ID: string;
+  readonly CLOUDFLARE_PURGE_TOKEN: string;
+}
+
+export async function getRuntimeEnv(): Promise<RuntimeEnv> {
+  const { env } = await import('cloudflare:workers');
+  return env;
+}

@@ -6,12 +6,12 @@ const root = join(import.meta.dir, '..');
 const source = (path: string) => readFileSync(join(root, path), 'utf8');
 
 describe('homepage composition', () => {
-  test('lets Astro i18n own the root redirect', () => {
+  test('keeps the root page redirect-free while Astro middleware owns locale negotiation', () => {
     const rootPage = source('src/pages/index.astro');
 
     expect(existsSync(join(root, 'src/pages/index.astro'))).toBe(true);
     expect(rootPage).not.toContain('Astro.redirect');
-    expect(existsSync(join(root, 'src/middleware.ts'))).toBe(false);
+    expect(existsSync(join(root, 'src/middleware.ts'))).toBe(true);
   });
 
   test('site layout composes the shared shell around one main landmark', () => {

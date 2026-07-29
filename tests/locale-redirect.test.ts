@@ -1,11 +1,12 @@
 import { describe, expect, test } from 'bun:test';
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import {
   localizedRedirectLocation,
   preferredLocale,
   shouldRedirectToLocale,
 } from '../src/lib/i18n/request-locale';
-import worker from '../src/worker';
+import { onRequest } from '../src/middleware';
 
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
@@ -60,26 +61,25 @@ describe('locale redirect decisions', () => {
   });
 });
 
-describe('static-assets Worker', () => {
-  test('returns the complete locale redirect response without calling assets', async () => {
-    const delegated: Request[] = [];
+describe('Astro locale middleware', () => {
+  test('returns the complete locale redirect response without rendering', async () => {
+    let rendered = false;
     const request = new Request('https://paradisefinefoods.com/contact/?source=hero', {
       headers: { 'Accept-Language': 'vi-VN, en;q=0.8' },
     });
-    const response = await worker.fetch(request, {
-      ASSETS: {
-        fetch: async (assetRequest) => {
-          delegated.push(assetRequest);
-          return new Response('asset');
-        },
+    const response = await onRequest(
+      { request } as never,
+      async () => {
+        rendered = true;
+        return new Response('rendered');
       },
-    });
+    ) as Response;
 
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('/vi/contact/?source=hero');
     expect(response.headers.get('Vary')).toBe('Accept-Language');
     expect(response.headers.get('Cache-Control')).toBe('no-store');
-    expect(delegated).toEqual([]);
+    expect(rendered).toBe(false);
   });
 
   test.each([
@@ -88,22 +88,21 @@ describe('static-assets Worker', () => {
     ['API', '/api/enquiry', 'GET'],
     ['file', '/favicon.svg', 'GET'],
     ['mutating', '/contact/', 'POST'],
-  ])('delegates %s requests exactly to the asset binding', async (_kind, pathname, method) => {
-    const delegated: Request[] = [];
-    const assetResponse = new Response('asset', { status: 207 });
+  ])('delegates %s requests exactly to Astro rendering', async (_kind, pathname, method) => {
+    let renderCount = 0;
+    const renderedResponse = new Response('rendered', { status: 207 });
     const request = new Request(`https://paradisefinefoods.com${pathname}`, { method });
-    const response = await worker.fetch(request, {
-      ASSETS: {
-        fetch: async (assetRequest) => {
-          delegated.push(assetRequest);
-          return assetResponse;
-        },
+    const response = await onRequest(
+      { request } as never,
+      async () => {
+        renderCount += 1;
+        return renderedResponse;
       },
-    });
+    ) as Response;
 
-    expect(response).toBe(assetResponse);
+    expect(response).toBe(renderedResponse);
     expect(response.status).toBe(207);
-    expect(delegated).toEqual([request]);
+    expect(renderCount).toBe(1);
   });
 });
 
@@ -114,44 +113,29 @@ test('imports the canonical default locale', async () => {
   expect(localeSource).not.toMatch(/const defaultLocale[^=]*=\s*['"]en['"]/);
 });
 
-test('depends on Wrangler without the unused Astro Cloudflare adapter', async () => {
+test('uses the Astro Cloudflare adapter for server output', async () => {
   const packageJson = JSON.parse(await read('../package.json')) as {
     dependencies?: Record<string, string>;
   };
   const lockfile = await read('../bun.lock');
-
-  expect(packageJson.dependencies).not.toHaveProperty('@astrojs/cloudflare');
-  expect(lockfile).not.toContain('"@astrojs/cloudflare"');
-  expect(packageJson.dependencies).toHaveProperty('wrangler');
-});
-
-test('uses a static-assets Worker before static output handling', async () => {
-  const wrangler = await read('../wrangler.jsonc');
   const astroConfig = await read('../astro.config.mjs');
 
-  expect(wrangler).toContain('"main": "./src/worker.ts"');
-  expect(wrangler).toMatch(/"directory"\s*:\s*"\.\/dist"/);
-  expect(wrangler).toMatch(/"run_worker_first"\s*:\s*true/);
-  expect(astroConfig).not.toContain("from '@astrojs/cloudflare'");
-  expect(astroConfig).not.toContain('adapter: cloudflare');
+  expect(packageJson.dependencies).toHaveProperty('@astrojs/cloudflare');
+  expect(lockfile).toContain('"@astrojs/cloudflare"');
+  expect(packageJson.dependencies).toHaveProperty('wrangler');
+  expect(astroConfig).toContain("from '@astrojs/cloudflare'");
+  expect(astroConfig).toContain("adapter: cloudflare({ imageService: 'passthrough' })");
+  expect(astroConfig).toContain("output: 'server'");
 });
 
-test('binds the Worker and generated-output verifiers to Astro static output', async () => {
+test('deploys the adapter-generated Worker and removes the custom Worker', async () => {
   const wrangler = await read('../wrangler.jsonc');
-  const verifierPaths = [
-    '../tests/verify-built-cms-assets.ts',
-    '../tests/verify-built-living-design.ts',
-    '../tests/verify-built-catalog.ts',
-    '../tests/verify-built-brands.ts',
-    '../tests/verify-built-enquiry.ts',
-    '../tests/verify-built-mvp.ts',
-    '../tests/verify-built-route-manifest.ts',
-  ];
 
+  expect(wrangler).toContain('"main": "@astrojs/cloudflare/entrypoints/server"');
   expect(wrangler).toMatch(/"directory"\s*:\s*"\.\/dist"/);
-  for (const verifierPath of verifierPaths) {
-    expect(await read(verifierPath)).not.toContain('dist/client');
-  }
+  expect(wrangler).not.toContain('"run_worker_first"');
+
+  expect(existsSync(new URL('../src/worker.ts', import.meta.url))).toBe(false);
 });
 
 test('keeps Wrangler generated state out of project configuration', async () => {
