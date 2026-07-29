@@ -3,6 +3,8 @@ import type { EnquiryMode } from '../i18n/ui';
 
 export const contactModes = ['customer', 'supplier'] as const;
 export type ContactMode = (typeof contactModes)[number];
+export const isContactMode = (value: unknown): value is ContactMode =>
+  typeof value === 'string' && contactModes.includes(value as ContactMode);
 
 export interface EnquiryModeCopy {
   eyebrow: string;

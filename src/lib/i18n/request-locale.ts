@@ -28,6 +28,7 @@ export function shouldRedirectToLocale(request: Request): boolean {
   const { pathname } = new URL(request.url);
   const firstSegment = pathname.split('/').filter(Boolean)[0] ?? '';
   if (isLocale(firstSegment)) return false;
+  if (/^[a-z]{2}(?:-[a-z]{2})?$/i.test(firstSegment)) return false;
 
   if (
     pathname === '/_astro'
@@ -36,6 +37,8 @@ export function shouldRedirectToLocale(request: Request): boolean {
     || pathname.startsWith('/_image/')
     || pathname === '/api'
     || pathname.startsWith('/api/')
+    || pathname === '/404'
+    || pathname === '/404/'
   ) return false;
 
   const lastSegment = pathname.split('/').filter(Boolean).at(-1) ?? '';

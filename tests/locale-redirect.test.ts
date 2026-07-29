@@ -43,9 +43,11 @@ describe('locale redirect decisions', () => {
     for (const pathname of [
       '/en/',
       '/vi/contact/',
+      '/fr/',
       '/_astro/site.css',
       '/_image',
       '/api/enquiry',
+      '/404',
       '/favicon.svg',
       '/sitemap-index.xml',
     ]) {

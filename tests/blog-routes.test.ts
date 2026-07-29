@@ -12,14 +12,16 @@ describe('localized blog routes', () => {
     }
   });
 
-  test('keeps route pages behind CMS queries and reciprocal stable-ID maps', () => {
+  test('keeps route pages behind runtime CMS queries and reciprocal stable IDs', () => {
     const index = source('src/pages/[locale]/blogs/index.astro');
     const detail = source('src/pages/[locale]/blogs/[slug].astro');
 
     expect(index).toContain('getBlogPosts(locale)');
+    expect(detail).toContain('getBlogPostBySlug(locale, slug)');
     expect(detail).toContain('getLatestBlogPosts(locale, 3, post.id)');
-    expect(detail).toContain('buildBlogRouteMaps(englishPosts, vietnamesePosts)');
-    expect(detail).toContain('satisfies GetStaticPaths');
+    expect(detail).toContain('counterpartPosts.find(({ id }) => id === post.id)');
+    expect(detail).toContain("return Astro.rewrite('/404')");
+    expect(detail).not.toContain('getStaticPaths');
     expect(`${index}\n${detail}`).not.toMatch(/demo-data|demoBlogPosts/);
   });
 

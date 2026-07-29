@@ -1,17 +1,16 @@
 ---
-import type { InferGetStaticPropsType } from 'astro';
 import BlogCard from '../../../components/blogs/BlogCard.astro';
 import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { getBlogPosts } from '../../../lib/cms/queries';
 import { localizedPath } from '../../../lib/i18n/routes';
-import { counterpartLocale, getLocaleStaticPaths } from '../../../lib/i18n/static-paths';
+import { counterpartLocale } from '../../../lib/i18n/static-paths';
+import { isLocale } from '../../../lib/i18n/types';
 import { ui } from '../../../lib/i18n/ui';
 
-export const getStaticPaths = getLocaleStaticPaths;
-
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
-const { locale } = Astro.props as Props;
+const localeParam = Astro.params.locale;
+if (!localeParam || !isLocale(localeParam)) return Astro.rewrite('/404');
+const locale = localeParam;
 const copy = ui[locale];
 const posts = await getBlogPosts(locale);
 const pathname = localizedPath(locale, 'blogs');

@@ -38,8 +38,10 @@ describe('enquiry rendering contract', () => {
       expect(source).not.toContain('demo-data');
     }
     expect(modeSource).toContain("contactModes = ['customer', 'supplier'] as const");
-    expect(routes[1]).toContain('contactModes.map((mode)');
-    expect(routes[1]).toContain('params: { locale, mode }');
+    expect(modeSource).toContain('export const isContactMode');
+    expect(routes[1]).toContain('isContactMode(modeParam)');
+    expect(routes[1]).toContain("return Astro.rewrite('/404')");
+    expect(routes[1]).not.toContain('getStaticPaths');
   });
 
   test('uses flat, touch-safe fields with direct error feedback', async () => {

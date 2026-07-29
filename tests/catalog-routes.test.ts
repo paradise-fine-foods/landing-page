@@ -70,7 +70,7 @@ describe('localized product routes', () => {
     expect(catalogSource).toContain('<noscript>');
   });
 
-  test('uses typed static paths and only the vendor-neutral query boundary', () => {
+  test('uses validated runtime params and only the vendor-neutral query boundary', () => {
     const routeFiles = [
       'src/pages/[locale]/products/index.astro',
       'src/pages/[locale]/products/[slug].astro',
@@ -81,11 +81,12 @@ describe('localized product routes', () => {
       expect(route).not.toMatch(/demo-data|demoProducts|demoCategories|demoBrands/);
     }
     const detailRoute = routeFiles[1]!;
-    expect(detailRoute).toContain('satisfies GetStaticPaths');
-    expect(detailRoute).toContain('InferGetStaticParamsType');
-    expect(detailRoute).toContain('InferGetStaticPropsType');
-    expect(detailRoute).toContain('params: { locale, slug: product.slug }');
-    expect(detailRoute).toContain('buildProductRouteMaps(englishProducts, vietnameseProducts)');
+    expect(detailRoute).toContain('Astro.params');
+    expect(detailRoute).toContain('isLocale(localeParam)');
+    expect(detailRoute).toContain('getProductBySlug(locale, slug)');
+    expect(detailRoute).toContain('counterpartProducts.find(({ id }) => id === product.id)');
+    expect(detailRoute).toContain("return Astro.rewrite('/404')");
+    expect(detailRoute).not.toContain('getStaticPaths');
   });
 
   test('keeps catalog controls compact and reserves orange for product facts', () => {

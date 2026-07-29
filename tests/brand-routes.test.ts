@@ -77,7 +77,7 @@ describe('localized brand routes', () => {
     expect(first.every((brand, index) => brand !== second[index])).toBe(true);
   });
 
-  test('keeps routes behind typed CMS queries and normalized static props', () => {
+  test('keeps routes behind typed runtime CMS queries and validated params', () => {
     const routes = [
       'src/pages/[locale]/brands/index.astro',
       'src/pages/[locale]/brands/[slug].astro',
@@ -88,11 +88,12 @@ describe('localized brand routes', () => {
       expect(route).not.toMatch(/demo-data|demoProducts|demoCategories|demoBrands/);
     }
     const detailRoute = routes[1]!;
-    expect(detailRoute).toContain('satisfies GetStaticPaths');
-    expect(detailRoute).toContain('InferGetStaticParamsType');
-    expect(detailRoute).toContain('InferGetStaticPropsType');
-    expect(detailRoute).toContain('params: { locale, slug: brand.slug }');
-    expect(detailRoute).toContain('buildBrandRouteMaps(englishBrands, vietnameseBrands)');
+    expect(detailRoute).toContain('Astro.params');
+    expect(detailRoute).toContain('isLocale(localeParam)');
+    expect(detailRoute).toContain('getBrandBySlug(locale, slug)');
+    expect(detailRoute).toContain('counterpartBrands.find(({ id }) => id === brand.id)');
+    expect(detailRoute).toContain("return Astro.rewrite('/404')");
+    expect(detailRoute).not.toContain('getStaticPaths');
   });
 
   test('centralizes locale copy and preserves accessible detail structure', () => {

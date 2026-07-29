@@ -62,17 +62,29 @@ Final focused verification:
 
 ## Final verification
 
-- `bun test`: 229 pass, 0 fail, 1389 assertions.
+- `bun test`: 231 pass, 0 fail, 1477 assertions.
 - `bun run check`: 0 errors, 0 warnings, 0 hints.
 - `bun run build`: completed successfully with the Cloudflare server adapter.
 - Feature-scoped `git diff --check`: clean.
 
+## Review fix
+
+The first independent review found a critical SSR regression: server-mode Astro
+does not execute `getStaticPaths()` for on-demand routes, while the localized
+pages still read their locale and content from `Astro.props`.
+
+The fix removes `getStaticPaths()` and `Astro.props` from all nine localized
+routes. They now validate `Astro.params`, perform their existing query-boundary
+lookups at request time, resolve localized counterparts by stable record ID,
+and rewrite invalid locales, slugs, and enquiry modes to the custom 404 route.
+The new SSR route regression suite went from 0/2 to 2/2 with 53 assertions.
+Focused affected-route verification passes 6/6.
+
 ## Concerns
 
-- The SSR build reports that the existing localized pages' `getStaticPaths()`
-  exports are ignored in server mode. Task 4 intentionally did not begin the
-  page-level Directus integration; later route tasks will replace those static
-  path contracts with runtime CMS resolution.
+- A local HTTP smoke attempt was blocked by Wrangler's sandboxed registry
+  write (`EPERM`). Source regression tests, the full suite, Astro diagnostics,
+  and the Cloudflare adapter build all pass.
 - The exact repository-wide `git diff --check` is not clean because the
   preserved, unrelated `.superpowers/sdd/task-2-report.md` worktree change has
   trailing whitespace on line 212. Task 4 does not modify or stage the existing
@@ -81,3 +93,5 @@ Final focused verification:
 ## Commit
 
 Subject: `feat: run astro on cloudflare ssr`
+
+Review fix subject: `fix: preserve localized pages in ssr`

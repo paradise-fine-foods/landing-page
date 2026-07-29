@@ -51,7 +51,7 @@ test('maps each locale to its reciprocal counterpart', () => {
   expect(counterpartLocale('vi')).toBe('en');
 });
 
-test('consolidates every localized page shape under one static locale tree', () => {
+test('consolidates every localized page shape under one runtime locale tree', () => {
   const localizedPages = [
     'index.astro',
     'products/index.astro',
@@ -67,13 +67,19 @@ test('consolidates every localized page shape under one static locale tree', () 
   for (const page of localizedPages) {
     const path = join(import.meta.dir, '..', 'src', 'pages', '[locale]', page);
     expect(existsSync(path)).toBe(true);
-    if (existsSync(path)) expect(readFileSync(path, 'utf8')).toContain('getStaticPaths');
+    if (existsSync(path)) {
+      const route = readFileSync(path, 'utf8');
+      expect(route).toContain('Astro.params');
+      expect(route).toContain('isLocale');
+      expect(route).not.toContain('getStaticPaths');
+      expect(route).not.toContain('Astro.props');
+    }
     expect(existsSync(join(import.meta.dir, '..', 'src', 'pages', 'en', page))).toBe(false);
     expect(existsSync(join(import.meta.dir, '..', 'src', 'pages', 'vi', page))).toBe(false);
   }
 });
 
-test('infers trusted locale props on every locale-only static page', () => {
+test('validates request locale params on every locale-only server page', () => {
   for (const page of [
     'index.astro',
     'products/index.astro',
@@ -83,9 +89,9 @@ test('infers trusted locale props on every locale-only static page', () => {
   ]) {
     const path = join(import.meta.dir, '..', 'src', 'pages', '[locale]', page);
     const route = readFileSync(path, 'utf8');
-    expect(route).toContain("import type { InferGetStaticPropsType } from 'astro'");
-    expect(route).toContain('type Props = InferGetStaticPropsType<typeof getStaticPaths>');
-    expect(route).toContain('Astro.props as Props');
+    expect(route).toContain('const localeParam = Astro.params.locale');
+    expect(route).toContain('isLocale(localeParam)');
+    expect(route).toContain("return Astro.rewrite('/404')");
   }
 });
 
