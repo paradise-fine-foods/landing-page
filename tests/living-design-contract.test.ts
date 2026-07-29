@@ -262,7 +262,7 @@ describe('Precision Supply System identity', () => {
       ['src/components/sections/ChannelPathways.astro', '.channel-pathways__links strong'],
       ['src/components/sections/ServiceProof.astro', '.service-proof__editorial strong'],
       ['src/components/blogs/BlogArticle.astro', '.blog-article__standfirst'],
-      ['src/components/blogs/BlogArticle.astro', '.blog-article__body section:first-child p:first-child'],
+      ['src/components/blogs/BlogArticle.astro', '.blog-article__body :global(p:first-child)'],
       ['src/pages/404.astro', '.not-found__art strong'],
     ] as const) {
       const declarations = cssRule(source(file), selector);

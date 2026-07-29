@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
-import { demoBlogPosts } from '../src/lib/cms/demo-data';
-import { getBlogPostBySlug, getBlogPosts, getLatestBlogPosts } from '../src/lib/cms/queries';
+import { demoBlogPosts } from './fixtures/demo-content';
+import { getBlogPostBySlug, getBlogPosts, getLatestBlogPosts } from './fixtures/directus';
 import { buildBlogRouteMaps, blogDetailPath, findBlogRoute } from '../src/lib/blogs/routes';
 import { validateDemoBlogPosts } from '../src/lib/blogs/validation';
 
@@ -13,8 +13,8 @@ describe('bilingual blog data', () => {
       'temperature-discipline', 'cream-for-service', 'focused-dairy-house', 'consistent-lamination',
     ]);
     expect(vi.map(({ id }) => id)).toEqual(en.map(({ id }) => id));
-    expect(en.every((post) => post.sections.length > 0)).toBe(true);
-    expect(vi.every((post) => post.sections.length > 0)).toBe(true);
+    expect(en.every((post) => post.bodyHtml.length > 0)).toBe(true);
+    expect(vi.every((post) => post.bodyHtml.length > 0)).toBe(true);
   });
 
   test('stores the blog Vietnamese content as proper UTF-8 text', () => {

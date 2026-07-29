@@ -29,6 +29,7 @@ export interface Category {
   name: string;
   description: string;
   image: ImageAsset;
+  counterpart?: LocalizedCounterpart;
 }
 
 export interface Brand {
@@ -39,6 +40,20 @@ export interface Brand {
   origin: string;
   image: ImageAsset;
   accent: BrandAccent;
+  counterpart?: LocalizedCounterpart;
+}
+
+export interface LocalizedCounterpart {
+  id: string;
+  locale: Locale;
+  slug: string;
+}
+
+export interface LocalizedTaxonomyOption {
+  id: string;
+  slug: string;
+  name: string;
+  description: string;
 }
 
 export interface ProductStorage {
@@ -57,15 +72,26 @@ export interface Product {
   origin: string;
   applications: string[];
   audienceChannels: string[];
+  applicationOptions: LocalizedTaxonomyOption[];
+  audienceChannelOptions: LocalizedTaxonomyOption[];
   packFormat: string;
   storage: ProductStorage;
   benefits: string[];
   featured: boolean;
+  counterpart?: LocalizedCounterpart;
+}
+
+export interface StoreInformation {
+  address: string;
+  email: string;
+  phone: string;
+  footerCopy: string;
 }
 
 export interface GlobalSettings {
   siteName: string;
   siteDescription: string;
+  store: StoreInformation;
   partners: BrandingAsset[];
 }
 
@@ -91,11 +117,6 @@ export interface ProductQuery {
   application?: string[];
 }
 
-export interface BlogSection {
-  heading?: string;
-  paragraphs: string[];
-}
-
 export interface BlogPost {
   id: string;
   slug: string;
@@ -105,5 +126,6 @@ export interface BlogPost {
   readingMinutes: number;
   category: string;
   image: ImageAsset;
-  sections: BlogSection[];
+  bodyHtml: string;
+  counterpart?: LocalizedCounterpart;
 }

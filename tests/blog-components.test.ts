@@ -45,7 +45,8 @@ describe('blog components', () => {
     expect(latest).toContain('data-latest-blogs');
     expect(article).toContain('data-blog-article');
     expect(article).toContain('<h1>{post.title}</h1>');
-    expect(article).toContain('section.heading && <h2>');
+    expect(article).toContain('set:html={post.bodyHtml}');
+    expect(article).not.toContain('post.sections');
     expect(article).not.toContain('<script');
   });
 

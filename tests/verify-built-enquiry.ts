@@ -1,4 +1,4 @@
-import { getProducts } from '../src/lib/cms/queries';
+import { getProducts } from './fixtures/directus';
 
 const pages = [
   { locale: 'en' as const, file: 'dist/en/contact/index.html', path: '/en/contact/' },

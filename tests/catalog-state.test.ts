@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 
 import { deriveCatalogState } from '../src/lib/catalog/catalog-state';
 import { buildProductSearchText, filterProducts } from '../src/lib/catalog/filter-products';
-import { getProducts } from '../src/lib/cms/queries';
+import { getProducts } from './fixtures/directus';
 import type { ProductQuery } from '../src/lib/cms/types';
 import { ui } from '../src/lib/i18n/ui';
 

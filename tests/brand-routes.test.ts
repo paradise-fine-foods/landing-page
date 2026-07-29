@@ -2,7 +2,8 @@ import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getBrandBySlug, getBrands, normalizeBrandAccent } from '../src/lib/cms/queries';
+import { normalizeBrandAccent } from '../src/lib/cms/queries';
+import { getBrandBySlug, getBrands } from './fixtures/directus';
 import { brandAccentTokens } from '../src/lib/cms/types';
 import {
   brandDetailPath,

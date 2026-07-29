@@ -7,7 +7,7 @@ import {
   demoFeaturedContent,
   demoGlobalSettings,
   demoProducts,
-} from '../src/lib/cms/demo-data';
+} from './fixtures/demo-content';
 import { ui } from '../src/lib/i18n/ui';
 
 const root = join(import.meta.dir, '..');

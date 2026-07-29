@@ -1,15 +1,19 @@
-import type { BrandAccent, LocalizedSlug, LocalizedText } from './types';
-import editorialTableSrc from '../../assets/demo/editorial-table.svg?no-inline';
-import livingHeroProductSrc from '../../assets/demo/living-hero-product.svg?no-inline';
-import productArtSrc from '../../assets/demo/product-art.svg?no-inline';
-import megaMartSrc from '../../assets/brand/paradise/mega-mart.jpeg?no-inline';
-import winmartSrc from '../../assets/brand/paradise/winmart.png?no-inline';
-import aeonMallSrc from '../../assets/brand/paradise/aeon-mall.png?no-inline';
-import emartSrc from '../../assets/brand/paradise/emart.png?no-inline';
-import lotteMartSrc from '../../assets/brand/paradise/lotte-mart.png?no-inline';
-import bachHoaXanhSrc from '../../assets/brand/paradise/bach-hoa-xanh.png?no-inline';
-import satraSrc from '../../assets/brand/paradise/satra.png?no-inline';
-import beeMartSrc from '../../assets/brand/paradise/beemart.png?no-inline';
+import type {
+  BrandAccent,
+  LocalizedSlug,
+  LocalizedText,
+} from '../../src/lib/cms/types';
+import editorialTableSrc from '../../src/assets/demo/editorial-table.svg?no-inline';
+import livingHeroProductSrc from '../../src/assets/demo/living-hero-product.svg?no-inline';
+import productArtSrc from '../../src/assets/demo/product-art.svg?no-inline';
+import megaMartSrc from '../../src/assets/brand/paradise/mega-mart.jpeg?no-inline';
+import winmartSrc from '../../src/assets/brand/paradise/winmart.png?no-inline';
+import aeonMallSrc from '../../src/assets/brand/paradise/aeon-mall.png?no-inline';
+import emartSrc from '../../src/assets/brand/paradise/emart.png?no-inline';
+import lotteMartSrc from '../../src/assets/brand/paradise/lotte-mart.png?no-inline';
+import bachHoaXanhSrc from '../../src/assets/brand/paradise/bach-hoa-xanh.png?no-inline';
+import satraSrc from '../../src/assets/brand/paradise/satra.png?no-inline';
+import beeMartSrc from '../../src/assets/brand/paradise/beemart.png?no-inline';
 
 interface DemoImageAsset {
   src: string;

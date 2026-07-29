@@ -23,9 +23,7 @@ const copy = ui[locale].blog;
     </dl>
   </header>
   <figure class="blog-article__visual"><img src={post.image.src} width={post.image.width} height={post.image.height} alt={post.image.alt} /></figure>
-  <div class="blog-article__body">
-    {post.sections.map((section) => <section>{section.heading && <h2>{section.heading}</h2>}{section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}</section>)}
-  </div>
+  <div class="blog-article__body" set:html={post.bodyHtml}></div>
 </article>
 
 <style>
@@ -39,7 +37,6 @@ const copy = ui[locale].blog;
   .blog-article__visual { aspect-ratio: 16 / 8; background: var(--color-cold-paper); }
   .blog-article__visual img { block-size: 100%; inline-size: 100%; object-fit: cover; }
   .blog-article__body { display: grid; gap: var(--space-7); margin-inline: auto; max-inline-size: 46rem; padding-block: var(--space-8) var(--space-9); }
-  .blog-article__body section { display: grid; gap: var(--space-4); }
-  .blog-article__body section:first-child p:first-child { font-family: var(--font-body); font-size: var(--text-lg); }
+  .blog-article__body :global(p:first-child) { font-family: var(--font-body); font-size: var(--text-lg); }
   @media (max-width: 42rem) { .blog-article__header { grid-template-columns: minmax(0, 1fr); } .blog-article__label { justify-self: start; } .blog-article__visual { aspect-ratio: 4 / 3; } }
 </style>

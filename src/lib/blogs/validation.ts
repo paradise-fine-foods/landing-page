@@ -1,7 +1,17 @@
-import type { DemoBlogPost } from '../cms/demo-data';
 import { locales, type Locale } from '../i18n/types';
 
 type UnknownRecord = Record<string, unknown>;
+type DemoBlogPost = {
+  id: string;
+  publishedAt: string;
+  readingMinutes: number;
+  image: unknown;
+  slug: unknown;
+  title: unknown;
+  excerpt: unknown;
+  category: unknown;
+  sections: unknown;
+};
 
 const fail = (id: string, message: string): never => {
   throw new Error(`Invalid blog post "${id}": ${message}`);
@@ -49,10 +59,10 @@ export const validateDemoBlogPosts = (posts: readonly DemoBlogPost[]): void => {
       || Number.isNaN(parsedDate.valueOf())
       || parsedDate.toISOString().slice(0, 10) !== post.publishedAt) fail(id, 'publishedAt must be a real YYYY-MM-DD date');
     if (!Number.isInteger(post.readingMinutes) || post.readingMinutes <= 0) fail(id, 'readingMinutes must be a positive integer');
-    if (!isRecord(post.image)
-      || !isNonBlankString(post.image.src)
-      || typeof post.image.width !== 'number' || !Number.isFinite(post.image.width) || post.image.width <= 0
-      || typeof post.image.height !== 'number' || !Number.isFinite(post.image.height) || post.image.height <= 0) fail(id, 'image is required');
+    const image = isRecord(post.image) ? post.image : fail(id, 'image is required');
+    if (!isNonBlankString(image.src)
+      || typeof image.width !== 'number' || !Number.isFinite(image.width) || image.width <= 0
+      || typeof image.height !== 'number' || !Number.isFinite(image.height) || image.height <= 0) fail(id, 'image is required');
 
     for (const locale of locales) {
       const slug = localizedText(id, post.slug, locale, 'slug');
@@ -60,14 +70,18 @@ export const validateDemoBlogPosts = (posts: readonly DemoBlogPost[]): void => {
       localizedText(id, post.title, locale, 'title');
       localizedText(id, post.excerpt, locale, 'excerpt');
       localizedText(id, post.category, locale, 'category');
-      localizedText(id, post.image.alt, locale, 'imageAlt');
+      localizedText(id, image.alt, locale, 'imageAlt');
       if (slugs[locale].has(slug)) fail(id, `${locale}.slug must be unique`);
       slugs[locale].add(slug);
 
-      if (!isRecord(post.sections) || !Array.isArray(post.sections[locale]) || post.sections[locale].length === 0) {
-        fail(id, `${locale}.sections must not be empty`);
-      }
-      for (const section of post.sections[locale]) {
+      const localizedSections = isRecord(post.sections)
+        ? post.sections[locale]
+        : undefined;
+      const sections = Array.isArray(localizedSections)
+        ? localizedSections
+        : fail(id, `${locale}.sections must not be empty`);
+      if (sections.length === 0) fail(id, `${locale}.sections must not be empty`);
+      for (const section of sections) {
         if (!isRecord(section)) fail(id, `${locale}.section is required`);
         if (section.heading !== undefined && !isNonBlankString(section.heading)) fail(id, `${locale}.section heading must not be blank`);
         if (!Array.isArray(section.paragraphs)

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { blogDetailPath } from '../src/lib/blogs/routes';
-import { getBlogPosts, getLatestBlogPosts } from '../src/lib/cms/queries';
+import { getBlogPosts, getLatestBlogPosts } from './fixtures/directus';
 import type { BlogPost } from '../src/lib/cms/types';
 import { ui } from '../src/lib/i18n/ui';
 
@@ -37,12 +37,12 @@ export const extractBlogArticle = (html: string): string =>
 
 export const assertLocalizedArticleOutput = (
   html: string,
-  post: Pick<BlogPost, 'title' | 'excerpt' | 'sections'>,
+  post: Pick<BlogPost, 'title' | 'excerpt' | 'bodyHtml'>,
 ): void => {
   const scoped = extractBlogArticle(html);
   assert.ok(scoped, 'blog article is missing');
-  for (const text of [post.title, post.excerpt, ...post.sections.flatMap((section) => [section.heading, ...section.paragraphs])]) {
-    if (text) assert.ok(scoped.includes(text), `localized article content is missing ${text}`);
+  for (const text of [post.title, post.excerpt, post.bodyHtml]) {
+    assert.ok(scoped.includes(text), `localized article content is missing ${text}`);
   }
 };
 

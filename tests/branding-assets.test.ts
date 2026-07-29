@@ -11,17 +11,20 @@ describe('Paradise branding assets', () => {
     expect(config).toContain('service: passthroughImageService()');
   });
 
-  test('keeps local provenance-backed partner assets in the typed CMS boundary', async () => {
+  test('keeps provenance-backed partner fixtures test-only and maps Directus assets', async () => {
     const types = await read('../src/lib/cms/types.ts');
-    const data = await read('../src/lib/cms/demo-data.ts');
+    const data = await read('./fixtures/demo-content.ts');
     const queries = await read('../src/lib/cms/queries.ts');
+    const mappers = await read('../src/lib/cms/directus/mappers.ts');
     const sources = await read('../src/assets/brand/paradise/SOURCES.md');
 
     expect(types).toContain('interface BrandingAsset');
     expect(types).toContain('sourceUrl: string');
     expect(data).toContain('demoBrandingAssets');
     expect(data).toContain("'mega-mart'");
-    expect(queries).toContain('partners: demoBrandingAssets.map');
+    expect(queries).toContain('repository.getPartners(locale)');
+    expect(queries).not.toContain('demoBrandingAssets');
+    expect(mappers).toContain('mapPartner');
     expect(sources).toContain('Source URL');
     expect(sources).toContain('paradisefinefoods.com/wp-content/uploads');
   });

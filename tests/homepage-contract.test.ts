@@ -2,7 +2,7 @@ import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ui } from '../src/lib/i18n/ui';
-import { getProducts } from '../src/lib/cms/queries';
+import { getProducts } from './fixtures/directus';
 
 const root = join(import.meta.dir, '..');
 const source = (path: string) => readFileSync(join(root, path), 'utf8');

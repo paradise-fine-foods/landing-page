@@ -35,7 +35,7 @@ describe('built blog verifier helpers', () => {
     const post = {
       title: 'Localized title',
       excerpt: 'Localized excerpt',
-      sections: [{ paragraphs: ['Opening paragraph'] }, { heading: 'Localized heading', paragraphs: ['Detailed paragraph'] }],
+      bodyHtml: '<p>Opening paragraph</p><h2>Localized heading</h2><p>Detailed paragraph</p>',
     };
     const html = '<article data-blog-article><h1>Localized title</h1><p>Localized excerpt</p><p>Opening paragraph</p><h2>Localized heading</h2><p>Detailed paragraph</p></article>';
     expect(() => assertLocalizedArticleOutput(html, post)).not.toThrow();

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { getProductCardMetadata } from '../src/lib/catalog/product-card';
-import { getProducts } from '../src/lib/cms/queries';
+import { getProducts } from './fixtures/directus';
 import { ui } from '../src/lib/i18n/ui';
 
 const root = join(import.meta.dir, '..');

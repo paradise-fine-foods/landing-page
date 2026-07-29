@@ -1,208 +1,144 @@
 import type { Locale } from '../i18n/types';
 import { filterProducts } from '../catalog/filter-products';
+import { getProductionCmsConnection } from './directus/client';
 import {
-  demoBrands,
-  demoBrandingAssets,
-  demoBlogPosts,
-  demoCategories,
-  demoFeaturedContent,
-  demoGlobalSettings,
-  demoProducts,
-  type DemoBrand,
-  type DemoBlogPost,
-  type DemoCategory,
-  type DemoProduct,
-} from './demo-data';
+  mapBlogPost,
+  mapBrand,
+  mapCategory,
+  mapFeaturedContent,
+  mapGlobalSettings,
+  mapProduct,
+} from './directus/mappers';
+import type { CmsRepository } from './directus/repository';
 import type {
-  Brand,
-  BrandAccent,
   BlogPost,
+  Brand,
   Category,
   FeaturedContent,
   GlobalSettings,
-  BrandingAsset,
-  ImageAsset,
   Product,
   ProductQuery,
 } from './types';
-import { brandAccentTokens } from './types';
-import { validateDemoBlogPosts } from '../blogs/validation';
+
+export { normalizeBrandAccent } from './directus/mappers';
+export { CmsDataError, CmsUnavailableError } from './directus/errors';
 export { submitEnquiry } from '../enquiry/submit';
 export { EnquiryValidationError } from '../enquiry/types';
 export type { EnquiryErrors, EnquiryInput, EnquirySuccess } from '../enquiry/types';
 
-type DemoImage = DemoProduct['image'];
+export interface CmsQueries {
+  getGlobalSettings(locale: Locale): Promise<GlobalSettings>;
+  getCategories(locale: Locale): Promise<Category[]>;
+  getProducts(locale: Locale, query?: ProductQuery): Promise<Product[]>;
+  getProductBySlug(locale: Locale, slug: string): Promise<Product | undefined>;
+  getBlogPosts(locale: Locale): Promise<BlogPost[]>;
+  getLatestBlogPosts(
+    locale: Locale,
+    limit: number,
+    excludeId?: string,
+  ): Promise<BlogPost[]>;
+  getBlogPostBySlug(locale: Locale, slug: string): Promise<BlogPost | undefined>;
+  getBrands(locale: Locale): Promise<Brand[]>;
+  getBrandBySlug(locale: Locale, slug: string): Promise<Brand | undefined>;
+  getFeaturedContent(locale: Locale): Promise<FeaturedContent>;
+}
 
-const defaultBrandAccent: BrandAccent = 'butter';
-
-validateDemoBlogPosts(demoBlogPosts);
-
-export const normalizeBrandAccent = (value: unknown): BrandAccent =>
-  typeof value === 'string' && brandAccentTokens.includes(value as BrandAccent)
-    ? value as BrandAccent
-    : defaultBrandAccent;
-
-const localizeImage = (image: DemoImage, locale: Locale): ImageAsset => ({
-  src: image.src,
-  width: image.width,
-  height: image.height,
-  alt: image.alt[locale],
+export const createCmsQueries = (
+  repository: CmsRepository,
+  directusUrl: string,
+): CmsQueries => ({
+  getGlobalSettings: async (locale) => {
+    const [settings, partners] = await Promise.all([
+      repository.getSiteSettings(locale),
+      repository.getPartners(locale),
+    ]);
+    return mapGlobalSettings(settings, partners, locale, directusUrl);
+  },
+  getCategories: async (locale) =>
+    (await repository.getCategories(locale))
+      .map((category) => mapCategory(category, locale, directusUrl)),
+  getProducts: async (locale, query = {}) =>
+    filterProducts(
+      (await repository.getProducts(locale))
+        .map((product) => mapProduct(product, locale, directusUrl)),
+      query,
+    ),
+  getProductBySlug: async (locale, slug) => {
+    const product = await repository.getProductBySlug(locale, slug);
+    return product ? mapProduct(product, locale, directusUrl) : undefined;
+  },
+  getBlogPosts: async (locale) =>
+    (await repository.getBlogPosts(locale))
+      .map((post) => mapBlogPost(post, locale, directusUrl)),
+  getLatestBlogPosts: async (locale, limit, excludeId) =>
+    (await repository.getLatestBlogPosts(locale, limit, excludeId))
+      .map((post) => mapBlogPost(post, locale, directusUrl)),
+  getBlogPostBySlug: async (locale, slug) => {
+    const post = await repository.getBlogPostBySlug(locale, slug);
+    return post ? mapBlogPost(post, locale, directusUrl) : undefined;
+  },
+  getBrands: async (locale) =>
+    (await repository.getBrands(locale))
+      .map((brand) => mapBrand(brand, locale, directusUrl)),
+  getBrandBySlug: async (locale, slug) => {
+    const brand = await repository.getBrandBySlug(locale, slug);
+    return brand ? mapBrand(brand, locale, directusUrl) : undefined;
+  },
+  getFeaturedContent: async (locale) =>
+    mapFeaturedContent(await repository.getHomePage(locale), locale, directusUrl),
 });
 
-const localizeCategory = (category: DemoCategory, locale: Locale): Category => ({
-  id: category.id,
-  slug: category.slug[locale],
-  name: category.name[locale],
-  description: category.description[locale],
-  image: localizeImage(category.image, locale),
-});
+let productionQueriesPromise: Promise<CmsQueries> | undefined;
 
-const localizeBrand = (brand: DemoBrand, locale: Locale): Brand => ({
-  id: brand.id,
-  slug: brand.slug[locale],
-  name: brand.name[locale],
-  description: brand.description[locale],
-  origin: brand.origin[locale],
-  image: localizeImage(brand.image, locale),
-  accent: normalizeBrandAccent(brand.accent),
-});
-
-const localizeProduct = (product: DemoProduct, locale: Locale): Product => {
-  const brand = demoBrands.find((item) => item.id === product.brandId);
-  const categories = product.categoryIds.map((categoryId) =>
-    demoCategories.find((item) => item.id === categoryId),
-  );
-
-  if (!brand || categories.some((category) => !category)) {
-    throw new Error(`Invalid catalog references for product: ${product.id}`);
-  }
-
-  return {
-    id: product.id,
-    slug: product.slug[locale],
-    name: product.name[locale],
-    description: product.description[locale],
-    image: localizeImage(product.image, locale),
-    brand: localizeBrand(brand, locale),
-    categories: categories.map((category) => localizeCategory(category!, locale)),
-    origin: product.origin[locale],
-    applications: [...product.applications],
-    audienceChannels: [...product.audienceChannels],
-    packFormat: product.packFormat[locale],
-    storage: {
-      label: product.storage.label[locale],
-      temperature: product.storage.temperature,
-    },
-    benefits: [...product.benefits[locale]],
-    featured: product.featured,
-  };
+const productionQueries = (): Promise<CmsQueries> => {
+  productionQueriesPromise ??= getProductionCmsConnection()
+    .then(({ repository, directusUrl }) => createCmsQueries(repository, directusUrl));
+  return productionQueriesPromise;
 };
 
-const localizeBlogPost = (post: DemoBlogPost, locale: Locale): BlogPost => ({
-  id: post.id,
-  slug: post.slug[locale],
-  title: post.title[locale],
-  excerpt: post.excerpt[locale],
-  publishedAt: post.publishedAt,
-  readingMinutes: post.readingMinutes,
-  category: post.category[locale],
-  image: localizeImage(post.image, locale),
-  sections: post.sections[locale].map((section) => ({
-    ...(section.heading ? { heading: section.heading } : {}),
-    paragraphs: [...section.paragraphs],
-  })),
-});
-
-export const getGlobalSettings = async (locale: Locale): Promise<GlobalSettings> => ({
-  siteName: demoGlobalSettings.siteName[locale],
-  siteDescription: demoGlobalSettings.siteDescription[locale],
-  partners: demoBrandingAssets.map((asset): BrandingAsset => ({
-    id: asset.id,
-    src: asset.src,
-    width: asset.width,
-    height: asset.height,
-    alt: asset.alt[locale],
-    sourceUrl: asset.sourceUrl,
-    group: asset.group,
-  })),
-});
+export const getGlobalSettings = async (locale: Locale): Promise<GlobalSettings> =>
+  (await productionQueries()).getGlobalSettings(locale);
 
 export const getCategories = async (locale: Locale): Promise<Category[]> =>
-  demoCategories.map((category) => localizeCategory(category, locale));
+  (await productionQueries()).getCategories(locale);
 
 export const getProducts = async (
   locale: Locale,
   query: ProductQuery = {},
-): Promise<Product[]> =>
-  filterProducts(
-    demoProducts.map((product) => localizeProduct(product, locale)),
-    query,
-  );
+): Promise<Product[]> => (await productionQueries()).getProducts(locale, query);
 
 export const getProductBySlug = async (
   locale: Locale,
   slug: string,
-): Promise<Product | undefined> => {
-  const product = demoProducts.find((item) => item.slug[locale] === slug);
-  return product ? localizeProduct(product, locale) : undefined;
-};
+): Promise<Product | undefined> =>
+  (await productionQueries()).getProductBySlug(locale, slug);
 
 export const getBlogPosts = async (locale: Locale): Promise<BlogPost[]> =>
-  demoBlogPosts.map((post) => localizeBlogPost(post, locale))
-    .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
+  (await productionQueries()).getBlogPosts(locale);
 
 export const getLatestBlogPosts = async (
   locale: Locale,
   limit: number,
   excludeId?: string,
-): Promise<BlogPost[]> => (await getBlogPosts(locale))
-  .filter(({ id }) => id !== excludeId)
-  .slice(0, Math.max(0, limit));
+): Promise<BlogPost[]> =>
+  (await productionQueries()).getLatestBlogPosts(locale, limit, excludeId);
 
 export const getBlogPostBySlug = async (
   locale: Locale,
   slug: string,
-): Promise<BlogPost | undefined> => {
-  const post = demoBlogPosts.find((item) => item.slug[locale] === slug);
-  return post ? localizeBlogPost(post, locale) : undefined;
-};
+): Promise<BlogPost | undefined> =>
+  (await productionQueries()).getBlogPostBySlug(locale, slug);
 
 export const getBrands = async (locale: Locale): Promise<Brand[]> =>
-  demoBrands.map((brand) => localizeBrand(brand, locale));
+  (await productionQueries()).getBrands(locale);
 
 export const getBrandBySlug = async (
   locale: Locale,
   slug: string,
-): Promise<Brand | undefined> => {
-  const brand = demoBrands.find((item) => item.slug[locale] === slug);
-  return brand ? localizeBrand(brand, locale) : undefined;
-};
+): Promise<Brand | undefined> =>
+  (await productionQueries()).getBrandBySlug(locale, slug);
 
-export const getFeaturedContent = async (locale: Locale): Promise<FeaturedContent> => {
-  const heroProduct = demoProducts.find(
-    (product) => product.id === demoFeaturedContent.hero.productId,
-  );
-
-  if (!heroProduct) {
-    throw new Error('Invalid featured product reference');
-  }
-
-  const heroImage = localizeImage(demoFeaturedContent.hero.image, locale);
-  const featuredProduct = localizeProduct(heroProduct, locale);
-  featuredProduct.image = heroImage;
-
-  return {
-    hero: {
-      eyebrow: demoFeaturedContent.hero.eyebrow[locale],
-      title: demoFeaturedContent.hero.title[locale],
-      body: demoFeaturedContent.hero.body[locale],
-      product: featuredProduct,
-      image: heroImage,
-    },
-    editorial: {
-      title: demoFeaturedContent.editorial.title[locale],
-      body: demoFeaturedContent.editorial.body[locale],
-      image: localizeImage(demoFeaturedContent.editorial.image, locale),
-    },
-  };
-};
+export const getFeaturedContent = async (
+  locale: Locale,
+): Promise<FeaturedContent> =>
+  (await productionQueries()).getFeaturedContent(locale);

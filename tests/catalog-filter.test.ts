@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 
 import { buildProductSearchText, filterProducts } from '../src/lib/catalog/filter-products';
-import { getProducts } from '../src/lib/cms/queries';
+import { getProducts } from './fixtures/directus';
 import { ui } from '../src/lib/i18n/ui';
 
 describe('filterProducts', () => {

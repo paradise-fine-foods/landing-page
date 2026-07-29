@@ -1,4 +1,4 @@
-import { demoBlogPosts, demoBrands, demoProducts } from '../src/lib/cms/demo-data';
+import { demoBlogPosts, demoBrands, demoProducts } from './fixtures/demo-content';
 import { contactModes } from '../src/lib/enquiry/modes';
 import { locales } from '../src/lib/i18n/types';
 

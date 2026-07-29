@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import { getBrands, getProducts } from '../src/lib/cms/queries';
+import { getBrands, getProducts } from './fixtures/directus';
 
 const root = join(import.meta.dir, '..', 'dist');
 const origin = 'https://paradisefinefoods.com';
