@@ -10,8 +10,9 @@ Status: **DONE_WITH_CONCERNS**
   relative `Location`, `Vary: Accept-Language`, and `Cache-Control: no-store`
   behavior.
 - Anonymous successful GET/HEAD HTML and GET server-island responses use the
-  Cloudflare default cache with `s-maxage=3600` and
-  `stale-while-revalidate=86400`.
+  Cloudflare default cache. Browsers receive `Cache-Control: public,
+  max-age=0`; Cloudflare receives `CDN-Cache-Control: public, max-age=3600,
+  stale-while-revalidate=86400`.
 - API, internal asset, preview, cookie, authorization, mutating, non-HTML,
   cookie-setting, and error responses bypass storage. Error responses are
   forced to `Cache-Control: no-store`.
@@ -62,7 +63,7 @@ Final focused verification:
 
 ## Final verification
 
-- `bun test`: 231 pass, 0 fail, 1477 assertions.
+- `bun test`: 231 pass, 0 fail, 1481 assertions.
 - `bun run check`: 0 errors, 0 warnings, 0 hints.
 - `bun run build`: completed successfully with the Cloudflare server adapter.
 - Feature-scoped `git diff --check`: clean.
@@ -79,6 +80,26 @@ lookups at request time, resolve localized counterparts by stable record ID,
 and rewrite invalid locales, slugs, and enquiry modes to the custom 404 route.
 The new SSR route regression suite went from 0/2 to 2/2 with 53 assertions.
 Focused affected-route verification passes 6/6.
+
+## Cache review fix
+
+The second independent review found that Cloudflare disables
+`stale-while-revalidate` when `s-maxage`, `must-revalidate`, or
+`proxy-revalidate` is present. Context7's current official Cloudflare Workers
+documentation confirmed that edge-specific `CDN-Cache-Control` is the correct
+way to keep browser and edge freshness separate.
+
+The regression test first failed against the old combined header:
+
+```text
+Expected: "public, max-age=0"
+Received: "public, max-age=0, s-maxage=3600, stale-while-revalidate=86400"
+```
+
+The implementation now sends browser revalidation through `Cache-Control` and
+the one-hour fresh plus 24-hour stale policy through `CDN-Cache-Control`. The
+semantic test also rejects all three Cloudflare SWR-disabling directives.
+Focused verification passes 7/7 with 36 assertions.
 
 ## Concerns
 

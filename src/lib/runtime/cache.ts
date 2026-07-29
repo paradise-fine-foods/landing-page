@@ -1,7 +1,8 @@
 export const CACHE_TTL_SECONDS = 3_600;
 export const CACHE_STALE_SECONDS = 86_400;
-export const CACHE_CONTROL =
-  `public, max-age=0, s-maxage=${CACHE_TTL_SECONDS}, stale-while-revalidate=${CACHE_STALE_SECONDS}`;
+export const BROWSER_CACHE_CONTROL = 'public, max-age=0';
+export const EDGE_CACHE_CONTROL =
+  `public, max-age=${CACHE_TTL_SECONDS}, stale-while-revalidate=${CACHE_STALE_SECONDS}`;
 
 export interface RuntimeCache {
   match(request: Request): Promise<Response | undefined>;
@@ -38,7 +39,8 @@ function cacheKey(request: Request) {
 
 function withCacheHeaders(response: Response) {
   const headers = new Headers(response.headers);
-  headers.set('Cache-Control', CACHE_CONTROL);
+  headers.set('Cache-Control', BROWSER_CACHE_CONTROL);
+  headers.set('CDN-Cache-Control', EDGE_CACHE_CONTROL);
 
   return new Response(response.body, {
     status: response.status,

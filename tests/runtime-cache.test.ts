@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'bun:test';
 import {
-  CACHE_CONTROL,
   isCacheEligibleRequest,
   isCacheableResponse,
   withRuntimeCache,
@@ -105,7 +104,7 @@ describe('runtime cache behavior', () => {
     expect(cache.matches).toHaveLength(1);
   });
 
-  test('stores successful HTML with the one-hour TTL and stale policy', async () => {
+  test('stores successful HTML with browser revalidation and Cloudflare stale revalidation', async () => {
     const cache = new MemoryCache();
 
     const response = await withRuntimeCache(
@@ -116,12 +115,18 @@ describe('runtime cache behavior', () => {
       cache,
     );
 
-    expect(response.headers.get('Cache-Control')).toBe(CACHE_CONTROL);
-    expect(CACHE_CONTROL).toContain('s-maxage=3600');
-    expect(CACHE_CONTROL).toContain('stale-while-revalidate=86400');
+    const browserPolicy = response.headers.get('Cache-Control');
+    const edgePolicy = response.headers.get('CDN-Cache-Control');
+    expect(browserPolicy).toBe('public, max-age=0');
+    expect(edgePolicy).toContain('max-age=3600');
+    expect(edgePolicy).toContain('stale-while-revalidate=86400');
+    expect(edgePolicy).not.toContain('s-maxage');
+    expect(edgePolicy).not.toContain('must-revalidate');
+    expect(edgePolicy).not.toContain('proxy-revalidate');
     expect(cache.puts).toHaveLength(1);
     expect(cache.puts[0]?.request.method).toBe('GET');
-    expect(cache.puts[0]?.response.headers.get('Cache-Control')).toBe(CACHE_CONTROL);
+    expect(cache.puts[0]?.response.headers.get('Cache-Control')).toBe(browserPolicy);
+    expect(cache.puts[0]?.response.headers.get('CDN-Cache-Control')).toBe(edgePolicy);
     expect(await cache.puts[0]?.response.text()).toBe('<main>Products</main>');
   });
 
