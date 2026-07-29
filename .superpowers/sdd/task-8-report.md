@@ -69,9 +69,11 @@ The new tests execute behavior rather than relying only on source contracts:
   by stable parent ID, emits reciprocal XHTML alternates, XML-escapes all
   absolute URLs, and deduplicates locations.
 - Successful sitemap responses use `application/xml; charset=utf-8` and the
-  existing one-hour/24-hour-stale public cache policy. Known CMS data/transport
-  failures return a non-sensitive `503` text response with `no-store`, while
-  programming errors remain visible to the runtime.
+  existing runtime cache boundary. The stored edge response uses the one-hour/
+  24-hour-stale policy while the outward response requires browser
+  revalidation. Known CMS data/transport failures return a non-sensitive `503`
+  text response with `no-store`, while programming errors remain visible to
+  the runtime.
 - Replaced the closed 42-demo-HTML manifest contract with the exact 14-file
   Astro runtime route manifest, including dynamic locale/detail shapes,
   revalidation, and the sitemap endpoint.
@@ -80,15 +82,51 @@ The new tests execute behavior rather than relying only on source contracts:
   article hero explicit dimensions, eager loading, high fetch priority, and a
   matching image preload.
 
+## Review follow-up: cache sitemap responses and verify emitted routes
+
+An independent review found that `/sitemap.xml` was semantically bypassed by
+the cache middleware because it has a file extension and cacheability accepted
+only `text/html`. It also found that the runtime route verifier inspected
+source files only, so an adapter/build regression could omit a Worker route
+without failing `bun run build`.
+
+### Follow-up RED
+
+- `bun test tests/runtime-cache.test.ts`: `6 pass`, `4 fail`. The failures
+  proved the sitemap request was ineligible, XML was uncacheable, the endpoint's
+  edge policy leaked outward, and a sitemap 503 did not receive `no-store`.
+- `bun test tests/route-manifest.test.ts`: expected missing-export error for
+  the new emitted-Worker route contract.
+
+### Follow-up implementation and GREEN
+
+- Cache eligibility now admits only exact `/sitemap.xml` GET/HEAD requests in
+  addition to pages and server islands. Successful `application/xml` is
+  cacheable only for that path; other file routes and XML responses remain
+  bypassed.
+- An integration-style memory-cache test calls the real sitemap response
+  builder: the first request executes all six bilingual CMS queries and stores
+  the edge-policy response; the second request is served from cache with no new
+  queries and the browser policy restored. Sitemap failures remain unstored
+  with `no-store`.
+- The route verifier now reads `dist/server/entry.mjs`, extracts route names
+  from the serialized Astro manifest, and requires 15 emitted routes covering
+  the sitemap, server-island endpoint, root, localized indexes/details,
+  404/503, and revalidation API. Representative and missing-route unit tests
+  cover the parser.
+- `package.json` runs the verifier after every `astro build`; the focused cache
+  and manifest suites pass `16 pass`, `0 fail`, and the build reports
+  `Verified 14 source route files and 15 emitted Worker routes.`
+
 ## Verification
 
 - Focused Task 8/route tests: `40 pass`, `0 fail`, `338 expect()` calls.
-- Full `bun test`: `269 pass`, `0 fail`, `1749 expect()` calls across 36 files.
+- Full `bun test`: `275 pass`, `0 fail`, `1775 expect()` calls across 36 files.
 - `bun run check`: 131 files, `0 errors`, `0 warnings`, `0 hints`.
-- `bun run build`: Cloudflare server build completed successfully; the emitted
-  manifest contains both `/_server-islands/[name]` and `/sitemap.xml`.
-- Task-scoped `git diff --check -- src tests .superpowers/sdd/task-8-report.md`:
-  clean.
+- `bun run build`: Cloudflare server build and the mandatory emitted-Worker
+  route verifier completed successfully.
+- Task-scoped `git diff --check -- package.json src tests
+  .superpowers/sdd/task-8-report.md`: clean.
 
 ## Preserved work and remaining integration gate
 

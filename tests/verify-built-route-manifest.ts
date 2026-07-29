@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 export function expectedRuntimeRouteFiles(): string[] {
@@ -18,6 +18,45 @@ export function expectedRuntimeRouteFiles(): string[] {
     'src/pages/index.astro',
     'src/pages/sitemap.xml.ts',
   ];
+}
+
+export function expectedBuiltWorkerRoutes(): string[] {
+  return [
+    '/',
+    '/404',
+    '/503',
+    '/[locale]',
+    '/[locale]/blogs',
+    '/[locale]/blogs/[slug]',
+    '/[locale]/brands',
+    '/[locale]/brands/[slug]',
+    '/[locale]/contact',
+    '/[locale]/contact/[mode]',
+    '/[locale]/products',
+    '/[locale]/products/[slug]',
+    '/api/revalidate',
+    '/sitemap.xml',
+    '/_server-islands/[name]',
+  ];
+}
+
+export function builtWorkerRoutes(workerSource: string): string[] {
+  return [...workerSource.matchAll(/"route":"([^"]+)"/g)]
+    .map((match) => JSON.parse(`"${match[1]}"`) as string);
+}
+
+export function assertBuiltWorkerRoutesText(workerSource: string): void {
+  const actual = new Set(builtWorkerRoutes(workerSource));
+  const missing = expectedBuiltWorkerRoutes().filter((route) => !actual.has(route));
+  if (missing.length === 0) return;
+
+  throw new Error(missing.map((route) => `Missing built Worker route: ${route}`).join('\n'));
+}
+
+export function assertBuiltWorkerRoutes(distDir: string): void {
+  const entry = join(distDir, 'server', 'entry.mjs');
+  if (!existsSync(entry)) throw new Error(`Missing built Worker entry: ${entry}`);
+  assertBuiltWorkerRoutesText(readFileSync(entry, 'utf8'));
 }
 
 export function runtimeRouteFiles(projectRoot: string): string[] {
@@ -49,5 +88,8 @@ if (import.meta.main) {
   const projectRoot = join(import.meta.dir, '..');
   if (!existsSync(join(projectRoot, 'src/pages'))) throw new Error('Missing src/pages.');
   assertRuntimeRouteManifest(projectRoot);
-  console.log(`Verified exact ${expectedRuntimeRouteFiles().length}-file runtime route manifest.`);
+  assertBuiltWorkerRoutes(join(projectRoot, 'dist'));
+  console.log(
+    `Verified ${expectedRuntimeRouteFiles().length} source route files and ${expectedBuiltWorkerRoutes().length} emitted Worker routes.`,
+  );
 }

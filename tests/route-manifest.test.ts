@@ -1,9 +1,11 @@
 import { describe, expect, test } from 'bun:test';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
+  assertBuiltWorkerRoutesText,
   assertRuntimeRouteManifest,
+  expectedBuiltWorkerRoutes,
   expectedRuntimeRouteFiles,
 } from './verify-built-route-manifest';
 
@@ -46,5 +48,31 @@ describe('Astro runtime route manifest', () => {
     rmSync(join(projectRoot, missing));
 
     expect(() => assertRuntimeRouteManifest(projectRoot)).toThrow(`Missing: ${missing}`);
+  });
+
+  test('accepts a representative serialized Worker manifest with every required route', () => {
+    const worker = `const manifest = deserializeManifest(${JSON.stringify({
+      routes: expectedBuiltWorkerRoutes().map((route) => ({ routeData: { route } })),
+    })});`;
+
+    expect(() => assertBuiltWorkerRoutesText(worker)).not.toThrow();
+  });
+
+  test('rejects a built Worker manifest missing a required adapter route', () => {
+    const worker = `const manifest = deserializeManifest(${JSON.stringify({
+      routes: expectedBuiltWorkerRoutes()
+        .filter((route) => route !== '/sitemap.xml')
+        .map((route) => ({ routeData: { route } })),
+    })});`;
+
+    expect(() => assertBuiltWorkerRoutesText(worker))
+      .toThrow('Missing built Worker route: /sitemap.xml');
+  });
+
+  test('runs the emitted Worker verifier after every Astro build', () => {
+    const packageJson = JSON.parse(readFileSync(join(import.meta.dir, '..', 'package.json'), 'utf8'));
+
+    expect(packageJson.scripts.build)
+      .toBe('astro build && bun tests/verify-built-route-manifest.ts');
   });
 });

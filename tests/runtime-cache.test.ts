@@ -4,6 +4,9 @@ import {
   isCacheableResponse,
   withRuntimeCache,
 } from '../src/lib/runtime/cache';
+import type { SitemapQueries } from '../src/pages/sitemap.xml';
+import { createSitemapResponse } from '../src/pages/sitemap.xml';
+import { getBlogPosts, getBrands, getProducts } from './fixtures/directus';
 
 class MemoryCache {
   readonly matches: Request[] = [];
@@ -20,14 +23,35 @@ class MemoryCache {
   }
 }
 
+class PersistingMemoryCache {
+  readonly matches: Request[] = [];
+  readonly puts: Array<{ request: Request; response: Response }> = [];
+  readonly responses = new Map<string, Response>();
+
+  async match(request: Request) {
+    this.matches.push(request);
+    return this.responses.get(request.url)?.clone();
+  }
+
+  async put(request: Request, response: Response) {
+    const stored = response.clone();
+    this.puts.push({ request, response: stored.clone() });
+    this.responses.set(request.url, stored);
+  }
+}
+
 const request = (path: string, init?: RequestInit) =>
   new Request(`https://paradisefinefoods.com${path}`, init);
 
 describe('cache eligibility', () => {
-  test('accepts anonymous GET and HEAD pages plus GET server islands', () => {
+  test('accepts anonymous GET and HEAD pages, server islands, and the exact sitemap path', () => {
     expect(isCacheEligibleRequest(request('/en/products/'))).toBe(true);
     expect(isCacheEligibleRequest(request('/vi/blogs/story/', { method: 'HEAD' }))).toBe(true);
     expect(isCacheEligibleRequest(request('/_server-islands/related?s=x&e=y&p=z'))).toBe(true);
+    expect(isCacheEligibleRequest(request('/sitemap.xml'))).toBe(true);
+    expect(isCacheEligibleRequest(request('/sitemap.xml', { method: 'HEAD' }))).toBe(true);
+    expect(isCacheEligibleRequest(request('/sitemap-index.xml'))).toBe(false);
+    expect(isCacheEligibleRequest(request('/feed.xml'))).toBe(false);
   });
 
   test('bypasses APIs, authorization, cookies, previews, assets, and non-idempotent methods', () => {
@@ -78,6 +102,22 @@ describe('cache eligibility', () => {
           'Set-Cookie': 'session=abc',
         },
       }),
+    )).toBe(false);
+  });
+
+  test('accepts successful XML only for the exact sitemap path', () => {
+    const xml = new Response('<urlset></urlset>', {
+      status: 200,
+      headers: { 'Content-Type': 'application/xml; charset=utf-8' },
+    });
+
+    expect(isCacheableResponse(request('/sitemap.xml'), xml.clone())).toBe(true);
+    expect(isCacheableResponse(request('/sitemap.xml', { method: 'HEAD' }), xml.clone())).toBe(true);
+    expect(isCacheableResponse(request('/feed.xml'), xml.clone())).toBe(false);
+    expect(isCacheableResponse(request('/en/products/'), xml.clone())).toBe(false);
+    expect(isCacheableResponse(
+      request('/sitemap.xml'),
+      new Response('<html></html>', { headers: { 'Content-Type': 'text/html' } }),
     )).toBe(false);
   });
 });
@@ -168,5 +208,61 @@ describe('runtime cache behavior', () => {
     expect(response.status).toBe(503);
     expect(cache.puts).toEqual([]);
     expect(response.headers.get('Cache-Control')).toBe('no-store');
+  });
+
+  test('stores the runtime sitemap once and serves the next request without new CMS queries', async () => {
+    const cache = new PersistingMemoryCache();
+    const queryCalls: string[] = [];
+    const queries: SitemapQueries = {
+      getProducts: async (locale) => {
+        queryCalls.push(`products:${locale}`);
+        return getProducts(locale);
+      },
+      getBrands: async (locale) => {
+        queryCalls.push(`brands:${locale}`);
+        return getBrands(locale);
+      },
+      getBlogPosts: async (locale) => {
+        queryCalls.push(`blogs:${locale}`);
+        return getBlogPosts(locale);
+      },
+    };
+    const sitemapRequest = request('/sitemap.xml');
+    const render = () => createSitemapResponse('https://paradisefinefoods.com', queries);
+
+    const first = await withRuntimeCache(sitemapRequest, render, cache);
+    const firstXml = await first.text();
+
+    expect(queryCalls).toHaveLength(6);
+    expect(first.headers.get('Content-Type')).toBe('application/xml; charset=utf-8');
+    expect(first.headers.get('Cache-Control')).toBe('public, max-age=0');
+    expect(cache.puts).toHaveLength(1);
+    expect(cache.puts[0]?.response.headers.get('Cache-Control'))
+      .toBe('public, max-age=3600, stale-while-revalidate=86400');
+
+    const second = await withRuntimeCache(sitemapRequest, render, cache);
+
+    expect(await second.text()).toBe(firstXml);
+    expect(second.headers.get('Cache-Control')).toBe('public, max-age=0');
+    expect(queryCalls).toHaveLength(6);
+    expect(cache.matches).toHaveLength(2);
+    expect(cache.puts).toHaveLength(1);
+  });
+
+  test('does not store a failed runtime sitemap and forces no-store', async () => {
+    const cache = new PersistingMemoryCache();
+
+    const response = await withRuntimeCache(
+      request('/sitemap.xml'),
+      async () => new Response('Sitemap temporarily unavailable.', {
+        status: 503,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      }),
+      cache,
+    );
+
+    expect(response.status).toBe(503);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(cache.puts).toHaveLength(0);
   });
 });

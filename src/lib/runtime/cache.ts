@@ -26,6 +26,10 @@ function isServerIsland(pathname: string) {
   return pathname.startsWith('/_server-islands/');
 }
 
+function isSitemap(pathname: string) {
+  return pathname === '/sitemap.xml';
+}
+
 function hasPreviewParameter(url: URL) {
   return previewParameters.some((parameter) => url.searchParams.has(parameter));
 }
@@ -105,7 +109,7 @@ export function isCacheEligibleRequest(request: Request) {
     return false;
   }
 
-  return isServerIsland(url.pathname) || isPagePath(url.pathname);
+  return isServerIsland(url.pathname) || isSitemap(url.pathname) || isPagePath(url.pathname);
 }
 
 export function isCacheableResponse(request: Request, response: Response) {
@@ -117,7 +121,10 @@ export function isCacheableResponse(request: Request, response: Response) {
     return false;
   }
 
-  return response.headers.get('Content-Type')?.toLowerCase().includes('text/html') === true;
+  const contentType = response.headers.get('Content-Type')?.toLowerCase() ?? '';
+  return isSitemap(new URL(request.url).pathname)
+    ? contentType.includes('application/xml')
+    : contentType.includes('text/html');
 }
 
 export async function withRuntimeCache(
