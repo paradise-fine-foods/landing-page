@@ -25,15 +25,16 @@ if (!localeParam || !isLocale(localeParam)) {
 const locale = localeParam;
 const pathname = localizedPath(locale, 'home');
 const alternatePath = localizedPath(counterpartLocale(locale), 'home');
-const pageData = await loadCmsPageData(async () => {
-  const [settings, featured, categories, products, brands, latestBlogs] = await Promise.all([
-    getGlobalSettings(locale), getFeaturedContent(locale), getCategories(locale),
-    getProducts(locale, {}), getBrands(locale), getLatestBlogPosts(locale, 3),
-  ]);
-  return { settings, featured, categories, products, brands, latestBlogs };
-});
+const pageData = await loadCmsPageData(
+  () => getGlobalSettings(locale),
+  () => getFeaturedContent(locale),
+  () => getCategories(locale),
+  () => getProducts(locale, {}),
+  () => getBrands(locale),
+  () => getLatestBlogPosts(locale, 3),
+);
 if (!pageData.ok) return Astro.rewrite('/503');
-const { settings, featured, categories, products, brands, latestBlogs } = pageData.data;
+const [settings, featured, categories, products, brands, latestBlogs] = pageData.data;
 const copy = ui[locale];
 const productsPath = localizedPath(locale, 'products');
 const contactPath = localizedPath(locale, 'contact');

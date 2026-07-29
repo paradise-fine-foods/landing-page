@@ -6,6 +6,7 @@ import { normalizeBrandAccent } from '../src/lib/cms/queries';
 import { getBrandBySlug, getBrands } from './fixtures/directus';
 import { brandAccentTokens } from '../src/lib/cms/types';
 import {
+  brandAlternatePath,
   brandDetailPath,
   buildBrandRouteMaps,
   findBrandRoute,
@@ -92,11 +93,21 @@ describe('localized brand routes', () => {
     expect(detailRoute).toContain('Astro.params');
     expect(detailRoute).toContain('isLocale(localeParam)');
     expect(detailRoute).toContain('getBrandBySlug(locale, slug)');
-    expect(detailRoute).toContain('brand.counterpart');
+    expect(detailRoute).toContain('brandAlternatePath(locale, brand)');
     expect(detailRoute).not.toContain('counterpartBrands');
     expect(detailRoute).toContain('markNotFound(Astro.response)');
     expect(detailRoute).toContain("return Astro.rewrite('/404')");
     expect(detailRoute).not.toContain('getStaticPaths');
+  });
+
+  test('uses a stable counterpart URL or the opposite-locale brand index', async () => {
+    const [english] = await getBrands('en');
+    expect(english).toBeDefined();
+    expect(brandAlternatePath('en', english!)).toBe(
+      `/vi/brands/${english!.counterpart!.slug}/`,
+    );
+    expect(brandAlternatePath('en', { counterpart: undefined })).toBe('/vi/brands/');
+    expect(brandAlternatePath('vi', { counterpart: undefined })).toBe('/en/brands/');
   });
 
   test('renders a localized empty state for a valid empty brand index', () => {

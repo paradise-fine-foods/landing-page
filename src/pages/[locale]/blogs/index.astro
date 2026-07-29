@@ -16,12 +16,12 @@ if (!localeParam || !isLocale(localeParam)) {
 }
 const locale = localeParam;
 const copy = ui[locale];
-const pageData = await loadCmsPageData(async () => {
-  const [settings, posts] = await Promise.all([getGlobalSettings(locale), getBlogPosts(locale)]);
-  return { settings, posts };
-});
+const pageData = await loadCmsPageData(
+  () => getGlobalSettings(locale),
+  () => getBlogPosts(locale),
+);
 if (!pageData.ok) return Astro.rewrite('/503');
-const { settings, posts } = pageData.data;
+const [settings, posts] = pageData.data;
 const pathname = localizedPath(locale, 'blogs');
 const alternatePath = localizedPath(counterpartLocale(locale), 'blogs');
 ---

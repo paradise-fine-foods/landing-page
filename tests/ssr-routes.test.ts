@@ -64,9 +64,9 @@ describe('localized SSR routes', () => {
     const product = source('src/pages/[locale]/products/[slug].astro');
     const brand = source('src/pages/[locale]/brands/[slug].astro');
 
-    expect(product).toContain('product.counterpart');
+    expect(product).toContain('productAlternatePath(locale, product)');
     expect(product).not.toContain('counterpartProducts');
-    expect(brand).toContain('brand.counterpart');
+    expect(brand).toContain('brandAlternatePath(locale, brand)');
     expect(brand).not.toContain('counterpartBrands');
   });
 

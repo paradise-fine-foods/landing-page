@@ -18,14 +18,14 @@ if (!localeParam || !isLocale(localeParam)) {
 const locale = localeParam;
 const pathname = localizedPath(locale, 'products');
 const alternatePath = localizedPath(counterpartLocale(locale), 'products');
-const pageData = await loadCmsPageData(async () => {
-  const [settings, products, categories, brands] = await Promise.all([
-    getGlobalSettings(locale), getProducts(locale), getCategories(locale), getBrands(locale),
-  ]);
-  return { settings, products, categories, brands };
-});
+const pageData = await loadCmsPageData(
+  () => getGlobalSettings(locale),
+  () => getProducts(locale),
+  () => getCategories(locale),
+  () => getBrands(locale),
+);
 if (!pageData.ok) return Astro.rewrite('/503');
-const { settings, products, categories, brands } = pageData.data;
+const [settings, products, categories, brands] = pageData.data;
 const copy = ui[locale];
 const applications = [...new Set(products.flatMap(({ applications }) => applications))].sort();
 ---

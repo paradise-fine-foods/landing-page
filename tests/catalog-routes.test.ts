@@ -6,6 +6,7 @@ import { getProducts, getProductBySlug } from './fixtures/directus';
 import {
   buildProductRouteMaps,
   findProductRoute,
+  productAlternatePath,
   productDetailPath,
 } from '../src/lib/catalog/routes';
 
@@ -84,11 +85,21 @@ describe('localized product routes', () => {
     expect(detailRoute).toContain('Astro.params');
     expect(detailRoute).toContain('isLocale(localeParam)');
     expect(detailRoute).toContain('getProductBySlug(locale, slug)');
-    expect(detailRoute).toContain('product.counterpart');
+    expect(detailRoute).toContain('productAlternatePath(locale, product)');
     expect(detailRoute).not.toContain('counterpartProducts');
     expect(detailRoute).toContain('markNotFound(Astro.response)');
     expect(detailRoute).toContain("return Astro.rewrite('/404')");
     expect(detailRoute).not.toContain('getStaticPaths');
+  });
+
+  test('uses a stable counterpart URL or the opposite-locale product index', async () => {
+    const [english] = await getProducts('en');
+    expect(english).toBeDefined();
+    expect(productAlternatePath('en', english!)).toBe(
+      `/vi/products/${english!.counterpart!.slug}/`,
+    );
+    expect(productAlternatePath('en', { counterpart: undefined })).toBe('/vi/products/');
+    expect(productAlternatePath('vi', { counterpart: undefined })).toBe('/en/products/');
   });
 
   test('renders the localized empty state when the runtime catalog is valid but empty', () => {

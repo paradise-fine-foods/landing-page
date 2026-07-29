@@ -2,7 +2,7 @@
 import BrandDetail from '../../../components/brands/BrandDetail.astro';
 import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { brandDetailPath } from '../../../lib/brands/routes';
+import { brandAlternatePath, brandDetailPath } from '../../../lib/brands/routes';
 import { getBrandBySlug, getGlobalSettings, getProducts } from '../../../lib/cms/queries';
 import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
 import { localizedPath } from '../../../lib/i18n/routes';
@@ -16,23 +16,20 @@ if (!localeParam || !isLocale(localeParam) || !slug) {
   return Astro.rewrite('/404');
 }
 const locale = localeParam;
-const pageData = await loadCmsPageData(async () => {
-  const [settings, brand, allProducts] = await Promise.all([
-    getGlobalSettings(locale), getBrandBySlug(locale, slug), getProducts(locale),
-  ]);
-  return { settings, brand, allProducts };
-});
+const pageData = await loadCmsPageData(
+  () => getGlobalSettings(locale),
+  () => getBrandBySlug(locale, slug),
+  () => getProducts(locale),
+);
 if (!pageData.ok) return Astro.rewrite('/503');
-const { settings, brand, allProducts } = pageData.data;
+const [settings, brand, allProducts] = pageData.data;
 if (!brand) {
   markNotFound(Astro.response);
   return Astro.rewrite('/404');
 }
 const products = allProducts.filter((product) => product.brand.id === brand.id);
 const pathname = brandDetailPath(locale, brand);
-const alternatePath = brand.counterpart
-  ? brandDetailPath(brand.counterpart.locale, brand.counterpart)
-  : undefined;
+const alternatePath = brandAlternatePath(locale, brand);
 const copy = ui[locale];
 ---
 

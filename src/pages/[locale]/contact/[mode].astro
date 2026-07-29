@@ -21,12 +21,12 @@ const mode = modeParam;
 const routeKey = mode === 'customer' ? 'customerContact' : 'supplierContact';
 const pathname = localizedPath(locale, routeKey);
 const alternatePath = localizedPath(counterpartLocale(locale), routeKey);
-const pageData = await loadCmsPageData(async () => {
-  const [settings, products] = await Promise.all([getGlobalSettings(locale), getProducts(locale)]);
-  return { settings, products };
-});
+const pageData = await loadCmsPageData(
+  () => getGlobalSettings(locale),
+  () => getProducts(locale),
+);
 if (!pageData.ok) return Astro.rewrite('/503');
-const { settings, products } = pageData.data;
+const [settings, products] = pageData.data;
 const copy = ui[locale];
 const modeCopy = getEnquiryModeCopy(locale, mode);
 ---

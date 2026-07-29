@@ -19,24 +19,22 @@ if (!localeParam || !isLocale(localeParam) || !slug) {
 }
 const locale = localeParam;
 const alternateLocale = counterpartLocale(locale);
-const primaryData = await loadCmsPageData(async () => {
-  const [settings, post] = await Promise.all([getGlobalSettings(locale), getBlogPostBySlug(locale, slug)]);
-  return { settings, post };
-});
+const primaryData = await loadCmsPageData(
+  () => getGlobalSettings(locale),
+  () => getBlogPostBySlug(locale, slug),
+);
 if (!primaryData.ok) return Astro.rewrite('/503');
-const { settings, post } = primaryData.data;
+const [settings, post] = primaryData.data;
 if (!post) {
   markNotFound(Astro.response);
   return Astro.rewrite('/404');
 }
-const secondaryData = await loadCmsPageData(async () => {
-  const [counterpartPosts, suggestions] = await Promise.all([
-    getBlogPosts(alternateLocale), getLatestBlogPosts(locale, 3, post.id),
-  ]);
-  return { counterpartPosts, suggestions };
-});
+const secondaryData = await loadCmsPageData(
+  () => getBlogPosts(alternateLocale),
+  () => getLatestBlogPosts(locale, 3, post.id),
+);
 if (!secondaryData.ok) return Astro.rewrite('/503');
-const { counterpartPosts, suggestions } = secondaryData.data;
+const [counterpartPosts, suggestions] = secondaryData.data;
 const counterpart = counterpartPosts.find(({ id }) => id === post.id);
 const pathname = blogDetailPath(locale, post);
 const alternatePath = counterpart

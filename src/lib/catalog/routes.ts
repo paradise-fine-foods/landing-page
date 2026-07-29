@@ -1,9 +1,17 @@
 import type { Product } from '../cms/types';
 import { localizedPath, type CounterpartMap } from '../i18n/routes';
 import type { Locale } from '../i18n/types';
+import { counterpartLocale } from '../i18n/static-paths';
 
 export const productDetailPath = (locale: Locale, product: Pick<Product, 'slug'>): string =>
   `${localizedPath(locale, 'products')}${product.slug}/`;
+
+export const productAlternatePath = (
+  locale: Locale,
+  product: Pick<Product, 'counterpart'>,
+): string => product.counterpart
+  ? productDetailPath(product.counterpart.locale, product.counterpart)
+  : localizedPath(counterpartLocale(locale), 'products');
 
 export const buildProductRouteMaps = (
   englishProducts: readonly Product[],
