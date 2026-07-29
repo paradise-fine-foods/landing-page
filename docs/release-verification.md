@@ -84,9 +84,18 @@ node scripts/verify-deployment-gates.mjs --live --json
 ```
 
 The live public gate passes only when published read, filtered draft denial,
-and anonymous write denial all match their expected results. The revalidation
-gate passes only when the bad secret returns `401` and the configured secret
-returns `204`.
+and anonymous write denial all match their expected results.
+`astro-revalidation-purge` passes only when the bad secret returns `401` and
+the configured secret returns `204`; the successful request performs the real
+Cloudflare purge.
+
+`directus-revalidation-flow` is deliberately not derived from this direct
+Astro endpoint probe, its credentials, or any environment boolean. Keep it
+blocked until either the canonical Directus Docker integration or a licensed
+deployment publication event demonstrates that publishing content invokes the
+configured callback and results in the expected purge. Retain event/callback
+and purge evidence outside the repository after checking it contains no
+secrets.
 
 ## 4. Browser matrix
 

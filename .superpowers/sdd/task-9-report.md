@@ -28,6 +28,11 @@ never counted as a pass.
   English/Vietnamese alternate targets. Screenshot evidence now uses a
   sanitized path plus a path digest, locale, and viewport to prevent
   same-locale route collisions.
+- Split the direct Astro endpoint/Cloudflare credential probe into the
+  `astro-revalidation-purge` gate. `directus-revalidation-flow` remains
+  blocked unless a canonical Directus Docker integration or licensed
+  deployment publication event demonstrates the callback and purge; no
+  environment boolean or direct endpoint request can satisfy it.
 - Replaced the fake Directus one-pixel PNG with a real 1200x800 PNG and added
   an IHDR assertion against the served asset, preserving the declared CMS
   dimensions end-to-end.
@@ -101,8 +106,13 @@ capture for each route.
   fake Directus asset whose PNG IHDR is 1200x800.
 - Revalidation authentication passed: the same-origin JSON bad secret returned
   401 without disclosure. A correct-secret request was not sent with
-  placeholder local zone/token values, so successful purge remains **BLOCKED**
-  until the configured deployment.
+  placeholder local zone/token values, so `astro-revalidation-purge` remains
+  **BLOCKED** until the configured deployment.
+- `directus-revalidation-flow` remains **BLOCKED** independently. It needs
+  evidence that a publication event in the canonical Directus Docker
+  integration or licensed deployment invoked the configured callback and
+  purged the expected cache; direct Astro endpoint authentication/purge probes
+  and environment booleans are not proof of this flow.
 
 ## Verification
 

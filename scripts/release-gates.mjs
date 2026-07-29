@@ -8,6 +8,7 @@ export const RELEASE_GATE_IDS = Object.freeze([
   'astro-build-once',
   'worker-publish-after-build',
   'worker-errors-and-seo',
+  'astro-revalidation-purge',
   'directus-revalidation-flow',
   'browser-matrix',
   'lighthouse',
@@ -21,9 +22,14 @@ export function classifyCapabilities(capabilities) {
   result.push(capabilities.licensedAnonymousReads
     ? { id: 'directus-licensed-anonymous-read', status: 'ready' }
     : { id: 'directus-licensed-anonymous-read', status: 'blocked', reason: 'Directus filtered public permissions unavailable in this runtime' });
-  result.push(capabilities.cloudflarePurgeCredentials
-    ? { id: 'directus-revalidation-flow', status: 'ready' }
-    : { id: 'directus-revalidation-flow', status: 'blocked', reason: 'Cloudflare purge credentials unavailable' });
+  result.push(capabilities.astroRevalidationPurge
+    ? { id: 'astro-revalidation-purge', status: 'ready' }
+    : { id: 'astro-revalidation-purge', status: 'blocked', reason: 'Astro revalidation endpoint or Cloudflare purge credentials unavailable' });
+  result.push({
+    id: 'directus-revalidation-flow',
+    status: 'blocked',
+    reason: 'Requires canonical Directus Docker integration or licensed deployment publication-trigger evidence',
+  });
   result.push(capabilities.playwright
     ? { id: 'browser-matrix', status: 'ready' }
     : { id: 'browser-matrix', status: 'blocked', reason: 'Python Playwright or Chromium unavailable' });

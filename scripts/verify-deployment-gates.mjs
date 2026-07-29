@@ -38,7 +38,7 @@ const anonymousProbe = async () => {
     && [401, 403].includes(deniedWrite.status);
 };
 
-const revalidationProbe = async () => {
+const astroRevalidationPurgeProbe = async () => {
   if (!live) return false;
   const endpoint = process.env.ASTRO_REVALIDATE_URL;
   const secret = process.env.CMS_REVALIDATE_SECRET;
@@ -58,7 +58,7 @@ try {
   const capabilities = {
     docker: commandAvailable('docker', ['version', '--format', '{{.Server.Version}}']),
     licensedAnonymousReads: await anonymousProbe(),
-    cloudflarePurgeCredentials: await revalidationProbe(),
+    astroRevalidationPurge: await astroRevalidationPurgeProbe(),
     playwright: commandAvailable('py', ['-3', '-c', 'import playwright']),
     lighthouse: commandAvailable('lighthouse', ['--version']),
   };

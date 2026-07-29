@@ -21,6 +21,7 @@ describe('Task 9 release gate contract', () => {
       'astro-build-once',
       'worker-publish-after-build',
       'worker-errors-and-seo',
+      'astro-revalidation-purge',
       'directus-revalidation-flow',
       'browser-matrix',
       'lighthouse',
@@ -31,16 +32,36 @@ describe('Task 9 release gate contract', () => {
     expect(classifyCapabilities({
       docker: false,
       licensedAnonymousReads: false,
-      cloudflarePurgeCredentials: false,
+      astroRevalidationPurge: false,
+      directusRevalidationFlow: true,
       playwright: true,
       lighthouse: false,
     })).toEqual([
       { id: 'directus-clean-docker', status: 'blocked', reason: 'Docker CLI or daemon unavailable' },
       { id: 'directus-licensed-anonymous-read', status: 'blocked', reason: 'Directus filtered public permissions unavailable in this runtime' },
-      { id: 'directus-revalidation-flow', status: 'blocked', reason: 'Cloudflare purge credentials unavailable' },
+      { id: 'astro-revalidation-purge', status: 'blocked', reason: 'Astro revalidation endpoint or Cloudflare purge credentials unavailable' },
+      { id: 'directus-revalidation-flow', status: 'blocked', reason: 'Requires canonical Directus Docker integration or licensed deployment publication-trigger evidence' },
       { id: 'browser-matrix', status: 'ready' },
       { id: 'lighthouse', status: 'blocked', reason: 'Lighthouse CLI unavailable' },
     ]);
+  });
+
+  test('keeps the Directus publication flow blocked when an Astro endpoint purge probe passes', () => {
+    const gates = classifyCapabilities({
+      docker: true,
+      licensedAnonymousReads: true,
+      astroRevalidationPurge: true,
+      directusRevalidationFlow: true,
+      playwright: true,
+      lighthouse: true,
+    });
+
+    expect(gates).toContainEqual({ id: 'astro-revalidation-purge', status: 'ready' });
+    expect(gates).toContainEqual({
+      id: 'directus-revalidation-flow',
+      status: 'blocked',
+      reason: 'Requires canonical Directus Docker integration or licensed deployment publication-trigger evidence',
+    });
   });
 
   test('redacts every configured secret value from durable evidence', () => {
