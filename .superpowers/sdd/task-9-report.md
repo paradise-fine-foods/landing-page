@@ -66,7 +66,7 @@ image-transfer performance claims.
   mistaken for the stable `id` field, and English/Vietnamese blog details load
   through the production query/repository/mapper path.
 - Python Playwright harness: Python 3.13 syntax compilation passed.
-- Full Astro suite: 292 passed, 0 failed, 1,833 assertions across 38 files.
+- Full Astro suite: 293 passed, 0 failed, 1,835 assertions across 38 files.
 
 ## Exactly-once Worker boundary
 
@@ -116,7 +116,7 @@ capture for each route.
 
 ## Verification
 
-- Full `bun test`: 292 passed, 0 failed, 1,833 assertions across 38 files.
+- Full `bun test`: 293 passed, 0 failed, 1,835 assertions across 38 files.
 - `bun run check`: 136 files, 0 errors, 0 warnings, 0 hints. Wrangler
   emitted its known sandbox-only log-write `EPERM` diagnostic; the check still
   exited successfully.
