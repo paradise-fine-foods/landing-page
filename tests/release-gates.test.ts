@@ -119,7 +119,7 @@ describe('Task 9 release gate contract', () => {
       'assert_initial_metadata(html, route, url)',
       'screenshot_name(route, \'desktop\')',
       'class MetadataParser(HTMLParser)',
-      'path_digest = hashlib.sha256(path.encode("utf-8")).hexdigest()\n    return',
+      'path_digest = hashlib.sha256(path.encode("utf-8")).hexdigest()',
       'return f"{readable_path}-{path_digest}--{route[\'lang\']}--{viewport}.png"',
     ]) expect(source).toContain(contract);
   });
