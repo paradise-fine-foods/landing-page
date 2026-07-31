@@ -1,6 +1,8 @@
 import {
   readItems,
+  readSingleton,
   type Query,
+  type QueryItem,
   type RegularCollections,
   type RestCommand,
 } from '@directus/sdk';
@@ -242,12 +244,12 @@ type Collection = RegularCollections<DirectusSchema>;
 const published = { status: { _eq: 'published' } } as const;
 
 const readSiteSettings = <
-  const TQuery extends Query<DirectusSchema, SiteSettingsRecord>,
->(query: TQuery) => readItems<DirectusSchema, 'site_settings', TQuery>('site_settings', query);
+  const TQuery extends QueryItem<DirectusSchema, SiteSettingsRecord>,
+>(query: TQuery) => readSingleton<DirectusSchema, 'site_settings', TQuery>('site_settings', query);
 
 const readHomePage = <
-  const TQuery extends Query<DirectusSchema, HomePageRecord>,
->(query: TQuery) => readItems<DirectusSchema, 'home_page', TQuery>('home_page', query);
+  const TQuery extends QueryItem<DirectusSchema, HomePageRecord>,
+>(query: TQuery) => readSingleton<DirectusSchema, 'home_page', TQuery>('home_page', query);
 
 const readCategories = <
   const TQuery extends Query<DirectusSchema, CategoryRecord>,
@@ -302,27 +304,33 @@ export const createCmsRepository = (request: CmsRequest): CmsRepository => {
     command: RestCommand<T[], DirectusSchema>,
   ): Promise<T | undefined> => (await list(collection, command))[0];
 
-  const requiredSingleton = async <T extends object>(
+  const requiredSingleton = async <T extends { status: unknown }>(
     collection: 'site_settings' | 'home_page',
-    command: RestCommand<T[], DirectusSchema>,
-  ): Promise<T> => {
-    const item = await detail(collection, command);
-    if (!item) throw new CmsDataError(collection, 'published singleton is missing');
+    command: RestCommand<T, DirectusSchema>,
+  ): Promise<T> => run(async () => {
+    const item = await request(command);
+    if (item === undefined) {
+      throw new CmsDataError(collection, 'published singleton is missing');
+    }
+    if (typeof item !== 'object' || item === null || Array.isArray(item)) {
+      throw new CmsDataError(collection, 'Directus singleton response must be a record');
+    }
+    if (item.status !== 'published') {
+      throw new CmsDataError(collection, 'singleton must be published');
+    }
     return item;
-  };
+  });
 
   return {
     getSiteSettings: async (locale): Promise<SiteSettingsRecord> => requiredSingleton('site_settings', readSiteSettings({
       fields: siteSettingsFields,
       filter: published,
       deep: localizedDeep(locale),
-      limit: 1,
     })),
     getHomePage: async (locale): Promise<HomePageRecord> => requiredSingleton('home_page', readHomePage({
       fields: homePageFields,
       filter: published,
       deep: homeDeep(locale),
-      limit: 1,
     })),
     getCategories: async (locale): Promise<CategoryRecord[]> => list('categories', readCategories({
       fields: categoryFields,

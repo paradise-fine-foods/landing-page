@@ -213,7 +213,24 @@ describe('Directus request repository', () => {
     ]) {
       expect(source).toContain(`const read${collection[0]!.toUpperCase()}${collection.slice(1)} =`);
     }
+    expect(source).toMatch(/readSingleton<DirectusSchema, 'site_settings'/);
+    expect(source).toMatch(/readSingleton<DirectusSchema, 'home_page'/);
     expect(source).not.toMatch(/readItems\(collection, query\)/);
+  });
+
+  test('reads published singleton objects and requests only published records', async () => {
+    const harness = createRequestHarness(fixtureSiteSettings, fixtureHomePage);
+    const repository = createCmsRepository(harness.request);
+
+    expect((await repository.getSiteSettings('en')).id).toBe('settings');
+    expect((await repository.getHomePage('vi')).id).toBe('home');
+    expect(harness.requests.map(({ path }) => path)).toEqual([
+      '/items/site_settings',
+      '/items/home_page',
+    ]);
+    expect(harness.requests.every(({ params }) =>
+      JSON.stringify(params?.filter) === JSON.stringify({ status: { _eq: 'published' } }),
+    )).toBe(true);
   });
 
   test('requests only published products with explicit localized relational fields', async () => {
@@ -362,16 +379,30 @@ describe('Directus request repository', () => {
     ]);
   });
 
-  test('rejects missing required singleton records as invalid data', async () => {
-    const settings = createRequestHarness([]);
-    const home = createRequestHarness([]);
+  test('rejects malformed, missing, and unpublished singleton records as invalid data', async () => {
+    const malformed = createRequestHarness(null);
+    const missing = createRequestHarness(undefined);
+    const draftSettings = createRequestHarness({
+      ...fixtureSiteSettings,
+      status: 'draft',
+    });
+    const archivedHome = createRequestHarness({
+      ...fixtureHomePage,
+      status: 'archived',
+    });
 
     expect(
-      createCmsRepository(settings.request).getSiteSettings('en'),
-    ).rejects.toBeInstanceOf(CmsDataError);
+      createCmsRepository(malformed.request).getSiteSettings('en'),
+    ).rejects.toThrow('Directus singleton response must be a record');
     expect(
-      createCmsRepository(home.request).getHomePage('vi'),
-    ).rejects.toBeInstanceOf(CmsDataError);
+      createCmsRepository(missing.request).getHomePage('vi'),
+    ).rejects.toThrow('published singleton is missing');
+    expect(
+      createCmsRepository(draftSettings.request).getSiteSettings('en'),
+    ).rejects.toThrow('singleton must be published');
+    expect(
+      createCmsRepository(archivedHome.request).getHomePage('vi'),
+    ).rejects.toThrow('singleton must be published');
   });
 
   test('converts transport failures without hiding CMS data errors', async () => {
@@ -403,9 +434,9 @@ describe('CMS query boundary', () => {
       [fixtureBrand],
       [fixtureBlogPost],
       [fixtureBlogPost],
-      [fixtureSiteSettings],
+      fixtureSiteSettings,
       [fixturePartner],
-      [fixtureHomePage],
+      fixtureHomePage,
     );
     const queries = createCmsQueries(
       createCmsRepository(harness.request),

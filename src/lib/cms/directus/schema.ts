@@ -164,9 +164,9 @@ export interface PartnerRecord extends EditorialParent {
 
 export interface DirectusSchema {
   directus_files: DirectusFile[];
-  site_settings: SiteSettingsRecord[];
+  site_settings: SiteSettingsRecord;
   site_settings_translations: SiteSettingsTranslation[];
-  home_page: HomePageRecord[];
+  home_page: HomePageRecord;
   home_page_translations: HomePageTranslation[];
   categories: CategoryRecord[];
   categories_translations: CategoryTranslation[];
