@@ -20,6 +20,7 @@ import {
   createCmsRepository,
   type CmsRequest,
 } from '../src/lib/cms/directus/repository';
+import type { SiteSettingsRecord } from '../src/lib/cms/directus/schema';
 import {
   fixtureAudienceChannel,
   fixtureBlogPost,
@@ -33,6 +34,7 @@ import {
 
 const directusUrl = 'https://cms.example.com';
 const root = join(import.meta.dir, '..');
+const siteSettingsHasNoLogo: 'logo' extends keyof SiteSettingsRecord ? true : false = false;
 
 const createRequestHarness = (...responses: unknown[]) => {
   const requests: Array<{
@@ -196,6 +198,16 @@ describe('Directus presentation mappers', () => {
 });
 
 describe('Directus request repository', () => {
+  test('omits the retired site-settings logo from the raw schema and request', async () => {
+    const harness = createRequestHarness([fixtureSiteSettings]);
+
+    await createCmsRepository(harness.request).getSiteSettings('en');
+
+    expect(siteSettingsHasNoLogo).toBe(false);
+    expect(JSON.stringify(harness.requests[0]?.params?.fields)).not.toContain('"logo"');
+    expect(fixtureSiteSettings).not.toHaveProperty('logo');
+  });
+
   test('builds SDK commands from collection-specific typed query boundaries', () => {
     const source = readFileSync(
       join(root, 'src/lib/cms/directus/repository.ts'),

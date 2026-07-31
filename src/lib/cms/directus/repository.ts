@@ -174,7 +174,6 @@ const siteSettingsFields = [
   'status',
   'email',
   'phone',
-  { logo: fileFields },
   {
     translations: [
       'id',

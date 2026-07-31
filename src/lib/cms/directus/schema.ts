@@ -28,7 +28,6 @@ export interface SiteSettingsTranslation extends TranslationBase {
 }
 
 export interface SiteSettingsRecord extends EditorialParent {
-  logo: DirectusFile | null;
   email: string | null;
   phone: string | null;
   translations: SiteSettingsTranslation[] | null;

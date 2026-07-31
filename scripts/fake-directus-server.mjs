@@ -88,7 +88,7 @@ const blog = (postBuild = false) => ({
 const baselineProduct = product();
 const baselineBlog = blog();
 const settings = Object.freeze({
-  id: '90000000-0000-4000-8000-000000000001', status: 'published', logo: file,
+  id: '90000000-0000-4000-8000-000000000001', status: 'published',
   email: 'release@example.test', phone: '+84 900 000 009',
   translations: translated('settings',
     { site_name: 'Paradise Fine Foods Release', site_description: 'Bilingual release fixture', address: 'Ho Chi Minh City', footer_copy: 'Release fixture footer.' },

@@ -171,7 +171,6 @@ export const fixturePartner = {
 export const fixtureSiteSettings = {
   id: 'settings',
   status: 'published',
-  logo: { ...fixtureFile, id: 'file-logo', width: 640, height: 240 },
   email: 'hello@example.com',
   phone: '+84 900 000 000',
   translations: [
@@ -422,7 +421,6 @@ const rawPartners = demoBrandingAssets.map((partner, index) => ({
 const rawSiteSettings = {
   id: 'settings',
   status: 'published',
-  logo: rawFile('site-logo', { width: 640, height: 240 }),
   email: 'hello@paradisefinefoods.com',
   phone: '+84 900 000 000',
   translations: (['en', 'vi'] as const).map((locale) => ({
