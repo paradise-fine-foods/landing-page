@@ -381,6 +381,7 @@ describe('Directus request repository', () => {
 
   test('rejects malformed, missing, and unpublished singleton records as invalid data', async () => {
     const malformed = createRequestHarness(null);
+    const array = createRequestHarness([fixtureSiteSettings]);
     const missing = createRequestHarness(undefined);
     const draftSettings = createRequestHarness({
       ...fixtureSiteSettings,
@@ -393,6 +394,9 @@ describe('Directus request repository', () => {
 
     expect(
       createCmsRepository(malformed.request).getSiteSettings('en'),
+    ).rejects.toThrow('Directus singleton response must be a record');
+    expect(
+      createCmsRepository(array.request).getSiteSettings('en'),
     ).rejects.toThrow('Directus singleton response must be a record');
     expect(
       createCmsRepository(missing.request).getHomePage('vi'),

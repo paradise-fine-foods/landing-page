@@ -175,23 +175,24 @@ export async function createFakeDirectusServer({ port = 0, hostname = '127.0.0.1
     if (request.method !== 'GET' && request.method !== 'HEAD') return json(response, 403, { errors: [{ message: 'Forbidden' }] });
 
     const collection = url.pathname.slice('/items/'.length).split('/')[0];
-    const singleton = collection === 'site_settings' || collection === 'home_page';
     const products = state.postBuild ? [baselineProduct, product(true)] : [baselineProduct];
     const blogs = state.postBuild ? [blog(true), baselineBlog] : [baselineBlog];
     const collections = {
-      site_settings: [settings], home_page: [home], categories: [], brands: [brand], products,
+      site_settings: settings, home_page: home, categories: [], brands: [brand], products,
       applications: [], audience_channels: [], blog_posts: blogs, partners: [],
       languages: [{ code: 'en', name: 'English', direction: 'ltr' }, { code: 'vi', name: 'Tiếng Việt', direction: 'ltr' }],
     };
     let data = collections[collection];
     if (!data) return json(response, 404, { errors: [{ message: 'Unknown collection' }] });
-    data = data.filter((item) => !item.translations || matchesDetail(item, url));
-    const excludedIds = queryValues(url, 'id').filter((value) => value !== 'published');
-    if (excludedIds.length) data = data.filter(({ id }) => !excludedIds.includes(id));
-    const limit = Number.parseInt(url.searchParams.get('limit') ?? '', 10);
-    if (Number.isFinite(limit) && limit >= 0) data = data.slice(0, limit);
+    if (Array.isArray(data)) {
+      data = data.filter((item) => !item.translations || matchesDetail(item, url));
+      const excludedIds = queryValues(url, 'id').filter((value) => value !== 'published');
+      if (excludedIds.length) data = data.filter(({ id }) => !excludedIds.includes(id));
+      const limit = Number.parseInt(url.searchParams.get('limit') ?? '', 10);
+      if (Number.isFinite(limit) && limit >= 0) data = data.slice(0, limit);
+    }
     if (request.method === 'HEAD') { response.writeHead(200, { 'content-type': 'application/json; charset=utf-8' }); response.end(); return; }
-    return json(response, 200, { data: structuredClone(singleton ? data[0] : data) });
+    return json(response, 200, { data: structuredClone(data) });
   });
 
   await new Promise((resolve, reject) => {
