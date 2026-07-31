@@ -17,6 +17,18 @@ describe('mutable fake Directus release server', () => {
     expect(queryValues(url, 'id')).toEqual(['exact-item-id']);
   });
 
+  test('serves singleton endpoints as objects and collection endpoints as arrays', async () => {
+    server = await createFakeDirectusServer({ port: 0, adminSecret: 'test-admin-secret' });
+
+    const settings = await (await fetch(`${server.url}/items/site_settings`)).json() as { data: unknown };
+    const home = await (await fetch(`${server.url}/items/home_page`)).json() as { data: unknown };
+    const products = await (await fetch(`${server.url}/items/products`)).json() as { data: unknown };
+
+    expect(settings.data).toMatchObject({ id: '90000000-0000-4000-8000-000000000001' });
+    expect(home.data).toMatchObject({ id: '90000000-0000-4000-8000-000000000005' });
+    expect(Array.isArray(products.data)).toBe(true);
+  });
+
   test('serves exact baseline fixtures through the production SDK and mappers', async () => {
     server = await createFakeDirectusServer({ port: 0, adminSecret: 'test-admin-secret' });
     const client = createDirectusCmsClient(server.url);

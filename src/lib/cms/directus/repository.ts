@@ -1,5 +1,6 @@
 import {
   readItems,
+  readSingleton,
   type Query,
   type RegularCollections,
   type RestCommand,
@@ -243,11 +244,11 @@ const published = { status: { _eq: 'published' } } as const;
 
 const readSiteSettings = <
   const TQuery extends Query<DirectusSchema, SiteSettingsRecord>,
->(query: TQuery) => readItems<DirectusSchema, 'site_settings', TQuery>('site_settings', query);
+>(query: TQuery) => readSingleton<DirectusSchema, 'site_settings', TQuery>('site_settings', query);
 
 const readHomePage = <
   const TQuery extends Query<DirectusSchema, HomePageRecord>,
->(query: TQuery) => readItems<DirectusSchema, 'home_page', TQuery>('home_page', query);
+>(query: TQuery) => readSingleton<DirectusSchema, 'home_page', TQuery>('home_page', query);
 
 const readCategories = <
   const TQuery extends Query<DirectusSchema, CategoryRecord>,
@@ -304,25 +305,25 @@ export const createCmsRepository = (request: CmsRequest): CmsRepository => {
 
   const requiredSingleton = async <T extends object>(
     collection: 'site_settings' | 'home_page',
-    command: RestCommand<T[], DirectusSchema>,
-  ): Promise<T> => {
-    const item = await detail(collection, command);
-    if (!item) throw new CmsDataError(collection, 'published singleton is missing');
-    return item;
-  };
+    command: RestCommand<T, DirectusSchema>,
+  ): Promise<T> => run(async () => {
+    const response = await request(command);
+    if (typeof response !== 'object' || response === null || Array.isArray(response)) {
+      throw new CmsDataError(collection, 'Directus singleton response must be a record');
+    }
+    return response;
+  });
 
   return {
     getSiteSettings: async (locale): Promise<SiteSettingsRecord> => requiredSingleton('site_settings', readSiteSettings({
       fields: siteSettingsFields,
       filter: published,
       deep: localizedDeep(locale),
-      limit: 1,
     })),
     getHomePage: async (locale): Promise<HomePageRecord> => requiredSingleton('home_page', readHomePage({
       fields: homePageFields,
       filter: published,
       deep: homeDeep(locale),
-      limit: 1,
     })),
     getCategories: async (locale): Promise<CategoryRecord[]> => list('categories', readCategories({
       fields: categoryFields,

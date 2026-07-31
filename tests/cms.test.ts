@@ -49,6 +49,10 @@ const createRequestHarness = (...responses: unknown[]) => {
   return { request, requests };
 };
 
+const expectCmsDataError = async (promise: Promise<unknown>) => {
+  expect(await promise.then(() => undefined, (error) => error)).toBeInstanceOf(CmsDataError);
+};
+
 describe('Directus presentation mappers', () => {
   test('maps a product strictly in the requested locale with stable counterpart identity', () => {
     const product = mapProduct(structuredClone(fixtureProduct), 'vi', directusUrl);
@@ -213,7 +217,20 @@ describe('Directus request repository', () => {
     ]) {
       expect(source).toContain(`const read${collection[0]!.toUpperCase()}${collection.slice(1)} =`);
     }
+    expect(source).toContain("readSingleton<DirectusSchema, 'site_settings'");
+    expect(source).toContain("readSingleton<DirectusSchema, 'home_page'");
     expect(source).not.toMatch(/readItems\(collection, query\)/);
+  });
+
+  test('accepts singleton object responses while collections remain arrays', async () => {
+    const harness = createRequestHarness(fixtureSiteSettings, fixtureHomePage, [fixtureProduct]);
+    const repository = createCmsRepository(harness.request);
+
+    expect((await repository.getSiteSettings('en')).id).toBe('settings');
+    expect((await repository.getHomePage('vi')).id).toBe('home');
+    expect((await repository.getProducts('en')).map(({ id }) => id)).toEqual([
+      'cultured-butter-sheet',
+    ]);
   });
 
   test('requests only published products with explicit localized relational fields', async () => {
@@ -362,16 +379,16 @@ describe('Directus request repository', () => {
     ]);
   });
 
-  test('rejects missing required singleton records as invalid data', async () => {
-    const settings = createRequestHarness([]);
-    const home = createRequestHarness([]);
+  test.each([
+    { response: null },
+    { response: [fixtureSiteSettings] },
+    { response: 'not-a-record' },
+  ])('rejects malformed singleton responses as invalid data', async ({ response }) => {
+    const settings = createRequestHarness(response);
+    const home = createRequestHarness(response);
 
-    expect(
-      createCmsRepository(settings.request).getSiteSettings('en'),
-    ).rejects.toBeInstanceOf(CmsDataError);
-    expect(
-      createCmsRepository(home.request).getHomePage('vi'),
-    ).rejects.toBeInstanceOf(CmsDataError);
+    await expectCmsDataError(createCmsRepository(settings.request).getSiteSettings('en'));
+    await expectCmsDataError(createCmsRepository(home.request).getHomePage('vi'));
   });
 
   test('converts transport failures without hiding CMS data errors', async () => {
@@ -403,9 +420,9 @@ describe('CMS query boundary', () => {
       [fixtureBrand],
       [fixtureBlogPost],
       [fixtureBlogPost],
-      [fixtureSiteSettings],
+      fixtureSiteSettings,
       [fixturePartner],
-      [fixtureHomePage],
+      fixtureHomePage,
     );
     const queries = createCmsQueries(
       createCmsRepository(harness.request),

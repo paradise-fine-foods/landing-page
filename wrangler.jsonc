@@ -4,6 +4,9 @@
   "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
   "name": "finefoods",
   "main": "@astrojs/cloudflare/entrypoints/server",
+  "vars": {
+    "DIRECTUS_URL": "https://directus-production-f1a9.up.railway.app/",
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
