@@ -46,7 +46,6 @@ export const matchesCatalogFilters = (
 
 export const buildProductSearchText = (
   product: Product,
-  applicationNames: Readonly<Record<string, string>> = {},
 ) =>
   [
     product.name,
@@ -55,25 +54,22 @@ export const buildProductSearchText = (
     product.origin,
     ...product.categories.map((category) => category.name),
     ...product.applications,
-    ...product.applications.map((application) => applicationNames[application]).filter(Boolean),
+    ...product.applicationOptions.map(({ name }) => name),
     ...product.benefits,
   ].join(' ');
 
-export const getApplicationNames = (products: readonly Pick<Product, 'applicationOptions'>[]) =>
-  Object.fromEntries(
-    products.flatMap(({ applicationOptions }) =>
-      applicationOptions
-        .filter(({ name }) => Boolean(name.trim()))
-        .map(({ id, name }) => [id, name]),
-    ),
-  ) as Record<string, string>;
+export const getApplicationOptions = (products: readonly Pick<Product, 'applicationOptions'>[]) =>
+  [...new Map(
+    products.flatMap(({ applicationOptions }) => applicationOptions)
+      .filter(({ name }) => Boolean(name.trim()))
+      .map((option) => [option.id, option]),
+  ).values()];
 
 export const filterProducts = (products: Product[], query: ProductQuery = {}): Product[] => {
-  const applicationNames = getApplicationNames(products);
   return products.filter((product) =>
     matchesCatalogFilters(
       {
-        search: buildProductSearchText(product, applicationNames),
+        search: buildProductSearchText(product),
         categories: product.categories.map((category) => category.id),
         brand: product.brand.id,
         applications: product.applications,

@@ -2,7 +2,6 @@ import { describe, expect, test } from 'bun:test';
 
 import { buildProductSearchText, filterProducts } from '../src/lib/catalog/filter-products';
 import { getProducts } from './fixtures/directus';
-import { ui } from '../src/lib/i18n/ui';
 
 describe('filterProducts', () => {
   test('matches search text without case or diacritics', async () => {
@@ -26,7 +25,7 @@ describe('filterProducts', () => {
     const butter = products.find(({ id }) => id === 'cultured-butter-sheet');
 
     expect(butter).toBeDefined();
-    const search = buildProductSearchText(butter!, ui.vi.product.applicationNames);
+    const search = buildProductSearchText(butter!);
     expect(search).toContain('lamination');
     expect(search).toContain('Cán lớp');
   });

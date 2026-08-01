@@ -314,6 +314,19 @@ const rawBrands = demoBrands.map((brand, index) => ({
 const applicationIds = [
   ...new Set(demoProducts.flatMap(({ applications }) => applications)),
 ];
+const applicationTranslationNames: Record<string, { en: string; vi: string }> = {
+  lamination: { en: 'Lamination', vi: 'Cán lớp' },
+  viennoiserie: { en: 'Viennoiserie', vi: 'Bánh viennoiserie' },
+  whipping: { en: 'Whipping', vi: 'Đánh bông' },
+  sauces: { en: 'Sauces', vi: 'Xốt' },
+  tiramisu: { en: 'Tiramisu', vi: 'Tiramisu' },
+  desserts: { en: 'Desserts', vi: 'Món tráng miệng' },
+  cheesecake: { en: 'Cheesecake', vi: 'Bánh phô mai' },
+  spreads: { en: 'Spreads', vi: 'Món phết' },
+  pizza: { en: 'Pizza', vi: 'Pizza' },
+  baking: { en: 'Baking', vi: 'Làm bánh' },
+  cooking: { en: 'Cooking', vi: 'Nấu ăn' },
+};
 const audienceChannelIds = [
   ...new Set(demoProducts.flatMap(({ audienceChannels }) => audienceChannels)),
 ];
@@ -325,7 +338,7 @@ const rawApplications = applicationIds.map((id, index) => ({
   translations: (['en', 'vi'] as const).map((locale) => ({
     id: `${id}-${locale}`,
     languages_code: locale,
-    name: locale === 'vi' ? ui.vi.product.applicationNames[id] ?? id : id,
+    name: applicationTranslationNames[id]?.[locale] ?? id,
     slug: id,
     description: '',
   })),
@@ -501,7 +514,6 @@ export const getBrandBySlug = fixtureQueries.getBrandBySlug;
 export const getFeaturedContent = fixtureQueries.getFeaturedContent;
 import { createCmsQueries } from '../../src/lib/cms/queries';
 import type { CmsRepository } from '../../src/lib/cms/directus/repository';
-import { ui } from '../../src/lib/i18n/ui';
 import {
   demoBlogPosts,
   demoBrandingAssets,

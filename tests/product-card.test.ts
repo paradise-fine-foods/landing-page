@@ -10,7 +10,6 @@ import { createSettings } from '../node_modules/astro/dist/core/config/settings.
 import { AstroLogger } from '../node_modules/astro/dist/core/logger/core.js';
 import { runHookConfigSetup } from '../node_modules/astro/dist/integrations/hooks.js';
 import astroPlugin from '../node_modules/astro/dist/vite-plugin-astro/index.js';
-import { getApplicationNames } from '../src/lib/catalog/filter-products';
 import { getProductCardMetadata } from '../src/lib/catalog/product-card';
 import { getProducts } from './fixtures/directus';
 import { ui } from '../src/lib/i18n/ui';
@@ -50,15 +49,13 @@ describe('ProductCard metadata', () => {
       applications: [applicationId],
       applicationOptions: [{ id: applicationId, slug: 'viennoiserie', name: applicationLabel, description: '' }],
     };
-    const applicationNames = getApplicationNames([product]);
     const container = await AstroContainer.create();
     const [filters, card, detail] = await Promise.all([
       container.renderToString(await component('/src/components/catalog/CatalogFilters.astro'), {
         props: {
           categories: product.categories,
           brands: [product.brand],
-          applications: product.applications,
-          applicationNames,
+          applications: product.applicationOptions,
           copy: ui.en.catalog,
           initialCount: 1,
         },
@@ -80,10 +77,9 @@ describe('ProductCard metadata', () => {
 
   test('combines only mapped category and application values', async () => {
     const product = (await getProducts('en'))[0]!;
-
-    expect(getProductCardMetadata(product, ui.en.product.applicationNames)).toEqual([
+    expect(getProductCardMetadata(product)).toEqual([
       product.categories[0]!.name,
-      ui.en.product.applicationNames[product.applications[0]!]!,
+      product.applicationOptions[0]!.name,
     ]);
   });
 
@@ -94,7 +90,7 @@ describe('ProductCard metadata', () => {
       applications: ['not-mapped'],
     };
 
-    const metadata = getProductCardMetadata(product, ui.en.product.applicationNames);
+    const metadata = getProductCardMetadata(product);
     expect(metadata).toEqual([]);
     expect(metadata.join(' · ')).not.toContain('undefined');
   });

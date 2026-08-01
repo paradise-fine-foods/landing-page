@@ -5,7 +5,6 @@ import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
 import CardSkeleton from '../../../components/global/CardSkeleton.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { productAlternatePath, productDetailPath } from '../../../lib/catalog/routes';
-import { getApplicationNames } from '../../../lib/catalog/filter-products';
 import { getGlobalSettings, getProductBySlug } from '../../../lib/cms/queries';
 import { localizedPath } from '../../../lib/i18n/routes';
 import { isLocale } from '../../../lib/i18n/types';
@@ -32,13 +31,12 @@ if (!product) {
 const pathname = productDetailPath(locale, product);
 const alternatePath = productAlternatePath(locale, product);
 const copy = ui[locale];
-const applicationNames = getApplicationNames([product]);
 ---
 
 <SiteLayout {locale} title={`${product.name} | ${settings.siteName}`} description={product.description} {pathname} {alternatePath} settings={settings} image={product.image.src}>
   <div class="product-page container section-space">
     <Breadcrumbs label={copy.product.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.products, href: localizedPath(locale, 'products') }, { label: product.name }]} />
-    <ProductDetail {product} {copy} {applicationNames} enquiryPath={localizedPath(locale, 'customerContact')} />
+    <ProductDetail {product} {copy} enquiryPath={localizedPath(locale, 'customerContact')} />
     <RelatedProductsIsland
       server:defer
       {locale}

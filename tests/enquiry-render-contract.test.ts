@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { readFile } from 'node:fs/promises';
+import { ui } from '../src/lib/i18n/ui';
 
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
@@ -60,6 +61,8 @@ describe('enquiry rendering contract', () => {
 
     expect(source).toContain('const requiredDescription = formCopy.requiredNote;');
     expect(source).not.toContain('`${formCopy.requiredNote} ${formCopy.required}`');
+    expect(ui.en.form).not.toHaveProperty('required');
+    expect(ui.vi.form).not.toHaveProperty('required');
     expect(source).toContain('aria-required="true"');
     expect(source).toContain('aria-hidden="true">*</span>');
   });

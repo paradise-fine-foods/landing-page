@@ -1,7 +1,6 @@
 ---
 import type { Product } from '../../lib/cms/types';
 import type { UiCopy } from '../../lib/i18n/ui';
-import { getApplicationNames } from '../../lib/catalog/filter-products';
 import ProductMetadata from './ProductMetadata.astro';
 import Icon from '../global/Icon.astro';
 
@@ -9,10 +8,9 @@ interface Props {
   product: Product;
   copy: UiCopy;
   enquiryPath: string;
-  applicationNames?: Readonly<Record<string, string>>;
 }
 
-const { product, copy, enquiryPath, applicationNames = getApplicationNames([product]) } = Astro.props;
+const { product, copy, enquiryPath } = Astro.props;
 ---
 
 <article class="product-detail">
@@ -27,7 +25,7 @@ const { product, copy, enquiryPath, applicationNames = getApplicationNames([prod
     <div class="product-detail__lists">
       <section>
         <h2>{copy.product.applications}</h2>
-        <ul>{product.applications.flatMap((application) => applicationNames[application] ? [<li>{applicationNames[application]}</li>] : [])}</ul>
+        <ul>{product.applicationOptions.map(({ name }) => <li>{name}</li>)}</ul>
       </section>
       <section>
         <h2>{copy.product.benefits}</h2>

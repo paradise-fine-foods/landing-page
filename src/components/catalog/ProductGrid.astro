@@ -2,19 +2,18 @@
 import type { Product } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
 import type { UiCopy } from '../../lib/i18n/ui';
-import { buildProductSearchText, getApplicationNames } from '../../lib/catalog/filter-products';
+import { buildProductSearchText } from '../../lib/catalog/filter-products';
 import ProductCard from './ProductCard.astro';
 
 interface Props {
   products: Product[];
   locale: Locale;
   copy: UiCopy['catalog'];
-  applicationNames?: Readonly<Record<string, string>>;
   showEmptyState?: boolean;
   cardHeadingLevel?: 'h2' | 'h3';
 }
 
-const { products, locale, copy, applicationNames = getApplicationNames(products), showEmptyState = true, cardHeadingLevel = 'h3' } = Astro.props;
+const { products, locale, copy, showEmptyState = true, cardHeadingLevel = 'h3' } = Astro.props;
 ---
 
 <div class="product-grid">
@@ -22,12 +21,12 @@ const { products, locale, copy, applicationNames = getApplicationNames(products)
     <div
       data-product-card
       data-product-id={product.id}
-      data-search={buildProductSearchText(product, applicationNames)}
+      data-search={buildProductSearchText(product)}
       data-categories={JSON.stringify(product.categories.map(({ id }) => id))}
       data-brand={product.brand.id}
       data-applications={JSON.stringify(product.applications)}
     >
-      <ProductCard {product} {locale} {applicationNames} headingLevel={cardHeadingLevel} />
+      <ProductCard {product} {locale} headingLevel={cardHeadingLevel} />
     </div>
   ))}
 </div>

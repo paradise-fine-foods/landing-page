@@ -86,13 +86,19 @@ describe('reviewed homepage contracts', () => {
     expect(component).not.toContain('{product.description}');
   });
 
-  test('every CMS application key has a distinct Vietnamese display name', async () => {
+  test('every CMS application option has a distinct Vietnamese display name', async () => {
     const products = await getProducts('vi');
-    const applicationKeys = [...new Set(products.flatMap(({ applications }) => applications))];
+    const options = products.flatMap(({ applicationOptions }) => applicationOptions);
 
-    for (const key of applicationKeys) {
-      expect(ui.vi.product.applicationNames[key]).toBeString();
-      expect(ui.vi.product.applicationNames[key]).not.toBe(key);
+    for (const option of options) {
+      expect(option.name).toBeString();
+      expect(option.name).not.toBe(option.id);
+    }
+  });
+
+  test('keeps application names in CMS data instead of static UI copy', () => {
+    for (const locale of ['en', 'vi'] as const) {
+      expect(ui[locale].product).not.toHaveProperty('applicationNames');
     }
   });
 

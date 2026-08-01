@@ -78,11 +78,11 @@ describe('localized product routes', () => {
     const detail = source('src/components/catalog/ProductDetail.astro');
     const filters = source('src/lib/catalog/filter-products.ts');
 
-    expect(catalog).toContain('getApplicationNames(products)');
+    expect(catalog).toContain('getApplicationOptions(products)');
     expect(filters).toContain('applicationOptions');
-    expect(grid).toContain('applicationNames');
-    expect(card).toContain('applicationNames');
-    expect(detail).toContain('applicationNames');
+    expect(grid).not.toContain('applicationNames');
+    expect(card).not.toContain('applicationNames');
+    expect(detail).not.toContain('applicationNames');
     expect(detail).not.toContain('?? application');
   });
 
