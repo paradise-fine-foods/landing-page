@@ -59,11 +59,21 @@ export const buildProductSearchText = (
     ...product.benefits,
   ].join(' ');
 
-export const filterProducts = (products: Product[], query: ProductQuery = {}): Product[] =>
-  products.filter((product) =>
+export const getApplicationNames = (products: readonly Pick<Product, 'applicationOptions'>[]) =>
+  Object.fromEntries(
+    products.flatMap(({ applicationOptions }) =>
+      applicationOptions
+        .filter(({ name }) => Boolean(name.trim()))
+        .map(({ id, name }) => [id, name]),
+    ),
+  ) as Record<string, string>;
+
+export const filterProducts = (products: Product[], query: ProductQuery = {}): Product[] => {
+  const applicationNames = getApplicationNames(products);
+  return products.filter((product) =>
     matchesCatalogFilters(
       {
-        search: buildProductSearchText(product),
+        search: buildProductSearchText(product, applicationNames),
         categories: product.categories.map((category) => category.id),
         brand: product.brand.id,
         applications: product.applications,
@@ -71,3 +81,4 @@ export const filterProducts = (products: Product[], query: ProductQuery = {}): P
       query,
     ),
   );
+};

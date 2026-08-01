@@ -1,16 +1,17 @@
 ---
 import type { Product } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
+import { getApplicationNames } from '../../lib/catalog/filter-products';
 import { getProductCardMetadata } from '../../lib/catalog/product-card';
 import { localizedPath } from '../../lib/i18n/routes';
 import { ui } from '../../lib/i18n/ui';
 import Icon from '../global/Icon.astro';
 
-interface Props { product: Product; locale: Locale; headingLevel?: 'h2' | 'h3' }
-const { product, locale, headingLevel = 'h3' } = Astro.props;
+interface Props { product: Product; locale: Locale; applicationNames?: Readonly<Record<string, string>>; headingLevel?: 'h2' | 'h3' }
+const { product, locale, applicationNames = getApplicationNames([product]), headingLevel = 'h3' } = Astro.props;
 const href = `${localizedPath(locale, 'products')}${product.slug}/`;
 const Heading = headingLevel;
-const categoryApplications = getProductCardMetadata(product, ui[locale].product.applicationNames);
+const categoryApplications = getProductCardMetadata(product, applicationNames);
 ---
 
 <article class="product-card">

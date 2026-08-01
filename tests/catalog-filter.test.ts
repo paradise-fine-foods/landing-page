@@ -31,6 +31,20 @@ describe('filterProducts', () => {
     expect(search).toContain('Cán lớp');
   });
 
+  test('indexes localized application options when Directus uses UUID IDs', async () => {
+    const product = (await getProducts('vi'))[0]!;
+    const applicationId = '8c60be88-16e5-4a11-b984-c433bf1c9172';
+    const uuidProduct = {
+      ...product,
+      applications: [applicationId],
+      applicationOptions: [{ id: applicationId, slug: 'viennoiserie', name: 'Kỹ thuật viennoiserie', description: '' }],
+    };
+
+    expect(filterProducts([uuidProduct], { search: 'viennoiserie' }).map(({ id }) => id)).toEqual([
+      uuidProduct.id,
+    ]);
+  });
+
   test('combines brand and category filters with AND semantics', async () => {
     const products = await getProducts('en');
 

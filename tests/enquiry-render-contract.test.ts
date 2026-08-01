@@ -55,6 +55,15 @@ describe('enquiry rendering contract', () => {
     expect(source).not.toContain('.enquiry__panel { background: var(--color-process-white); border: 1px solid');
   });
 
+  test('renders the required note once while keeping required controls accessible', async () => {
+    const source = await read('../src/components/forms/EnquiryForm.astro');
+
+    expect(source).toContain('const requiredDescription = formCopy.requiredNote;');
+    expect(source).not.toContain('`${formCopy.requiredNote} ${formCopy.required}`');
+    expect(source).toContain('aria-required="true"');
+    expect(source).toContain('aria-hidden="true">*</span>');
+  });
+
   test('keeps controls clear of both rail states and gives consent a labelled 44px hit area', async () => {
     const source = await read('../src/components/forms/EnquiryForm.astro');
 

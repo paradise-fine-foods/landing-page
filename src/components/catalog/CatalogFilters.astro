@@ -39,7 +39,7 @@ const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSing
     <label for="catalog-application">{copy.applicationLabel}</label>
     <select id="catalog-application" data-filter-application>
       <option value="">{copy.allApplications}</option>
-      {applications.map((application) => <option value={application}>{applicationNames[application] ?? application}</option>)}
+      {applications.map((application) => <option value={application}>{applicationNames[application]}</option>)}
     </select>
   </div>
   <div class="catalog-filters__summary">

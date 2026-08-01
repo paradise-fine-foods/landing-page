@@ -51,6 +51,17 @@ describe('floating form rail rendering contract', () => {
     }
   });
 
+  test('leaves only the 44px toggle exposed when a 390px rail is collapsed', async () => {
+    const source = await read('../src/components/global/FloatingFormRail.astro');
+    const sharedRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    expect(sharedRail).toContain('flex-direction: row-reverse');
+    expect(source).toContain(".floating-form-rail[data-ready='true'][data-expanded='false'] {");
+    expect(source).toContain('translate: calc(100% - 2.75rem) 0');
+    expect(source).toContain('inline-size: 2.75rem');
+    expect(source).toContain('.floating-form-rail__panel[inert]');
+  });
+
   test('uses a non-obscuring horizontal top dock when expanded on mobile', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
 
