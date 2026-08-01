@@ -54,11 +54,14 @@ describe('floating form rail rendering contract', () => {
   test('leaves only the 44px toggle exposed when a 390px rail is collapsed', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     const sharedRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
+    const collapsedRail = source.match(/\.floating-form-rail\[data-ready='true'\]\[data-expanded='false'\]\s*\{([^}]*)\}/)?.[1] ?? '';
+    const collapsedPanel = source.match(/\.floating-form-rail\[data-ready='true'\]\[data-expanded='false'\] \.floating-form-rail__panel\s*\{([^}]*)\}/)?.[1] ?? '';
 
-    expect(sharedRail).toContain('flex-direction: row-reverse');
-    expect(source).toContain(".floating-form-rail[data-ready='true'][data-expanded='false'] {");
-    expect(source).toContain('translate: calc(100% - 2.75rem) 0');
-    expect(source).toContain('inline-size: 2.75rem');
+    expect(sharedRail).toMatch(/flex-direction:\s*row\s*;/);
+    expect(collapsedRail).toContain('inline-size: 2.75rem');
+    expect(collapsedRail).toContain('translate: 0 0');
+    expect(collapsedPanel).toContain('display: none');
+    expect(source.match(/\n  \.floating-form-rail__toggle\s*\{([^}]*)\}/)?.[1]).toContain('inline-size: 2.75rem');
     expect(source).toContain('.floating-form-rail__panel[inert]');
   });
 
@@ -96,7 +99,7 @@ describe('floating form rail rendering contract', () => {
       'flex-direction: row',
       'align-items: flex-end',
       "[data-expanded='false'] {",
-      'translate: calc(100% - 2.75rem) 0',
+      'translate: 0 0',
       'transition: translate var(--transition-base)',
       'transition: background-color var(--transition-fast)',
       'initializeFloatingRail',
@@ -117,7 +120,6 @@ describe('floating form rail rendering contract', () => {
     expect(source).not.toContain('3.25rem');
     expect(source).not.toContain('inline-size: min(17rem');
     expect(source).not.toContain('inline-size: min(20rem');
-    expect(source).not.toContain("[data-expanded='false'] .floating-form-rail__panel");
     expect(source).not.toContain('animation: floating-rail-enter 360ms cubic-bezier(0.22, 1, 0.36, 1) both');
     expect(source).not.toContain('translate: 1rem 0');
     expect(source).not.toContain('clip-path');

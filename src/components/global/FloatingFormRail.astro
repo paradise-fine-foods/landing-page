@@ -47,7 +47,7 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
   .floating-form-rail {
     align-items: flex-end;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     inset-block-end: calc(1rem + env(safe-area-inset-bottom, 0px));
     inset-inline-end: calc(1rem + env(safe-area-inset-right, 0px));
     pointer-events: none;
@@ -84,8 +84,11 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
   }
 
   .floating-form-rail[data-ready='true'][data-expanded='false'] {
-    translate: calc(100% - 2.75rem) 0;
+    inline-size: 2.75rem;
+    translate: 0 0;
   }
+
+  .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel { display: none; }
 
   .floating-form-rail__toggle,
   .floating-form-rail__panel a {
