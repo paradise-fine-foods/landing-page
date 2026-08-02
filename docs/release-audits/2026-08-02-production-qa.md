@@ -2,12 +2,12 @@
 
 ## Release status
 
-Directus fix is deployed and verified. Storefront source needed no functional change. Temporary bilingual product and blog publication, discovery, revalidation, and archival removal passed. Storefront audit release and administrator cleanup remain release gates at time of this report revision.
+Directus fix and storefront audit release are deployed and verified. Storefront source needed no functional change. Temporary bilingual product and blog publication, discovery, revalidation, archival removal, and administrator cleanup passed.
 
 | System | Revision | Deployment | Status |
 | --- | --- | --- | --- |
 | Directus | `d18e5d9` | Railway `97a18987-308e-407b-b611-64d8526728d3` | Active; post-deploy editor validation passed |
-| Storefront | _client release commit pending_ | _Cloudflare deployment pending_ | Browser audit passed; audit-only release pending |
+| Storefront | `3490a82` | Cloudflare build `f48114ed` | Successful; final EN/VI and CMS-backed route smoke passed |
 
 ## Scope and method
 
@@ -83,8 +83,6 @@ Native local-file upload could not be exercised because the Chrome control exten
 
 No reproducible functional, permission, accessibility, metadata, console, or responsive defect was found in client source. Therefore no speculative UI change or redesign was made. Existing Astro components, CMS API shapes, and revalidation contract remain unchanged.
 
-## Remaining release gates
+## Production cleanup
 
-- Re-authenticate as Administrator and permanently delete only temporary QA records, disposable QA file, and temporary QA user.
-- Confirm existing production content and users remain unchanged.
-- Commit and push this audit-only storefront revision, then record active Cloudflare deployment and final client verification above.
+On 2026-08-03, an Administrator permanently deleted only the disposable QA product, blog, Public CMS file, and user. Directus then showed one existing published product, one existing published blog, and the same three pre-existing active users. Final storefront checks found the existing product, excluded both QA records, and returned no browser console warnings or errors.
