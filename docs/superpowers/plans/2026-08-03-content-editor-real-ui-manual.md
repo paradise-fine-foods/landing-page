@@ -4,7 +4,7 @@
 
 **Goal:** Đồng bộ manual Content Editor sang frontend và bổ sung mười ảnh PNG chụp từ giao diện Directus thật bằng dữ liệu QA song ngữ có ý nghĩa.
 
-**Architecture:** Directus giữ bản manual hiện có; frontend nhận cây tài liệu giống hệt. Controller tạo dữ liệu QA tạm, chụp Chrome dưới vai trò Content Editor, làm sạch ảnh, cập nhật manual, đồng bộ hai repo, rồi dùng Administrator xóa toàn bộ QA trước khi push.
+**Architecture:** Directus giữ bản manual hiện có; frontend nhận cây tài liệu giống hệt. Administrator chỉ tạo user QA và dọn dữ liệu. Controller dùng chính user Content Editor để tạo nội dung, upload, publish, archive và chụp Chrome; sau đó làm sạch ảnh, cập nhật manual, đồng bộ hai repo và xóa toàn bộ QA trước khi push.
 
 **Tech Stack:** Markdown, SVG, PNG, Chrome, Directus Data Studio, Sharp, Git.
 
@@ -16,6 +16,7 @@
 - Hai ảnh nội dung mới phải thể hiện sản phẩm matcha và cách bảo quản matcha.
 - User QA chỉ có vai trò Content Editor; file QA chỉ nằm trong Public CMS.
 - Mọi PNG hướng dẫn phải được chụp trong phiên đăng nhập của user QA Content Editor; không dùng phiên Administrator để chụp thay.
+- Mọi taxonomy, Product, Blog Post, translation, relation, file upload, publish và archive QA phải do user QA Content Editor thực hiện.
 - PNG không chứa email, mật khẩu, token, ID, thông tin tài khoản hoặc mục quản trị ngoài quyền Content Editor.
 - Không thay đổi code, schema, dependency hoặc dữ liệu production hiện có.
 - Toàn bộ user, record, relation và file QA phải được xóa trước khi phát hành.
@@ -67,7 +68,11 @@ Mở từng PNG ở độ phân giải gốc. Expected: nội dung đúng chủ 
 
 Trong Administrator, tạo user có tên hiển thị `QA Manual Editor`, email tạm không xuất hiện trong ảnh, mật khẩu ngẫu nhiên, role duy nhất **Content Editor**. Không cấp Administrator hoặc policy khác.
 
-- [ ] **Step 2: Tạo taxonomy QA**
+- [ ] **Step 2: Đăng nhập Content Editor**
+
+Mở phiên Chrome tách biệt nếu được hỗ trợ. Đăng nhập user QA; xác nhận tài khoản chỉ có role **Content Editor**, sidebar chỉ có phạm vi editor, và các mục Users, Settings, Teams, policies, schema, Flows, Languages không dùng được. Nếu không thể tách phiên mà không làm mất Administrator session, dừng và xin phép trước khi đăng xuất.
+
+- [ ] **Step 3: Tạo taxonomy QA bằng Content Editor**
 
 Tạo và Published các record song ngữ:
 
@@ -78,21 +83,17 @@ Tạo và Published các record song ngữ:
 
 Mỗi bản dịch có slug chữ thường, mô tả đầy đủ và ảnh/mô tả ảnh khi validation yêu cầu.
 
-- [ ] **Step 3: Tải hai ảnh vào Public CMS**
+- [ ] **Step 4: Tải hai ảnh vào Public CMS bằng Content Editor**
 
 Đặt tên `qa-manual-organic-matcha` và `qa-manual-matcha-storage`. Xác nhận thư mục là **Public CMS**, MIME là image và preview hiển thị đúng.
 
-- [ ] **Step 4: Tạo Product QA song ngữ**
+- [ ] **Step 5: Tạo Product QA song ngữ bằng Content Editor**
 
 EN: `[QA] Organic Culinary Matcha`; VI: `[QA] Bột matcha hữu cơ dùng cho chế biến`. Điền slug, mô tả, Uji–Kyoto làm xuất xứ, túi 500 g có khóa kéo, bảo quản kín ở nơi mát tối, nhiệt độ 5–20°C, ảnh + alt, Brand, ba taxonomy và benefits ngắn về màu xanh, vị umami và khả năng hòa trộn.
 
-- [ ] **Step 5: Tạo Blog Post QA song ngữ**
+- [ ] **Step 6: Tạo Blog Post QA song ngữ bằng Content Editor**
 
 EN: `[QA] How to Store Matcha for Fresh Colour and Aroma`; VI: `[QA] Cách bảo quản matcha để giữ màu và hương thơm`. Body có ba phần: tránh ánh sáng/nhiệt, dùng hộp kín, để trở về nhiệt độ phòng trước khi mở. Điền excerpt, category, slug, ảnh + alt, Published At là ngày QA và Reading Minutes là `4`.
-
-- [ ] **Step 6: Dùng phiên Content Editor**
-
-Mở phiên Chrome tách biệt nếu được hỗ trợ. Đăng nhập user QA; xác nhận tài khoản chỉ có role **Content Editor**, sidebar chỉ có phạm vi editor, và các mục Users, Settings, Teams, policies, schema, Flows, Languages không dùng được. Nếu không thể tách phiên mà không làm mất Administrator session, dừng và xin phép trước khi đăng xuất.
 
 - [ ] **Step 7: Chụp mười ảnh**
 
