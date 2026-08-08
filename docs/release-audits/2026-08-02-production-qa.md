@@ -86,3 +86,10 @@ No reproducible functional, permission, accessibility, metadata, console, or res
 ## Production cleanup
 
 On 2026-08-03, an Administrator permanently deleted only the disposable QA product, blog, Public CMS file, and user. Directus then showed one existing published product, one existing published blog, and the same three pre-existing active users. Final storefront checks found the existing product, excluded both QA records, and returned no browser console warnings or errors.
+
+## Content Editor manual release — 2026-08-08
+
+- Directus revision `3f8ca20` adds the Vietnamese, nontechnical Content Editor manual and 10 production UI screenshots captured from a disposable Content Editor account.
+- The same 19-file manual tree is included in the storefront repository under `docs/user-manuals/`; SHA-256 comparison found no differences between repositories.
+- Screenshots contain meaningful bilingual product, blog, relation, benefit, image, publish, and archive examples. Independent visual review found no credentials, email addresses, UUIDs, loading states, or administrative navigation.
+- An Administrator permanently deleted only the disposable manual QA product, blog, supporting taxonomy records, two Public CMS images, and temporary Content Editor user after screenshot capture. Existing production content remained unchanged.
