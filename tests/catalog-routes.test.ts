@@ -71,6 +71,21 @@ describe('localized product routes', () => {
     expect(catalogSource).toContain('<noscript>');
   });
 
+  test('uses localized application options instead of static UI labels', () => {
+    const catalog = source('src/pages/[locale]/products/index.astro');
+    const grid = source('src/components/catalog/ProductGrid.astro');
+    const card = source('src/components/catalog/ProductCard.astro');
+    const detail = source('src/components/catalog/ProductDetail.astro');
+    const filters = source('src/lib/catalog/filter-products.ts');
+
+    expect(catalog).toContain('getApplicationOptions(products)');
+    expect(filters).toContain('applicationOptions');
+    expect(grid).not.toContain('applicationNames');
+    expect(card).not.toContain('applicationNames');
+    expect(detail).not.toContain('applicationNames');
+    expect(detail).not.toContain('?? application');
+  });
+
   test('uses validated runtime params and only the vendor-neutral query boundary', () => {
     const routeFiles = [
       'src/pages/[locale]/products/index.astro',

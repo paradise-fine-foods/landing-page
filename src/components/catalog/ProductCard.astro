@@ -10,7 +10,7 @@ interface Props { product: Product; locale: Locale; headingLevel?: 'h2' | 'h3' }
 const { product, locale, headingLevel = 'h3' } = Astro.props;
 const href = `${localizedPath(locale, 'products')}${product.slug}/`;
 const Heading = headingLevel;
-const categoryApplications = getProductCardMetadata(product, ui[locale].product.applicationNames);
+const categoryApplications = getProductCardMetadata(product);
 ---
 
 <article class="product-card">

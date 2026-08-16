@@ -4,6 +4,7 @@ import ProductGrid from '../../../components/catalog/ProductGrid.astro';
 import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
 import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { getBrands, getCategories, getGlobalSettings, getProducts } from '../../../lib/cms/queries';
+import { getApplicationOptions } from '../../../lib/catalog/filter-products';
 import { localizedPath } from '../../../lib/i18n/routes';
 import { counterpartLocale } from '../../../lib/i18n/static-paths';
 import { isLocale } from '../../../lib/i18n/types';
@@ -27,7 +28,8 @@ const pageData = await loadCmsPageData(
 if (!pageData.ok) return Astro.rewrite('/503');
 const [settings, products, categories, brands] = pageData.data;
 const copy = ui[locale];
-const applications = [...new Set(products.flatMap(({ applications }) => applications))].sort();
+const applications = getApplicationOptions(products)
+  .sort((first, second) => first.name.localeCompare(second.name));
 ---
 
 <SiteLayout {locale} title={`${copy.catalog.title} | ${settings.siteName}`} description={copy.catalog.description} {pathname} {alternatePath} settings={settings}>
@@ -38,7 +40,7 @@ const applications = [...new Set(products.flatMap(({ applications }) => applicat
       <h1>{copy.catalog.title}</h1>
       <p>{copy.catalog.description}</p>
     </header>
-    <CatalogFilters {categories} {brands} {applications} applicationNames={copy.product.applicationNames} copy={copy.catalog} initialCount={products.length} />
+    <CatalogFilters {categories} {brands} {applications} copy={copy.catalog} initialCount={products.length} />
     <ProductGrid {products} {locale} copy={copy.catalog} cardHeadingLevel="h2" />
   </div>
 </SiteLayout>

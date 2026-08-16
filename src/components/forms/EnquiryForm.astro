@@ -15,7 +15,7 @@ interface Props {
 const { locale, products, copy, mode = 'general' } = Astro.props;
 const formCopy = copy.form;
 const modeCopy = getEnquiryModeCopy(locale, mode);
-const requiredDescription = `${formCopy.requiredNote} ${formCopy.required}`;
+const requiredDescription = formCopy.requiredNote;
 ---
 
 <section class="enquiry" aria-labelledby="enquiry-title" data-enquiry-root data-mode={mode} data-locale={locale} data-known-products={JSON.stringify(products.map(({ id }) => id))} data-submitting={formCopy.submitting} data-form-error={copy.status.formError} data-unexpected-error={formCopy.unexpectedError}>

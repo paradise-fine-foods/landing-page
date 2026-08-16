@@ -27,7 +27,7 @@ const applicationLabels = getProductApplicationLabels(product, copy.product.appl
     <div class="product-detail__lists">
       <section>
         <h2>{copy.product.applications}</h2>
-        <ul>{applicationLabels.map((application) => <li>{application}</li>)}</ul>
+        <ul>{product.applicationOptions.map(({ name }) => <li>{name}</li>)}</ul>
       </section>
       <section>
         <h2>{copy.product.benefits}</h2>

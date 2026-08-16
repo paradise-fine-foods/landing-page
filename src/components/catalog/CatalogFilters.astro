@@ -1,18 +1,17 @@
 ---
-import type { Brand, Category } from '../../lib/cms/types';
+import type { Brand, Category, LocalizedTaxonomyOption } from '../../lib/cms/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import Icon from '../global/Icon.astro';
 
 interface Props {
   categories: Category[];
   brands: Brand[];
-  applications: string[];
-  applicationNames: Record<string, string>;
+  applications: LocalizedTaxonomyOption[];
   copy: UiCopy['catalog'];
   initialCount: number;
 }
 
-const { categories, brands, applications, applicationNames, copy, initialCount } = Astro.props;
+const { categories, brands, applications, copy, initialCount } = Astro.props;
 const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSingular : copy.resultPlural}`;
 ---
 
@@ -39,7 +38,7 @@ const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSing
     <label for="catalog-application">{copy.applicationLabel}</label>
     <select id="catalog-application" data-filter-application>
       <option value="">{copy.allApplications}</option>
-      {applications.map((application) => <option value={application}>{applicationNames[application] ?? application}</option>)}
+      {applications.map(({ id, name }) => <option value={id}>{name}</option>)}
     </select>
   </div>
   <div class="catalog-filters__summary">

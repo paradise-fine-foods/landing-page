@@ -2,7 +2,6 @@ import { describe, expect, test } from 'bun:test';
 
 import { buildProductSearchText, filterProducts } from '../src/lib/catalog/filter-products';
 import { getProducts } from './fixtures/directus';
-import { ui } from '../src/lib/i18n/ui';
 
 describe('filterProducts', () => {
   test('matches search text without case or diacritics', async () => {
@@ -26,9 +25,23 @@ describe('filterProducts', () => {
     const butter = products.find(({ id }) => id === 'cultured-butter-sheet');
 
     expect(butter).toBeDefined();
-    const search = buildProductSearchText(butter!, ui.vi.product.applicationNames);
+    const search = buildProductSearchText(butter!);
     expect(search).toContain('lamination');
     expect(search).toContain('Cán lớp');
+  });
+
+  test('indexes localized application options when Directus uses UUID IDs', async () => {
+    const product = (await getProducts('vi'))[0]!;
+    const applicationId = '8c60be88-16e5-4a11-b984-c433bf1c9172';
+    const uuidProduct = {
+      ...product,
+      applications: [applicationId],
+      applicationOptions: [{ id: applicationId, slug: 'viennoiserie', name: 'Kỹ thuật viennoiserie', description: '' }],
+    };
+
+    expect(filterProducts([uuidProduct], { search: 'viennoiserie' }).map(({ id }) => id)).toEqual([
+      uuidProduct.id,
+    ]);
   });
 
   test('combines brand and category filters with AND semantics', async () => {

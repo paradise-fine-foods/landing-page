@@ -3,7 +3,6 @@ import type { Product } from '../../lib/cms/types';
 import type { Locale } from '../../lib/i18n/types';
 import type { UiCopy } from '../../lib/i18n/ui';
 import { buildProductSearchText } from '../../lib/catalog/filter-products';
-import { ui } from '../../lib/i18n/ui';
 import ProductCard from './ProductCard.astro';
 
 interface Props {
@@ -22,7 +21,7 @@ const { products, locale, copy, showEmptyState = true, cardHeadingLevel = 'h3' }
     <div
       data-product-card
       data-product-id={product.id}
-      data-search={buildProductSearchText(product, ui[locale].product.applicationNames)}
+      data-search={buildProductSearchText(product)}
       data-categories={JSON.stringify(product.categories.map(({ id }) => id))}
       data-brand={product.brand.id}
       data-applications={JSON.stringify(product.applications)}
