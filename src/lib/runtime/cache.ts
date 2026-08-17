@@ -35,7 +35,10 @@ function hasPreviewParameter(url: URL) {
 }
 
 function cacheKey(request: Request) {
-  return new Request(request.url, {
+  const buildId = (import.meta as any).env?.BUILD_ID ?? 'dev';
+  const url = new URL(request.url);
+  url.searchParams.set('__b', buildId);
+  return new Request(url.toString(), {
     method: 'GET',
     headers: request.headers,
   });

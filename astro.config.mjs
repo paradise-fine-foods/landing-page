@@ -4,6 +4,8 @@ import { defineConfig, passthroughImageService } from 'astro/config';
 import icon from 'astro-icon';
 import { defaultLocale, locales } from './src/lib/i18n/types.ts';
 
+const buildId = Date.now().toString(36);
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://paradisefinefoods.com',
@@ -22,4 +24,9 @@ export default defineConfig({
     service: passthroughImageService(),
   },
   integrations: [icon()],
+  vite: {
+    define: {
+      'import.meta.env.BUILD_ID': JSON.stringify(buildId),
+    },
+  },
 });
