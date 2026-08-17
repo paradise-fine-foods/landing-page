@@ -5,13 +5,13 @@
   "name": "finefoods",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "vars": {
-    "DIRECTUS_URL": "https://directus.nghienot.dev/",
+    "DIRECTUS_URL": "https://directus.nghienot.dev/"
   },
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS",
+    "binding": "ASSETS"
   },
   "observability": {
-    "enabled": true,
-  },
+    "enabled": true
+  }
 }
