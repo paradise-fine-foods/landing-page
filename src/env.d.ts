@@ -5,6 +5,7 @@ interface CloudflareRuntimeEnv {
   readonly CMS_REVALIDATE_SECRET: string;
   readonly CLOUDFLARE_ZONE_ID: string;
   readonly CLOUDFLARE_PURGE_TOKEN: string;
+  readonly FORM_SUBMISSION_SECRET: string;
 }
 
 declare module 'cloudflare:workers' {

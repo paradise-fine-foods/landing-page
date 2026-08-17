@@ -4,25 +4,34 @@ import { validateEnquiry } from '@/lib/enquiry/validation';
 
 interface EnquiryDependencies {
   now: () => Date;
-  createId: () => string;
-  delay: (milliseconds: number) => Promise<void>;
+  fetch: (input: string, init?: RequestInit) => Promise<Response>;
 }
 
-const wait = (milliseconds: number) => new Promise<void>((resolve) => {
-  globalThis.setTimeout(resolve, milliseconds);
-});
-
 /** Internal factory kept injectable so submission behavior is deterministic under test. */
-export const createEnquirySubmitter = ({ now, createId, delay }: EnquiryDependencies) =>
+export const createEnquirySubmitter = ({ now, fetch }: EnquiryDependencies) =>
   async (input: EnquiryInput): Promise<EnquirySuccess> => {
-    await delay(350);
-
     const validation = validateEnquiry(input);
     if (!validation.ok) throw new EnquiryValidationError(validation.errors);
 
+    let response: Response;
+    try {
+      response = await fetch('/api/enquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(validation.value),
+      });
+    } catch {
+      throw new Error('Submission failed');
+    }
+
+    if (!response.ok) throw new Error('Submission failed');
+
+    const payload = (await response.json()) as { reference?: string };
+    if (!payload.reference) throw new Error('Submission failed');
+
     return {
       ok: true,
-      reference: `PFF-${createId().toUpperCase()}`,
+      reference: payload.reference,
       message: ui[validation.value.locale].status.successMessage,
       receivedAt: now().toISOString(),
     };
@@ -30,6 +39,5 @@ export const createEnquirySubmitter = ({ now, createId, delay }: EnquiryDependen
 
 export const submitEnquiry = createEnquirySubmitter({
   now: () => new Date(),
-  createId: () => crypto.randomUUID(),
-  delay: wait,
+  fetch: (...args) => globalThis.fetch(...args),
 });

@@ -10,6 +10,7 @@ const runtimeEnv: RevalidateRuntimeEnv = {
   CLOUDFLARE_ZONE_ID: 'zone-id',
   CLOUDFLARE_PURGE_TOKEN: 'purge-token',
   DIRECTUS_URL: 'https://cms.example.com',
+  FORM_SUBMISSION_SECRET: 'form-secret',
 };
 
 const request = (method: string, authorization?: string) =>

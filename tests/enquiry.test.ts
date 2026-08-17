@@ -67,16 +67,21 @@ describe('validateEnquiry', () => {
 });
 
 describe('enquiry submission', () => {
-  test.each(['en', 'vi'] as const)('returns deterministic success for %s', async (locale) => {
-    const delays: number[] = [];
+  test.each(['en', 'vi'] as const)('returns success with the server reference for %s', async (locale) => {
+    const calls: Array<{ input: string; init?: RequestInit }> = [];
     const submit = createEnquirySubmitter({
       now: () => new Date('2026-07-16T08:30:00.000Z'),
-      createId: () => 'fixed-id',
-      delay: async (milliseconds) => { delays.push(milliseconds); },
+      fetch: async (input, init) => {
+        calls.push({ input, init });
+        return Response.json({ ok: true, reference: 'PFF-FIXED-ID' });
+      },
     });
 
     const result = await submit(validInput(locale));
-    expect(delays).toEqual([350]);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.input).toBe('/api/enquiry');
+    expect(new Headers(calls[0]?.init?.headers).get('Content-Type')).toBe('application/json');
+    expect(calls[0]?.init?.method).toBe('POST');
     expect(result).toEqual({
       ok: true,
       reference: 'PFF-FIXED-ID',
@@ -87,13 +92,14 @@ describe('enquiry submission', () => {
     });
   });
 
-  test('waits, revalidates, and throws a typed field error without creating a receipt', async () => {
-    const delays: number[] = [];
+  test('validates before the network call and throws a typed field error without posting', async () => {
     let createdReceipt = false;
     const submit = createEnquirySubmitter({
       now: () => { createdReceipt = true; return new Date(); },
-      createId: () => { createdReceipt = true; return 'unused'; },
-      delay: async (milliseconds) => { delays.push(milliseconds); },
+      fetch: async () => {
+        createdReceipt = true;
+        return Response.json({ ok: true, reference: 'unused' });
+      },
     });
 
     try {
@@ -102,9 +108,17 @@ describe('enquiry submission', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(EnquiryValidationError);
       expect((error as EnquiryValidationError).errors.email).toBe('Enter a valid email address.');
-      expect(delays).toEqual([350]);
       expect(createdReceipt).toBe(false);
     }
+  });
+
+  test('throws a generic error when the server rejects the submission', () => {
+    const submit = createEnquirySubmitter({
+      now: () => new Date(),
+      fetch: async () => new Response(null, { status: 502 }),
+    });
+
+    return expect(submit(validInput())).rejects.toThrow('Submission failed');
   });
 });
 
