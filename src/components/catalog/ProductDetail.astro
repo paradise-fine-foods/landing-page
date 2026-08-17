@@ -1,9 +1,8 @@
 ---
 import type { Product } from '../../lib/cms/types';
 import type { UiCopy } from '../../lib/i18n/ui';
-import ProductMetadata from './ProductMetadata.astro';
 import Icon from '../global/Icon.astro';
-import { getProductApplicationLabels } from '../../lib/catalog/application-labels';
+import ProductMetadata from './ProductMetadata.astro';
 
 interface Props {
   product: Product;
@@ -12,7 +11,6 @@ interface Props {
 }
 
 const { product, copy, enquiryPath } = Astro.props;
-const applicationLabels = getProductApplicationLabels(product, copy.product.applicationNames);
 ---
 
 <article class="product-detail">

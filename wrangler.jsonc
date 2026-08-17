@@ -5,7 +5,7 @@
   "name": "finefoods",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "vars": {
-    "DIRECTUS_URL": "https://directus-production-f1a9.up.railway.app/",
+    "DIRECTUS_URL": "https://directus.nghienot.dev/",
   },
   "assets": {
     "directory": "./dist",
