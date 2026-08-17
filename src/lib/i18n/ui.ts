@@ -1,4 +1,4 @@
-import type { Locale } from './types';
+import type { Locale } from '@/lib/i18n/types';
 
 export type EnquiryMode = 'general' | 'customer' | 'supplier';
 

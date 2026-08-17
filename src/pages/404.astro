@@ -4,13 +4,13 @@ import '@fontsource/nunito/400.css';
 import '@fontsource/nunito/500.css';
 import '@fontsource/nunito/600.css';
 import { Image } from 'astro:assets';
-import logo from '../assets/brand/paradise-fine-foods-logo.png';
-import Icon from '../components/global/Icon.astro';
-import FloatingFormRail from '../components/global/FloatingFormRail.astro';
-import { ui } from '../lib/i18n/ui';
-import '../styles/tokens.css';
-import '../styles/typography.css';
-import '../styles/global.css';
+import logo from '@/assets/brand/paradise-fine-foods-logo.png';
+import Icon from '@/components/global/Icon.astro';
+import FloatingFormRail from '@/components/global/FloatingFormRail.astro';
+import { ui } from '@/lib/i18n/ui';
+import '@/styles/tokens.css';
+import '@/styles/typography.css';
+import '@/styles/global.css';
 
 const canonical = new URL('/404.html', Astro.site ?? 'https://paradisefinefoods.com');
 ---

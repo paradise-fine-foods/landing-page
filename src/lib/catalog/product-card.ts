@@ -1,4 +1,4 @@
-import type { Product } from '../cms/types';
+import type { Product } from '@/lib/cms/types';
 
 export const getProductCardMetadata = (
   product: Pick<Product, 'categories' | 'applications' | 'applicationOptions'>,

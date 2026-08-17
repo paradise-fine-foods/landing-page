@@ -28,6 +28,7 @@ beforeAll(async () => {
     appType: 'custom',
     logLevel: 'silent',
     server: { middlewareMode: true },
+    resolve: { alias: { '@': join(root, 'src') } },
     plugins: [...(settings.config.vite.plugins ?? []), astroPlugin({ settings, logger })],
   });
 }, 20_000);
@@ -99,7 +100,7 @@ describe('ProductCard metadata', () => {
 
     expect(card).toContain('class="product-card__media"');
     expect(card).toContain('aspect-ratio: 1 / 1');
-    expect(card).toContain('background: var(--color-cold-paper)');
+    expect(card).toContain('background: var(--color-process-white)');
     expect(card).toContain('border-block-start: 1px solid var(--color-brushed-steel)');
     expect(card).not.toContain('product-card__organic-media');
     expect(card).not.toMatch(/product-card__media::before|color-paradise-orange/);

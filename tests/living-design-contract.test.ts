@@ -387,8 +387,8 @@ describe('Precision Supply System identity', () => {
     const footer = '<Footer {locale} {siteName} store={settings.store} />';
     const rail = '<FloatingFormRail locale={locale} contactPath={localizedPath(locale, \'contact\')} customerPath={localizedPath(locale, \'customerContact\')} supplierPath={localizedPath(locale, \'supplierContact\')} copy={ui[locale].floatingRail} />';
 
-    expect(layout).toContain("import { localizedPath } from '../lib/i18n/routes';");
-    expect(layout).toContain("import FloatingFormRail from '../components/global/FloatingFormRail.astro';");
+    expect(layout).toContain("import { localizedPath } from '@/lib/i18n/routes';");
+    expect(layout).toContain("import FloatingFormRail from '@/components/global/FloatingFormRail.astro';");
     expect(layout).toContain(rail);
     expect(layout.indexOf('</main>')).toBeLessThan(layout.indexOf(footer));
     expect(layout.indexOf(footer)).toBeLessThan(layout.indexOf(rail));
@@ -404,8 +404,8 @@ describe('Precision Supply System identity', () => {
     const page = source('src/pages/404.astro');
     const rail = '<FloatingFormRail locale="en" contactPath="/en/contact/" customerPath="/en/contact/customer/" supplierPath="/en/contact/supplier/" copy={ui.en.floatingRail} staticOnly />';
 
-    expect(page).toContain("import { ui } from '../lib/i18n/ui';");
-    expect(page).toContain("import FloatingFormRail from '../components/global/FloatingFormRail.astro';");
+    expect(page).toContain("import { ui } from '@/lib/i18n/ui';");
+    expect(page).toContain("import FloatingFormRail from '@/components/global/FloatingFormRail.astro';");
     expect(page).toContain(rail);
     expect(page.indexOf('</main>')).toBeLessThan(page.indexOf(rail));
     expect(page.indexOf('</footer>')).toBeLessThan(page.indexOf(rail));

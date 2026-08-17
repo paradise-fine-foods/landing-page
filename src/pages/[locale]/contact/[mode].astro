@@ -1,14 +1,14 @@
 ---
-import EnquiryForm from '../../../components/forms/EnquiryForm.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
-import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { getEnquiryModeCopy, isContactMode } from '../../../lib/enquiry/modes';
-import { getGlobalSettings, getProducts } from '../../../lib/cms/queries';
-import { localizedPath } from '../../../lib/i18n/routes';
-import { counterpartLocale } from '../../../lib/i18n/static-paths';
-import { isLocale } from '../../../lib/i18n/types';
-import { ui } from '../../../lib/i18n/ui';
-import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
+import EnquiryForm from '@/components/forms/EnquiryForm.astro';
+import Breadcrumbs from '@/components/global/Breadcrumbs.astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import { getEnquiryModeCopy, isContactMode } from '@/lib/enquiry/modes';
+import { getGlobalSettings, getProducts } from '@/lib/cms/queries';
+import { localizedPath } from '@/lib/i18n/routes';
+import { counterpartLocale } from '@/lib/i18n/static-paths';
+import { isLocale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '@/lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
 const modeParam = Astro.params.mode;

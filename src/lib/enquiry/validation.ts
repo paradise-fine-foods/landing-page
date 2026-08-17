@@ -1,5 +1,5 @@
-import { ui } from '../i18n/ui';
-import type { EnquiryInput, EnquiryValidationResult } from './types';
+import { ui } from '@/lib/i18n/ui';
+import type { EnquiryInput, EnquiryValidationResult } from '@/lib/enquiry/types';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

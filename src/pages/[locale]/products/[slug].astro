@@ -1,15 +1,15 @@
 ---
-import ProductDetail from '../../../components/catalog/ProductDetail.astro';
-import RelatedProductsIsland from '../../../components/catalog/RelatedProductsIsland.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
-import CardSkeleton from '../../../components/global/CardSkeleton.astro';
-import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { productAlternatePath, productDetailPath } from '../../../lib/catalog/routes';
-import { getGlobalSettings, getProductBySlug } from '../../../lib/cms/queries';
-import { localizedPath } from '../../../lib/i18n/routes';
-import { isLocale } from '../../../lib/i18n/types';
-import { ui } from '../../../lib/i18n/ui';
-import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
+import ProductDetail from '@/components/catalog/ProductDetail.astro';
+import RelatedProductsIsland from '@/components/catalog/RelatedProductsIsland.astro';
+import Breadcrumbs from '@/components/global/Breadcrumbs.astro';
+import CardSkeleton from '@/components/global/CardSkeleton.astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import { productAlternatePath, productDetailPath } from '@/lib/catalog/routes';
+import { getGlobalSettings, getProductBySlug } from '@/lib/cms/queries';
+import { localizedPath } from '@/lib/i18n/routes';
+import { isLocale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '@/lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
 const slug = Astro.params.slug;

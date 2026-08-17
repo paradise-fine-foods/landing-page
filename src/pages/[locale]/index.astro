@@ -1,21 +1,21 @@
 ---
-import SiteLayout from '../../layouts/SiteLayout.astro';
-import LivingHero from '../../components/sections/LivingHero.astro';
-import CredibilityStrip from '../../components/sections/CredibilityStrip.astro';
-import CategoryDiscovery from '../../components/sections/CategoryDiscovery.astro';
-import FeaturedProducts from '../../components/sections/FeaturedProducts.astro';
-import FeaturedBrands from '../../components/sections/FeaturedBrands.astro';
-import LatestBlogs from '../../components/blogs/LatestBlogs.astro';
-import ServiceProof from '../../components/sections/ServiceProof.astro';
-import ChannelPathways from '../../components/sections/ChannelPathways.astro';
-import FinalCta from '../../components/sections/FinalCta.astro';
-import PartnerStrip from '../../components/sections/PartnerStrip.astro';
-import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getLatestBlogPosts, getProducts } from '../../lib/cms/queries';
-import { localizedPath } from '../../lib/i18n/routes';
-import { counterpartLocale } from '../../lib/i18n/static-paths';
-import { isLocale } from '../../lib/i18n/types';
-import { ui } from '../../lib/i18n/ui';
-import { loadCmsPageData, markNotFound } from '../../lib/cms/page-state';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import LivingHero from '@/components/sections/LivingHero.astro';
+import CredibilityStrip from '@/components/sections/CredibilityStrip.astro';
+import CategoryDiscovery from '@/components/sections/CategoryDiscovery.astro';
+import FeaturedProducts from '@/components/sections/FeaturedProducts.astro';
+import FeaturedBrands from '@/components/sections/FeaturedBrands.astro';
+import LatestBlogs from '@/components/blogs/LatestBlogs.astro';
+import ServiceProof from '@/components/sections/ServiceProof.astro';
+import ChannelPathways from '@/components/sections/ChannelPathways.astro';
+import FinalCta from '@/components/sections/FinalCta.astro';
+import PartnerStrip from '@/components/sections/PartnerStrip.astro';
+import { getBrands, getCategories, getFeaturedContent, getGlobalSettings, getLatestBlogPosts, getProducts } from '@/lib/cms/queries';
+import { localizedPath } from '@/lib/i18n/routes';
+import { counterpartLocale } from '@/lib/i18n/static-paths';
+import { isLocale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '@/lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
 if (!localeParam || !isLocale(localeParam)) {

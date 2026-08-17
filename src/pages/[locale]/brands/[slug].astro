@@ -1,13 +1,13 @@
 ---
-import BrandDetail from '../../../components/brands/BrandDetail.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
-import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { brandAlternatePath, brandDetailPath } from '../../../lib/brands/routes';
-import { getBrandBySlug, getGlobalSettings, getProducts } from '../../../lib/cms/queries';
-import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
-import { localizedPath } from '../../../lib/i18n/routes';
-import { isLocale } from '../../../lib/i18n/types';
-import { ui } from '../../../lib/i18n/ui';
+import BrandDetail from '@/components/brands/BrandDetail.astro';
+import Breadcrumbs from '@/components/global/Breadcrumbs.astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import { brandAlternatePath, brandDetailPath } from '@/lib/brands/routes';
+import { getBrandBySlug, getGlobalSettings, getProducts } from '@/lib/cms/queries';
+import { loadCmsPageData, markNotFound } from '@/lib/cms/page-state';
+import { localizedPath } from '@/lib/i18n/routes';
+import { isLocale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
 
 const localeParam = Astro.params.locale;
 const slug = Astro.params.slug;

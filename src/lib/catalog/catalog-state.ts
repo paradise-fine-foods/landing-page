@@ -2,7 +2,7 @@ import {
   matchesCatalogFilters,
   type CatalogFilterInput,
   type CatalogFilterProjection,
-} from './filter-products';
+} from '@/lib/catalog/filter-products';
 
 export interface CatalogFilterRecord extends CatalogFilterProjection {
   id: string;

@@ -1,6 +1,6 @@
-import { getProducts } from '../cms/queries';
-import type { Product } from '../cms/types';
-import type { Locale } from '../i18n/types';
+import { getProducts } from '@/lib/cms/queries';
+import type { Product } from '@/lib/cms/types';
+import type { Locale } from '@/lib/i18n/types';
 
 export interface RelatedProductCriteria {
   productId: string;

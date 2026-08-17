@@ -1,4 +1,4 @@
-import type { Locale, RouteKey } from './types';
+import type { Locale, RouteKey } from '@/lib/i18n/types';
 
 export const routeSegments: Record<Locale, Record<RouteKey, string>> = {
   en: { home: '', products: 'products', brands: 'brands', blogs: 'blogs', contact: 'contact', customerContact: 'contact/customer', supplierContact: 'contact/supplier' },

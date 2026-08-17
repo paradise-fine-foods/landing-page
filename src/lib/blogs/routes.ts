@@ -2,12 +2,12 @@ import {
   getBlogPostBySlug,
   getGlobalSettings,
   type CmsQueries,
-} from '../cms/queries';
-import { loadCmsPageData } from '../cms/page-state';
-import type { BlogPost, GlobalSettings } from '../cms/types';
-import { counterpartPath, localizedPath, type CounterpartMap } from '../i18n/routes';
-import { counterpartLocale } from '../i18n/static-paths';
-import type { Locale } from '../i18n/types';
+} from '@/lib/cms/queries';
+import { loadCmsPageData } from '@/lib/cms/page-state';
+import type { BlogPost, GlobalSettings } from '@/lib/cms/types';
+import { counterpartPath, localizedPath, type CounterpartMap } from '@/lib/i18n/routes';
+import { counterpartLocale } from '@/lib/i18n/static-paths';
+import type { Locale } from '@/lib/i18n/types';
 
 export const blogDetailPath = (locale: Locale, post: Pick<BlogPost, 'slug'>): string =>
   `${localizedPath(locale, 'blogs')}${post.slug}/`;

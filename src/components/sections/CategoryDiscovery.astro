@@ -1,5 +1,5 @@
 ---
-import type { Category } from '../../lib/cms/types';
+import type { Category } from '@/lib/cms/types';
 
 interface Props { eyebrow: string; title: string; description: string; categories: Category[]; categoryCounts: Record<string, number>; productLabel: string; productsPath: string }
 const { eyebrow, title, description, categories, categoryCounts, productLabel, productsPath } = Astro.props;
@@ -35,8 +35,8 @@ const { eyebrow, title, description, categories, categoryCounts, productLabel, p
   .category-discovery__item { border-block-start: 1px solid var(--color-brushed-steel); color: var(--color-graphite); display: grid; gap: var(--space-4); grid-template-columns: minmax(9rem, 0.75fr) minmax(10rem, 1fr); padding-block: var(--space-4); text-decoration: none; }
   .category-discovery__item:nth-of-type(odd) { border-inline-end: 1px solid var(--color-brushed-steel); padding-inline-end: var(--space-5); }
   .category-discovery__item:nth-of-type(even) { padding-inline-start: var(--space-5); }
-  .category-discovery__media { aspect-ratio: 4 / 3; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); overflow: hidden; }
-  .category-discovery__media img { block-size: 100%; inline-size: 100%; object-fit: cover; }
+  .category-discovery__media { aspect-ratio: 4 / 3; background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); overflow: hidden; }
+  .category-discovery__media img { block-size: 100%; inline-size: 100%; object-fit: contain; }
   .category-discovery__copy { align-content: center; display: grid; gap: var(--space-2); }
   .category-discovery__copy strong { font-family: var(--font-body); font-size: var(--text-xl); font-weight: 500; }
   .category-discovery__copy small { font-size: var(--text-sm); line-height: 1.55; }

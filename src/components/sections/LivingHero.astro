@@ -1,7 +1,7 @@
 ---
-import type { FeaturedContent } from '../../lib/cms/types';
-import type { UiCopy } from '../../lib/i18n/ui';
-import ButtonLink from '../global/ButtonLink.astro';
+import type { FeaturedContent } from '@/lib/cms/types';
+import type { UiCopy } from '@/lib/i18n/ui';
+import ButtonLink from '@/components/global/ButtonLink.astro';
 
 interface Props {
   copy: UiCopy['hero'];
@@ -61,7 +61,7 @@ const metadata = [
     for (const controller of controllers) controller.dispose();
   });
 
-  import('../../lib/carousel/controller')
+  import('@/lib/carousel/controller')
     .then(({ createCarousel }) => {
       if (pageDisposed) return;
       controllers.push(...[...document.querySelectorAll<HTMLElement>('[data-carousel]')]

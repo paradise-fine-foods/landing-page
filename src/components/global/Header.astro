@@ -1,11 +1,11 @@
 ---
 import { Image } from 'astro:assets';
-import paradiseLogo from '../../assets/brand/paradise-fine-foods-logo.png';
-import type { Locale } from '../../lib/i18n/types';
-import { localizedPath } from '../../lib/i18n/routes';
-import { ui } from '../../lib/i18n/ui';
-import LanguageSwitcher from './LanguageSwitcher.astro';
-import Icon from './Icon.astro';
+import paradiseLogo from '@/assets/brand/paradise-fine-foods-logo.png';
+import type { Locale } from '@/lib/i18n/types';
+import { localizedPath } from '@/lib/i18n/routes';
+import { ui } from '@/lib/i18n/ui';
+import LanguageSwitcher from '@/components/global/LanguageSwitcher.astro';
+import Icon from '@/components/global/Icon.astro';
 
 interface Props {
   locale: Locale;

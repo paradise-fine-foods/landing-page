@@ -1,6 +1,6 @@
-import { ui } from '../i18n/ui';
-import { EnquiryValidationError, type EnquiryInput, type EnquirySuccess } from './types';
-import { validateEnquiry } from './validation';
+import { ui } from '@/lib/i18n/ui';
+import { EnquiryValidationError, type EnquiryInput, type EnquirySuccess } from '@/lib/enquiry/types';
+import { validateEnquiry } from '@/lib/enquiry/validation';
 
 interface EnquiryDependencies {
   now: () => Date;

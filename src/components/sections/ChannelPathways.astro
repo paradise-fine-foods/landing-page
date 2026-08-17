@@ -1,7 +1,7 @@
 ---
 interface Channel { label: string; description: string; href: string }
 interface Props { eyebrow: string; title: string; channels: Channel[] }
-import Icon from '../global/Icon.astro';
+import Icon from '@/components/global/Icon.astro';
 const { eyebrow, title, channels } = Astro.props;
 ---
 

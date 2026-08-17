@@ -1,9 +1,9 @@
 ---
-import type { Brand, Product } from '../../lib/cms/types';
-import type { Locale } from '../../lib/i18n/types';
-import { localizedPath } from '../../lib/i18n/routes';
-import { ui } from '../../lib/i18n/ui';
-import Icon from '../global/Icon.astro';
+import type { Brand, Product } from '@/lib/cms/types';
+import type { Locale } from '@/lib/i18n/types';
+import { localizedPath } from '@/lib/i18n/routes';
+import { ui } from '@/lib/i18n/ui';
+import Icon from '@/components/global/Icon.astro';
 
 interface Props { eyebrow: string; title: string; selectedBrand: Brand; selectedBrandProducts: Product[]; remainingBrands: Brand[]; locale: Locale }
 const { eyebrow, title, selectedBrand, selectedBrandProducts, remainingBrands, locale } = Astro.props;

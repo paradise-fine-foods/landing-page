@@ -1,6 +1,6 @@
-import { getLatestBlogPosts } from '../cms/queries';
-import type { BlogPost } from '../cms/types';
-import type { Locale } from '../i18n/types';
+import { getLatestBlogPosts } from '@/lib/cms/queries';
+import type { BlogPost } from '@/lib/cms/types';
+import type { Locale } from '@/lib/i18n/types';
 
 export type LatestBlogQuery = (
   locale: Locale,

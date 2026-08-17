@@ -1,4 +1,4 @@
-import type { Product, ProductQuery } from '../cms/types';
+import type { Product, ProductQuery } from '@/lib/cms/types';
 
 export const normalizeCatalogText = (value: string) =>
   value

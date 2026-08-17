@@ -1,6 +1,6 @@
-import type { ImageAsset } from '../types';
-import { CmsDataError } from './errors';
-import type { DirectusFile } from './schema';
+import type { ImageAsset } from '@/lib/cms/types';
+import { CmsDataError } from '@/lib/cms/directus/errors';
+import type { DirectusFile } from '@/lib/cms/directus/schema';
 
 const positiveDimension = (
   value: unknown,

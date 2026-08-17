@@ -7,8 +7,8 @@ import {
   type RestCommand,
 } from '@directus/sdk';
 
-import type { Locale } from '../../i18n/types';
-import { CmsDataError, CmsUnavailableError } from './errors';
+import type { Locale } from '@/lib/i18n/types';
+import { CmsDataError, CmsUnavailableError } from '@/lib/cms/directus/errors';
 import type {
   BlogPostRecord,
   BrandRecord,
@@ -18,7 +18,7 @@ import type {
   PartnerRecord,
   ProductRecord,
   SiteSettingsRecord,
-} from './schema';
+} from '@/lib/cms/directus/schema';
 
 export type CmsRequest = <Output>(
   command: RestCommand<Output, DirectusSchema>,

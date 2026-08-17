@@ -1,7 +1,7 @@
 ---
-import type { Brand, Category, LocalizedTaxonomyOption } from '../../lib/cms/types';
-import type { UiCopy } from '../../lib/i18n/ui';
-import Icon from '../global/Icon.astro';
+import type { Brand, Category, LocalizedTaxonomyOption } from '@/lib/cms/types';
+import type { UiCopy } from '@/lib/i18n/ui';
+import Icon from '@/components/global/Icon.astro';
 
 interface Props {
   categories: Category[];
@@ -56,7 +56,7 @@ const initialCountText = `${initialCount} ${initialCount === 1 ? copy.resultSing
 <noscript><p class="catalog-filters__noscript">{copy.noScript}</p></noscript>
 
 <script>
-  import { deriveCatalogState, initializeCatalogCategory, type CatalogFilterRecord } from '../../lib/catalog/catalog-state';
+  import { deriveCatalogState, initializeCatalogCategory, type CatalogFilterRecord } from '@/lib/catalog/catalog-state';
 
   const catalogs = document.querySelectorAll<HTMLElement>('[data-catalog]');
   for (const catalog of catalogs) {

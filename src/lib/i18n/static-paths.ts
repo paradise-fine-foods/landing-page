@@ -1,4 +1,4 @@
-import { locales, type Locale } from './types';
+import { locales, type Locale } from '@/lib/i18n/types';
 
 export const getLocaleStaticPaths = (): Array<{
   params: { locale: Locale };

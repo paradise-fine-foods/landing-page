@@ -1,14 +1,14 @@
 ---
-import BlogArticle from '../../../components/blogs/BlogArticle.astro';
-import BlogSuggestionsIsland from '../../../components/blogs/BlogSuggestionsIsland.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
-import CardSkeleton from '../../../components/global/CardSkeleton.astro';
-import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { blogAlternatePath, blogDetailPath, loadBlogDetailPageData } from '../../../lib/blogs/routes';
-import { markNotFound } from '../../../lib/cms/page-state';
-import { localizedPath } from '../../../lib/i18n/routes';
-import { isLocale } from '../../../lib/i18n/types';
-import { ui } from '../../../lib/i18n/ui';
+import BlogArticle from '@/components/blogs/BlogArticle.astro';
+import BlogSuggestionsIsland from '@/components/blogs/BlogSuggestionsIsland.astro';
+import Breadcrumbs from '@/components/global/Breadcrumbs.astro';
+import CardSkeleton from '@/components/global/CardSkeleton.astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import { blogAlternatePath, blogDetailPath, loadBlogDetailPageData } from '@/lib/blogs/routes';
+import { markNotFound } from '@/lib/cms/page-state';
+import { localizedPath } from '@/lib/i18n/routes';
+import { isLocale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
 
 const localeParam = Astro.params.locale;
 const slug = Astro.params.slug;

@@ -1,4 +1,4 @@
-import { locales, type Locale } from '../i18n/types';
+import { locales, type Locale } from '@/lib/i18n/types';
 
 type UnknownRecord = Record<string, unknown>;
 type DemoBlogPost = {

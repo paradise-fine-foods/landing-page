@@ -1,5 +1,5 @@
-import { localizedPath } from '../i18n/routes';
-import { locales, type Locale } from '../i18n/types';
+import { localizedPath } from '@/lib/i18n/routes';
+import { locales, type Locale } from '@/lib/i18n/types';
 
 export interface MetaInput {
   site: string | URL;

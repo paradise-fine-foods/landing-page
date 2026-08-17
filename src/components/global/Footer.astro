@@ -1,10 +1,10 @@
 ---
 import { Image } from 'astro:assets';
-import paradiseLogo from '../../assets/brand/paradise-fine-foods-logo.png';
-import type { Locale } from '../../lib/i18n/types';
-import { localizedPath } from '../../lib/i18n/routes';
-import { ui } from '../../lib/i18n/ui';
-import type { StoreInformation } from '../../lib/cms/types';
+import paradiseLogo from '@/assets/brand/paradise-fine-foods-logo.png';
+import type { Locale } from '@/lib/i18n/types';
+import { localizedPath } from '@/lib/i18n/routes';
+import { ui } from '@/lib/i18n/ui';
+import type { StoreInformation } from '@/lib/cms/types';
 
 interface Props { locale: Locale; siteName: string; store: StoreInformation }
 const { locale, siteName, store } = Astro.props;

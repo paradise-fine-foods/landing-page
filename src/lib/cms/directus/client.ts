@@ -1,13 +1,13 @@
 import { createDirectus, rest } from '@directus/sdk';
 
-import { getRuntimeEnv } from '../../runtime/env';
-import { CmsUnavailableError } from './errors';
+import { getRuntimeEnv } from '@/lib/runtime/env';
+import { CmsUnavailableError } from '@/lib/cms/directus/errors';
 import {
   createCmsRepository,
   type CmsRepository,
   type CmsRequest,
-} from './repository';
-import type { DirectusSchema } from './schema';
+} from '@/lib/cms/directus/repository';
+import type { DirectusSchema } from '@/lib/cms/directus/schema';
 
 export interface ProductionCmsConnection {
   directusUrl: string;

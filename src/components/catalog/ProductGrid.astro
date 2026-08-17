@@ -1,9 +1,9 @@
 ---
-import type { Product } from '../../lib/cms/types';
-import type { Locale } from '../../lib/i18n/types';
-import type { UiCopy } from '../../lib/i18n/ui';
-import { buildProductSearchText } from '../../lib/catalog/filter-products';
-import ProductCard from './ProductCard.astro';
+import type { Product } from '@/lib/cms/types';
+import type { Locale } from '@/lib/i18n/types';
+import type { UiCopy } from '@/lib/i18n/ui';
+import { buildProductSearchText } from '@/lib/catalog/filter-products';
+import ProductCard from '@/components/catalog/ProductCard.astro';
 
 interface Props {
   products: Product[];

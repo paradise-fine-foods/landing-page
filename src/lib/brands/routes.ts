@@ -1,7 +1,7 @@
-import type { Brand } from '../cms/types';
-import { localizedPath, type CounterpartMap } from '../i18n/routes';
-import type { Locale } from '../i18n/types';
-import { counterpartLocale } from '../i18n/static-paths';
+import type { Brand } from '@/lib/cms/types';
+import { localizedPath, type CounterpartMap } from '@/lib/i18n/routes';
+import type { Locale } from '@/lib/i18n/types';
+import { counterpartLocale } from '@/lib/i18n/static-paths';
 
 export const brandDetailPath = (locale: Locale, brand: Pick<Brand, 'slug'>): string =>
   `${localizedPath(locale, 'brands')}${brand.slug}/`;

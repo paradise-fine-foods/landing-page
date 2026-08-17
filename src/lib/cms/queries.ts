@@ -1,6 +1,6 @@
-import type { Locale } from '../i18n/types';
-import { filterProducts } from '../catalog/filter-products';
-import { getProductionCmsConnection } from './directus/client';
+import type { Locale } from '@/lib/i18n/types';
+import { filterProducts } from '@/lib/catalog/filter-products';
+import { getProductionCmsConnection } from '@/lib/cms/directus/client';
 import {
   mapBlogPost,
   mapBrand,
@@ -8,8 +8,8 @@ import {
   mapFeaturedContent,
   mapGlobalSettings,
   mapProduct,
-} from './directus/mappers';
-import type { CmsRepository } from './directus/repository';
+} from '@/lib/cms/directus/mappers';
+import type { CmsRepository } from '@/lib/cms/directus/repository';
 import type {
   BlogPost,
   Brand,
@@ -18,13 +18,13 @@ import type {
   GlobalSettings,
   Product,
   ProductQuery,
-} from './types';
+} from '@/lib/cms/types';
 
-export { normalizeBrandAccent } from './directus/mappers';
-export { CmsDataError, CmsUnavailableError } from './directus/errors';
-export { submitEnquiry } from '../enquiry/submit';
-export { EnquiryValidationError } from '../enquiry/types';
-export type { EnquiryErrors, EnquiryInput, EnquirySuccess } from '../enquiry/types';
+export { normalizeBrandAccent } from '@/lib/cms/directus/mappers';
+export { CmsDataError, CmsUnavailableError } from '@/lib/cms/directus/errors';
+export { submitEnquiry } from '@/lib/enquiry/submit';
+export { EnquiryValidationError } from '@/lib/enquiry/types';
+export type { EnquiryErrors, EnquiryInput, EnquirySuccess } from '@/lib/enquiry/types';
 
 export interface CmsQueries {
   getGlobalSettings(locale: Locale): Promise<GlobalSettings>;

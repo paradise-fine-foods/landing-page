@@ -1,4 +1,4 @@
-import type { Locale } from '../../i18n/types';
+import type { Locale } from '@/lib/i18n/types';
 import {
   brandAccentTokens,
   type Brand,
@@ -11,10 +11,10 @@ import {
   type LocalizedCounterpart,
   type LocalizedTaxonomyOption,
   type Product,
-} from '../types';
-import { mapImageAsset } from './assets';
-import { CmsDataError } from './errors';
-import { sanitizeBlogHtml } from './rich-text';
+} from '@/lib/cms/types';
+import { mapImageAsset } from '@/lib/cms/directus/assets';
+import { CmsDataError } from '@/lib/cms/directus/errors';
+import { sanitizeBlogHtml } from '@/lib/cms/directus/rich-text';
 
 type UnknownRecord = Record<string, unknown>;
 

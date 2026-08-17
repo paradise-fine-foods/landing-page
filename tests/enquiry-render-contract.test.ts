@@ -7,7 +7,7 @@ const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 describe('enquiry rendering contract', () => {
   test('uses the CMS boundary and renders stable accessible relationships', async () => {
     const source = await read('../src/components/forms/EnquiryForm.astro');
-    expect(source).toContain("from '../../lib/cms/queries'");
+    expect(source).toContain("from '@/lib/cms/queries'");
     expect(source).toContain('novalidate');
     expect(source).toMatch(/<button[^>]*type="submit"[^>]*disabled/);
     expect(source).toContain('initializeEnquiryForm');

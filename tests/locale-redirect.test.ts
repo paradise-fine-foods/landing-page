@@ -124,7 +124,7 @@ describe('Astro locale middleware', () => {
 test('imports the canonical default locale', async () => {
   const localeSource = await read('../src/lib/i18n/request-locale.ts');
 
-  expect(localeSource).toContain("import { defaultLocale, isLocale, type Locale } from './types';");
+  expect(localeSource).toContain("import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/types';");
   expect(localeSource).not.toMatch(/const defaultLocale[^=]*=\s*['"]en['"]/);
 });
 

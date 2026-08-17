@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { getRuntimeEnv, type RuntimeEnv } from '../../lib/runtime/env';
+import { getRuntimeEnv, type RuntimeEnv } from '@/lib/runtime/env';
 
 export type RevalidateRuntimeEnv = RuntimeEnv;
 

@@ -1,4 +1,4 @@
-import { defaultLocale, isLocale, type Locale } from './types';
+import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/types';
 
 export function preferredLocale(acceptLanguage: string | null): Locale {
   if (!acceptLanguage) return defaultLocale;

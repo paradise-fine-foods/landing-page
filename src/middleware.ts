@@ -1,10 +1,10 @@
 import type { MiddlewareHandler } from 'astro';
-import { withRuntimeCache } from './lib/runtime/cache';
+import { withRuntimeCache } from '@/lib/runtime/cache';
 import {
   localizedRedirectLocation,
   preferredLocale,
   shouldRedirectToLocale,
-} from './lib/i18n/request-locale';
+} from '@/lib/i18n/request-locale';
 
 export const onRequest: MiddlewareHandler = async ({ request }, next) => {
   if (shouldRedirectToLocale(request)) {

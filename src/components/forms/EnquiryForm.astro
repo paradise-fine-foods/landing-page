@@ -1,9 +1,9 @@
 ---
-import type { Product } from '../../lib/cms/types';
-import type { UiCopy } from '../../lib/i18n/ui';
-import type { Locale } from '../../lib/i18n/types';
-import type { EnquiryMode } from '../../lib/i18n/ui';
-import { getEnquiryModeCopy } from '../../lib/enquiry/modes';
+import type { Product } from '@/lib/cms/types';
+import type { UiCopy } from '@/lib/i18n/ui';
+import type { Locale } from '@/lib/i18n/types';
+import type { EnquiryMode } from '@/lib/i18n/ui';
+import { getEnquiryModeCopy } from '@/lib/enquiry/modes';
 
 interface Props {
   locale: Locale;
@@ -109,10 +109,10 @@ const requiredDescription = formCopy.requiredNote;
 </section>
 
 <script>
-  import { submitEnquiry } from '../../lib/cms/queries';
-  import { initializeEnquiryForm, type EnquiryFormView } from '../../lib/enquiry/controller';
-  import type { Locale } from '../../lib/i18n/types';
-  import type { EnquiryMode } from '../../lib/i18n/ui';
+  import { submitEnquiry } from '@/lib/cms/queries';
+  import { initializeEnquiryForm, type EnquiryFormView } from '@/lib/enquiry/controller';
+  import type { Locale } from '@/lib/i18n/types';
+  import type { EnquiryMode } from '@/lib/i18n/ui';
 
   for (const root of document.querySelectorAll<HTMLElement>('[data-enquiry-root]')) {
     const form = root.querySelector<HTMLFormElement>('[data-enquiry-form]');

@@ -18,8 +18,8 @@ describe('homepage composition', () => {
     const layout = source('src/layouts/SiteLayout.astro');
 
     expect(layout).not.toMatch(/DemoNotice|demoNotice/);
-    expect(layout).toContain("import Header from '../components/global/Header.astro'");
-    expect(layout).toContain("import Footer from '../components/global/Footer.astro'");
+    expect(layout).toContain("import Header from '@/components/global/Header.astro'");
+    expect(layout).toContain("import Footer from '@/components/global/Footer.astro'");
     expect(layout).toContain('<main id="main-content">');
   });
 
@@ -37,7 +37,7 @@ describe('homepage composition', () => {
     expect(hero).toContain('fetchpriority="high"');
     expect(hero).not.toMatch(/data-living-canvas|<canvas|OrganicMark/);
     expect(hero).not.toMatch(/slot name="stage"|ProductStage|modelSrc/);
-    expect(hero).toContain("import('../../lib/carousel/controller')");
+    expect(hero).toContain("import('@/lib/carousel/controller')");
     expect(hero).not.toMatch(/motion\/|shouldEnhanceMotion|data-motion-enhanced/);
     expect(hero).not.toMatch(/addEventListener\('pagehide',[\s\S]{0,240}\{ once: true \}/);
   });
@@ -52,16 +52,16 @@ describe('homepage composition', () => {
     expect(page).toContain('getBrands');
     expect(page).toContain('getLatestBlogPosts');
     expect(page).toContain('counterpartLocale');
-    expect(page).toContain("import LivingHero from '../../components/sections/LivingHero.astro'");
+    expect(page).toContain("import LivingHero from '@/components/sections/LivingHero.astro'");
     expect(page).toContain('<LivingHero');
     expect(page).toContain('<LatestBlogs');
     expect(page).not.toMatch(/ProductStage|modelSrc|slot="stage"/);
     expect(page).not.toMatch(/locale\s*===|locale\s*!==/);
     expect(page).toContain('carousel={copy.home.carousel}');
     const hero = source('src/components/sections/LivingHero.astro');
-    expect(hero).toContain("import('../../lib/carousel/controller')");
-    expect(hero).not.toContain("import('../../lib/motion/reveal')");
-    expect(hero).not.toContain("import('../../lib/motion/living-canvas')");
+    expect(hero).toContain("import('@/lib/carousel/controller')");
+    expect(hero).not.toContain("import('@/lib/motion/reveal')");
+    expect(hero).not.toContain("import('@/lib/motion/living-canvas')");
   });
 
   test('derives hero preloads from the same CMS image rendered by the hero', () => {

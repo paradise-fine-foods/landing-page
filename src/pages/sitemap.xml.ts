@@ -5,15 +5,15 @@ import {
   getBrands,
   getProducts,
   type CmsQueries,
-} from '../lib/cms/queries';
-import { loadCmsPageData } from '../lib/cms/page-state';
-import type { BlogPost, Brand, Product } from '../lib/cms/types';
-import { blogDetailPath } from '../lib/blogs/routes';
-import { brandDetailPath } from '../lib/brands/routes';
-import { productDetailPath } from '../lib/catalog/routes';
-import { localizedPath } from '../lib/i18n/routes';
-import { locales, type Locale, type RouteKey } from '../lib/i18n/types';
-import { EDGE_CACHE_CONTROL } from '../lib/runtime/cache';
+} from '@/lib/cms/queries';
+import { loadCmsPageData } from '@/lib/cms/page-state';
+import type { BlogPost, Brand, Product } from '@/lib/cms/types';
+import { blogDetailPath } from '@/lib/blogs/routes';
+import { brandDetailPath } from '@/lib/brands/routes';
+import { productDetailPath } from '@/lib/catalog/routes';
+import { localizedPath } from '@/lib/i18n/routes';
+import { locales, type Locale, type RouteKey } from '@/lib/i18n/types';
+import { EDGE_CACHE_CONTROL } from '@/lib/runtime/cache';
 
 export type SitemapQueries = Pick<CmsQueries, 'getProducts' | 'getBrands' | 'getBlogPosts'>;
 export type SitemapRouteGroup = Partial<Record<Locale, string>>;

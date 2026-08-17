@@ -1,4 +1,4 @@
-import type { Locale } from '../i18n/types';
+import type { Locale } from '@/lib/i18n/types';
 
 const dateLocales: Record<Locale, string> = { en: 'en-GB', vi: 'vi-VN' };
 export const formatBlogDate = (locale: Locale, value: string): string =>

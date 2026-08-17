@@ -1,6 +1,6 @@
-import type { Locale } from '../i18n/types';
-import type { EnquiryMode } from '../i18n/ui';
-import { EnquiryValidationError, type EnquiryErrors, type EnquiryInput, type EnquirySuccess } from './types';
+import type { Locale } from '@/lib/i18n/types';
+import type { EnquiryMode } from '@/lib/i18n/ui';
+import { EnquiryValidationError, type EnquiryErrors, type EnquiryInput, type EnquirySuccess } from '@/lib/enquiry/types';
 
 export interface EnquiryFormView {
   installSubmitHandler(handler: () => Promise<void>): void;

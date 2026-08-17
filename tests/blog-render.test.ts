@@ -26,6 +26,7 @@ beforeAll(async () => {
     appType: 'custom',
     logLevel: 'silent',
     server: { middlewareMode: true },
+    resolve: { alias: { '@': join(root, 'src') } },
     plugins: astroPlugin({ settings, logger }),
   });
 });

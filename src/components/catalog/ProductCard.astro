@@ -1,10 +1,10 @@
 ---
-import type { Product } from '../../lib/cms/types';
-import type { Locale } from '../../lib/i18n/types';
-import { getProductCardMetadata } from '../../lib/catalog/product-card';
-import { localizedPath } from '../../lib/i18n/routes';
-import { ui } from '../../lib/i18n/ui';
-import Icon from '../global/Icon.astro';
+import type { Product } from '@/lib/cms/types';
+import type { Locale } from '@/lib/i18n/types';
+import { getProductCardMetadata } from '@/lib/catalog/product-card';
+import { localizedPath } from '@/lib/i18n/routes';
+import { ui } from '@/lib/i18n/ui';
+import Icon from '@/components/global/Icon.astro';
 
 interface Props { product: Product; locale: Locale; headingLevel?: 'h2' | 'h3' }
 const { product, locale, headingLevel = 'h3' } = Astro.props;
@@ -32,7 +32,7 @@ const categoryApplications = getProductCardMetadata(product);
 
 <style>
   .product-card { display: grid; gap: var(--space-3); }
-  .product-card__media { aspect-ratio: 1 / 1; background: var(--color-cold-paper); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: block; overflow: hidden; }
+  .product-card__media { aspect-ratio: 1 / 1; background: var(--color-process-white); border: 1px solid var(--color-brushed-steel); border-radius: var(--radius-sm); display: block; overflow: hidden; }
   .product-card__media img { block-size: 100%; inline-size: 100%; object-fit: contain; transition: opacity var(--transition-fast); }
   .product-card:hover .product-card__media img { opacity: 0.92; }
   .product-card__meta { border-block-start: 1px solid var(--color-brushed-steel); color: var(--color-utility-grey); display: flex; font-size: 0.68rem; font-weight: 600; justify-content: space-between; letter-spacing: var(--tracking-label); padding-block-start: var(--space-3); text-transform: uppercase; }

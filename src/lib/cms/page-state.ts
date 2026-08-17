@@ -1,4 +1,4 @@
-import { CmsDataError, CmsUnavailableError } from './directus/errors';
+import { CmsDataError, CmsUnavailableError } from '@/lib/cms/directus/errors';
 
 interface MutablePageResponse {
   status?: number;

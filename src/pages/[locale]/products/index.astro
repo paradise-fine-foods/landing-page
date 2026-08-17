@@ -1,15 +1,15 @@
 ---
-import CatalogFilters from '../../../components/catalog/CatalogFilters.astro';
-import ProductGrid from '../../../components/catalog/ProductGrid.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
-import SiteLayout from '../../../layouts/SiteLayout.astro';
-import { getBrands, getCategories, getGlobalSettings, getProducts } from '../../../lib/cms/queries';
-import { getApplicationOptions } from '../../../lib/catalog/filter-products';
-import { localizedPath } from '../../../lib/i18n/routes';
-import { counterpartLocale } from '../../../lib/i18n/static-paths';
-import { isLocale } from '../../../lib/i18n/types';
-import { ui } from '../../../lib/i18n/ui';
-import { loadCmsPageData, markNotFound } from '../../../lib/cms/page-state';
+import CatalogFilters from '@/components/catalog/CatalogFilters.astro';
+import ProductGrid from '@/components/catalog/ProductGrid.astro';
+import Breadcrumbs from '@/components/global/Breadcrumbs.astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import { getBrands, getCategories, getGlobalSettings, getProducts } from '@/lib/cms/queries';
+import { getApplicationOptions } from '@/lib/catalog/filter-products';
+import { localizedPath } from '@/lib/i18n/routes';
+import { counterpartLocale } from '@/lib/i18n/static-paths';
+import { isLocale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
+import { loadCmsPageData, markNotFound } from '@/lib/cms/page-state';
 
 const localeParam = Astro.params.locale;
 if (!localeParam || !isLocale(localeParam)) {
