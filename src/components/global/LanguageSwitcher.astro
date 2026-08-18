@@ -23,7 +23,7 @@ const targetLocale = targetLocales[locale];
 >
   <Icon name="lucide:globe-2" size="1em" />
   <span aria-hidden="true">{targetLocale.toUpperCase()}</span>
-  {ui[locale].header.language}
+  <span class="language-switcher__name">{ui[locale].header.language}</span>
 </a>
 
 <style>
@@ -44,5 +44,11 @@ const targetLocale = targetLocales[locale];
     font-size: 0.625rem;
     line-height: 1;
     padding: 0.28rem;
+  }
+
+  .language-switcher .language-switcher__name { border: 0; padding: 0; }
+
+  @media (max-width: 48rem) {
+    .language-switcher__name { display: none; }
   }
 </style>

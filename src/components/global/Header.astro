@@ -30,25 +30,27 @@ const links = [
     <a class="wordmark" href={localizedPath(locale, 'home')} aria-label={siteName}>
       <Image src={paradiseLogo} alt={siteName} loading="eager" />
     </a>
-    <button
-      class="menu-toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="primary-navigation"
-      data-menu-toggle
-      data-open-label={copy.menuOpen}
-      data-close-label={copy.menuClose}
-    >
-      <span data-menu-label>{copy.menuOpen}</span>
-      <span class="menu-toggle__icon menu-toggle__icon--open" aria-hidden="true"><Icon name="lucide:menu" size="1.2em" /></span>
-      <span class="menu-toggle__icon menu-toggle__icon--close" aria-hidden="true"><Icon name="lucide:x" size="1.2em" /></span>
-    </button>
     <nav id="primary-navigation" class="primary-nav" aria-label={copy.navigation} data-navigation>
       <ul>
         {links.map(({ href, label }) => <li><a href={href}>{label}</a></li>)}
       </ul>
-      <LanguageSwitcher {locale} {currentPath} {alternatePath} />
     </nav>
+    <div class="site-header__actions">
+      <LanguageSwitcher {locale} {currentPath} {alternatePath} />
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+        data-menu-toggle
+        data-open-label={copy.menuOpen}
+        data-close-label={copy.menuClose}
+      >
+        <span class="visually-hidden" data-menu-label>{copy.menuOpen}</span>
+        <span class="menu-toggle__icon menu-toggle__icon--open" aria-hidden="true"><Icon name="lucide:menu" size="1.2em" /></span>
+        <span class="menu-toggle__icon menu-toggle__icon--close" aria-hidden="true"><Icon name="lucide:x" size="1.2em" /></span>
+      </button>
+    </div>
     <noscript>
       <style is:inline>
         .site-header .primary-nav { display: none !important; }
@@ -91,15 +93,23 @@ const links = [
   .site-header {
     background: var(--color-cold-paper);
     border-bottom: 1px solid var(--color-brushed-steel);
-    position: relative;
+    position: sticky;
+    inset-block-start: 0;
     z-index: 20;
   }
 
   .site-header__bar {
     align-items: center;
     display: grid;
-    grid-template-columns: minmax(10rem, 1fr) auto;
+    gap: var(--space-6);
+    grid-template-columns: minmax(10rem, 1fr) auto auto;
     min-block-size: 4.5rem;
+  }
+
+  .site-header__actions {
+    align-items: center;
+    display: flex;
+    gap: var(--space-3);
   }
 
   .wordmark {
@@ -116,7 +126,7 @@ const links = [
     display: flex;
   }
 
-  .primary-nav { font-family: var(--font-body); gap: var(--space-6); }
+  .primary-nav { font-family: var(--font-body); }
   .primary-nav ul { gap: var(--space-5); list-style: none; }
   .primary-nav a { align-items: center; color: var(--color-graphite); display: inline-flex; font-size: var(--text-sm); font-weight: 500; min-block-size: 2.75rem; text-decoration: none; }
   .primary-nav a:hover {
@@ -129,7 +139,7 @@ const links = [
   .noscript-nav { display: none; }
 
   @media (max-width: 48rem) {
-    .site-header__bar { min-block-size: 4.5rem; }
+    .site-header__bar { gap: var(--space-2); grid-template-columns: minmax(10rem, 1fr) auto; min-block-size: 4.5rem; }
     .site-header--enhanced .menu-toggle {
       align-items: center;
       background: transparent;
