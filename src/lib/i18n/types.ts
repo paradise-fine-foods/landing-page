@@ -1,8 +1,15 @@
-export type RouteKey = 'home' | 'products' | 'brands' | 'blogs' | 'contact' | 'customerContact' | 'supplierContact';
+export type RouteKey =
+  | "home"
+  | "products"
+  | "brands"
+  | "blogs"
+  | "contact"
+  | "customerContact"
+  | "supplierContact";
 
-export const locales = ['en', 'vi'] as const;
+export const locales = ["en", "vi"] as const;
 
-export const defaultLocale = 'en';
+export const defaultLocale = "vi";
 
 export type Locale = (typeof locales)[number];
 
