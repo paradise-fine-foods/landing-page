@@ -18,13 +18,14 @@ describe('preferredLocale', () => {
 
   test('ignores disabled and unsupported languages', () => {
     expect(preferredLocale('vi;q=0, fr-FR;q=1, en;q=0.5')).toBe('en');
-    expect(preferredLocale('fr-FR, de;q=0.8')).toBe('en');
+    expect(preferredLocale('fr-FR;q=1, de;q=0.8, en;q=0.5')).toBe('en');
   });
 
-  test('falls back to English without a usable header', () => {
-    expect(preferredLocale(null)).toBe('en');
-    expect(preferredLocale('')).toBe('en');
-    expect(preferredLocale('*')).toBe('en');
+  test('falls back to the default locale without a usable header', () => {
+    expect(preferredLocale(null)).toBe('vi');
+    expect(preferredLocale('')).toBe('vi');
+    expect(preferredLocale('*')).toBe('vi');
+    expect(preferredLocale('fr-FR, de;q=0.8')).toBe('vi');
   });
 });
 

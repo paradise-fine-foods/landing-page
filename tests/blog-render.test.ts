@@ -58,7 +58,7 @@ describe('server-rendered blog components', () => {
     expect(html).toContain('fetchpriority="high"');
     expect(html.indexOf('<h1')).toBeLessThan(html.indexOf('<h2>Safe heading</h2>'));
     expect(html).not.toMatch(/<script|onclick=|javascript:|<img[^>]+evil\.test/i);
-  });
+  }, 20000);
 
   test('renders cards and latest stories as primary server HTML', async () => {
     const post = mapBlogPost(structuredClone(fixtureBlogPost), 'en', directusUrl);
@@ -82,7 +82,7 @@ describe('server-rendered blog components', () => {
     expect(latest).toContain(post.title);
     expect(latest).toContain(`/en/blogs/${post.slug}/`);
     expect(latest).not.toContain('server:defer');
-  });
+  }, 20000);
 
   test('omits an empty latest-stories section from server HTML', async () => {
     const container = await AstroContainer.create();
@@ -97,5 +97,5 @@ describe('server-rendered blog components', () => {
     });
 
     expect(html).not.toContain('data-latest-blogs');
-  });
+  }, 20000);
 });

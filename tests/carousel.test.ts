@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'bun:test';
-import { createCarousel, nextIndex, previousIndex } from '../src/lib/carousel/controller';
+import { afterAll, describe, expect, test } from 'bun:test';
+import { createCarousel, hasOverflow, nextIndex, previousIndex } from '../src/lib/carousel/controller';
 
 type Listener = (event: Event) => void;
 
@@ -9,6 +9,9 @@ class FakeElement {
   hidden = true;
   offsetLeft = 0;
   scrollLeft = 0;
+  scrollWidth = 0;
+  clientWidth = 0;
+  tabIndex = 0;
   textContent = '';
   readonly calls: ScrollIntoViewOptions[] = [];
   readonly listeners = new Map<string, Set<Listener>>();
@@ -40,10 +43,28 @@ class FakeElement {
   }
 }
 
+let resizeObservers: FakeResizeObserver[] = [];
+
+class FakeResizeObserver {
+  readonly observed: FakeElement[] = [];
+  constructor(private readonly callback: () => void) { resizeObservers.push(this); }
+  observe(target: FakeElement) { this.observed.push(target); }
+  unobserve() {}
+  disconnect() { this.observed.length = 0; }
+  trigger() { this.callback(); }
+}
+
+const originalResizeObserver = globalThis.ResizeObserver;
+afterAll(() => { globalThis.ResizeObserver = originalResizeObserver; });
+
 const harness = (count = 3) => {
+  resizeObservers = [];
+  globalThis.ResizeObserver = FakeResizeObserver as unknown as typeof ResizeObserver;
   const log: string[] = [];
   const root = new FakeElement(log);
   const viewport = new FakeElement(log);
+  viewport.scrollWidth = count * 300;
+  viewport.clientWidth = 600;
   const controls = new FakeElement(log);
   let controlsHidden = true;
   Object.defineProperty(controls, 'hidden', {
@@ -65,7 +86,7 @@ const harness = (count = 3) => {
   root.register('[data-carousel-next]', next);
   root.register('[data-carousel-status]', status);
   root.registerAll('[data-carousel-item]', items);
-  return { root, viewport, controls, previous, next, status, items, log };
+  return { root, viewport, controls, previous, next, status, items, log, resizeObservers };
 };
 
 describe('manual carousel state', () => {
@@ -75,6 +96,15 @@ describe('manual carousel state', () => {
     expect(nextIndex(0, 0)).toBe(0);
     expect(previousIndex(0)).toBe(0);
     expect(previousIndex(2)).toBe(1);
+  });
+});
+
+describe('overflow detection', () => {
+  test('hasOverflow tolerates a one-pixel difference', () => {
+    expect(hasOverflow({ scrollWidth: 900, clientWidth: 600 })).toBe(true);
+    expect(hasOverflow({ scrollWidth: 602, clientWidth: 600 })).toBe(true);
+    expect(hasOverflow({ scrollWidth: 601, clientWidth: 600 })).toBe(false);
+    expect(hasOverflow({ scrollWidth: 600, clientWidth: 600 })).toBe(false);
   });
 });
 
@@ -154,5 +184,77 @@ describe('manual carousel controller', () => {
     controller.dispose();
     controller.dispose();
     expect(setup.log).not.toContain('hidden:false');
+  });
+
+  test('stays hidden and inert when everything fits', () => {
+    const setup = harness();
+    setup.viewport.scrollWidth = 600;
+    setup.viewport.clientWidth = 600;
+    const controller = createCarousel(setup.root as unknown as HTMLElement, { reduceMotion: false });
+    expect(setup.log).not.toContain('hidden:false');
+    expect(setup.log).not.toContain('listen:');
+    expect(setup.viewport.tabIndex).toBe(-1);
+    expect(setup.status.textContent).toBe('');
+    expect(setup.previous.disabled).toBe(false);
+    expect(setup.next.disabled).toBe(false);
+    controller.dispose();
+  });
+
+  test('reveals controls when the viewport starts overflowing', () => {
+    const setup = harness();
+    setup.viewport.scrollWidth = 600;
+    setup.viewport.clientWidth = 600;
+    createCarousel(setup.root as unknown as HTMLElement, { reduceMotion: false });
+    setup.viewport.scrollWidth = 1200;
+    setup.resizeObservers[0].trigger();
+    expect(setup.log).toContain('hidden:false');
+    expect(setup.log.filter((entry) => entry.startsWith('listen:')).length).toBe(4);
+    expect(setup.viewport.tabIndex).toBe(0);
+    expect(setup.status.textContent).toBe('1 / 3');
+    expect(setup.previous.disabled).toBe(true);
+    expect(setup.next.disabled).toBe(false);
+  });
+
+  test('hides and disables the carousel when overflow goes away', () => {
+    const setup = harness();
+    const controller = createCarousel(setup.root as unknown as HTMLElement, { reduceMotion: false });
+    expect(setup.log).toContain('hidden:false');
+    setup.viewport.scrollWidth = 600;
+    setup.resizeObservers[0].trigger();
+    expect(setup.log).toContain('hidden:true');
+    expect(setup.log.filter((entry) => entry.startsWith('remove:')).length).toBe(4);
+    expect(setup.viewport.tabIndex).toBe(-1);
+    setup.next.emit('click');
+    expect(setup.status.textContent).toBe('1 / 3');
+    expect(setup.items[1].calls.length).toBe(0);
+    controller.dispose();
+  });
+
+  test('reactivates cleanly when overflow returns', () => {
+    const setup = harness();
+    setup.viewport.scrollWidth = 600;
+    setup.viewport.clientWidth = 600;
+    const controller = createCarousel(setup.root as unknown as HTMLElement, { reduceMotion: false });
+    setup.viewport.scrollWidth = 1200;
+    setup.resizeObservers[0].trigger();
+    setup.viewport.scrollWidth = 600;
+    setup.resizeObservers[0].trigger();
+    setup.viewport.scrollWidth = 1200;
+    setup.resizeObservers[0].trigger();
+    expect(setup.viewport.tabIndex).toBe(0);
+    expect(setup.status.textContent).toBe('1 / 3');
+    expect(setup.previous.disabled).toBe(true);
+    setup.next.emit('click');
+    expect(setup.status.textContent).toBe('2 / 3');
+    expect(setup.items[1].calls.at(-1)).toEqual({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+    controller.dispose();
+  });
+
+  test('dispose disconnects the resize observer', () => {
+    const setup = harness();
+    const controller = createCarousel(setup.root as unknown as HTMLElement, { reduceMotion: false });
+    expect(setup.resizeObservers[0].observed.length).toBe(4);
+    controller.dispose();
+    expect(setup.resizeObservers[0].observed.length).toBe(0);
   });
 });

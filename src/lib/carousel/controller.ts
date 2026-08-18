@@ -1,3 +1,6 @@
+export const hasOverflow = (viewport: { scrollWidth: number; clientWidth: number }): boolean =>
+  viewport.scrollWidth > viewport.clientWidth + 1;
+
 export const nextIndex = (current: number, count: number): number =>
   Math.min(current + 1, Math.max(0, count - 1));
 
@@ -17,8 +20,9 @@ export function createCarousel(root: HTMLElement, options: CarouselOptions): Car
     return { dispose() {} };
   }
 
-  let index = 0;
+  let active = false;
   let disposed = false;
+  let index = 0;
   const removers: Array<() => void> = [];
   const statusTemplate = status.dataset.carouselStatusTemplate;
   const update = () => {
@@ -72,21 +76,60 @@ export function createCarousel(root: HTMLElement, options: CarouselOptions): Car
     removers.push(() => target.removeEventListener(type, listener as EventListener, options));
   };
 
-  try {
-    listen(previous, 'click', onPrevious);
-    listen(next, 'click', onNext);
-    listen(viewport, 'keydown', onKeydown);
-    listen(viewport, 'scroll', onScroll, { passive: true });
-    update();
-    controls.hidden = false;
-  } catch {
+  const deactivate = () => {
     for (const remove of removers.splice(0).reverse()) remove();
+    controls.hidden = true;
+    viewport.tabIndex = -1;
+    active = false;
+  };
+
+  const activate = () => {
+    if (disposed) return;
+    index = 0;
+    try {
+      listen(previous, 'click', onPrevious);
+      listen(next, 'click', onNext);
+      listen(viewport, 'keydown', onKeydown);
+      listen(viewport, 'scroll', onScroll, { passive: true });
+      update();
+      controls.hidden = false;
+      viewport.tabIndex = 0;
+      active = true;
+    } catch {
+      for (const remove of removers.splice(0).reverse()) remove();
+    }
+  };
+
+  const sync = () => {
+    if (disposed) return;
+    if (hasOverflow(viewport)) {
+      if (!active) activate();
+    } else if (active) {
+      deactivate();
+    } else {
+      viewport.tabIndex = -1;
+    }
+  };
+
+  const observer = typeof ResizeObserver === 'undefined'
+    ? undefined
+    : new ResizeObserver(sync);
+  if (observer) {
+    observer.observe(viewport);
+    for (const item of items) observer.observe(item);
+  }
+
+  sync();
+
+  if (typeof document !== 'undefined' && document.fonts) {
+    document.fonts.ready.then(sync).catch(() => undefined);
   }
 
   return {
     dispose() {
       if (disposed) return;
       disposed = true;
+      observer?.disconnect();
       for (const remove of removers.splice(0).reverse()) remove();
     },
   };
