@@ -67,17 +67,20 @@ describe('floating form rail rendering contract', () => {
   test('leaves only the 44px toggle exposed when a 390px rail is collapsed', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     const sharedRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
+    const expandedPanel = source.match(/\n  \.floating-form-rail__panel \{([\s\S]*?)\n  \.floating-form-rail__panel\[inert\]/)?.[1] ?? '';
     const collapsedRail = source.match(/\.floating-form-rail\[data-ready='true'\]\[data-expanded='false'\]\s*\{([^}]*)\}/)?.[1] ?? '';
     const collapsedPanel = source.match(/\.floating-form-rail\[data-ready='true'\]\[data-expanded='false'\] \.floating-form-rail__panel\s*\{([^}]*)\}/)?.[1] ?? '';
 
     expect(sharedRail).toMatch(/flex-direction:\s*row\s*;/);
     expect(collapsedRail).toContain('inline-size: 2.75rem');
     expect(collapsedRail).toContain('translate: 0 0');
+    expect(expandedPanel).toContain('transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear 0s');
+    expect(expandedPanel).not.toContain('visibility 0s linear var(--transition-base)');
     for (const declaration of ['visibility: hidden', 'opacity: 0', 'translate: 0 0.5rem']) {
       expect(collapsedPanel).toContain(declaration);
     }
+    expect(collapsedPanel).toContain('transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear var(--transition-base)');
     expect(collapsedPanel).not.toContain('display: none');
-    expect(source).toContain('transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear var(--transition-base)');
     expect(source.match(/\n  \.floating-form-rail__toggle\s*\{([^}]*)\}/)?.[1]).toContain('inline-size: 2.75rem');
     expect(source).toContain('.floating-form-rail__panel[inert]');
   });

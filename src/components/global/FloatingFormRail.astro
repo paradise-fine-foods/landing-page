@@ -138,7 +138,7 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     inline-size: min(12rem, calc(100vw - 2.75rem));
     padding: var(--space-1) var(--space-3);
     pointer-events: auto;
-    transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear var(--transition-base);
+    transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear 0s;
   }
 
   .floating-form-rail__panel[inert] {
@@ -149,6 +149,7 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     opacity: 0;
     translate: 0 0.5rem;
     visibility: hidden;
+    transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear var(--transition-base);
   }
 
   .floating-form-rail__panel a {
