@@ -149,6 +149,22 @@ export interface BlogPostRecord extends EditorialParent {
   translations: BlogPostTranslation[] | null;
 }
 
+export interface RecipeTranslation extends TranslationBase {
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: string | null;
+  body: string;
+  image_alt: string | null;
+}
+
+export interface RecipeRecord extends EditorialParent {
+  image: DirectusFile | null;
+  published_at: string | null;
+  reading_minutes: number | null;
+  translations: RecipeTranslation[] | null;
+}
+
 export interface PartnerTranslation extends TranslationBase {
   name: string;
   logo_alt: string;
@@ -180,6 +196,8 @@ export interface DirectusSchema {
   audience_channels_translations: TaxonomyTranslation[];
   blog_posts: BlogPostRecord[];
   blog_posts_translations: BlogPostTranslation[];
+  recipes: RecipeRecord[];
+  recipes_translations: RecipeTranslation[];
   partners: PartnerRecord[];
   partners_translations: PartnerTranslation[];
   products_categories: ProductCategoryJunction[];

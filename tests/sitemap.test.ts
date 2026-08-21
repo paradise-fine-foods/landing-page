@@ -8,12 +8,13 @@ import {
   type SitemapQueries,
   type SitemapRouteGroup,
 } from '../src/pages/sitemap.xml';
-import { getBlogPosts, getBrands, getProducts } from './fixtures/directus';
+import { getBlogPosts, getBrands, getProducts, getRecipes } from './fixtures/directus';
 
 const queries = async (): Promise<SitemapQueries> => ({
   getProducts,
   getBrands,
   getBlogPosts,
+  getRecipes,
 });
 
 describe('runtime sitemap XML', () => {
@@ -33,6 +34,10 @@ describe('runtime sitemap XML', () => {
         calls.push(`blogs:${locale}`);
         return base.getBlogPosts(locale);
       },
+      getRecipes: async (locale) => {
+        calls.push(`recipes:${locale}`);
+        return base.getRecipes(locale);
+      },
     };
 
     const response = await createSitemapResponse(
@@ -50,6 +55,7 @@ describe('runtime sitemap XML', () => {
       'blogs:en', 'blogs:vi',
       'brands:en', 'brands:vi',
       'products:en', 'products:vi',
+      'recipes:en', 'recipes:vi',
     ]);
     expect(xml).toStartWith('<?xml version="1.0" encoding="UTF-8"?>');
     expect(xml).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
@@ -57,13 +63,15 @@ describe('runtime sitemap XML', () => {
     expect(xml).toContain('<loc>https://paradisefinefoods.com/en/</loc>');
     expect(xml).toContain('<loc>https://paradisefinefoods.com/vi/contact/supplier/</loc>');
 
-    const [englishProducts, vietnameseProducts, englishBrands, vietnameseBrands, englishPosts, vietnamesePosts] = await Promise.all([
+    const [englishProducts, vietnameseProducts, englishBrands, vietnameseBrands, englishPosts, vietnamesePosts, englishRecipes, vietnameseRecipes] = await Promise.all([
       base.getProducts('en'),
       base.getProducts('vi'),
       base.getBrands('en'),
       base.getBrands('vi'),
       base.getBlogPosts('en'),
       base.getBlogPosts('vi'),
+      base.getRecipes('en'),
+      base.getRecipes('vi'),
     ]);
     const [englishProduct] = englishProducts;
     const [vietnameseProduct] = vietnameseProducts;
@@ -71,13 +79,16 @@ describe('runtime sitemap XML', () => {
     expect(xml).toContain(`hreflang="vi" href="https://paradisefinefoods.com/vi/products/${vietnameseProduct!.slug}/"`);
     expect(xml).toContain(`<loc>https://paradisefinefoods.com/en/brands/${englishBrands[0]!.slug}/</loc>`);
     expect(xml).toContain(`<loc>https://paradisefinefoods.com/vi/blogs/${vietnamesePosts[0]!.slug}/</loc>`);
+    expect(xml).toContain(`<loc>https://paradisefinefoods.com/en/recipes/${englishRecipes[0]!.slug}/</loc>`);
+    expect(xml).toContain(`hreflang="vi" href="https://paradisefinefoods.com/vi/recipes/${vietnameseRecipes[0]!.slug}/"`);
 
     const locations = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
     expect(locations).toHaveLength(
-      14
+      16
       + englishProducts.length + vietnameseProducts.length
       + englishBrands.length + vietnameseBrands.length
-      + englishPosts.length + vietnamesePosts.length,
+      + englishPosts.length + vietnamesePosts.length
+      + englishRecipes.length + vietnameseRecipes.length,
     );
     expect(new Set(locations).size).toBe(locations.length);
   });
@@ -100,6 +111,7 @@ describe('runtime sitemap XML', () => {
       getProducts: async () => { throw new CmsUnavailableError(); },
       getBrands: async () => [] as Brand[],
       getBlogPosts: async () => [] as BlogPost[],
+      getRecipes: async () => [] as BlogPost[],
     };
 
     const response = await createSitemapResponse('https://paradisefinefoods.com', unavailable);
@@ -117,6 +129,7 @@ describe('runtime sitemap XML', () => {
       getProducts: async () => { throw new TypeError('broken mapper'); },
       getBrands: async () => [] as Brand[],
       getBlogPosts: async () => [] as BlogPost[],
+      getRecipes: async () => [] as BlogPost[],
     };
 
     expect(createSitemapResponse('https://paradisefinefoods.com', broken))

@@ -1,0 +1,40 @@
+---
+import type { Recipe } from '@/lib/cms/types';
+import type { Locale } from '@/lib/i18n/types';
+import { localizedPath } from '@/lib/i18n/routes';
+import RecipeCard from '@/components/recipes/RecipeCard.astro';
+
+interface Props {
+  recipes: Recipe[];
+  locale: Locale;
+  eyebrow: string;
+  title: string;
+  viewAllLabel: string;
+}
+
+const { recipes, locale, eyebrow, title, viewAllLabel } = Astro.props;
+---
+
+{recipes.length > 0 && (
+  <section class="latest-recipes section-space" data-latest-recipes aria-labelledby="latest-recipes-title">
+    <div class="container">
+      <header class="latest-recipes__heading">
+        <div><p class="eyebrow">{eyebrow}</p><h2 id="latest-recipes-title">{title}</h2></div>
+        <a href={localizedPath(locale, 'recipes')}>{viewAllLabel}</a>
+      </header>
+      <div class="latest-recipes__grid">{recipes.map((recipe) => <RecipeCard {recipe} {locale} headingLevel="h3" />)}</div>
+    </div>
+  </section>
+)}
+
+<style>
+  .latest-recipes { background: var(--color-cold-paper); }
+  .latest-recipes__heading { align-items: end; display: flex; gap: var(--space-5); justify-content: space-between; margin-block-end: var(--space-7); }
+  .latest-recipes__heading h2 { margin-block-start: var(--space-3); }
+  .latest-recipes__heading > a { font-weight: 600; min-block-size: 2.75rem; padding-block: .65rem; }
+  .latest-recipes__grid { border-block: 1px solid var(--color-brushed-steel); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .latest-recipes__grid > :global(*) { border-inline-start: 1px solid var(--color-brushed-steel); padding: var(--space-4); }
+  .latest-recipes__grid > :global(*:first-child) { border-inline-start: 0; padding-inline-start: 0; }
+  @media (max-width: 48rem) { .latest-recipes__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .latest-recipes__grid > :global(*:last-child) { border-block-start: 1px solid var(--color-brushed-steel); border-inline-start: 0; grid-column: 1 / -1; padding-inline: 0; } }
+  @media (max-width: 34rem) { .latest-recipes__heading { align-items: start; flex-direction: column; } .latest-recipes__grid { grid-template-columns: minmax(0, 1fr); } .latest-recipes__grid > :global(*) { border-block-start: 1px solid var(--color-brushed-steel); border-inline-start: 0; grid-column: auto; padding-inline: 0; } .latest-recipes__grid > :global(*:first-child) { border-block-start: 0; } }
+</style>

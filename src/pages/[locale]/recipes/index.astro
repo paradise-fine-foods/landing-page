@@ -1,0 +1,44 @@
+---
+import RecipeCard from '@/components/recipes/RecipeCard.astro';
+import Breadcrumbs from '@/components/global/Breadcrumbs.astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import { getRecipes, getGlobalSettings } from '@/lib/cms/queries';
+import { loadCmsPageData, markNotFound } from '@/lib/cms/page-state';
+import { localizedPath } from '@/lib/i18n/routes';
+import { counterpartLocale } from '@/lib/i18n/static-paths';
+import { isLocale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
+
+const localeParam = Astro.params.locale;
+if (!localeParam || !isLocale(localeParam)) {
+  markNotFound(Astro.response);
+  return Astro.rewrite('/404');
+}
+const locale = localeParam;
+const copy = ui[locale];
+const pageData = await loadCmsPageData(
+  () => getGlobalSettings(locale),
+  () => getRecipes(locale),
+);
+if (!pageData.ok) return Astro.rewrite('/503');
+const [settings, recipes] = pageData.data;
+const pathname = localizedPath(locale, 'recipes');
+const alternatePath = localizedPath(counterpartLocale(locale), 'recipes');
+---
+
+<SiteLayout {locale} title={`${copy.recipe.title} | ${settings.siteName}`} description={copy.recipe.description} {pathname} {alternatePath} settings={settings} image={recipes[0]?.image.src}>
+  <div class="recipe-index container section-space" data-recipe-index>
+    <Breadcrumbs label={copy.recipe.breadcrumb} items={[{ label: copy.header.home, href: localizedPath(locale, 'home') }, { label: copy.header.recipes }]} />
+    <header class="recipe-index__intro"><p class="eyebrow">{copy.recipe.eyebrow}</p><h1>{copy.recipe.title}</h1><p>{copy.recipe.description}</p></header>
+    {recipes.length > 0 ? <section class="recipe-index__grid" aria-label={copy.recipe.title}>{recipes.map((recipe, index) => <RecipeCard {recipe} {locale} variant={index === 0 ? 'lead' : 'standard'} headingLevel="h2" />)}</section> : <section class="recipe-index__empty"><h2>{copy.recipe.emptyTitle}</h2><p>{copy.recipe.emptyDescription}</p></section>}
+  </div>
+</SiteLayout>
+
+<style>
+  .recipe-index__intro { display: grid; gap: var(--space-5); grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr); padding-block: var(--space-6) var(--space-8); }
+  .recipe-index__intro h1 { max-inline-size: 12ch; }
+  .recipe-index__intro > p:last-child { font-size: var(--text-lg); grid-column: 2; max-inline-size: var(--measure); }
+  .recipe-index__grid { display: grid; gap: var(--space-5); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .recipe-index__empty { border-block: 1px solid var(--color-brushed-steel); display: grid; gap: var(--space-4); padding-block: var(--space-7); }
+  @media (max-width: 42rem) { .recipe-index__intro, .recipe-index__grid { grid-template-columns: minmax(0, 1fr); } .recipe-index__intro > p:last-child { grid-column: auto; } }
+</style>

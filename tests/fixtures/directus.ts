@@ -495,6 +495,11 @@ export const fixtureRepository: CmsRepository = {
     clone(rawBlogPosts.filter(({ id }) => id !== excludeId).slice(0, Math.max(0, limit))) as never,
   getBlogPostBySlug: async (locale, slug) =>
     clone(localizedBySlug(rawBlogPosts, locale, slug)) as never,
+  getRecipes: async () => clone(rawBlogPosts) as never,
+  getLatestRecipes: async (_locale, limit, excludeId) =>
+    clone(rawBlogPosts.filter(({ id }) => id !== excludeId).slice(0, Math.max(0, limit))) as never,
+  getRecipeBySlug: async (locale, slug) =>
+    clone(localizedBySlug(rawBlogPosts, locale, slug)) as never,
 };
 
 const fixtureQueries = createCmsQueries(
@@ -509,6 +514,9 @@ export const getProductBySlug = fixtureQueries.getProductBySlug;
 export const getBlogPosts = fixtureQueries.getBlogPosts;
 export const getLatestBlogPosts = fixtureQueries.getLatestBlogPosts;
 export const getBlogPostBySlug = fixtureQueries.getBlogPostBySlug;
+export const getRecipes = fixtureQueries.getRecipes;
+export const getLatestRecipes = fixtureQueries.getLatestRecipes;
+export const getRecipeBySlug = fixtureQueries.getRecipeBySlug;
 export const getBrands = fixtureQueries.getBrands;
 export const getBrandBySlug = fixtureQueries.getBrandBySlug;
 export const getFeaturedContent = fixtureQueries.getFeaturedContent;

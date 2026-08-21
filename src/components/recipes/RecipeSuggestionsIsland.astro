@@ -1,0 +1,23 @@
+---
+import { loadRecipeSuggestions } from '@/lib/recipes/suggestions';
+import type { Locale } from '@/lib/i18n/types';
+import { ui } from '@/lib/i18n/ui';
+import LatestRecipes from '@/components/recipes/LatestRecipes.astro';
+
+interface Props {
+  locale: Locale;
+  currentRecipeId: string;
+}
+
+const { locale, currentRecipeId } = Astro.props;
+const recipes = await loadRecipeSuggestions(locale, currentRecipeId);
+const copy = ui[locale].recipe;
+---
+
+<LatestRecipes
+  {recipes}
+  {locale}
+  eyebrow={copy.latestEyebrow}
+  title={copy.latestTitle}
+  viewAllLabel={copy.viewAll}
+/>

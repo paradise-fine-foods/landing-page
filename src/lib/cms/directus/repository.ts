@@ -17,6 +17,8 @@ import type {
   HomePageRecord,
   PartnerRecord,
   ProductRecord,
+  RecipeRecord,
+  RecipeTranslation,
   SiteSettingsRecord,
 } from '@/lib/cms/directus/schema';
 
@@ -40,6 +42,13 @@ export interface CmsRepository {
     excludeId?: string,
   ): Promise<BlogPostRecord[]>;
   getBlogPostBySlug(locale: Locale, slug: string): Promise<BlogPostRecord | undefined>;
+  getRecipes(locale: Locale): Promise<RecipeRecord[]>;
+  getLatestRecipes(
+    locale: Locale,
+    limit: number,
+    excludeId?: string,
+  ): Promise<RecipeRecord[]>;
+  getRecipeBySlug(locale: Locale, slug: string): Promise<RecipeRecord | undefined>;
 }
 
 const fileFields = ['id', 'width', 'height', 'filename_download', 'type'] as const;
@@ -169,6 +178,26 @@ const blogFields = [
   'reading_minutes',
   { image: fileFields },
   { translations: blogTranslationFields },
+] as const;
+
+const recipeTranslationFields = [
+  'id',
+  'languages_code',
+  'title',
+  'slug',
+  'excerpt',
+  'category',
+  'body',
+  'image_alt',
+] as const;
+
+const recipeFields = [
+  'id',
+  'status',
+  'published_at',
+  'reading_minutes',
+  { image: fileFields },
+  { translations: recipeTranslationFields },
 ] as const;
 
 const siteSettingsFields = [
@@ -407,6 +436,43 @@ export const createCmsRepository = (request: CmsRequest): CmsRepository => {
     },
     getBlogPostBySlug: async (locale, slug): Promise<BlogPostRecord | undefined> => detail('blog_posts', readBlogPosts({
       fields: blogFields,
+      filter: {
+        ...published,
+        translations: {
+          languages_code: { _eq: locale },
+          slug: { _eq: slug },
+        },
+      },
+      deep: {
+        translations: {
+          _filter: { languages_code: { _in: ['en', 'vi'] as Locale[] } },
+          _limit: 2,
+        },
+      },
+      limit: 1,
+    })),
+    getRecipes: async (locale): Promise<RecipeRecord[]> => list('recipes', readBlogPosts({
+      fields: recipeFields,
+      filter: published,
+      deep: localizedDeep(locale),
+      sort: ['-published_at', 'id'],
+    })),
+    getLatestRecipes: async (locale, limit, excludeId): Promise<RecipeRecord[]> => {
+      const safeLimit = Math.max(0, Math.floor(limit));
+      if (safeLimit === 0) return Promise.resolve([]);
+      return list('recipes', readBlogPosts({
+        fields: recipeFields,
+        filter: {
+          ...published,
+          ...(excludeId ? { id: { _neq: excludeId } } : {}),
+        },
+        deep: localizedDeep(locale),
+        sort: ['-published_at', 'id'],
+        limit: safeLimit,
+      }));
+    },
+    getRecipeBySlug: async (locale, slug): Promise<RecipeRecord | undefined> => detail('recipes', readBlogPosts({
+      fields: recipeFields,
       filter: {
         ...published,
         translations: {

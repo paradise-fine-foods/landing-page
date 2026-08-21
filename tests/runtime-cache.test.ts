@@ -6,7 +6,7 @@ import {
 } from '../src/lib/runtime/cache';
 import type { SitemapQueries } from '../src/pages/sitemap.xml';
 import { createSitemapResponse } from '../src/pages/sitemap.xml';
-import { getBlogPosts, getBrands, getProducts } from './fixtures/directus';
+import { getBlogPosts, getBrands, getProducts, getRecipes } from './fixtures/directus';
 
 class MemoryCache {
   readonly matches: Request[] = [];
@@ -226,6 +226,10 @@ describe('runtime cache behavior', () => {
         queryCalls.push(`blogs:${locale}`);
         return getBlogPosts(locale);
       },
+      getRecipes: async (locale) => {
+        queryCalls.push(`recipes:${locale}`);
+        return getRecipes(locale);
+      },
     };
     const sitemapRequest = request('/sitemap.xml');
     const render = () => createSitemapResponse('https://paradisefinefoods.com', queries);
@@ -233,7 +237,7 @@ describe('runtime cache behavior', () => {
     const first = await withRuntimeCache(sitemapRequest, render, cache);
     const firstXml = await first.text();
 
-    expect(queryCalls).toHaveLength(6);
+    expect(queryCalls).toHaveLength(8);
     expect(first.headers.get('Content-Type')).toBe('application/xml; charset=utf-8');
     expect(first.headers.get('Cache-Control')).toBe('public, max-age=0');
     expect(cache.puts).toHaveLength(1);
@@ -244,7 +248,7 @@ describe('runtime cache behavior', () => {
 
     expect(await second.text()).toBe(firstXml);
     expect(second.headers.get('Cache-Control')).toBe('public, max-age=0');
-    expect(queryCalls).toHaveLength(6);
+    expect(queryCalls).toHaveLength(8);
     expect(cache.matches).toHaveLength(2);
     expect(cache.puts).toHaveLength(1);
   });

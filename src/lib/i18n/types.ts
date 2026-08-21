@@ -3,6 +3,7 @@ export type RouteKey =
   | "products"
   | "brands"
   | "blogs"
+  | "recipes"
   | "contact"
   | "customerContact"
   | "supplierContact";

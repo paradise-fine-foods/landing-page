@@ -129,3 +129,16 @@ export interface BlogPost {
   bodyHtml: string;
   counterpart?: LocalizedCounterpart;
 }
+
+export interface Recipe {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  publishedAt: string;
+  readingMinutes: number;
+  category: string;
+  image: ImageAsset;
+  bodyHtml: string;
+  counterpart?: LocalizedCounterpart;
+}

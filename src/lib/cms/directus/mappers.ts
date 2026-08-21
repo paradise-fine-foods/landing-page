@@ -11,6 +11,7 @@ import {
   type LocalizedCounterpart,
   type LocalizedTaxonomyOption,
   type Product,
+  type Recipe,
 } from '@/lib/cms/types';
 import { mapImageAsset } from '@/lib/cms/directus/assets';
 import { CmsDataError } from '@/lib/cms/directus/errors';
@@ -321,6 +322,28 @@ export const mapBlogPost = (
 ): BlogPost => {
   const item = record(value, 'blog_posts');
   const context = itemContext('blog_posts', item);
+  const localized = translation(item, locale, context);
+  return {
+    id: requiredString(item.id, context, 'id'),
+    slug: requiredString(localized.slug, context, 'slug'),
+    title: requiredString(localized.title, context, 'title'),
+    excerpt: requiredString(localized.excerpt, context, 'excerpt'),
+    publishedAt: requiredString(item.published_at, context, 'published_at'),
+    readingMinutes: requiredNumber(item.reading_minutes, context, 'reading_minutes'),
+    category: optionalString(localized.category),
+    image: mapImageAsset(item.image, localized.image_alt, directusUrl, context),
+    bodyHtml: sanitizeBlogHtml(requiredString(localized.body, context, 'body')),
+    counterpart: counterpart(item, locale, context),
+  };
+};
+
+export const mapRecipe = (
+  value: unknown,
+  locale: Locale,
+  directusUrl: string,
+): Recipe => {
+  const item = record(value, 'recipes');
+  const context = itemContext('recipes', item);
   const localized = translation(item, locale, context);
   return {
     id: requiredString(item.id, context, 'id'),

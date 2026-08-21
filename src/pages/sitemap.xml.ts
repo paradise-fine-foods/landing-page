@@ -4,26 +4,29 @@ import {
   getBlogPosts,
   getBrands,
   getProducts,
+  getRecipes,
   type CmsQueries,
 } from '@/lib/cms/queries';
 import { loadCmsPageData } from '@/lib/cms/page-state';
-import type { BlogPost, Brand, Product } from '@/lib/cms/types';
+import type { BlogPost, Brand, Product, Recipe } from '@/lib/cms/types';
 import { blogDetailPath } from '@/lib/blogs/routes';
 import { brandDetailPath } from '@/lib/brands/routes';
 import { productDetailPath } from '@/lib/catalog/routes';
+import { recipeDetailPath } from '@/lib/recipes/routes';
 import { localizedPath } from '@/lib/i18n/routes';
 import { locales, type Locale, type RouteKey } from '@/lib/i18n/types';
 import { EDGE_CACHE_CONTROL } from '@/lib/runtime/cache';
 
-export type SitemapQueries = Pick<CmsQueries, 'getProducts' | 'getBrands' | 'getBlogPosts'>;
+export type SitemapQueries = Pick<CmsQueries, 'getProducts' | 'getBrands' | 'getBlogPosts' | 'getRecipes'>;
 export type SitemapRouteGroup = Partial<Record<Locale, string>>;
 
-const productionQueries: SitemapQueries = { getProducts, getBrands, getBlogPosts };
+const productionQueries: SitemapQueries = { getProducts, getBrands, getBlogPosts, getRecipes };
 const fixedRouteKeys: readonly RouteKey[] = [
   'home',
   'products',
   'brands',
   'blogs',
+  'recipes',
   'contact',
   'customerContact',
   'supplierContact',
@@ -109,6 +112,8 @@ export const createSitemapResponse = async (
     () => queries.getBrands('vi'),
     () => queries.getBlogPosts('en'),
     () => queries.getBlogPosts('vi'),
+    () => queries.getRecipes('en'),
+    () => queries.getRecipes('vi'),
   );
 
   if (!pageData.ok) {
@@ -121,12 +126,13 @@ export const createSitemapResponse = async (
     });
   }
 
-  const [englishProducts, vietnameseProducts, englishBrands, vietnameseBrands, englishPosts, vietnamesePosts] = pageData.data;
+  const [englishProducts, vietnameseProducts, englishBrands, vietnameseBrands, englishPosts, vietnamesePosts, englishRecipes, vietnameseRecipes] = pageData.data;
   const routes: SitemapRouteGroup[] = [
     ...fixedRouteGroups(),
     ...localizedRecordGroups<Product>(englishProducts, vietnameseProducts, productDetailPath),
     ...localizedRecordGroups<Brand>(englishBrands, vietnameseBrands, brandDetailPath),
     ...localizedRecordGroups<BlogPost>(englishPosts, vietnamesePosts, blogDetailPath),
+    ...localizedRecordGroups<Recipe>(englishRecipes, vietnameseRecipes, recipeDetailPath),
   ];
 
   return new Response(buildSitemapXml(site, routes), {

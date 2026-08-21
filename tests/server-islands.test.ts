@@ -130,7 +130,7 @@ describe('Astro server-island boundaries', () => {
     expect(blogRoute).toContain('server:defer');
     expect(productRoute).toContain('<CardSkeleton slot="fallback"');
     expect(blogRoute).toContain('<CardSkeleton slot="fallback"');
-    expect(allAstro.reduce((count, value) => count + (value.match(/server:defer/g)?.length ?? 0), 0)).toBe(2);
+    expect(allAstro.reduce((count, value) => count + (value.match(/server:defer/g)?.length ?? 0), 0)).toBe(3);
 
     expect(productIsland).toContain('await loadRelatedProducts(locale');
     expect(blogIsland).toContain('await loadBlogSuggestions(locale');

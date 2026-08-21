@@ -24,7 +24,7 @@ describe('Astro runtime route manifest', () => {
     const projectRoot = join(import.meta.dir, '..');
     const routes = expectedRuntimeRouteFiles();
 
-    expect(routes).toHaveLength(15);
+    expect(routes).toHaveLength(17);
     expect(routes).toContain('src/pages/sitemap.xml.ts');
     expect(routes).toContain('src/pages/[locale]/products/[slug].astro');
     expect(routes).toContain('src/pages/[locale]/blogs/[slug].astro');

@@ -14,6 +14,7 @@ export interface UiCopy {
     products: string;
     brands: string;
     blogs: string;
+    recipes: string;
     contact: string;
     language: string;
   };
@@ -55,6 +56,9 @@ export interface UiCopy {
     latestBlogsEyebrow: string;
     latestBlogsTitle: string;
     latestBlogsViewAll: string;
+    latestRecipesEyebrow: string;
+    latestRecipesTitle: string;
+    latestRecipesViewAll: string;
     partnersEyebrow: string;
     partnersTitle: string;
     serviceEyebrow: string;
@@ -134,6 +138,22 @@ export interface UiCopy {
     emptyTitle: string;
     emptyDescription: string;
   };
+  recipe: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    readStory: string;
+    readingTime: string;
+    publishedLabel: string;
+    readingTimeLabel: string;
+    categoryLabel: string;
+    latestEyebrow: string;
+    latestTitle: string;
+    viewAll: string;
+    breadcrumb: string;
+    emptyTitle: string;
+    emptyDescription: string;
+  };
   form: {
     mode?: EnquiryMode;
     modes?: Record<EnquiryMode, { eyebrow: string; title: string; description: string; submit: string; successMessage: string; interestLabel: string; interestOptions: Record<string, string> }>;
@@ -185,7 +205,7 @@ export const ui: Record<Locale, UiCopy> = {
     siteName: 'Paradise Fine Foods',
     languageName: 'English',
     skipToContent: 'Skip to main content',
-    header: { navigation: 'Primary navigation', menuOpen: 'Open menu', menuClose: 'Close menu', home: 'Home', products: 'Products', brands: 'Brands', blogs: 'Blogs', contact: 'Contact', language: 'Tiếng Việt' },
+    header: { navigation: 'Primary navigation', menuOpen: 'Open menu', menuClose: 'Close menu', home: 'Home', products: 'Products', brands: 'Brands', blogs: 'Blogs', recipes: 'Recipes', contact: 'Contact', language: 'Tiếng Việt' },
     footer: { tagline: 'Exceptional ingredients, handled with care.', navigation: 'Explore', contact: 'Contact', legal: 'Serving professional food businesses across Vietnam.', copyright: 'Paradise Fine Foods. All rights reserved.' },
     floatingRail: { navigation: 'Enquiry options', toggleOpen: 'Open enquiry options', toggleClose: 'Close enquiry options', buy: 'Buy ingredients', sell: 'Sell products', contact: 'General enquiry' },
     hero: { primaryCta: 'Explore products', secondaryCta: 'Start an enquiry', brand: 'Brand', origin: 'Origin', packFormat: 'Pack format', storage: 'Storage' },
@@ -198,7 +218,7 @@ export const ui: Record<Locale, UiCopy> = {
         { title: 'Nationwide Vietnam delivery', description: 'Distribution planning supports partners and service points across Vietnam.' },
       ],
       categoryEyebrow: 'Discover', categoryTitle: 'Ingredients by category', categoryDescription: 'Explore ingredients selected for professional kitchens, pastry teams, and retail partners.', categoryProductLabel: 'products',
-      featuredProductsEyebrow: 'Selected ingredients', featuredProductsTitle: 'Featured products', carousel: { label: 'Featured products', previous: 'Previous product', next: 'Next product', status: 'Product {current} of {total}' }, featuredBrandsEyebrow: 'Producer stories', featuredBrandsTitle: 'Featured brands', latestBlogsEyebrow: 'From the professional table', latestBlogsTitle: 'Latest stories', latestBlogsViewAll: 'View all stories', partnersEyebrow: 'Trusted channels', partnersTitle: 'Partners who move ingredients forward',
+      featuredProductsEyebrow: 'Selected ingredients', featuredProductsTitle: 'Featured products', carousel: { label: 'Featured products', previous: 'Previous product', next: 'Next product', status: 'Product {current} of {total}' }, featuredBrandsEyebrow: 'Producer stories', featuredBrandsTitle: 'Featured brands', latestBlogsEyebrow: 'From the professional table', latestBlogsTitle: 'Latest stories', latestBlogsViewAll: 'View all stories', latestRecipesEyebrow: 'From the professional kitchen', latestRecipesTitle: 'Latest recipes', latestRecipesViewAll: 'View all recipes', partnersEyebrow: 'Trusted channels', partnersTitle: 'Partners who move ingredients forward',
       serviceEyebrow: 'Cold-chain confidence', serviceTitle: 'Care from selection to delivery', serviceDescription: 'A precise service framework for professional kitchens, retail teams, and growing food businesses.', serviceTemperatureLabel: '2—6 °C / MONITORED',
       channelsEyebrow: 'Who we serve', channelsTitle: 'Pathways for every channel',
       channels: {
@@ -213,6 +233,7 @@ export const ui: Record<Locale, UiCopy> = {
     product: { viewDetails: 'View product', productDetails: 'Product details', origin: 'Origin', category: 'Category', packFormat: 'Pack format', storage: 'Storage', applications: 'Applications', benefits: 'Professional benefits', audience: 'Suitable for', enquire: 'Enquire about this product', relatedTitle: 'Related products', backToProducts: 'Back to products', breadcrumb: 'Product breadcrumb' },
     brand: { eyebrow: 'Our brands', title: 'Ingredient makers with a point of view', description: 'Explore producer stories and product families.', viewBrand: 'View brand', origin: 'Origin', story: 'Brand story', categories: 'Categories', products: 'Products from this brand', backToBrands: 'Back to brands', breadcrumb: 'Brand breadcrumb', emptyTitle: 'Brand stories are being prepared', emptyDescription: 'Return soon to discover the producers behind our ingredient range.' },
     blog: { eyebrow: 'Culinary dispatches', title: 'Stories behind better ingredients.', description: 'Practical notes on ingredients, handling, makers, and professional kitchen work.', readStory: 'Read story', readingTime: '{minutes} min read', publishedLabel: 'Published', readingTimeLabel: 'Reading time', categoryLabel: 'Category', latestEyebrow: 'Continue reading', latestTitle: 'Latest stories', viewAll: 'View all stories', breadcrumb: 'Blog breadcrumb', emptyTitle: 'Stories are being prepared', emptyDescription: 'Return soon for new notes from the professional table.' },
+  recipe: { eyebrow: 'Culinary recipes', title: 'Recipes for professional kitchens.', description: 'Tested recipes for professional kitchens, pastry teams, and retail partners.', readStory: 'View recipe', readingTime: '{minutes} min read', publishedLabel: 'Published', readingTimeLabel: 'Reading time', categoryLabel: 'Category', latestEyebrow: 'Continue cooking', latestTitle: 'Latest recipes', viewAll: 'View all recipes', breadcrumb: 'Recipe breadcrumb', emptyTitle: 'Recipes are being prepared', emptyDescription: 'Return soon for new recipes from the professional kitchen.' },
     form: { eyebrow: 'Sales enquiry', title: 'Tell us what you need', description: 'Share your ingredient requirements and we will prepare a useful follow-up.', requiredNote: 'Fields marked with an asterisk are required.', name: 'Name', company: 'Company', email: 'Email', phone: 'Phone', interest: 'Area of interest', interestPlaceholder: 'Choose an area of interest', interestOptions: { retail: 'Retail', horeca: 'HORECA', bakery: 'Bakery & Pastry', ecommerce: 'E-commerce', other: 'Other' }, product: 'Product (optional)', productPlaceholder: 'No specific product', message: 'How can we help?', consent: 'I agree that Paradise Fine Foods may use my details to respond to this enquiry.', submit: 'Send enquiry', submitting: 'Sending…', noScript: 'JavaScript is required to submit this form.', unexpectedError: 'We could not complete this submission. Please try again.' },
     status: { formError: 'Please correct the highlighted fields.', successTitle: 'Thank you for your enquiry', successMessage: 'Your enquiry has been received.', reference: 'Reference' },
     validation: { nameRequired: 'Enter your name.', emailRequired: 'Enter your email address.', emailInvalid: 'Enter a valid email address.', interestRequired: 'Choose an area of interest.', messageRequired: 'Tell us how we can help.', consentRequired: 'Confirm your consent to continue.' },
@@ -222,7 +243,7 @@ export const ui: Record<Locale, UiCopy> = {
     siteName: 'Thực Phẩm Paradise',
     languageName: 'Tiếng Việt',
     skipToContent: 'Chuyển đến nội dung chính',
-    header: { navigation: 'Điều hướng chính', menuOpen: 'Mở menu', menuClose: 'Đóng menu', home: 'Trang chủ', products: 'Sản phẩm', brands: 'Thương hiệu', blogs: 'Bài viết', contact: 'Liên hệ', language: 'English' },
+    header: { navigation: 'Điều hướng chính', menuOpen: 'Mở menu', menuClose: 'Đóng menu', home: 'Trang chủ', products: 'Sản phẩm', brands: 'Thương hiệu', blogs: 'Bài viết', recipes: 'Công thức', contact: 'Liên hệ', language: 'English' },
     footer: { tagline: 'Nguyên liệu tuyển chọn, được chăm chút cẩn thận.', navigation: 'Khám phá', contact: 'Liên hệ', legal: 'Phục vụ doanh nghiệp thực phẩm chuyên nghiệp trên toàn Việt Nam.', copyright: 'Paradise Fine Foods. Bảo lưu mọi quyền.' },
     floatingRail: { navigation: 'Lựa chọn yêu cầu', toggleOpen: 'Mở lựa chọn yêu cầu', toggleClose: 'Đóng lựa chọn yêu cầu', buy: 'Mua nguyên liệu', sell: 'Cung cấp sản phẩm', contact: 'Yêu cầu chung' },
     hero: { primaryCta: 'Khám phá sản phẩm', secondaryCta: 'Gửi yêu cầu', brand: 'Thương hiệu', origin: 'Xuất xứ', packFormat: 'Quy cách', storage: 'Bảo quản' },
@@ -235,7 +256,7 @@ export const ui: Record<Locale, UiCopy> = {
         { title: 'Giao hàng toàn quốc', description: 'Kế hoạch phân phối hỗ trợ đối tác và điểm phục vụ trên khắp Việt Nam.' },
       ],
       categoryEyebrow: 'Khám phá', categoryTitle: 'Nguyên liệu theo danh mục', categoryDescription: 'Khám phá nguyên liệu tuyển chọn cho bếp chuyên nghiệp, đội ngũ làm bánh và đối tác bán lẻ.', categoryProductLabel: 'sản phẩm',
-      featuredProductsEyebrow: 'Nguyên liệu tuyển chọn', featuredProductsTitle: 'Sản phẩm nổi bật', carousel: { label: 'Sản phẩm nổi bật', previous: 'Sản phẩm trước', next: 'Sản phẩm tiếp theo', status: 'Sản phẩm {current} trên {total}' }, featuredBrandsEyebrow: 'Câu chuyện nhà sản xuất', featuredBrandsTitle: 'Thương hiệu nổi bật', latestBlogsEyebrow: 'Từ bàn bếp chuyên nghiệp', latestBlogsTitle: 'Bài viết mới nhất', latestBlogsViewAll: 'Xem tất cả bài viết', partnersEyebrow: 'Kênh đối tác', partnersTitle: 'Đối tác cùng đưa nguyên liệu đi xa',
+      featuredProductsEyebrow: 'Nguyên liệu tuyển chọn', featuredProductsTitle: 'Sản phẩm nổi bật', carousel: { label: 'Sản phẩm nổi bật', previous: 'Sản phẩm trước', next: 'Sản phẩm tiếp theo', status: 'Sản phẩm {current} trên {total}' }, featuredBrandsEyebrow: 'Câu chuyện nhà sản xuất', featuredBrandsTitle: 'Thương hiệu nổi bật', latestBlogsEyebrow: 'Từ bàn bếp chuyên nghiệp', latestBlogsTitle: 'Bài viết mới nhất', latestBlogsViewAll: 'Xem tất cả bài viết', latestRecipesEyebrow: 'Từ bàn bếp chuyên nghiệp', latestRecipesTitle: 'Công thức mới nhất', latestRecipesViewAll: 'Xem tất cả công thức', partnersEyebrow: 'Kênh đối tác', partnersTitle: 'Đối tác cùng đưa nguyên liệu đi xa',
       serviceEyebrow: 'Vững tin chuỗi lạnh', serviceTitle: 'Chăm chút từ tuyển chọn đến giao hàng', serviceDescription: 'Quy trình dịch vụ chuẩn xác dành cho bếp chuyên nghiệp, đội ngũ bán lẻ và doanh nghiệp thực phẩm đang phát triển.', serviceTemperatureLabel: '2—6 °C / KIỂM SOÁT',
       channelsEyebrow: 'Đối tượng phục vụ', channelsTitle: 'Giải pháp cho từng kênh',
       channels: {
@@ -250,6 +271,7 @@ export const ui: Record<Locale, UiCopy> = {
     product: { viewDetails: 'Xem sản phẩm', productDetails: 'Chi tiết sản phẩm', origin: 'Xuất xứ', category: 'Danh mục', packFormat: 'Quy cách', storage: 'Bảo quản', applications: 'Ứng dụng', benefits: 'Lợi ích chuyên nghiệp', audience: 'Phù hợp với', enquire: 'Yêu cầu tư vấn sản phẩm', relatedTitle: 'Sản phẩm liên quan', backToProducts: 'Quay lại sản phẩm', breadcrumb: 'Đường dẫn sản phẩm' },
     brand: { eyebrow: 'Thương hiệu', title: 'Những nhà sản xuất nguyên liệu giàu bản sắc', description: 'Khám phá câu chuyện nhà sản xuất và các dòng sản phẩm.', viewBrand: 'Xem thương hiệu', origin: 'Xuất xứ', story: 'Câu chuyện thương hiệu', categories: 'Danh mục', products: 'Sản phẩm từ thương hiệu này', backToBrands: 'Quay lại thương hiệu', breadcrumb: 'Đường dẫn thương hiệu', emptyTitle: 'Câu chuyện thương hiệu đang được chuẩn bị', emptyDescription: 'Hãy quay lại để khám phá các nhà sản xuất phía sau danh mục nguyên liệu.' },
     blog: { eyebrow: 'Ghi chép ẩm thực', title: 'Câu chuyện phía sau nguyên liệu tốt.', description: 'Ghi chú thực tế về nguyên liệu, bảo quản, nhà sản xuất và công việc bếp chuyên nghiệp.', readStory: 'Đọc bài viết', readingTime: '{minutes} phút đọc', publishedLabel: 'Ngày đăng', readingTimeLabel: 'Thời gian đọc', categoryLabel: 'Chủ đề', latestEyebrow: 'Đọc tiếp', latestTitle: 'Bài viết mới nhất', viewAll: 'Xem tất cả bài viết', breadcrumb: 'Đường dẫn bài viết', emptyTitle: 'Bài viết đang được chuẩn bị', emptyDescription: 'Hãy quay lại để xem ghi chép mới từ bàn bếp chuyên nghiệp.' },
+  recipe: { eyebrow: 'Công thức ẩm thực', title: 'Công thức cho bếp chuyên nghiệp.', description: 'Các công thức đã thử nghiệm cho bếp chuyên nghiệp, đội ngũ làm bánh và đối tác bán lẻ.', readStory: 'Xem công thức', readingTime: '{minutes} phút đọc', publishedLabel: 'Ngày đăng', readingTimeLabel: 'Thời gian đọc', categoryLabel: 'Chủ đề', latestEyebrow: 'Tiếp tục nấu', latestTitle: 'Công thức mới nhất', viewAll: 'Xem tất cả công thức', breadcrumb: 'Đường dẫn công thức', emptyTitle: 'Công thức đang được chuẩn bị', emptyDescription: 'Hãy quay lại để xem công thức mới từ bàn bếp chuyên nghiệp.' },
     form: { eyebrow: 'Yêu cầu tư vấn', title: 'Chia sẻ nhu cầu của bạn', description: 'Hãy cho chúng tôi biết yêu cầu nguyên liệu để chuẩn bị phản hồi hữu ích.', requiredNote: 'Các trường có dấu sao là bắt buộc.', name: 'Họ và tên', company: 'Công ty', email: 'Email', phone: 'Điện thoại', interest: 'Lĩnh vực quan tâm', interestPlaceholder: 'Chọn lĩnh vực quan tâm', interestOptions: { retail: 'Bán lẻ', horeca: 'HORECA', bakery: 'Bánh mì & Bánh ngọt', ecommerce: 'Thương mại điện tử', other: 'Khác' }, product: 'Sản phẩm (không bắt buộc)', productPlaceholder: 'Không chọn sản phẩm cụ thể', message: 'Chúng tôi có thể hỗ trợ gì?', consent: 'Tôi đồng ý để Paradise Fine Foods sử dụng thông tin của tôi để phản hồi yêu cầu này.', submit: 'Gửi yêu cầu', submitting: 'Đang gửi…', noScript: 'Cần JavaScript để gửi biểu mẫu này.', unexpectedError: 'Không thể hoàn tất yêu cầu này. Vui lòng thử lại.' },
     status: { formError: 'Vui lòng sửa các trường được đánh dấu.', successTitle: 'Cảm ơn yêu cầu của bạn', successMessage: 'Yêu cầu của bạn đã được tiếp nhận.', reference: 'Mã tham chiếu' },
     validation: { nameRequired: 'Vui lòng nhập họ và tên.', emailRequired: 'Vui lòng nhập địa chỉ email.', emailInvalid: 'Vui lòng nhập địa chỉ email hợp lệ.', interestRequired: 'Vui lòng chọn lĩnh vực quan tâm.', messageRequired: 'Vui lòng cho biết chúng tôi có thể hỗ trợ gì.', consentRequired: 'Vui lòng xác nhận đồng ý để tiếp tục.' },

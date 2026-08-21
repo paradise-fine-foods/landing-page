@@ -8,6 +8,7 @@ import {
   mapFeaturedContent,
   mapGlobalSettings,
   mapProduct,
+  mapRecipe,
 } from '@/lib/cms/directus/mappers';
 import type { CmsRepository } from '@/lib/cms/directus/repository';
 import type {
@@ -18,6 +19,7 @@ import type {
   GlobalSettings,
   Product,
   ProductQuery,
+  Recipe,
 } from '@/lib/cms/types';
 
 export { normalizeBrandAccent } from '@/lib/cms/directus/mappers';
@@ -38,6 +40,13 @@ export interface CmsQueries {
     excludeId?: string,
   ): Promise<BlogPost[]>;
   getBlogPostBySlug(locale: Locale, slug: string): Promise<BlogPost | undefined>;
+  getRecipes(locale: Locale): Promise<Recipe[]>;
+  getLatestRecipes(
+    locale: Locale,
+    limit: number,
+    excludeId?: string,
+  ): Promise<Recipe[]>;
+  getRecipeBySlug(locale: Locale, slug: string): Promise<Recipe | undefined>;
   getBrands(locale: Locale): Promise<Brand[]>;
   getBrandBySlug(locale: Locale, slug: string): Promise<Brand | undefined>;
   getFeaturedContent(locale: Locale): Promise<FeaturedContent>;
@@ -76,6 +85,16 @@ export const createCmsQueries = (
   getBlogPostBySlug: async (locale, slug) => {
     const post = await repository.getBlogPostBySlug(locale, slug);
     return post ? mapBlogPost(post, locale, directusUrl) : undefined;
+  },
+  getRecipes: async (locale) =>
+    (await repository.getRecipes(locale))
+      .map((recipe) => mapRecipe(recipe, locale, directusUrl)),
+  getLatestRecipes: async (locale, limit, excludeId) =>
+    (await repository.getLatestRecipes(locale, limit, excludeId))
+      .map((recipe) => mapRecipe(recipe, locale, directusUrl)),
+  getRecipeBySlug: async (locale, slug) => {
+    const recipe = await repository.getRecipeBySlug(locale, slug);
+    return recipe ? mapRecipe(recipe, locale, directusUrl) : undefined;
   },
   getBrands: async (locale) =>
     (await repository.getBrands(locale))
@@ -128,6 +147,22 @@ export const getBlogPostBySlug = async (
   slug: string,
 ): Promise<BlogPost | undefined> =>
   (await productionQueries()).getBlogPostBySlug(locale, slug);
+
+export const getRecipes = async (locale: Locale): Promise<Recipe[]> =>
+  (await productionQueries()).getRecipes(locale);
+
+export const getLatestRecipes = async (
+  locale: Locale,
+  limit: number,
+  excludeId?: string,
+): Promise<Recipe[]> =>
+  (await productionQueries()).getLatestRecipes(locale, limit, excludeId);
+
+export const getRecipeBySlug = async (
+  locale: Locale,
+  slug: string,
+): Promise<Recipe | undefined> =>
+  (await productionQueries()).getRecipeBySlug(locale, slug);
 
 export const getBrands = async (locale: Locale): Promise<Brand[]> =>
   (await productionQueries()).getBrands(locale);
