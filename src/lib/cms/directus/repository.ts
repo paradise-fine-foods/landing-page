@@ -18,7 +18,6 @@ import type {
   PartnerRecord,
   ProductRecord,
   RecipeRecord,
-  RecipeTranslation,
   SiteSettingsRecord,
 } from '@/lib/cms/directus/schema';
 
@@ -300,6 +299,10 @@ const readBlogPosts = <
   const TQuery extends Query<DirectusSchema, BlogPostRecord>,
 >(query: TQuery) => readItems<DirectusSchema, 'blog_posts', TQuery>('blog_posts', query);
 
+const readRecipes = <
+  const TQuery extends Query<DirectusSchema, RecipeRecord>,
+>(query: TQuery) => readItems<DirectusSchema, 'recipes', TQuery>('recipes', query);
+
 export const createCmsRepository = (request: CmsRequest): CmsRepository => {
   const run = async <T>(operation: () => Promise<T>): Promise<T> => {
     try {
@@ -451,7 +454,7 @@ export const createCmsRepository = (request: CmsRequest): CmsRepository => {
       },
       limit: 1,
     })),
-    getRecipes: async (locale): Promise<RecipeRecord[]> => list('recipes', readBlogPosts({
+    getRecipes: async (locale): Promise<RecipeRecord[]> => list('recipes', readRecipes({
       fields: recipeFields,
       filter: published,
       deep: localizedDeep(locale),
@@ -460,7 +463,7 @@ export const createCmsRepository = (request: CmsRequest): CmsRepository => {
     getLatestRecipes: async (locale, limit, excludeId): Promise<RecipeRecord[]> => {
       const safeLimit = Math.max(0, Math.floor(limit));
       if (safeLimit === 0) return Promise.resolve([]);
-      return list('recipes', readBlogPosts({
+      return list('recipes', readRecipes({
         fields: recipeFields,
         filter: {
           ...published,
@@ -471,7 +474,7 @@ export const createCmsRepository = (request: CmsRequest): CmsRepository => {
         limit: safeLimit,
       }));
     },
-    getRecipeBySlug: async (locale, slug): Promise<RecipeRecord | undefined> => detail('recipes', readBlogPosts({
+    getRecipeBySlug: async (locale, slug): Promise<RecipeRecord | undefined> => detail('recipes', readRecipes({
       fields: recipeFields,
       filter: {
         ...published,

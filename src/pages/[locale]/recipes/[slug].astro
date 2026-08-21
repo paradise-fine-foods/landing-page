@@ -2,6 +2,7 @@
 import RecipeArticle from '@/components/recipes/RecipeArticle.astro';
 import RecipeSuggestionsIsland from '@/components/recipes/RecipeSuggestionsIsland.astro';
 import Breadcrumbs from '@/components/global/Breadcrumbs.astro';
+import CardSkeleton from '@/components/global/CardSkeleton.astro';
 import SiteLayout from '@/layouts/SiteLayout.astro';
 import { recipeAlternatePath, recipeDetailPath, loadRecipeDetailPageData } from '@/lib/recipes/routes';
 import { markNotFound } from '@/lib/cms/page-state';
@@ -34,7 +35,7 @@ const copy = ui[locale];
     <RecipeArticle {recipe} {locale} />
   </div>
   <RecipeSuggestionsIsland server:defer {locale} currentRecipeId={recipe.id}>
-    <div slot="fallback" class="card-skeleton" data-skeleton label={copy.recipe.latestTitle} title={copy.recipe.latestTitle} tone="muted" />
+    <CardSkeleton slot="fallback" label={copy.recipe.latestTitle} title={copy.recipe.latestTitle} tone="muted" />
   </RecipeSuggestionsIsland>
 </SiteLayout>
 

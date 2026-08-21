@@ -256,6 +256,36 @@ export const fixtureBlogPost = {
   ],
 } as const;
 
+export const fixtureRecipe = {
+  id: 'recipe-butter-lamination',
+  status: 'published',
+  image: { ...fixtureFile, id: 'file-recipe', width: 1600, height: 1000 },
+  published_at: '2026-08-03',
+  reading_minutes: 8,
+  translations: [
+    {
+      id: 'recipe-en',
+      languages_code: 'en',
+      title: 'Butter lamination method',
+      slug: 'butter-lamination-method',
+      excerpt: 'A controlled pastry method for folded butter dough.',
+      category: 'Pastry method',
+      body: '<h2>Recipe method</h2><p onclick="evil()">Keep the dough <strong>cool</strong> before folding.</p><ul><li>Sheet butter evenly</li></ul><ol><li>Rest between turns</li></ol><blockquote>Chill before service.</blockquote><pre><code>2 turns</code></pre><script>alert(1)</script><a href="javascript:alert(2)">bad</a><a href="https://example.com" target="_blank" title="Read">safe</a><a href="https://example.com" target="popup">popup</a><img src="https://evil.test/a.jpg">',
+      image_alt: 'Laminated butter dough',
+    },
+    {
+      id: 'recipe-vi',
+      languages_code: 'vi',
+      title: 'Cách cán lớp bơ',
+      slug: 'cach-can-lop-bo',
+      excerpt: 'Phương pháp kiểm soát cho bột cán lớp với bơ.',
+      category: 'Phương pháp bánh',
+      body: '<h2>Phương pháp công thức</h2><p>Giữ bột lạnh trước khi gấp.</p>',
+      image_alt: 'Bột cán lớp với bơ',
+    },
+  ],
+} as const;
+
 export const directusFixture = {
   siteSettings: fixtureSiteSettings,
   homePage: fixtureHomePage,
@@ -265,6 +295,7 @@ export const directusFixture = {
   applications: [fixtureApplication],
   audienceChannels: [fixtureAudienceChannel],
   blogPosts: [fixtureBlogPost],
+  recipes: [fixtureRecipe],
   partners: [fixturePartner],
 } as const;
 
@@ -417,6 +448,129 @@ const rawBlogPosts = demoBlogPosts.map((post) => ({
   })),
 }));
 
+const rawRecipes = [
+  {
+    id: 'recipe-butter-lamination',
+    publishedAt: '2026-08-03',
+    readingMinutes: 8,
+    image: { width: 1600, height: 1000 },
+    translations: {
+      en: {
+        id: 'recipe-butter-lamination-en',
+        title: 'Butter lamination method',
+        slug: 'butter-lamination-method',
+        excerpt: 'A controlled pastry method for folded butter dough.',
+        category: 'Pastry method',
+        body: '<h2>Recipe method</h2><p>Keep the dough <strong>cool</strong> before folding.</p>',
+        imageAlt: 'Laminated butter dough',
+      },
+      vi: {
+        id: 'recipe-butter-lamination-vi',
+        title: 'Cách cán lớp bơ',
+        slug: 'cach-can-lop-bo',
+        excerpt: 'Phương pháp kiểm soát cho bột cán lớp với bơ.',
+        category: 'Phương pháp bánh',
+        body: '<h2>Phương pháp công thức</h2><p>Giữ bột lạnh trước khi gấp.</p>',
+        imageAlt: 'Bột cán lớp với bơ',
+      },
+    },
+  },
+  {
+    id: 'recipe-cream-chantilly',
+    publishedAt: '2026-07-27',
+    readingMinutes: 5,
+    image: { width: 1200, height: 900 },
+    translations: {
+      en: {
+        id: 'recipe-cream-chantilly-en',
+        title: 'Stable chantilly cream',
+        slug: 'stable-chantilly-cream',
+        excerpt: 'Whipped cream handling for busy pastry service.',
+        category: 'Cream recipe',
+        body: '<h2>Whip and hold</h2><p>Start cold and stop at soft peaks.</p>',
+        imageAlt: 'Stable chantilly cream',
+      },
+      vi: {
+        id: 'recipe-cream-chantilly-vi',
+        title: 'Kem chantilly ổn định',
+        slug: 'kem-chantilly-on-dinh',
+        excerpt: 'Cách xử lý kem đánh bông cho ca bánh bận rộn.',
+        category: 'Công thức kem',
+        body: '<h2>Đánh và giữ kem</h2><p>Bắt đầu lạnh và dừng ở chóp mềm.</p>',
+        imageAlt: 'Kem chantilly ổn định',
+      },
+    },
+  },
+  {
+    id: 'recipe-mascarpone-tiramisu',
+    publishedAt: '2026-07-18',
+    readingMinutes: 7,
+    image: { width: 1200, height: 900 },
+    translations: {
+      en: {
+        id: 'recipe-mascarpone-tiramisu-en',
+        title: 'Professional tiramisu cream',
+        slug: 'professional-tiramisu-cream',
+        excerpt: 'A mascarpone base for clean slicing and service.',
+        category: 'Dessert recipe',
+        body: '<h2>Build the cream</h2><p>Fold mascarpone gently into the base.</p>',
+        imageAlt: 'Tiramisu cream in preparation',
+      },
+      vi: {
+        id: 'recipe-mascarpone-tiramisu-vi',
+        title: 'Kem tiramisu chuyên nghiệp',
+        slug: 'kem-tiramisu-chuyen-nghiep',
+        excerpt: 'Nền mascarpone giúp cắt lát và phục vụ gọn gàng.',
+        category: 'Công thức tráng miệng',
+        body: '<h2>Làm nền kem</h2><p>Trộn mascarpone nhẹ tay vào nền kem.</p>',
+        imageAlt: 'Kem tiramisu đang chuẩn bị',
+      },
+    },
+  },
+  {
+    id: 'recipe-mozzarella-bake',
+    publishedAt: '2026-07-09',
+    readingMinutes: 6,
+    image: { width: 1200, height: 900 },
+    translations: {
+      en: {
+        id: 'recipe-mozzarella-bake-en',
+        title: 'Mozzarella tray bake',
+        slug: 'mozzarella-tray-bake',
+        excerpt: 'A repeatable baked cheese dish for service lines.',
+        category: 'Kitchen recipe',
+        body: '<h2>Bake for service</h2><p>Layer sauce, cheese, and toppings evenly.</p>',
+        imageAlt: 'Mozzarella tray bake',
+      },
+      vi: {
+        id: 'recipe-mozzarella-bake-vi',
+        title: 'Mozzarella nướng khay',
+        slug: 'mozzarella-nuong-khay',
+        excerpt: 'Món phô mai nướng lặp lại ổn định cho dây chuyền phục vụ.',
+        category: 'Công thức bếp',
+        body: '<h2>Nướng cho phục vụ</h2><p>Xếp xốt, phô mai và topping đều tay.</p>',
+        imageAlt: 'Mozzarella nướng khay',
+      },
+    },
+  },
+].map((recipe) => ({
+  id: recipe.id,
+  status: 'published',
+  image: rawFile(`recipe-${recipe.id}`, recipe.image),
+  published_at: recipe.publishedAt,
+  reading_minutes: recipe.readingMinutes,
+  translations: (['en', 'vi'] as const).map((locale) => ({
+    id: recipe.translations[locale].id,
+    languages_code: locale,
+    title: recipe.translations[locale].title,
+    slug: recipe.translations[locale].slug,
+    excerpt: recipe.translations[locale].excerpt,
+    category: recipe.translations[locale].category,
+    body: recipe.translations[locale].body,
+    image_alt: recipe.translations[locale].imageAlt,
+  })),
+}));
+
 const rawPartners = demoBrandingAssets.map((partner, index) => ({
   id: partner.id,
   status: 'published',
@@ -495,11 +649,11 @@ export const fixtureRepository: CmsRepository = {
     clone(rawBlogPosts.filter(({ id }) => id !== excludeId).slice(0, Math.max(0, limit))) as never,
   getBlogPostBySlug: async (locale, slug) =>
     clone(localizedBySlug(rawBlogPosts, locale, slug)) as never,
-  getRecipes: async () => clone(rawBlogPosts) as never,
+  getRecipes: async () => clone(rawRecipes) as never,
   getLatestRecipes: async (_locale, limit, excludeId) =>
-    clone(rawBlogPosts.filter(({ id }) => id !== excludeId).slice(0, Math.max(0, limit))) as never,
+    clone(rawRecipes.filter(({ id }) => id !== excludeId).slice(0, Math.max(0, limit))) as never,
   getRecipeBySlug: async (locale, slug) =>
-    clone(localizedBySlug(rawBlogPosts, locale, slug)) as never,
+    clone(localizedBySlug(rawRecipes, locale, slug)) as never,
 };
 
 const fixtureQueries = createCmsQueries(
