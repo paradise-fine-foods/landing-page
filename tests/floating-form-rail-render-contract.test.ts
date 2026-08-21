@@ -4,6 +4,19 @@ import { readFile } from 'node:fs/promises';
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
 
 describe('floating form rail rendering contract', () => {
+  test('keeps the footer link groups in scoped column flow', async () => {
+    const source = await read('../src/components/global/Footer.astro');
+    const footerColumns = source.match(/\.site-footer__column\s*\{([^}]*)\}/)?.[1] ?? '';
+
+    for (const declaration of [
+      'display: flex',
+      'flex-direction: column',
+      'align-items: flex-start',
+    ]) expect(footerColumns).toContain(declaration);
+
+    expect(source).toContain('class="site-footer__column"');
+  });
+
   test('anchors the enhanced rail above the lower-right safe edge at every viewport', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
     const sharedRail = source.match(/\.floating-form-rail\s*\{([^}]*)\}/)?.[1] ?? '';
@@ -60,26 +73,29 @@ describe('floating form rail rendering contract', () => {
     expect(sharedRail).toMatch(/flex-direction:\s*row\s*;/);
     expect(collapsedRail).toContain('inline-size: 2.75rem');
     expect(collapsedRail).toContain('translate: 0 0');
-    expect(collapsedPanel).toContain('display: none');
+    for (const declaration of ['visibility: hidden', 'opacity: 0', 'translate: 0 0.5rem']) {
+      expect(collapsedPanel).toContain(declaration);
+    }
+    expect(collapsedPanel).not.toContain('display: none');
+    expect(source).toContain('transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear var(--transition-base)');
     expect(source.match(/\n  \.floating-form-rail__toggle\s*\{([^}]*)\}/)?.[1]).toContain('inline-size: 2.75rem');
     expect(source).toContain('.floating-form-rail__panel[inert]');
   });
 
-  test('uses a non-obscuring horizontal top dock when expanded on mobile', async () => {
+  test('keeps the expanded mobile rail vertically stacked without grid columns', async () => {
     const source = await read('../src/components/global/FloatingFormRail.astro');
+    const mobilePanel = source.match(/\.floating-form-rail\[data-ready='true'\]\[data-expanded='true'\] \.floating-form-rail__panel\s*\{([^}]*)\}/)?.[1] ?? '';
 
     for (const value of [
-      ".floating-form-rail[data-ready='true'][data-expanded='true'] {",
-      'block-size: 3rem',
-      'inset-block-start: 0',
-      'inset-block-end: auto',
-      'inset-inline: 0',
+      'display: flex',
+      'flex-direction: column',
       'inline-size: 100%',
-      'grid-template-columns: repeat(3, minmax(0, 1fr))',
-      ":global(html:has([data-floating-rail][data-ready='true'][data-expanded='true'])) body { padding-block-start: 3rem; }",
-    ]) expect(source).toContain(value);
+      'max-block-size: none',
+    ]) expect(mobilePanel).toContain(value);
 
-    expect(source).toContain(".floating-form-rail[data-expanded='true'] .floating-form-rail__panel a { border-block-end: 0; min-block-size: 2.75rem; }");
+    expect(source).toContain('@media (max-width: 48rem)');
+    expect(mobilePanel).not.toContain('grid-template-columns: repeat(3, minmax(0, 1fr))');
+    expect(source).not.toContain(":global(html:has([data-floating-rail][data-ready='true'][data-expanded='true'])) body { padding-block-start: 3rem; }");
   });
 
   test('renders a label-free accessible server-side rail', async () => {

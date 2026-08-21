@@ -88,8 +88,6 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     translate: 0 0;
   }
 
-  .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel { display: none; }
-
   .floating-form-rail__toggle,
   .floating-form-rail__panel a {
     align-items: center;
@@ -134,15 +132,23 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
     border: 1px solid var(--color-brushed-steel);
     border-block-start: 2px solid var(--color-paradise-orange);
     border-radius: var(--radius-sm);
-    display: grid;
+    display: flex;
+    flex-direction: column;
     filter: none;
     inline-size: min(12rem, calc(100vw - 2.75rem));
     padding: var(--space-1) var(--space-3);
     pointer-events: auto;
+    transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear var(--transition-base);
   }
 
   .floating-form-rail__panel[inert] {
     pointer-events: none;
+  }
+
+  .floating-form-rail[data-ready='true'][data-expanded='false'] .floating-form-rail__panel {
+    opacity: 0;
+    translate: 0 0.5rem;
+    visibility: hidden;
   }
 
   .floating-form-rail__panel a {
@@ -168,32 +174,14 @@ const { locale, contactPath, customerPath, supplierPath, copy, staticOnly = fals
       inline-size: min(14.75rem, 100vw);
     }
 
-    .floating-form-rail[data-ready='true'][data-expanded='true'] {
-      align-items: stretch;
-      block-size: 3rem;
-      inset-block-start: 0;
-      inset-block-end: auto;
-      inset-inline: 0;
+    .floating-form-rail[data-ready='true'][data-expanded='true'] { max-block-size: none; }
+
+    .floating-form-rail[data-ready='true'][data-expanded='true'] .floating-form-rail__panel {
+      display: flex;
+      flex-direction: column;
       inline-size: 100%;
-      translate: 0 0;
-    }
-
-    .floating-form-rail[data-expanded='true'] .floating-form-rail__toggle {
-      block-size: 3rem;
-      flex: 0 0 2.75rem;
-    }
-
-    .floating-form-rail[data-expanded='true'] .floating-form-rail__panel {
-      block-size: 3rem;
-      flex: 1 1 auto;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      inline-size: auto;
       max-block-size: none;
-      padding: 0;
     }
-
-    .floating-form-rail[data-expanded='true'] .floating-form-rail__panel a { border-block-end: 0; min-block-size: 2.75rem; }
-    :global(html:has([data-floating-rail][data-ready='true'][data-expanded='true'])) body { padding-block-start: 3rem; }
 
     .floating-form-rail__panel { max-block-size: 16rem; }
   }

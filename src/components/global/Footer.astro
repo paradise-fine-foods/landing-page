@@ -17,12 +17,12 @@ const copy = ui[locale];
       <Image class="site-footer__logo" src={paradiseLogo} alt={siteName} />
       <p>{store.footerCopy}</p>
     </div>
-    <nav aria-label={copy.footer.navigation}>
+    <nav class="site-footer__column" aria-label={copy.footer.navigation}>
       <p class="site-footer__label">{copy.footer.navigation}</p>
       <a href={localizedPath(locale, 'products')}>{copy.header.products}</a>
       <a href={localizedPath(locale, 'brands')}>{copy.header.brands}</a>
     </nav>
-    <div>
+    <div class="site-footer__column">
       <p class="site-footer__label">{copy.footer.contact}</p>
       {store.address && <address>{store.address}</address>}
       {store.email && <a href={`mailto:${store.email}`}>{store.email}</a>}
@@ -40,6 +40,7 @@ const copy = ui[locale];
   .site-footer { background: var(--color-graphite); color: var(--color-cold-paper); padding-block: var(--space-7) var(--space-5); }
   .site-footer__grid { display: grid; gap: var(--space-6); grid-template-columns: 2fr 1fr 1fr; }
   .site-footer__brand { max-inline-size: 24rem; }
+  .site-footer__column { align-items: flex-start; display: flex; flex-direction: column; }
   .site-footer__logo { block-size: auto; inline-size: 7.5rem; margin-block-end: var(--space-3); }
   .site-footer__label { color: var(--color-brushed-steel); font-size: var(--text-xs); letter-spacing: var(--tracking-label); margin-block-end: var(--space-3); text-transform: uppercase; }
   .site-footer a { align-items: center; color: inherit; display: inline-flex; inline-size: max-content; margin-block-end: var(--space-2); min-block-size: 2.75rem; }
