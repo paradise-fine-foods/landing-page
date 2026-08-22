@@ -81,7 +81,9 @@ describe('floating form rail rendering contract', () => {
     }
     expect(collapsedPanel).toContain('transition: opacity var(--transition-base), translate var(--transition-base), visibility 0s linear var(--transition-base)');
     expect(collapsedPanel).not.toContain('display: none');
-    expect(source.match(/\n  \.floating-form-rail__toggle\s*\{([^}]*)\}/)?.[1]).toContain('inline-size: 2.75rem');
+    const toggle = source.match(/\n  \.floating-form-rail__toggle\s*\{([^}]*)\}/)?.[1] ?? '';
+    expect(toggle).toContain('inline-size: 2.75rem');
+    expect(toggle).toContain('flex: 0 0 2.75rem');
     expect(source).toContain('.floating-form-rail__panel[inert]');
   });
 
