@@ -9,7 +9,7 @@ Hướng dẫn này dành cho người biên tập nội dung website. Chỉ là
 3. [Trạng thái nội dung](#trạng-thái-nội-dung)
 4. [Chọn luồng đúng](#chọn-luồng-đúng)
 5. [Hai mục đơn lẻ](#hai-mục-đơn-lẻ)
-6. [Bảy nhóm nội dung lặp lại](#bảy-nhóm-nội-dung-lặp-lại)
+6. [Tám nhóm nội dung lặp lại](#tám-nhóm-nội-dung-lặp-lại)
 7. [Điều kiện để Published](#điều-kiện-để-published)
 8. [Nội dung song ngữ và đường dẫn](#nội-dung-song-ngữ-và-đường-dẫn)
 9. [Hình ảnh trong Public CMS](#hình-ảnh-trong-public-cms)
@@ -29,7 +29,7 @@ Hướng dẫn này dành cho người biên tập nội dung website. Chỉ là
 
 ![Thanh điều hướng của Content Editor với các nhóm nội dung được phép sử dụng](images/ui/01-dieu-huong-content-editor.png)
 
-*Ảnh giao diện 1 — Thanh điều hướng chỉ hiển thị các nhóm nội dung dành cho Content Editor.*
+*Ảnh giao diện 1 — Thanh điều hướng của Content Editor.*
 
 ![Sơ đồ tìm nhóm nội dung, tìm kiếm, lọc và mở bản ghi để sửa](images/01-dieu-huong.svg)
 
@@ -40,7 +40,7 @@ Hướng dẫn này dành cho người biên tập nội dung website. Chỉ là
 Bạn có thể:
 
 - Cập nhật hai mục đơn lẻ **Site Settings** và **Home Page**.
-- Tạo, sửa, lưu nháp, xuất bản và lưu trữ bảy nhóm nội dung lặp lại cùng bản dịch tiếng Anh và tiếng Việt.
+- Tạo, sửa, lưu nháp, xuất bản và lưu trữ tám nhóm nội dung lặp lại cùng bản dịch tiếng Anh và tiếng Việt, gồm cả **Recipes**.
 - Chọn hoặc thay **Brand**; gắn hoặc bỏ **Categories**, **Applications** và **Audience Channels** cho sản phẩm. **Brand** là bắt buộc và phải **Published**.
 - Chọn, tải lên và cập nhật hình trong thư mục **Public CMS**.
 
@@ -105,7 +105,7 @@ Hai mục dưới đây chỉ có một bản ghi. Không chọn **Tạo mới**
 
 **Lưu và xuất bản:** giữ nguyên trạng thái hiện tại, chọn **Lưu** và mở hai trang chủ để xem tiêu đề, ảnh và liên kết sản phẩm. Nếu mục đang **Draft** do người phụ trách chuẩn bị, chỉ chuyển **Published** sau khi đã kiểm tra ảnh, mô tả ảnh và sản phẩm nổi bật.
 
-## Bảy nhóm nội dung lặp lại
+## Tám nhóm nội dung lặp lại
 
 Với mỗi nhóm, tạo mới theo luồng **Draft** → kiểm tra → **Published** → mở website. Khi sửa bản ghi đang **Published**, giữ nguyên trạng thái, lưu và kiểm tra website. Chỉ dùng **Archived** khi muốn gỡ mục.
 
@@ -196,6 +196,18 @@ Với mỗi nhóm, tạo mới theo luồng **Draft** → kiểm tra → **Publi
 
 *Hình 4. Soạn hai bản ngôn ngữ, kiểm tra nội dung định dạng và các thông tin hiển thị của bài viết.*
 
+### Recipes
+
+**Mục đích:** công thức dành cho bếp chuyên nghiệp, hiển thị trong danh sách **Recipes** và trang chi tiết.
+
+**Trường cần điền:**
+
+- Điền tiếng Anh rồi tiếng Việt: tiêu đề, **Đường dẫn (Slug)**, **Tóm tắt (Excerpt)**, thể loại, **Nội dung (Body)** và **Mô tả ảnh (Image Alt)**. Tiêu đề, đường dẫn, tóm tắt, nội dung và mô tả ảnh là bắt buộc.
+- Viết **Nội dung (Body)** bằng vùng soạn thảo định dạng. Dùng tiêu đề, đoạn văn và danh sách rõ ràng; đọc lại ngay trong vùng soạn thảo trước khi lưu, rồi kiểm tra website sau khi xuất bản.
+- Chọn **Ảnh (Image)** trong **Public CMS**. Đặt **Ngày xuất bản (Published At)** đúng ngày cần hiển thị và **Thời gian đọc (Reading Minutes)** phù hợp với độ dài công thức. Hai trường này bắt buộc khi xuất bản.
+
+**Lưu, xuất bản và kiểm tra:** khi tạo mới, lưu **Draft**, đọc lại hai bản dịch, xem bố cục nội dung định dạng, ảnh, ngày đăng và thời gian đọc rồi xuất bản. Khi sửa mục **Published**, giữ nguyên trạng thái và lưu. Mở danh sách và trang chi tiết Recipes ở hai ngôn ngữ; kiểm tra tiêu đề, ảnh, tóm tắt, nội dung, ngày và thời gian đọc.
+
 ### Partners
 
 **Mục đích:** đối tác, logo và liên kết nguồn.
@@ -208,7 +220,7 @@ Với mỗi nhóm, tạo mới theo luồng **Draft** → kiểm tra → **Publi
 
 ## Điều kiện để Published
 
-Trước khi chuyển nội dung mới sang **Published**, hoặc trước khi lưu nội dung đang **Published**, kiểm tra các điều kiện sau. Tất cả bản dịch được nêu đều cần tiếng Anh và tiếng Việt.
+Khi chuyển nội dung sang **Published** (tạo mới hoặc từ **Draft**), hệ thống kiểm tra các điều kiện sau trước khi lưu. Tất cả bản dịch được nêu đều cần tiếng Anh và tiếng Việt. Với nội dung đang **Published**, bạn có thể sửa và lưu mà không bị chặn bởi các điều kiện này; tuy nhiên website hiển thị ngay nội dung đã lưu, nên hãy giữ nội dung đầy đủ. Tính đầy đủ được kiểm tra lại khi bạn chuyển nội dung sang **Published**.
 
 | Nhóm | Điều kiện bắt buộc khi Published |
 | --- | --- |
@@ -217,7 +229,7 @@ Trước khi chuyển nội dung mới sang **Published**, hoặc trước khi l
 | **Brands** và **Categories** | Tên, đường dẫn, mô tả ảnh ở hai ngôn ngữ; ảnh trong **Public CMS**. |
 | **Products** | Tên, đường dẫn, lợi ích và mô tả ảnh ở hai ngôn ngữ; ảnh trong **Public CMS**; thương hiệu đang **Published**. Mọi phân loại, ứng dụng hoặc kênh khách hàng đã chọn cũng phải **Published**. |
 | **Applications** và **Audience Channels** | Tên và đường dẫn ở hai ngôn ngữ. |
-| **Blog Posts** | Tiêu đề, đường dẫn, tóm tắt, nội dung và mô tả ảnh ở hai ngôn ngữ; ảnh trong **Public CMS**; ngày xuất bản và thời gian đọc. |
+| **Blog Posts** và **Recipes** | Tiêu đề, đường dẫn, tóm tắt, nội dung và mô tả ảnh ở hai ngôn ngữ; ảnh trong **Public CMS**; ngày xuất bản và thời gian đọc. |
 | **Partners** | Tên và mô tả logo ở hai ngôn ngữ; logo trong **Public CMS**; nhóm từ lựa chọn có sẵn. |
 
 ## Nội dung song ngữ và đường dẫn
@@ -326,7 +338,7 @@ Nếu hệ thống chặn thao tác, đọc tên nhóm hoặc nội dung liên k
 | Không thể xuất bản | Hoàn tất tiếng Anh, tiếng Việt, trường bắt buộc, ảnh và quan hệ. Nội dung mới giữ Draft; nội dung Published giữ Published rồi lưu lại. | Đã hoàn tất nhưng vẫn không thể lưu hoặc xuất bản. |
 | Thiếu ảnh hoặc văn bản thay thế | Chọn ảnh trong Public CMS và thêm mô tả có ý nghĩa ở hai ngôn ngữ. | Không thấy Public CMS hoặc không chọn được ảnh. |
 | Đường dẫn trùng | Đổi đường dẫn thành giá trị khác, chữ thường, không dấu, dùng gạch nối. | Đường dẫn khác vẫn không lưu được. |
-| Sản phẩm hoặc bài viết chưa hiện | Kiểm tra Status là Published, hai bản dịch, ảnh và mục liên quan. | Đã kiểm tra nhưng website vẫn chưa cập nhật. |
+| Sản phẩm, bài viết hoặc công thức chưa hiện | Kiểm tra Status là Published, hai bản dịch, ảnh, ngày xuất bản, thời gian đọc và mục liên quan. | Đã kiểm tra nhưng website vẫn chưa cập nhật. |
 | Không thể chuyển Draft hoặc Archived vì còn liên kết | Đọc tên nội dung liên kết trong thông báo. Thay hoặc bỏ quan hệ ở Product Published; nếu là Featured Product, chọn Product Published khác cho Home Page rồi lưu và thử lại. | Đã cập nhật mọi nội dung phụ thuộc nhưng vẫn bị chặn. |
 | Không thấy nút xóa | Dùng Archived để gỡ mục. | Cần xóa vĩnh viễn hoặc khôi phục dữ liệu không có trong mục. |
 | Không thấy nhóm nội dung | Tải lại trang và kiểm tra đúng tên nhóm ở thanh điều hướng. | Vẫn không truy cập được nhóm hoặc không có quyền lưu. |
