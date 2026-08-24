@@ -3,31 +3,11 @@ import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import {
   localizedRedirectLocation,
-  preferredLocale,
   shouldRedirectToLocale,
 } from '../src/lib/i18n/request-locale';
 import { onRequest } from '../src/middleware';
 
 const read = (path: string) => readFile(new URL(path, import.meta.url), 'utf8');
-
-describe('preferredLocale', () => {
-  test('selects supported regional languages by quality weight', () => {
-    expect(preferredLocale('en-US;q=0.7, vi-VN;q=0.9, vi;q=0.8')).toBe('vi');
-    expect(preferredLocale('vi-VN;q=0.6, en-GB;q=0.8')).toBe('en');
-  });
-
-  test('ignores disabled and unsupported languages', () => {
-    expect(preferredLocale('vi;q=0, fr-FR;q=1, en;q=0.5')).toBe('en');
-    expect(preferredLocale('fr-FR;q=1, de;q=0.8, en;q=0.5')).toBe('en');
-  });
-
-  test('falls back to the default locale without a usable header', () => {
-    expect(preferredLocale(null)).toBe('vi');
-    expect(preferredLocale('')).toBe('vi');
-    expect(preferredLocale('*')).toBe('vi');
-    expect(preferredLocale('fr-FR, de;q=0.8')).toBe('vi');
-  });
-});
 
 describe('locale redirect decisions', () => {
   const request = (pathname: string, init?: RequestInit) =>
@@ -79,7 +59,7 @@ describe('Astro locale middleware', () => {
   test('returns the complete locale redirect response without rendering', async () => {
     let rendered = false;
     const request = new Request('https://paradisefinefoods.com/contact/?source=hero', {
-      headers: { 'Accept-Language': 'vi-VN, en;q=0.8' },
+      headers: { 'Accept-Language': 'en-US, vi;q=0.8' },
     });
     const response = await onRequest(
       { request } as never,
@@ -91,7 +71,7 @@ describe('Astro locale middleware', () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('/vi/contact/?source=hero');
-    expect(response.headers.get('Vary')).toBe('Accept-Language');
+    expect(response.headers.get('Vary')).toBeNull();
     expect(response.headers.get('Cache-Control')).toBe('no-store');
     expect(rendered).toBe(false);
   });
@@ -125,7 +105,7 @@ describe('Astro locale middleware', () => {
 test('imports the canonical default locale', async () => {
   const localeSource = await read('../src/lib/i18n/request-locale.ts');
 
-  expect(localeSource).toContain("import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/types';");
+  expect(localeSource).toContain("import { isLocale, type Locale } from '@/lib/i18n/types';");
   expect(localeSource).not.toMatch(/const defaultLocale[^=]*=\s*['"]en['"]/);
 });
 

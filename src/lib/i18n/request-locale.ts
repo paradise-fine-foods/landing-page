@@ -1,26 +1,4 @@
-import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/types';
-
-export function preferredLocale(acceptLanguage: string | null): Locale {
-  if (!acceptLanguage) return defaultLocale;
-
-  const preferences = acceptLanguage
-    .split(',')
-    .map((entry, index) => {
-      const [languageRange = '', ...parameters] = entry.trim().split(';');
-      const qualityParameter = parameters.find((parameter) => parameter.trim().startsWith('q='));
-      const parsedQuality = qualityParameter
-        ? Number.parseFloat(qualityParameter.trim().slice(2))
-        : 1;
-      const quality = Number.isFinite(parsedQuality) ? parsedQuality : 0;
-      const language = languageRange.toLowerCase().split('-')[0] ?? '';
-
-      return { index, language, quality };
-    })
-    .filter(({ language, quality }) => quality > 0 && isLocale(language))
-    .sort((left, right) => right.quality - left.quality || left.index - right.index);
-
-  return (preferences[0]?.language as Locale | undefined) ?? defaultLocale;
-}
+import { isLocale, type Locale } from '@/lib/i18n/types';
 
 export function shouldRedirectToLocale(request: Request): boolean {
   if (request.method !== 'GET' && request.method !== 'HEAD') return false;
