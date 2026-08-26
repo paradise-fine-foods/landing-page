@@ -5,7 +5,8 @@
   "name": "finefoods",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "vars": {
-    "DIRECTUS_URL": "https://directus.nghienot.dev/"
+    "DIRECTUS_URL": "https://directus.nghienot.dev/",
+    "CLOUDFLARE_ZONE_ID": "49d0b520748fdb98e7928bb0288c9657"
   },
   "assets": {
     "directory": "./dist",

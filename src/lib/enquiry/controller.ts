@@ -37,6 +37,8 @@ const stringValue = (data: FormData, name: string): string => {
 
 export const collectEnquiryInput = (locale: Locale, data: FormData, mode: EnquiryMode = 'general'): EnquiryInput => {
   const productId = stringValue(data, 'productId');
+  const productRange = stringValue(data, 'productRange');
+  const temperature = stringValue(data, 'temperature');
   return {
     locale,
     mode,
@@ -48,6 +50,8 @@ export const collectEnquiryInput = (locale: Locale, data: FormData, mode: Enquir
     message: stringValue(data, 'message'),
     consent: data.get('consent') === 'on',
     ...(productId ? { productId } : {}),
+    ...(productRange ? { productRange } : {}),
+    ...(temperature ? { temperature } : {}),
   };
 };
 

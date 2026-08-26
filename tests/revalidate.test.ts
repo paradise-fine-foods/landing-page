@@ -11,6 +11,9 @@ const runtimeEnv: RevalidateRuntimeEnv = {
   CLOUDFLARE_PURGE_TOKEN: 'purge-token',
   DIRECTUS_URL: 'https://cms.example.com',
   FORM_SUBMISSION_SECRET: 'form-secret',
+  GOOGLE_SERVICE_ACCOUNT_EMAIL: 'sheet-service-account@example.iam.gserviceaccount.com',
+  GOOGLE_PRIVATE_KEY: 'private-key',
+  GOOGLE_SHEET_ID: 'spreadsheet-id',
 };
 
 const request = (method: string, authorization?: string) =>

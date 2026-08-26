@@ -174,6 +174,18 @@ describe('enquiry form controller', () => {
     expect(collectEnquiryInput('vi', fillFormData(true, 'butter-sheet-pro'))).toMatchObject({ locale: 'vi', consent: true, productId: 'butter-sheet-pro' });
   });
 
+  test('collects supplier-only product range and storage temperature fields', () => {
+    const data = fillFormData(true);
+    data.set('productRange', ' Cream and butter ');
+    data.set('temperature', ' 2-6 C ');
+
+    expect(collectEnquiryInput('en', data, 'supplier')).toMatchObject({
+      mode: 'supplier',
+      productRange: ' Cream and butter ',
+      temperature: ' 2-6 C ',
+    });
+  });
+
   test('installs prevention listener before enabling and strictly preselects known product', () => {
     const view = new FakeView();
     initializeEnquiryForm(view, async () => ({ ok: true, reference: 'PFF-1', message: '', receivedAt: '', demo: true }), {

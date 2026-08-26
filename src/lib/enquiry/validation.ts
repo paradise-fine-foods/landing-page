@@ -14,6 +14,8 @@ const trimInput = (input: EnquiryInput): EnquiryInput => ({
   message: input.message.trim(),
   consent: input.consent,
   ...(input.productId === undefined ? {} : { productId: input.productId.trim() }),
+  ...(input.productRange === undefined ? {} : { productRange: input.productRange.trim() }),
+  ...(input.temperature === undefined ? {} : { temperature: input.temperature.trim() }),
 });
 
 export const validateEnquiry = (input: EnquiryInput): EnquiryValidationResult => {

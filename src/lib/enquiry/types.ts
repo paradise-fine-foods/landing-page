@@ -12,6 +12,8 @@ export interface EnquiryInput {
   message: string;
   consent: boolean;
   productId?: string;
+  productRange?: string;
+  temperature?: string;
 }
 
 export type EnquiryErrors = Partial<Record<keyof EnquiryInput, string>>;
