@@ -529,12 +529,12 @@ describe('Precision Supply System identity', () => {
     expect(baseCssRule(hero, '.living-hero__art')).toContain('z-index: 0');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('grid-column: 1 / -1');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('grid-row: 1 / span 2');
-    expect(baseCssRule(hero, '.living-hero__art')).toContain('inline-size: 65%');
+    expect(baseCssRule(hero, '.living-hero__art')).toContain('inline-size: 100%');
     expect(baseCssRule(hero, '.living-hero__image-frame')).toContain('inline-size: 100%');
     expect(hero).toContain('.living-hero__art::before {');
     expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
-    expect(hero).toMatch(/\.living-hero__art\s*\{[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*1;[\s\S]*block-size:\s*50%;[\s\S]*inline-size:\s*80%;/);
+    expect(hero).toMatch(/\.living-hero__art\s*\{[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*1;[\s\S]*block-size:\s*50%;[\s\S]*inline-size:\s*100%;/);
     expect(hero).toMatch(/\.living-hero__image-frame\s*\{[\s\S]*min-block-size:\s*0;/);
     expect(hero).toContain('object-fit: cover');
     expect(hero).toContain('object-position: center right');
