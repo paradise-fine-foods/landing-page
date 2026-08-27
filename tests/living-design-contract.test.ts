@@ -500,8 +500,9 @@ describe('Precision Supply System identity', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     const image = baseCssRule(hero, '.living-hero__image-frame > img');
     expect(image).toContain('object-fit: cover');
-    expect(image).toContain('-webkit-mask-image: linear-gradient');
-    expect(image).toContain('mask-image: linear-gradient');
+    expect(image).not.toContain('mask-image');
+    expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient(90deg, var(--color-cold-paper)');
+    expect(cssRule(hero, '.living-hero__art::after')).toContain('linear-gradient(0deg, var(--color-cold-paper)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
@@ -527,7 +528,7 @@ describe('Precision Supply System identity', () => {
     expect(baseCssRule(hero, '.living-hero__art')).toContain('grid-column: 2');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('grid-row: 1 / span 2');
     expect(baseCssRule(hero, '.living-hero__image-frame')).toContain('inline-size: 65%');
-    expect(hero).toContain('.living-hero__image-frame::before {');
+    expect(hero).toContain('.living-hero__art::before {');
     expect(hero).toContain('linear-gradient(90deg, var(--color-cold-paper)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 1; inset: 0; margin: 0;');
