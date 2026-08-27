@@ -508,10 +508,10 @@ describe('Precision Supply System identity', () => {
   test('keeps hero facts below copy at mobile-wide width instead of squeezing them beside it', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     expect(hero.indexOf('<dl class="living-hero__metadata">')).toBeGreaterThan(hero.indexOf('<figure class="living-hero__art">'));
-    expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-column: 1 / -1');
+    expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-column: 1');
     expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-row: 2');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('grid-row: 1 / span 2');
-    expect(hero).toContain('.living-hero__metadata { grid-column: 1 / -1; grid-row: 2;');
+    expect(hero).toContain('.living-hero__metadata { grid-column: 1; grid-row: 2;');
   });
 
   test('gives mobile hero image full-width fade stage after copy and facts', () => {
@@ -520,6 +520,23 @@ describe('Precision Supply System identity', () => {
     expect(hero).toContain('grid-template-rows: auto auto auto;');
     expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 3;');
     expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 3; margin-inline: 0;');
+  });
+
+  test('aligns hero actions to fact tags and keeps mobile tags inset', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
+    expect(baseCssRule(hero, '.living-hero__actions')).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
+    expect(cssRule(hero, '.living-hero__actions .button-link')).toContain('inline-size: 100%');
+    expect(cssRule(hero, '.living-hero__actions .button-link')).toContain('padding-inline: var(--space-3)');
+    expect(hero).toContain('.living-hero__metadata { gap: var(--space-2); grid-column: 1; grid-row: 2; padding-inline: var(--container-inline);');
+  });
+
+  test('gives brand lists row gap and stretches product cards to equal grid height', () => {
+    const brands = source('src/pages/[locale]/brands/index.astro');
+    const productGrid = source('src/components/catalog/ProductGrid.astro');
+    const productCard = source('src/components/catalog/ProductCard.astro');
+    expect(cssRule(brands, '.brands-page__grid')).toContain('gap: var(--space-5)');
+    expect(cssRule(productGrid, '.product-grid > [data-product-card]')).toContain('display: flex');
+    expect(cssRule(productCard, '.product-card')).toContain('block-size: 100%');
   });
 
   test('keeps card and discovery images free of scale and transform motion', () => {

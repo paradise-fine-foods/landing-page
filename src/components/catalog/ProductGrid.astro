@@ -40,6 +40,7 @@ const { products, locale, copy, showEmptyState = true, cardHeadingLevel = 'h3' }
 
 <style>
   .product-grid { display: grid; gap: clamp(var(--space-6), 4vw, var(--space-8)) var(--space-5); grid-template-columns: repeat(3, minmax(0, 1fr)); padding-block: var(--space-7); }
+  .product-grid > [data-product-card] { display: flex; min-block-size: 0; }
   .catalog-empty { border-block: 1px solid var(--color-brushed-steel); padding: var(--space-8); text-align: center; }
   .catalog-empty h2 { font-size: var(--text-h2); }
   .catalog-empty p { margin: var(--space-3) auto var(--space-5); max-inline-size: var(--measure); }
