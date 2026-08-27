@@ -1,12 +1,12 @@
 ---
-import type { FeaturedContent } from '@/lib/cms/types';
-import type { UiCopy } from '@/lib/i18n/ui';
-import ButtonLink from '@/components/global/ButtonLink.astro';
-import Icon from '@/components/global/Icon.astro';
+import type { FeaturedContent } from "@/lib/cms/types";
+import type { UiCopy } from "@/lib/i18n/ui";
+import ButtonLink from "@/components/global/ButtonLink.astro";
+import Icon from "@/components/global/Icon.astro";
 
 interface Props {
-  copy: UiCopy['hero'];
-  content: FeaturedContent['hero'];
+  copy: UiCopy["hero"];
+  content: FeaturedContent["hero"];
   productsPath: string;
   contactPath: string;
 }
@@ -14,10 +14,14 @@ interface Props {
 const { copy, content, productsPath, contactPath } = Astro.props;
 const { product } = content;
 const metadata = [
-  { label: copy.brand, value: product.brand.name, icon: 'lucide:award' },
-  { label: copy.origin, value: product.origin, icon: 'lucide:globe-2' },
-  { label: copy.packFormat, value: product.packFormat, icon: 'lucide:package' },
-  { label: copy.storage, value: `${product.storage.label} · ${product.storage.temperature}`, icon: 'lucide:snowflake' },
+  { label: copy.brand, value: product.brand.name, icon: "lucide:award" },
+  { label: copy.origin, value: product.origin, icon: "lucide:globe-2" },
+  { label: copy.packFormat, value: product.packFormat, icon: "lucide:package" },
+  {
+    label: copy.storage,
+    value: `${product.storage.label} · ${product.storage.temperature}`,
+    icon: "lucide:snowflake",
+  },
 ];
 ---
 
@@ -28,7 +32,9 @@ const metadata = [
       <p class="living-hero__description">{content.body}</p>
       <div class="living-hero__actions">
         <ButtonLink href={productsPath}>{copy.primaryCta}</ButtonLink>
-        <ButtonLink href={contactPath} variant="secondary">{copy.secondaryCta}</ButtonLink>
+        <ButtonLink href={contactPath} variant="secondary"
+          >{copy.secondaryCta}</ButtonLink
+        >
       </div>
     </div>
     <figure class="living-hero__art">
@@ -44,55 +50,275 @@ const metadata = [
       </div>
     </figure>
     <dl class="living-hero__metadata">
-      {metadata.map(({ label, value, icon }) => (
-        <div class="living-hero__fact">
-          <span class="living-hero__fact-icon"><Icon name={icon} size="1.25em" /></span>
-          <div class="living-hero__fact-copy"><dt>{label}</dt><dd>{value}</dd></div>
-        </div>
-      ))}
+      {
+        metadata.map(({ label, value, icon }) => (
+          <div class="living-hero__fact">
+            <span class="living-hero__fact-icon">
+              <Icon name={icon} size="1.25em" />
+            </span>
+            <div class="living-hero__fact-copy">
+              <>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </>
+            </div>
+          </div>
+        ))
+      }
     </dl>
   </div>
 </section>
 
 <script>
-  const reduceMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? true;
+  const reduceMotion =
+    globalThis.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? true;
   const controllers: Array<{ dispose(): void }> = [];
   let pageDisposed = false;
 
-  globalThis.addEventListener('pagehide', (event) => {
-    if ('persisted' in event && event.persisted) return;
+  globalThis.addEventListener("pagehide", (event) => {
+    if ("persisted" in event && event.persisted) return;
     pageDisposed = true;
     for (const controller of controllers) controller.dispose();
   });
 
-  import('@/lib/carousel/controller')
+  import("@/lib/carousel/controller")
     .then(({ createCarousel }) => {
       if (pageDisposed) return;
-      controllers.push(...[...document.querySelectorAll<HTMLElement>('[data-carousel]')]
-        .map((carousel) => createCarousel(carousel, { reduceMotion })));
+      controllers.push(
+        ...[...document.querySelectorAll<HTMLElement>("[data-carousel]")].map(
+          (carousel) => createCarousel(carousel, { reduceMotion }),
+        ),
+      );
     })
     .catch(() => undefined);
 </script>
 
 <style>
-  .living-hero { background: var(--color-cold-paper); overflow: hidden; }
-  .living-hero__content { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto; min-block-size: min(44rem, calc(100vh - 4.5rem)); padding-block-end: var(--space-6); position: relative; z-index: 1; }
-  .living-hero__copy { align-self: center; display: flex; flex-direction: column; gap: var(--space-4); grid-column: 1; grid-row: 1; padding: clamp(var(--space-7), 7vw, var(--space-9)) clamp(var(--space-6), 4vw, var(--space-8)) clamp(var(--space-7), 7vw, var(--space-9)) 0; position: relative; z-index: 2; }
-  .living-hero h1 { font-size: var(--text-hero); max-inline-size: 11ch; }
-  .living-hero__description { max-inline-size: 34rem; }
-  .living-hero__actions { display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); margin-block-start: var(--space-2); }
-  .living-hero__actions :global(.button-link) { gap: var(--space-2); inline-size: 100%; min-inline-size: 0; padding-inline: var(--space-3); white-space: nowrap; }
-  .living-hero__metadata { display: grid; gap: var(--space-3); grid-column: 1; grid-row: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding-inline-end: clamp(var(--space-6), 4vw, var(--space-8)); position: relative; z-index: 2; }
-  .living-hero__fact { align-items: center; background: var(--color-glass-surface); -webkit-backdrop-filter: blur(var(--blur-glass)); backdrop-filter: blur(var(--blur-glass)); border: 1px solid var(--color-glass-border); border-radius: var(--radius-md); box-shadow: var(--shadow-glass); display: grid; gap: var(--space-2); grid-template-columns: auto 1fr; min-block-size: 3rem; min-inline-size: 0; padding: var(--space-2); }
-  .living-hero__fact-icon { align-items: center; background: rgba(228, 111, 44, 0.1); border-radius: 50%; color: var(--color-paradise-orange); display: inline-flex; flex: 0 0 2rem; block-size: 2rem; inline-size: 2rem; justify-content: center; }
-  .living-hero__fact-copy { min-inline-size: 0; }
-  .living-hero__metadata dt { color: var(--color-utility-grey); font-size: 0.66rem; font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
-  .living-hero__metadata dd { color: var(--color-deep-herb); font-size: 0.82rem; margin-block-start: var(--space-1); overflow-wrap: anywhere; }
-  .living-hero__art { block-size: 100%; display: block; grid-column: 1 / -1; grid-row: 1 / span 2; inline-size: 65%; inset: 0; inset-inline-start: auto; min-inline-size: 0; overflow: hidden; position: absolute; z-index: 0; }
-  .living-hero__art::before { background: linear-gradient(90deg, var(--color-cold-paper) 0%, rgba(247, 244, 238, 0.96) 38%, rgba(247, 244, 238, 0.68) 58%, rgba(247, 244, 238, 0) 86%); content: ''; inset: 0; pointer-events: none; position: absolute; z-index: 1; }
-  .living-hero__art::after { background: linear-gradient(0deg, var(--color-cold-paper) -2%, rgba(247, 244, 238, 0) 22%); content: ''; inset: 0; pointer-events: none; position: absolute; z-index: 2; }
-  .living-hero__image-frame { block-size: 100%; inline-size: 100%; min-block-size: 36rem; overflow: hidden; position: relative; }
-  .living-hero__image-frame > img { block-size: 100%; inline-size: 100%; object-fit: cover; object-position: center; position: absolute; z-index: 0; }
-  @media (max-width: 64rem) { .living-hero__content { grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr); } .living-hero__copy { padding-inline-end: var(--container-inline); } .living-hero__actions { grid-template-columns: minmax(0, 1fr); } .living-hero__metadata { grid-column: 1; grid-row: 2; grid-template-columns: minmax(0, 1fr); padding-inline-end: var(--container-inline); } .living-hero__art { inline-size: 80%; } .living-hero__image-frame { min-block-size: 32rem; } }
-  @media (max-width: 36rem) { .living-hero__content { inline-size: 100%; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; } .living-hero__copy { padding-inline: var(--container-inline); } .living-hero__copy { padding-block-end: var(--space-2); } .living-hero__description { inline-size: 100%; } .living-hero__actions { gap: var(--space-2); grid-template-columns: minmax(0, 1fr); } .living-hero__actions { inline-size: 100%; } .living-hero__art { grid-column: 1; grid-row: 1; inline-size: 80%; inset: 0; inset-inline-start: auto; margin: 0; } .living-hero__image-frame { min-block-size: 30rem; } .living-hero__image-frame > img { object-fit: cover; object-position: center; } .living-hero__metadata { gap: var(--space-2); grid-column: 1; grid-row: 2; grid-template-columns: minmax(0, 1fr); padding-inline: var(--container-inline); } .living-hero__metadata { background: var(--color-cold-paper); } }
+  .living-hero {
+    background: var(--color-cold-paper);
+    overflow: hidden;
+  }
+  .living-hero__content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    min-block-size: min(44rem, calc(100vh - 4.5rem));
+    padding-block-end: var(--space-6);
+    position: relative;
+    z-index: 1;
+  }
+  .living-hero__copy {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    grid-column: 1;
+    grid-row: 1;
+    padding: clamp(var(--space-7), 7vw, var(--space-9))
+      clamp(var(--space-6), 4vw, var(--space-8))
+      clamp(var(--space-7), 7vw, var(--space-9)) 0;
+    position: relative;
+    z-index: 2;
+  }
+  .living-hero h1 {
+    font-size: var(--text-hero);
+    max-inline-size: 11ch;
+  }
+  .living-hero__description {
+    max-inline-size: 34rem;
+  }
+  .living-hero__actions {
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-block-start: var(--space-2);
+  }
+  .living-hero__actions :global(.button-link) {
+    gap: var(--space-2);
+    inline-size: 100%;
+    min-inline-size: 0;
+    padding-inline: var(--space-3);
+    white-space: nowrap;
+  }
+  .living-hero__metadata {
+    display: grid;
+    gap: var(--space-3);
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    padding-inline-end: clamp(var(--space-6), 4vw, var(--space-8));
+    position: relative;
+    z-index: 2;
+  }
+  .living-hero__fact {
+    align-items: center;
+    background: var(--color-glass-surface);
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    backdrop-filter: blur(var(--blur-glass));
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-glass);
+    display: grid;
+    gap: var(--space-2);
+    grid-template-columns: auto 1fr;
+    min-block-size: 3rem;
+    min-inline-size: 0;
+    padding: var(--space-2);
+  }
+  .living-hero__fact-icon {
+    align-items: center;
+    background: rgba(228, 111, 44, 0.1);
+    border-radius: 50%;
+    color: var(--color-paradise-orange);
+    display: inline-flex;
+    flex: 0 0 2rem;
+    block-size: 2rem;
+    inline-size: 2rem;
+    justify-content: center;
+  }
+  .living-hero__fact-copy {
+    min-inline-size: 0;
+  }
+  .living-hero__metadata dt {
+    color: var(--color-utility-grey);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+  .living-hero__metadata dd {
+    color: var(--color-deep-herb);
+    font-size: 0.82rem;
+    margin-block-start: var(--space-1);
+    overflow-wrap: anywhere;
+  }
+  .living-hero__art {
+    block-size: 100%;
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 1 / span 2;
+    inline-size: 65%;
+    inset: 0;
+    inset-inline-start: auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: 0;
+  }
+  .living-hero__art::before {
+    background: linear-gradient(
+      90deg,
+      rgba(247, 244, 238, 0.72) 0%,
+      rgba(247, 244, 238, 0.44) 30%,
+      rgba(247, 244, 238, 0.16) 52%,
+      rgba(247, 244, 238, 0) 78%
+    );
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+  }
+  .living-hero__art::after {
+    background: linear-gradient(
+      0deg,
+      rgba(247, 244, 238, 0.72) -2%,
+      rgba(247, 244, 238, 0.16) 28%,
+      rgba(247, 244, 238, 0) 42%
+    );
+    content: "";
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+  }
+  .living-hero__image-frame {
+    block-size: 100%;
+    inline-size: 100%;
+    min-block-size: 36rem;
+    overflow: hidden;
+    position: relative;
+  }
+  .living-hero__image-frame > img {
+    block-size: 100%;
+    inline-size: 100%;
+    object-fit: contain;
+    object-position: center right;
+    position: absolute;
+    z-index: 0;
+  }
+  @media (max-width: 64rem) {
+    .living-hero__content {
+      grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr);
+    }
+    .living-hero__copy {
+      padding-inline-end: var(--container-inline);
+    }
+    .living-hero__actions {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .living-hero__metadata {
+      grid-column: 1;
+      grid-row: 2;
+      grid-template-columns: minmax(0, 1fr);
+      padding-inline-end: var(--container-inline);
+    }
+    .living-hero__art {
+      inline-size: 80%;
+    }
+    .living-hero__image-frame {
+      min-block-size: 32rem;
+    }
+  }
+  @media (max-width: 36rem) {
+    .living-hero__content {
+      inline-size: 100%;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto auto;
+    }
+    .living-hero__copy {
+      padding-inline: var(--container-inline);
+    }
+    .living-hero__copy {
+      padding-block-end: var(--space-2);
+    }
+    .living-hero__description {
+      inline-size: 100%;
+    }
+    .living-hero__actions {
+      gap: var(--space-2);
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .living-hero__actions {
+      inline-size: 100%;
+    }
+    .living-hero__art {
+      grid-column: 1;
+      grid-row: 1;
+      block-size: 50%;
+      inline-size: 80%;
+      inset: 0;
+      inset-block-end: auto;
+      inset-inline-start: auto;
+      margin: 0;
+    }
+    .living-hero__image-frame {
+      min-block-size: 0;
+    }
+    .living-hero__image-frame > img {
+      object-fit: contain;
+      object-position: center right;
+    }
+    .living-hero__metadata {
+      gap: var(--space-2);
+      grid-column: 1;
+      grid-row: 2;
+      grid-template-columns: minmax(0, 1fr);
+      padding-inline: var(--container-inline);
+    }
+    .living-hero__metadata {
+      background: var(--color-cold-paper);
+    }
+  }
 </style>

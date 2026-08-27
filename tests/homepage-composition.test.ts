@@ -41,7 +41,7 @@ describe('homepage composition', () => {
     expect(hero).toContain('fetchpriority="high"');
     expect(hero).not.toMatch(/data-living-canvas|<canvas|OrganicMark/);
     expect(hero).not.toMatch(/slot name="stage"|ProductStage|modelSrc/);
-    expect(hero).toContain("import('@/lib/carousel/controller')");
+    expect(hero).toMatch(/import\((['"])@\/lib\/carousel\/controller\1\)/);
     expect(hero).not.toMatch(/motion\/|shouldEnhanceMotion|data-motion-enhanced/);
     expect(hero).not.toMatch(/addEventListener\('pagehide',[\s\S]{0,240}\{ once: true \}/);
   });
@@ -63,7 +63,7 @@ describe('homepage composition', () => {
     expect(page).not.toMatch(/locale\s*===|locale\s*!==/);
     expect(page).toContain('carousel={copy.home.carousel}');
     const hero = source('src/components/sections/LivingHero.astro');
-    expect(hero).toContain("import('@/lib/carousel/controller')");
+    expect(hero).toMatch(/import\((['"])@\/lib\/carousel\/controller\1\)/);
     expect(hero).not.toContain("import('@/lib/motion/reveal')");
     expect(hero).not.toContain("import('@/lib/motion/living-canvas')");
   });

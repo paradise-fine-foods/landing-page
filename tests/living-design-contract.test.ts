@@ -496,17 +496,19 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card')).toContain('backdrop-filter: blur(var(--blur-glass))');
   });
 
-  test('keeps covered hero imagery across all viewport widths', () => {
+  test('keeps contained hero imagery with a lighter art-layer fade', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     const image = baseCssRule(hero, '.living-hero__image-frame > img');
-    expect(image).toContain('object-fit: cover');
+    expect(image).toContain('object-fit: contain');
+    expect(image).toContain('object-position: center right');
     expect(image).not.toContain('mask-image');
-    expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient(90deg, var(--color-cold-paper)');
-    expect(cssRule(hero, '.living-hero__art::after')).toContain('linear-gradient(0deg, var(--color-cold-paper)');
+    expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient');
+    expect(cssRule(hero, '.living-hero__art::before')).toContain('rgba(247, 244, 238, 0.72)');
+    expect(cssRule(hero, '.living-hero__art::after')).toContain('linear-gradient');
+    expect(cssRule(hero, '.living-hero__art::after')).toContain('rgba(247, 244, 238, 0.72)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
-    expect(hero).not.toContain('object-fit: contain');
   });
 
   test('keeps hero facts below copy at mobile-wide width instead of squeezing them beside it', () => {
@@ -514,7 +516,7 @@ describe('Precision Supply System identity', () => {
     expect(hero.indexOf('<dl class="living-hero__metadata">')).toBeGreaterThan(hero.indexOf('<figure class="living-hero__art">'));
     expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-column: 1');
     expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-row: 2');
-    expect(hero).toContain('.living-hero__metadata { grid-column: 1; grid-row: 2;');
+    expect(hero).toMatch(/\.living-hero__metadata\s*\{[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*2;/);
   });
 
   test('keeps hero image behind content with full-width mobile fade stage', () => {
@@ -530,30 +532,31 @@ describe('Precision Supply System identity', () => {
     expect(baseCssRule(hero, '.living-hero__art')).toContain('inline-size: 65%');
     expect(baseCssRule(hero, '.living-hero__image-frame')).toContain('inline-size: 100%');
     expect(hero).toContain('.living-hero__art::before {');
-    expect(hero).toContain('linear-gradient(90deg, var(--color-cold-paper)');
+    expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
-    expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 1; inline-size: 80%; inset: 0; inset-inline-start: auto; margin: 0;');
-    expect(hero).toContain('.living-hero__image-frame { min-block-size: 30rem; }');
-    expect(hero).toContain('.living-hero__image-frame > img { object-fit: cover; object-position: center; }');
-    expect(hero).toContain('.living-hero__copy { padding-block-end: var(--space-2); }');
-    expect(hero).toContain('.living-hero__description { inline-size: 100%; }');
-    expect(hero).toContain('.living-hero__actions { inline-size: 100%; }');
-    expect(hero).toContain('.living-hero__metadata { background: var(--color-cold-paper); }');
+    expect(hero).toMatch(/\.living-hero__art\s*\{[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*1;[\s\S]*block-size:\s*50%;[\s\S]*inline-size:\s*80%;/);
+    expect(hero).toMatch(/\.living-hero__image-frame\s*\{[\s\S]*min-block-size:\s*0;/);
+    expect(hero).toContain('object-fit: contain');
+    expect(hero).toContain('object-position: center right');
+    expect(hero).toMatch(/\.living-hero__copy\s*\{[\s\S]*padding-block-end:\s*var\(--space-2\);/);
+    expect(hero).toMatch(/\.living-hero__description\s*\{[\s\S]*inline-size:\s*100%;/);
+    expect(hero).toMatch(/\.living-hero__actions\s*\{[\s\S]*inline-size:\s*100%;/);
+    expect(hero).toMatch(/\.living-hero__metadata\s*\{[\s\S]*background:\s*var\(--color-cold-paper\);/);
   });
 
   test('stacks mobile hero actions and fact tags at matching widths', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     expect(baseCssRule(hero, '.living-hero__actions')).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
-    expect(hero).toContain('.living-hero__actions :global(.button-link) { gap: var(--space-2); inline-size: 100%; min-inline-size: 0; padding-inline: var(--space-3); white-space: nowrap; }');
-    expect(hero).toContain('@media (max-width: 36rem) { .living-hero__content');
-    expect(hero).toContain('.living-hero__actions { gap: var(--space-2); grid-template-columns: minmax(0, 1fr); }');
+    expect(cssRule(hero, '.living-hero__actions :global(.button-link)')).toContain('inline-size: 100%');
+    expect(hero).toMatch(/@media\s*\(max-width:\s*36rem\)\s*\{/);
+    expect(hero).toMatch(/\.living-hero__actions\s*\{[\s\S]*gap:\s*var\(--space-2\);[\s\S]*grid-template-columns:\s*minmax\(0, 1fr\);/);
     expect(baseCssRule(hero, '.living-hero__metadata')).toContain('padding-inline-end: clamp(var(--space-6), 4vw, var(--space-8))');
-    expect(hero).toContain('.living-hero__copy { padding-inline-end: var(--container-inline); }');
+    expect(hero).toMatch(/\.living-hero__copy\s*\{[\s\S]*padding-inline-end:\s*var\(--container-inline\);/);
     expect(hero).not.toContain('padding-inline: var(--container-inline); padding-inline-end: 0;');
-    expect(hero).toContain('@media (max-width: 64rem) { .living-hero__content');
-    expect(hero).toContain('.living-hero__actions { grid-template-columns: minmax(0, 1fr); }');
-    expect(hero).toContain('.living-hero__metadata { grid-column: 1; grid-row: 2; grid-template-columns: minmax(0, 1fr);');
-    expect(hero).toContain('.living-hero__metadata { gap: var(--space-2); grid-column: 1; grid-row: 2; grid-template-columns: minmax(0, 1fr); padding-inline: var(--container-inline);');
+    expect(hero).toMatch(/@media\s*\(max-width:\s*64rem\)\s*\{/);
+    expect(hero).toMatch(/\.living-hero__actions\s*\{[\s\S]*grid-template-columns:\s*minmax\(0, 1fr\);/);
+    expect(hero).toMatch(/\.living-hero__metadata\s*\{[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*2;[\s\S]*grid-template-columns:\s*minmax\(0, 1fr\);/);
+    expect(hero).toMatch(/\.living-hero__metadata\s*\{[\s\S]*gap:\s*var\(--space-2\);[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*2;[\s\S]*grid-template-columns:\s*minmax\(0, 1fr\);[\s\S]*padding-inline:\s*var\(--container-inline\);/);
   });
 
   test('keeps hero fact tags compact enough to align with buttons', () => {

@@ -118,7 +118,7 @@ describe('reviewed homepage contracts', () => {
 
     expect(page).toContain('featured.hero');
     expect(page).toContain('content={featured.hero}');
-    expect(hero).toContain('content: FeaturedContent[\'hero\']');
+    expect(hero).toMatch(/content:\s*FeaturedContent\[(['"])hero\1\]/);
     expect(hero).not.toContain('{content.eyebrow}');
     expect(hero).toContain('{content.title}');
     expect(hero).toContain('{content.body}');
