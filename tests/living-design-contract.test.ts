@@ -494,16 +494,32 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card')).toContain('backdrop-filter: blur(var(--blur-glass))');
   });
 
-  test('keeps contained hero imagery beside mobile copy with an image-level fade', () => {
+  test('keeps contained hero imagery fading at tablet and mobile widths', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     const image = cssRule(hero, '.living-hero__image-frame > img');
     expect(image).toContain('object-fit: contain');
     expect(image).toContain('-webkit-mask-image: linear-gradient');
     expect(image).toContain('mask-image: linear-gradient');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
-    expect(hero).toContain('grid-template-columns: minmax(0, 1.15fr) minmax(7.5rem, 0.85fr)');
-    expect(hero).not.toContain('@media (max-width: 64rem) { .living-hero__content { grid-template-columns: 1fr; }');
+    expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(hero).toMatch(/@media \(max-width: 64rem\)[\s\S]*\.living-hero__art \{[^}]*grid-column: 2;[^}]*grid-row: 1;/);
+  });
+
+  test('keeps hero facts below copy at mobile-wide width instead of squeezing them beside it', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
+    expect(hero.indexOf('<dl class="living-hero__metadata">')).toBeGreaterThan(hero.indexOf('<figure class="living-hero__art">'));
+    expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-column: 1 / -1');
+    expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-row: 2');
+    expect(baseCssRule(hero, '.living-hero__art')).toContain('grid-row: 1 / span 2');
+    expect(hero).toContain('.living-hero__metadata { grid-column: 1 / -1; grid-row: 2;');
+  });
+
+  test('gives mobile hero image full-width fade stage after copy and facts', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
+    expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
+    expect(hero).toContain('grid-template-rows: auto auto auto;');
+    expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 3;');
+    expect(hero).toContain('margin-inline: calc(-1 * var(--container-inline));');
   });
 
   test('keeps card and discovery images free of scale and transform motion', () => {
