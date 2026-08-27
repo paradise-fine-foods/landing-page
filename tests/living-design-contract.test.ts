@@ -519,6 +519,7 @@ describe('Precision Supply System identity', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     expect(baseCssRule(hero, '.living-hero__content')).toContain('position: relative');
     expect(baseCssRule(hero, '.living-hero__content')).toContain('z-index: 1');
+    expect(baseCssRule(hero, '.living-hero__content')).toContain('padding-block-end: var(--space-6)');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('inset: 0');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('z-index: 0');

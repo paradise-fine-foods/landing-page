@@ -76,7 +76,7 @@ const metadata = [
 
 <style>
   .living-hero { background: var(--color-cold-paper); overflow: hidden; }
-  .living-hero__content { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto; min-block-size: min(44rem, calc(100vh - 4.5rem)); position: relative; z-index: 1; }
+  .living-hero__content { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto auto; min-block-size: min(44rem, calc(100vh - 4.5rem)); padding-block-end: var(--space-6); position: relative; z-index: 1; }
   .living-hero__copy { align-self: center; display: flex; flex-direction: column; gap: var(--space-4); grid-column: 1; grid-row: 1; padding: clamp(var(--space-7), 7vw, var(--space-9)) clamp(var(--space-6), 4vw, var(--space-8)) clamp(var(--space-7), 7vw, var(--space-9)) 0; position: relative; z-index: 2; }
   .living-hero h1 { font-size: var(--text-hero); max-inline-size: 11ch; }
   .living-hero__description { max-inline-size: 34rem; }
