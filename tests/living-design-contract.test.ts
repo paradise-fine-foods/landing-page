@@ -533,13 +533,14 @@ describe('Precision Supply System identity', () => {
     expect(baseCssRule(hero, '.living-hero__image-frame')).toContain('inline-size: 100%');
     expect(hero).toContain('.living-hero__art::before {');
     expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient');
+    expect(cssRule(hero, '.living-hero__art::before')).toContain('rgba(247, 244, 238, 0) 50%');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(hero).toMatch(/\.living-hero__art\s*\{[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*1;[\s\S]*block-size:\s*50%;[\s\S]*inline-size:\s*100%;/);
     expect(hero).toMatch(/\.living-hero__image-frame\s*\{[\s\S]*min-block-size:\s*0;/);
     expect(hero).toContain('object-fit: cover');
     expect(hero).toContain('object-position: center right');
     expect(hero).toMatch(/\.living-hero__copy\s*\{[\s\S]*padding-block-end:\s*var\(--space-2\);/);
-    expect(hero).toMatch(/\.living-hero__description\s*\{[\s\S]*inline-size:\s*100%;/);
+    expect(hero).toMatch(/\.living-hero__description\s*\{[\s\S]*inline-size:\s*50%;/);
     expect(hero).toMatch(/\.living-hero__actions\s*\{[\s\S]*inline-size:\s*100%;/);
     expect(hero).toMatch(/\.living-hero__metadata\s*\{[\s\S]*background:\s*var\(--color-cold-paper\);/);
   });
