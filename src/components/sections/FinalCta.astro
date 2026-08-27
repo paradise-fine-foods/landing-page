@@ -7,7 +7,7 @@ const { title, description, button, href } = Astro.props;
 <section class="final-cta" aria-labelledby="final-cta-title">
   <div class="container final-cta__shape">
     <div><h2 id="final-cta-title">{title}</h2><p>{description}</p></div>
-    <ButtonLink {href}>{button}</ButtonLink>
+    <ButtonLink {href} variant="secondary">{button}</ButtonLink>
   </div>
 </section>
 

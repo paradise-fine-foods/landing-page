@@ -2,6 +2,7 @@
 import type { FeaturedContent } from '@/lib/cms/types';
 import type { UiCopy } from '@/lib/i18n/ui';
 import ButtonLink from '@/components/global/ButtonLink.astro';
+import Icon from '@/components/global/Icon.astro';
 
 interface Props {
   copy: UiCopy['hero'];
@@ -13,17 +14,16 @@ interface Props {
 const { copy, content, productsPath, contactPath } = Astro.props;
 const { product } = content;
 const metadata = [
-  { label: copy.brand, value: product.brand.name },
-  { label: copy.origin, value: product.origin },
-  { label: copy.packFormat, value: product.packFormat },
-  { label: copy.storage, value: `${product.storage.label} · ${product.storage.temperature}` },
+  { label: copy.brand, value: product.brand.name, icon: 'lucide:award' },
+  { label: copy.origin, value: product.origin, icon: 'lucide:globe-2' },
+  { label: copy.packFormat, value: product.packFormat, icon: 'lucide:package' },
+  { label: copy.storage, value: `${product.storage.label} · ${product.storage.temperature}`, icon: 'lucide:snowflake' },
 ];
 ---
 
 <section class="living-hero" aria-labelledby="hero-title" data-living-hero>
   <div class="living-hero__content container">
     <div class="living-hero__copy">
-      <p class="eyebrow">{content.eyebrow}</p>
       <h1 id="hero-title">{content.title}</h1>
       <p class="living-hero__description">{content.body}</p>
       <div class="living-hero__actions">
@@ -31,7 +31,12 @@ const metadata = [
         <ButtonLink href={contactPath} variant="secondary">{copy.secondaryCta}</ButtonLink>
       </div>
       <dl class="living-hero__metadata">
-        {metadata.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+        {metadata.map(({ label, value, icon }) => (
+          <div class="living-hero__fact">
+            <span class="living-hero__fact-icon"><Icon name={icon} size="1.25em" /></span>
+            <div class="living-hero__fact-copy"><dt>{label}</dt><dd>{value}</dd></div>
+          </div>
+        ))}
       </dl>
     </div>
     <figure class="living-hero__art">
@@ -45,7 +50,6 @@ const metadata = [
           fetchpriority="high"
         />
       </div>
-      <figcaption>{product.name}</figcaption>
     </figure>
   </div>
 </section>
@@ -71,20 +75,22 @@ const metadata = [
 </script>
 
 <style>
-  .living-hero { background: var(--color-process-white); border-block-end: 1px solid var(--color-brushed-steel); overflow: hidden; }
-  .living-hero__content { display: grid; grid-template-columns: minmax(18rem, 4fr) minmax(30rem, 8fr); min-block-size: min(42rem, calc(100vh - 4.5rem)); }
-  .living-hero__copy { align-self: center; display: flex; flex-direction: column; gap: var(--space-4); padding: var(--space-8) clamp(var(--space-6), 4vw, var(--space-8)) var(--space-8) 0; }
+  .living-hero { background: var(--color-cold-paper); overflow: hidden; }
+  .living-hero__content { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-block-size: min(44rem, calc(100vh - 4.5rem)); }
+  .living-hero__copy { align-self: center; display: flex; flex-direction: column; gap: var(--space-4); padding: clamp(var(--space-7), 7vw, var(--space-9)) clamp(var(--space-6), 4vw, var(--space-8)) clamp(var(--space-7), 7vw, var(--space-9)) 0; position: relative; z-index: 2; }
   .living-hero h1 { font-size: var(--text-hero); max-inline-size: 11ch; }
   .living-hero__description { max-inline-size: 34rem; }
   .living-hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-block-start: var(--space-2); }
-  .living-hero__metadata { border-block-start: 2px solid var(--color-paradise-orange); display: grid; grid-template-columns: 1fr 1fr; margin: var(--space-3) 0 0; }
-  .living-hero__metadata div { border-block-end: 1px solid var(--color-brushed-steel); min-inline-size: 0; padding: var(--space-3) var(--space-3) var(--space-3) 0; }
-  .living-hero__metadata dt { color: var(--color-utility-grey); font-size: 0.7rem; font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
-  .living-hero__metadata dd { font-size: 0.82rem; margin-block-start: var(--space-1); overflow-wrap: anywhere; }
-  .living-hero__art { align-self: stretch; background: var(--color-cold-paper); border-inline: 1px solid var(--color-brushed-steel); display: grid; grid-template-rows: 1fr auto; margin: 0; min-inline-size: 0; position: relative; }
-  .living-hero__image-frame { background: var(--color-process-white); min-block-size: 36rem; overflow: hidden; position: relative; }
-  .living-hero__image-frame > img { block-size: 100%; inline-size: 100%; object-fit: contain; position: absolute; }
-  .living-hero__art figcaption { background: var(--color-graphite); color: var(--color-process-white); font-size: 0.78rem; font-weight: 600; letter-spacing: var(--tracking-label); padding: var(--space-3) var(--space-4); text-transform: uppercase; }
-  @media (max-width: 64rem) { .living-hero__content { grid-template-columns: 1fr; } .living-hero__copy { padding-inline-end: 0; } .living-hero__art { border-block-start: 1px solid var(--color-brushed-steel); } }
-  @media (max-width: 36rem) { .living-hero__content { inline-size: 100%; } .living-hero__copy { padding-inline: var(--container-inline); } .living-hero__actions { align-items: stretch; flex-direction: column; } .living-hero__art { background: var(--color-cold-paper); border-inline: 0; } .living-hero__image-frame { min-block-size: 30rem; } }
+  .living-hero__metadata { display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); margin: var(--space-4) 0 0; }
+  .living-hero__fact { align-items: center; background: var(--color-glass-surface); -webkit-backdrop-filter: blur(var(--blur-glass)); backdrop-filter: blur(var(--blur-glass)); border: 1px solid var(--color-glass-border); border-radius: var(--radius-md); box-shadow: var(--shadow-glass); display: grid; gap: var(--space-3); grid-template-columns: auto 1fr; min-block-size: 5.25rem; min-inline-size: 0; padding: var(--space-3); }
+  .living-hero__fact-icon { align-items: center; background: rgba(228, 111, 44, 0.1); border-radius: 50%; color: var(--color-paradise-orange); display: inline-flex; flex: 0 0 2.25rem; block-size: 2.25rem; inline-size: 2.25rem; justify-content: center; }
+  .living-hero__fact-copy { min-inline-size: 0; }
+  .living-hero__metadata dt { color: var(--color-utility-grey); font-size: 0.66rem; font-weight: 600; letter-spacing: var(--tracking-label); text-transform: uppercase; }
+  .living-hero__metadata dd { color: var(--color-deep-herb); font-size: 0.82rem; margin-block-start: var(--space-1); overflow-wrap: anywhere; }
+  .living-hero__art { align-self: stretch; display: block; grid-column: 2; grid-row: 1; margin: 0 calc(-1 * var(--container-inline)) 0 0; min-inline-size: 0; position: relative; }
+  .living-hero__image-frame { block-size: 100%; min-block-size: 36rem; overflow: hidden; position: relative; }
+  .living-hero__image-frame::after { background: linear-gradient(90deg, var(--color-cold-paper) 0%, rgba(247, 244, 238, 0.86) 10%, rgba(247, 244, 238, 0) 38%), linear-gradient(0deg, var(--color-cold-paper) -2%, rgba(247, 244, 238, 0) 22%); content: ''; inset: 0; pointer-events: none; position: absolute; z-index: 1; }
+  .living-hero__image-frame > img { block-size: 100%; inline-size: 100%; object-fit: contain; object-position: center right; position: absolute; }
+  @media (max-width: 64rem) { .living-hero__content { grid-template-columns: 1fr; } .living-hero__copy { padding-inline-end: 0; } .living-hero__art { grid-column: 1; grid-row: 2; margin-inline-end: 0; } .living-hero__image-frame { min-block-size: 32rem; } .living-hero__image-frame::after { background: linear-gradient(0deg, var(--color-cold-paper) 0%, rgba(247, 244, 238, 0) 25%); } }
+  @media (max-width: 36rem) { .living-hero__content { inline-size: 100%; } .living-hero__copy { padding-inline: var(--container-inline); } .living-hero__actions { align-items: stretch; flex-direction: column; } .living-hero__art { margin-inline: 0; } .living-hero__image-frame { min-block-size: 28rem; } .living-hero__metadata { gap: var(--space-2); } .living-hero__fact { padding: var(--space-2); } }
 </style>

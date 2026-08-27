@@ -31,7 +31,11 @@ describe('homepage composition', () => {
     expect(hero).toContain('width={content.image.width}');
     expect(hero).toContain('height={content.image.height}');
     expect(hero).toContain('living-hero__actions');
-    expect(hero).toContain('<figcaption>{product.name}</figcaption>');
+    expect(hero).not.toContain('<figcaption>{product.name}</figcaption>');
+    expect(hero).toContain('lucide:award');
+    expect(hero).toContain('lucide:globe-2');
+    expect(hero).toContain('lucide:package');
+    expect(hero).toContain('lucide:snowflake');
     expect(hero).toContain('living-hero__metadata');
     expect(hero).toContain('loading="eager"');
     expect(hero).toContain('fetchpriority="high"');

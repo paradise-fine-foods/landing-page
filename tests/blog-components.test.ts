@@ -59,13 +59,13 @@ describe('blog components', () => {
     expect(mapper).toContain('bodyHtml: sanitizeBlogHtml(requiredString(localized.body');
   });
 
-  test('makes authentic blog media lead flat cards and keeps article facts compact', () => {
+  test('makes authentic blog media lead glass cards and keeps article facts compact', () => {
     const card = source('src/components/blogs/BlogCard.astro');
     const article = source('src/components/blogs/BlogArticle.astro');
 
-    expect(card).toContain('.blog-card { border-block-start: 1px solid var(--color-brushed-steel);');
+    expect(card).toContain('.blog-card { background: var(--color-glass-surface);');
     expect(card).toContain('.blog-card__image { aspect-ratio: 4 / 3;');
-    expect(card).not.toContain('.blog-card { background: var(--color-process-white); border: 1px solid');
+    expect(card).toContain('backdrop-filter: blur(var(--blur-glass))');
     expect(article).toContain('border-block: 1px solid var(--color-brushed-steel);');
     expect(article).toContain('padding-block: var(--space-3);');
     expect(article).not.toContain('.blog-article__label { align-self: end; background:');

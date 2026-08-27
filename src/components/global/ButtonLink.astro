@@ -18,7 +18,7 @@ const { href, variant = 'primary', class: className } = Astro.props;
 <style>
   .button-link {
     align-items: center;
-    border: 1px solid var(--color-graphite);
+    border: 1px solid var(--color-deep-herb);
     border-radius: var(--radius-sm);
     display: inline-flex;
     font-size: var(--text-sm);
@@ -26,30 +26,36 @@ const { href, variant = 'primary', class: className } = Astro.props;
     gap: var(--space-3);
     justify-content: space-between;
     min-block-size: 2.75rem;
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-3) var(--space-5);
     text-decoration: none;
-    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
   }
 
   .button-link--primary {
-    background: var(--color-graphite);
-    border-color: var(--color-paradise-orange);
+    background: var(--color-deep-herb);
+    border-color: var(--color-deep-herb);
     color: var(--color-process-white);
   }
 
   .button-link--primary:hover {
-    background: var(--color-graphite);
+    background: var(--color-deep-herb);
     border-color: var(--color-paradise-orange);
     color: var(--color-process-white);
+    box-shadow: 0 0 0 2px var(--color-paradise-orange);
   }
 
   .button-link--secondary {
-    background: var(--color-process-white);
-    border-color: var(--color-graphite);
-    color: var(--color-graphite);
+    background: var(--color-glass-surface);
+    border-color: var(--color-deep-herb);
+    color: var(--color-deep-herb);
+    -webkit-backdrop-filter: blur(var(--blur-glass));
+    backdrop-filter: blur(var(--blur-glass));
   }
 
   .button-link--secondary:hover {
-    background: var(--color-cold-paper);
+    background: var(--color-process-white);
+    border-color: var(--color-paradise-orange);
   }
+
+  .button-link :global(svg) { color: var(--color-paradise-orange); }
 </style>

@@ -38,7 +38,7 @@ const imageLoading = variant === 'lead' ? 'eager' : 'lazy';
 </article>
 
 <style>
-  .recipe-card { border-block-start: 1px solid var(--color-brushed-steel); display: grid; min-inline-size: 0; }
+  .recipe-card { background: var(--color-glass-surface); -webkit-backdrop-filter: blur(var(--blur-glass)); backdrop-filter: blur(var(--blur-glass)); border: 1px solid var(--color-glass-border); border-radius: var(--radius-md); box-shadow: var(--shadow-glass); display: grid; min-inline-size: 0; overflow: hidden; }
   .recipe-card__image { aspect-ratio: 4 / 3; background: var(--color-cold-paper); display: block; }
   .recipe-card__image img { block-size: 100%; inline-size: 100%; object-fit: cover; }
   .recipe-card__copy { align-content: start; display: grid; gap: var(--space-4); padding: var(--space-5); }
@@ -47,7 +47,7 @@ const imageLoading = variant === 'lead' ? 'eager' : 'lazy';
   .recipe-card h2 { font-size: var(--text-h2); }
   .recipe-card h3 { font-size: var(--text-h3); }
   .recipe-card h2 a, .recipe-card h3 a { align-items: center; display: flex; min-block-size: 2.75rem; text-decoration: none; }
-  .recipe-card__label { align-items: center; color: var(--color-graphite); display: flex; font-size: var(--text-sm); font-weight: 600; inline-size: fit-content; margin-block-start: auto; min-block-size: 2.75rem; text-decoration: underline; text-decoration-color: var(--color-brushed-steel); text-underline-offset: .25em; }
+  .recipe-card__label { align-items: center; color: var(--color-deep-herb); display: flex; font-size: var(--text-sm); font-weight: 600; inline-size: fit-content; margin-block-start: auto; min-block-size: 2.75rem; text-decoration: underline; text-decoration-color: var(--color-paradise-orange); text-underline-offset: .25em; }
   .recipe-card--lead { grid-column: 1 / -1; grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .8fr); }
   .recipe-card--lead .recipe-card__image { aspect-ratio: 4 / 3; }
   .recipe-card--lead .recipe-card__copy { align-content: center; padding: clamp(var(--space-6), 5vw, var(--space-8)); }

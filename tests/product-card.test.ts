@@ -95,13 +95,14 @@ describe('ProductCard metadata', () => {
     expect(metadata).toEqual([]);
     expect(metadata.join(' · ')).not.toContain('undefined');
   });
-  test('uses an unmasked square media stage with neutral metadata separators', () => {
+  test('uses a square media stage inside a soft glass card', () => {
     const card = source('src/components/catalog/ProductCard.astro');
 
     expect(card).toContain('class="product-card__media"');
     expect(card).toContain('aspect-ratio: 1 / 1');
     expect(card).toContain('background: var(--color-process-white)');
-    expect(card).toContain('border-block-start: 1px solid var(--color-brushed-steel)');
+    expect(card).toContain('background: var(--color-glass-surface)');
+    expect(card).toContain('border: 1px solid var(--color-glass-border)');
     expect(card).not.toContain('product-card__organic-media');
     expect(card).not.toMatch(/product-card__media::before|color-paradise-orange/);
   });

@@ -1,17 +1,22 @@
 :root {
   --color-process-white: #ffffff;
-  --color-cold-paper: #f5f6f2;
-  --color-brushed-steel: #d9dcd7;
-  --color-graphite: #202522;
+  --color-cold-paper: #f7f4ee;
+  --color-brushed-steel: #d8ded4;
+  --color-deep-herb: #0a2c1d;
+  --color-graphite: var(--color-deep-herb);
   --color-utility-grey: #68706a;
   --color-paradise-orange: #e46f2c;
   --color-success: #356146;
   --color-error: #9a3f38;
 
+  --color-glass-surface: rgba(255, 255, 255, 0.68);
+  --color-glass-border: rgba(255, 255, 255, 0.78);
+  --shadow-glass: 0 1rem 2.5rem rgba(10, 44, 29, 0.08);
+  --blur-glass: 18px;
+
   --color-paper-white: var(--color-process-white);
   --color-rice-paper: var(--color-cold-paper);
   --color-mist-blue: var(--color-cold-paper);
-  --color-deep-herb: var(--color-graphite);
   --color-paradise-tangerine: var(--color-paradise-orange);
   --color-paradise-blue: var(--color-brushed-steel);
   --color-paradise-green: var(--color-brushed-steel);
@@ -50,8 +55,9 @@
   --leading-body: 1.6;
   --tracking-label: 0.07em;
 
-  --radius-sm: 0;
-  --radius-md: 2px;
+  --radius-sm: 0.875rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.75rem;
   --shape-drop: var(--radius-sm);
   --focus-ring: 0 0 0 3px var(--color-paradise-orange);
   --transition-fast: 120ms ease;

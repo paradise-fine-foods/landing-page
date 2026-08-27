@@ -45,8 +45,12 @@ describe('Precision Supply System identity', () => {
       '--text-hero: var(--text-h1)',
       '--text-2xl: var(--text-h2)',
       '--text-xl: var(--text-h3)',
-      '--radius-sm: 0',
-      '--radius-md: 2px',
+      '--radius-sm: 0.875rem',
+      '--radius-md: 1.25rem',
+      '--radius-lg: 1.75rem',
+      '--color-glass-surface: rgba(255, 255, 255, 0.68)',
+      '--color-glass-border: rgba(255, 255, 255, 0.78)',
+      '--shadow-glass: 0 1rem 2.5rem rgba(10, 44, 29, 0.08)',
     ]) expect(tokens).toContain(declaration);
 
     expect(cssRule(typography, 'h1')).toContain('font-size: var(--text-h1)');
@@ -55,7 +59,7 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(global, '.section-space')).toContain('padding-block: clamp(2.5rem, 5vw, 4rem)');
   });
 
-  test('keeps shared chrome compact, square, and free of decorative effects', () => {
+  test('keeps shared chrome compact, rounded, and free of decorative effects', () => {
     const header = source('src/components/global/Header.astro');
     const footer = source('src/components/global/Footer.astro');
     const button = source('src/components/global/ButtonLink.astro');
@@ -78,12 +82,12 @@ describe('Precision Supply System identity', () => {
       'src/components/global/FloatingFormRail.astro',
     ]) {
       const component = source(file);
-      expect(component, file).not.toMatch(/linear-gradient|radial-gradient|color-mix\(/);
+      expect(component, file).not.toMatch(/radial-gradient|color-mix\(/);
     }
   });
 
-  test('uses graphite selection text with contrast-safe Paradise orange', () => {
-    expect(contrastRatio('#202522', '#e46f2c')).toBeGreaterThanOrEqual(4.5);
+  test('uses deep-herb selection text with contrast-safe Paradise orange', () => {
+    expect(contrastRatio('#0a2c1d', '#e46f2c')).toBeGreaterThanOrEqual(4.5);
     const selection = cssRule(source('src/styles/global.css'), '::selection');
     expect(selection).toContain('background: var(--color-paradise-orange)');
     expect(selection).toContain('color: var(--color-graphite)');
@@ -178,9 +182,10 @@ describe('Precision Supply System identity', () => {
     const tokens = source('src/styles/tokens.css').toLowerCase();
     for (const declaration of [
       '--color-process-white: #ffffff',
-      '--color-cold-paper: #f5f6f2',
-      '--color-brushed-steel: #d9dcd7',
-      '--color-graphite: #202522',
+      '--color-cold-paper: #f7f4ee',
+      '--color-brushed-steel: #d8ded4',
+      '--color-deep-herb: #0a2c1d',
+      '--color-graphite: var(--color-deep-herb)',
       '--color-utility-grey: #68706a',
       '--color-paradise-orange: #e46f2c',
       '--color-success: #356146',
@@ -194,12 +199,12 @@ describe('Precision Supply System identity', () => {
     expect(tokens).toContain('--color-paper-white: var(--color-process-white)');
     expect(tokens).toContain('--color-rice-paper: var(--color-cold-paper)');
     expect(tokens).toContain('--color-mist-blue: var(--color-cold-paper)');
-    expect(tokens).toContain('--color-deep-herb: var(--color-graphite)');
+    expect(tokens).toContain('--color-graphite: var(--color-deep-herb)');
     expect(tokens).toContain('--shape-drop: var(--radius-sm)');
   });
 
   test('uses an opaque Paradise-orange focus ring that contrasts with graphite', () => {
-    expect(contrastRatio('#e46f2c', '#202522')).toBeGreaterThanOrEqual(3);
+    expect(contrastRatio('#e46f2c', '#0a2c1d')).toBeGreaterThanOrEqual(3);
 
     const tokens = source('src/styles/tokens.css');
     expect(tokens).toContain('--focus-ring: 0 0 0 3px var(--color-paradise-orange)');
@@ -232,7 +237,7 @@ describe('Precision Supply System identity', () => {
   });
 
   test('keeps small category and brand metadata text at contrast-safe graphite', () => {
-    expect(contrastRatio('#202522', '#ffffff')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#0a2c1d', '#ffffff')).toBeGreaterThanOrEqual(4.5);
     expect(cssRule(source('src/components/sections/CategoryDiscovery.astro'), '.category-discovery__copy span')).toContain('color: var(--color-graphite)');
     const brands = source('src/components/sections/FeaturedBrands.astro');
     expect(cssRule(brands, '.featured-brands__origin')).toContain('color: var(--color-deep-herb)');
@@ -272,15 +277,15 @@ describe('Precision Supply System identity', () => {
   });
 
   test('keeps small button and link text at WCAG AA contrast', () => {
-    expect(contrastRatio('#ffffff', '#202522')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#ffffff', '#0a2c1d')).toBeGreaterThanOrEqual(4.5);
 
     const button = source('src/components/global/ButtonLink.astro');
     const primary = cssRule(button, '.button-link--primary');
     const primaryHover = cssRule(button, '.button-link--primary:hover');
-    expect(primary).toContain('background: var(--color-graphite)');
+    expect(primary).toContain('background: var(--color-deep-herb)');
     expect(primary).toContain('color: var(--color-process-white)');
-    expect(primary).toContain('border-color: var(--color-paradise-orange)');
-    expect(primaryHover).toContain('background: var(--color-graphite)');
+    expect(primary).toContain('border-color: var(--color-deep-herb)');
+    expect(primaryHover).toContain('background: var(--color-deep-herb)');
     expect(primaryHover).toContain('border-color: var(--color-paradise-orange)');
 
     const global = source('src/styles/global.css');
@@ -293,8 +298,8 @@ describe('Precision Supply System identity', () => {
     expect(navHover).toContain('text-decoration-color: var(--color-paradise-orange)');
 
     expect(source('src/components/global/OrganicMark.astro')).toContain('display: none');
-    expect(cssRule(button, '.button-link--primary')).toContain('background: var(--color-graphite)');
-    expect(cssRule(button, '.button-link--primary')).toContain('border-color: var(--color-paradise-orange)');
+    expect(cssRule(button, '.button-link--primary')).toContain('background: var(--color-deep-herb)');
+    expect(cssRule(button, '.button-link--primary')).toContain('border-color: var(--color-deep-herb)');
     expect(cssRule(header, '.site-header')).toContain('border-bottom: 1px solid var(--color-brushed-steel)');
   });
 
@@ -473,16 +478,20 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.field--consent label')).toContain('min-block-size: 2.75rem');
   });
 
-  test('uses neutral rectangular hero and product stages', () => {
+  test('uses a borderless, fading hero image and glass product stages', () => {
     const hero = source('src/components/sections/LivingHero.astro');
-    expect(cssRule(hero, '.living-hero__art')).toContain('background: var(--color-cold-paper)');
+    expect(hero).not.toContain('<p class="eyebrow">{content.eyebrow}</p>');
+    expect(hero).not.toContain('<figcaption>{product.name}</figcaption>');
+    expect(cssRule(hero, '.living-hero__art')).not.toContain('border-inline');
+    expect(hero).toMatch(/\.living-hero__image-frame\s*\{[^}]*position: relative/);
+    expect(hero).toContain('linear-gradient');
+    expect(hero).toContain('grid-template-columns: auto 1fr');
     expect(hero).not.toMatch(/data-living-canvas|<canvas/);
-    expect(hero).not.toContain('drop-shadow');
 
     const card = source('src/components/catalog/ProductCard.astro');
     expect(cssRule(card, '.product-card__media')).toContain('border-radius: var(--radius-sm)');
-    expect(cssRule(card, '.product-card__meta')).toContain('border-block-start: 1px solid var(--color-brushed-steel)');
-    expect(card).not.toContain('var(--shape-drop)');
+    expect(cssRule(card, '.product-card')).toContain('background: var(--color-glass-surface)');
+    expect(cssRule(card, '.product-card')).toContain('backdrop-filter: blur(var(--blur-glass))');
   });
 
   test('keeps card and discovery images free of scale and transform motion', () => {
@@ -505,7 +514,7 @@ describe('Precision Supply System identity', () => {
     }
   });
 
-  test('keeps remaining homepage sections neutral, rectangular, and shadow-free', () => {
+  test('keeps remaining homepage sections restrained while allowing shared glass cards', () => {
     const files = [
       'src/components/sections/FeaturedBrands.astro',
       'src/components/blogs/LatestBlogs.astro',
@@ -518,7 +527,7 @@ describe('Precision Supply System identity', () => {
     ];
     for (const file of files) {
       const component = source(file);
-      expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow/);
+      expect(component).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow/);
     }
     expect(source('src/components/sections/FinalCta.astro')).toContain('background: var(--color-graphite)');
     expect(source('src/components/sections/FinalCta.astro')).toContain('color: var(--color-cold-paper)');
@@ -553,15 +562,14 @@ describe('Precision Supply System identity', () => {
     expect(detail).not.toMatch(/product-detail__organic-stage|product-detail__stage::before|product-detail__stage > span/);
   });
 
-  test('removes legacy decorative presentation from every active styled surface', () => {
+  test('keeps retired decorative presentation tokens out of active styled surfaces', () => {
     const styledFiles = filesBelow('src/components')
       .filter((path) => path.endsWith('.astro') && path !== 'src/components/global/OrganicMark.astro');
     const pageFiles = filesBelow('src/pages').filter((path) => path.endsWith('.astro'));
 
     for (const file of [...styledFiles, ...pageFiles]) {
       const component = source(file);
-      expect(component, file).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|box-shadow\s*:\s*(?!\s*none\s*;)|linear-gradient|color-mix\(|clip-path/);
-      expect(component, file).not.toMatch(/border-radius:\s*(?:[5-9]px|[1-9]\d+px|(?:0\.[3-9]|[1-9]\d*(?:\.\d+)?)rem|[1-9]\d*%|999px)/);
+      expect(component, file).not.toMatch(/var\(--color-paradise-(?:blue|green|coral|tangerine)\)|var\(--color-mist-blue\)|var\(--shape-drop\)|drop-shadow|color-mix\(|clip-path/);
       expect(component, file).not.toMatch(/(?:[2-9]\d\d|[1-9]\d{3,})ms/);
     }
 
@@ -581,18 +589,38 @@ describe('Precision Supply System identity', () => {
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
   });
 
-  test('keeps editorial, enquiry, and 404 surfaces square, flat, and free of decorative masks', () => {
+  test('keeps editorial, enquiry, and 404 surfaces free of decorative masks', () => {
     for (const file of [
-      'src/components/blogs/BlogCard.astro',
       'src/components/blogs/BlogArticle.astro',
       'src/components/forms/EnquiryForm.astro',
       'src/pages/404.astro',
     ]) {
       const component = source(file);
-      expect(component, file).not.toMatch(/box-shadow|clip-path|mask-image|OrganicMark|var\(--color-paradise-orange\)/);
+      expect(component, file).not.toMatch(/clip-path|mask-image|OrganicMark|var\(--color-paradise-orange\)/);
     }
 
     expect(cssRule(source('src/components/forms/EnquiryForm.astro'), '.enquiry-form__actions button'))
       .toContain('min-block-size: 2.75rem');
+  });
+
+  test('defines the soft glass card contract for every reusable content card', () => {
+    for (const file of [
+      'src/components/catalog/ProductCard.astro',
+      'src/components/brands/BrandCard.astro',
+      'src/components/blogs/BlogCard.astro',
+      'src/components/recipes/RecipeCard.astro',
+    ]) {
+      const component = source(file);
+      expect(component, file).toContain('background: var(--color-glass-surface)');
+      expect(component, file).toContain('border: 1px solid var(--color-glass-border)');
+      expect(component, file).toContain('box-shadow: var(--shadow-glass)');
+      expect(component, file).toContain('backdrop-filter: blur(var(--blur-glass))');
+    }
+  });
+
+  test('keeps deep-herb and orange accents contrast-safe', () => {
+    expect(contrastRatio('#ffffff', '#0a2c1d')).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio('#0a2c1d', '#e46f2c')).toBeGreaterThanOrEqual(4.5);
+    expect(source('src/components/global/ButtonLink.astro')).toContain('color: var(--color-paradise-orange)');
   });
 });

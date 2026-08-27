@@ -133,17 +133,18 @@ describe('localized brand routes', () => {
     expect(routeSources).not.toMatch(/locale\s*===|locale\s*\?/);
   });
 
-  test('uses neutral square brand media without a decorative card surround', () => {
+  test('uses square brand media inside a soft glass card', () => {
     const card = source('src/components/brands/BrandCard.astro');
     const detail = source('src/components/brands/BrandDetail.astro');
 
     expect(card).toContain('class="brand-card__media"');
     expect(card).toContain('aspect-ratio: 1 / 1');
-    expect(card).toContain('border-block-end: 1px solid var(--color-brushed-steel)');
+    expect(card).toContain('background: var(--color-glass-surface)');
+    expect(card).toContain('border: 1px solid var(--color-glass-border)');
     expect(card).not.toContain('brand-card__organic-field');
     expect(detail).toContain('aspect-ratio: 1 / 1');
     expect(detail).not.toContain('<span aria-hidden="true"></span>');
-    expect(`${card}\n${detail}`).not.toMatch(/color-paradise-orange|box-shadow|linear-gradient/);
+    expect(detail).not.toMatch(/color-paradise-orange|box-shadow|linear-gradient/);
   });
 
   test('keeps its image link exposed with the brand image name', () => {
