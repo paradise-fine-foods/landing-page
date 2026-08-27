@@ -496,16 +496,16 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card')).toContain('backdrop-filter: blur(var(--blur-glass))');
   });
 
-  test('keeps contained desktop imagery and covered mobile crop', () => {
+  test('keeps covered hero imagery across all viewport widths', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     const image = baseCssRule(hero, '.living-hero__image-frame > img');
-    expect(image).toContain('object-fit: contain');
+    expect(image).toContain('object-fit: cover');
     expect(image).toContain('-webkit-mask-image: linear-gradient');
     expect(image).toContain('mask-image: linear-gradient');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
-    expect(hero).toContain('.living-hero__image-frame > img { object-fit: cover; object-position: center right; }');
+    expect(hero).not.toContain('object-fit: contain');
   });
 
   test('keeps hero facts below copy at mobile-wide width instead of squeezing them beside it', () => {
