@@ -534,6 +534,7 @@ describe('Precision Supply System identity', () => {
     const productGrid = source('src/components/catalog/ProductGrid.astro');
     const productCard = source('src/components/catalog/ProductCard.astro');
     expect(cssRule(brands, '.brands-page__grid')).toContain('gap: var(--space-5)');
+    expect(baseCssRule(productGrid, '.product-grid')).toContain('grid-auto-rows: minmax(0, 1fr)');
     expect(cssRule(productGrid, '.product-grid > [data-product-card]')).toContain('display: flex');
     expect(cssRule(productCard, '.product-card')).toContain('block-size: 100%');
   });
