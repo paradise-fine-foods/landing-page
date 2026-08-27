@@ -528,6 +528,8 @@ describe('Precision Supply System identity', () => {
     expect(hero).toContain('.living-hero__actions :global(.button-link) { gap: var(--space-2); inline-size: 100%; min-inline-size: 0; padding-inline: var(--space-2); }');
     expect(hero).toContain('@media (max-width: 36rem) { .living-hero__content');
     expect(hero).toContain('.living-hero__actions { gap: var(--space-2); }');
+    expect(baseCssRule(hero, '.living-hero__metadata')).toContain('padding-inline-end: clamp(var(--space-6), 4vw, var(--space-8))');
+    expect(hero).toContain('.living-hero__copy { padding-inline-end: var(--container-inline); }');
     expect(hero).toContain('.living-hero__metadata { gap: var(--space-2); grid-column: 1; grid-row: 2; padding-inline: var(--container-inline);');
   });
 
