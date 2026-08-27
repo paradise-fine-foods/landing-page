@@ -503,7 +503,7 @@ describe('Precision Supply System identity', () => {
     expect(image).toContain('object-position: center right');
     expect(image).not.toContain('mask-image');
     expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient');
-    expect(cssRule(hero, '.living-hero__art::before')).toContain('rgba(247, 244, 238, 0.9)');
+    expect(cssRule(hero, '.living-hero__art::before')).toContain('rgba(247, 244, 238, 0.94)');
     expect(cssRule(hero, '.living-hero__art::after')).toContain('linear-gradient');
     expect(cssRule(hero, '.living-hero__art::after')).toContain('rgba(247, 244, 238, 0.72)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
@@ -548,8 +548,8 @@ describe('Precision Supply System identity', () => {
   test('keeps mobile hero copy readable with a hard art-layer fade and no blur', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     const mobileFade = cssRule(hero, '.living-hero__art::before');
-    expect(mobileFade).toContain('rgba(247, 244, 238, 0.9) 0%');
-    expect(mobileFade).toContain('rgba(247, 244, 238, 0.52) 32%');
+    expect(mobileFade).toContain('rgba(247, 244, 238, 0.94) 0%');
+    expect(mobileFade).toContain('rgba(247, 244, 238, 0.62) 32%');
     expect(mobileFade).toContain('rgba(247, 244, 238, 0) 50%');
     expect(mobileFade).not.toContain('backdrop-filter');
   });
