@@ -545,14 +545,13 @@ describe('Precision Supply System identity', () => {
     expect(hero).toMatch(/\.living-hero__metadata\s*\{[\s\S]*background:\s*var\(--color-cold-paper\);/);
   });
 
-  test('keeps mobile hero copy readable with a hard art-layer fade and light blur', () => {
+  test('keeps mobile hero copy readable with a hard art-layer fade and no blur', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     const mobileFade = cssRule(hero, '.living-hero__art::before');
     expect(mobileFade).toContain('rgba(247, 244, 238, 0.9) 0%');
     expect(mobileFade).toContain('rgba(247, 244, 238, 0.52) 32%');
     expect(mobileFade).toContain('rgba(247, 244, 238, 0) 50%');
-    expect(mobileFade).toContain('-webkit-backdrop-filter: blur(1px)');
-    expect(mobileFade).toContain('backdrop-filter: blur(1px)');
+    expect(mobileFade).not.toContain('backdrop-filter');
   });
 
   test('stacks mobile hero actions and fact tags at matching widths', () => {
