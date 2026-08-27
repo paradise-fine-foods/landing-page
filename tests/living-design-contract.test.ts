@@ -526,7 +526,8 @@ describe('Precision Supply System identity', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     expect(baseCssRule(hero, '.living-hero__actions')).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
     expect(cssRule(hero, '.living-hero__actions .button-link')).toContain('inline-size: 100%');
-    expect(cssRule(hero, '.living-hero__actions .button-link')).toContain('padding-inline: var(--space-3)');
+    expect(cssRule(hero, '.living-hero__actions .button-link')).toContain('gap: var(--space-2)');
+    expect(cssRule(hero, '.living-hero__actions .button-link')).toContain('padding-inline: var(--space-2)');
     expect(hero).toContain('.living-hero__metadata { gap: var(--space-2); grid-column: 1; grid-row: 2; padding-inline: var(--container-inline);');
   });
 
