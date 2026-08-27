@@ -496,15 +496,16 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card')).toContain('backdrop-filter: blur(var(--blur-glass))');
   });
 
-  test('keeps contained hero imagery fading at tablet and mobile widths', () => {
+  test('keeps contained desktop imagery and covered mobile crop', () => {
     const hero = source('src/components/sections/LivingHero.astro');
-    const image = cssRule(hero, '.living-hero__image-frame > img');
+    const image = baseCssRule(hero, '.living-hero__image-frame > img');
     expect(image).toContain('object-fit: contain');
     expect(image).toContain('-webkit-mask-image: linear-gradient');
     expect(image).toContain('mask-image: linear-gradient');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
+    expect(hero).toContain('.living-hero__image-frame > img { object-fit: cover; object-position: center right; }');
   });
 
   test('keeps hero facts below copy at mobile-wide width instead of squeezing them beside it', () => {
@@ -529,6 +530,7 @@ describe('Precision Supply System identity', () => {
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(hero).toContain('.living-hero__art { inset: 0; margin: 0;');
     expect(hero).toContain('.living-hero__image-frame { inline-size: 100%; min-block-size: 30rem; }');
+    expect(hero).toContain('.living-hero__image-frame > img { object-fit: cover; object-position: center right; }');
   });
 
   test('stacks mobile hero actions and fact tags at matching widths', () => {
