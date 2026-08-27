@@ -94,7 +94,9 @@ describe('Precision Supply System identity', () => {
   });
 
   test('keeps the credibility heading on the approved local H2 display role', () => {
-    const heading = baseCssRule(source('src/components/sections/CredibilityStrip.astro'), '.credibility h2');
+    const credibility = source('src/components/sections/CredibilityStrip.astro');
+    const heading = baseCssRule(credibility, '.credibility h2');
+    expect(baseCssRule(credibility, '.credibility')).toContain('padding-block: var(--space-6) var(--space-5)');
     expect(heading).toContain('font-family: var(--font-display)');
     expect(heading).toContain('font-size: var(--text-h2)');
   });
