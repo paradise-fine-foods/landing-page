@@ -496,10 +496,10 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card')).toContain('backdrop-filter: blur(var(--blur-glass))');
   });
 
-  test('keeps contained hero imagery with a lighter art-layer fade', () => {
+  test('keeps covered hero imagery with a lighter art-layer fade', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     const image = baseCssRule(hero, '.living-hero__image-frame > img');
-    expect(image).toContain('object-fit: contain');
+    expect(image).toContain('object-fit: cover');
     expect(image).toContain('object-position: center right');
     expect(image).not.toContain('mask-image');
     expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient');
@@ -536,7 +536,7 @@ describe('Precision Supply System identity', () => {
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(hero).toMatch(/\.living-hero__art\s*\{[\s\S]*grid-column:\s*1;[\s\S]*grid-row:\s*1;[\s\S]*block-size:\s*50%;[\s\S]*inline-size:\s*80%;/);
     expect(hero).toMatch(/\.living-hero__image-frame\s*\{[\s\S]*min-block-size:\s*0;/);
-    expect(hero).toContain('object-fit: contain');
+    expect(hero).toContain('object-fit: cover');
     expect(hero).toContain('object-position: center right');
     expect(hero).toMatch(/\.living-hero__copy\s*\{[\s\S]*padding-block-end:\s*var\(--space-2\);/);
     expect(hero).toMatch(/\.living-hero__description\s*\{[\s\S]*inline-size:\s*100%;/);
