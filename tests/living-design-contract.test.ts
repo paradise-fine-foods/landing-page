@@ -519,7 +519,7 @@ describe('Precision Supply System identity', () => {
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
     expect(hero).toContain('grid-template-rows: auto auto auto;');
     expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 3;');
-    expect(hero).toContain('margin-inline: calc(-1 * var(--container-inline));');
+    expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 3; margin-inline: 0;');
   });
 
   test('keeps card and discovery images free of scale and transform motion', () => {
