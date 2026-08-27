@@ -81,7 +81,7 @@ const metadata = [
   .living-hero h1 { font-size: var(--text-hero); max-inline-size: 11ch; }
   .living-hero__description { max-inline-size: 34rem; }
   .living-hero__actions { display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); margin-block-start: var(--space-2); }
-  .living-hero__actions :global(.button-link) { gap: var(--space-2); inline-size: 100%; min-inline-size: 0; padding-inline: var(--space-2); }
+  .living-hero__actions :global(.button-link) { gap: var(--space-2); inline-size: 100%; min-inline-size: 0; padding-inline: var(--space-2); white-space: nowrap; }
   .living-hero__metadata { display: grid; gap: var(--space-3); grid-column: 1; grid-row: 2; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding-inline-end: clamp(var(--space-6), 4vw, var(--space-8)); }
   .living-hero__fact { align-items: center; background: var(--color-glass-surface); -webkit-backdrop-filter: blur(var(--blur-glass)); backdrop-filter: blur(var(--blur-glass)); border: 1px solid var(--color-glass-border); border-radius: var(--radius-md); box-shadow: var(--shadow-glass); display: grid; gap: var(--space-3); grid-template-columns: auto 1fr; min-block-size: 5.25rem; min-inline-size: 0; padding: var(--space-3); }
   .living-hero__fact-icon { align-items: center; background: rgba(228, 111, 44, 0.1); border-radius: 50%; color: var(--color-paradise-orange); display: inline-flex; flex: 0 0 2.25rem; block-size: 2.25rem; inline-size: 2.25rem; justify-content: center; }
