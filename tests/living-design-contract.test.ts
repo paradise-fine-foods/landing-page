@@ -533,6 +533,10 @@ describe('Precision Supply System identity', () => {
     expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 1; inset: 0; margin: 0;');
     expect(hero).toContain('.living-hero__image-frame { inline-size: 100%; min-block-size: 30rem; }');
     expect(hero).toContain('.living-hero__image-frame > img { object-fit: cover; object-position: center right; }');
+    expect(hero).toContain('.living-hero__copy { padding-block-end: var(--space-2); }');
+    expect(hero).toContain('.living-hero__description { inline-size: 100%; }');
+    expect(hero).toContain('.living-hero__actions { inline-size: 100%; }');
+    expect(hero).toContain('.living-hero__metadata { background: var(--color-cold-paper); }');
   });
 
   test('stacks mobile hero actions and fact tags at matching widths', () => {
