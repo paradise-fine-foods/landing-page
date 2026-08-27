@@ -494,6 +494,18 @@ describe('Precision Supply System identity', () => {
     expect(cssRule(card, '.product-card')).toContain('backdrop-filter: blur(var(--blur-glass))');
   });
 
+  test('keeps contained hero imagery beside mobile copy with an image-level fade', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
+    const image = cssRule(hero, '.living-hero__image-frame > img');
+    expect(image).toContain('object-fit: contain');
+    expect(image).toContain('-webkit-mask-image: linear-gradient');
+    expect(image).toContain('mask-image: linear-gradient');
+    expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
+    expect(hero).toContain('grid-template-columns: minmax(0, 1.15fr) minmax(7.5rem, 0.85fr)');
+    expect(hero).not.toContain('@media (max-width: 64rem) { .living-hero__content { grid-template-columns: 1fr; }');
+    expect(hero).toMatch(/@media \(max-width: 64rem\)[\s\S]*\.living-hero__art \{[^}]*grid-column: 2;[^}]*grid-row: 1;/);
+  });
+
   test('keeps card and discovery images free of scale and transform motion', () => {
     for (const [file, imageSelector, interactionSelector] of [
       ['src/components/catalog/ProductCard.astro', '.product-card__media img', '.product-card:hover .product-card__media img'],
