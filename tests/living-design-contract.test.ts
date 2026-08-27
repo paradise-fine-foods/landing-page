@@ -531,9 +531,9 @@ describe('Precision Supply System identity', () => {
     expect(hero).toContain('.living-hero__art::before {');
     expect(hero).toContain('linear-gradient(90deg, var(--color-cold-paper)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
-    expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 1; inset: 0; margin: 0;');
+    expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 1; inline-size: 70%; inset: 0; inset-inline-start: auto; margin: 0;');
     expect(hero).toContain('.living-hero__image-frame { inline-size: 100%; min-block-size: 30rem; }');
-    expect(hero).toContain('.living-hero__image-frame > img { object-fit: cover; object-position: center right; }');
+    expect(hero).toContain('.living-hero__image-frame > img { object-fit: cover; object-position: center; }');
     expect(hero).toContain('.living-hero__copy { padding-block-end: var(--space-2); }');
     expect(hero).toContain('.living-hero__description { inline-size: 100%; }');
     expect(hero).toContain('.living-hero__actions { inline-size: 100%; }');
