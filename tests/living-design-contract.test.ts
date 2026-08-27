@@ -502,7 +502,7 @@ describe('Precision Supply System identity', () => {
     expect(image).toContain('mask-image: linear-gradient');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
-    expect(hero).toMatch(/@media \(max-width: 64rem\)[\s\S]*\.living-hero__art \{[^}]*grid-column: 2;[^}]*grid-row: 1;/);
+    expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
   });
 
   test('keeps hero facts below copy at mobile-wide width instead of squeezing them beside it', () => {
@@ -510,28 +510,42 @@ describe('Precision Supply System identity', () => {
     expect(hero.indexOf('<dl class="living-hero__metadata">')).toBeGreaterThan(hero.indexOf('<figure class="living-hero__art">'));
     expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-column: 1');
     expect(baseCssRule(hero, '.living-hero__metadata')).toContain('grid-row: 2');
-    expect(baseCssRule(hero, '.living-hero__art')).toContain('grid-row: 1 / span 2');
     expect(hero).toContain('.living-hero__metadata { grid-column: 1; grid-row: 2;');
   });
 
-  test('gives mobile hero image full-width fade stage after copy and facts', () => {
+  test('keeps hero image behind content with full-width mobile fade stage', () => {
     const hero = source('src/components/sections/LivingHero.astro');
+    expect(baseCssRule(hero, '.living-hero__content')).toContain('position: relative');
+    expect(baseCssRule(hero, '.living-hero__content')).toContain('z-index: 1');
+    expect(baseCssRule(hero, '.living-hero__art')).toContain('inset: 0');
+    expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
+    expect(baseCssRule(hero, '.living-hero__art')).toContain('z-index: 0');
+    expect(baseCssRule(hero, '.living-hero__image-frame')).toContain('inline-size: 55%');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
-    expect(hero).toContain('grid-template-rows: auto auto auto;');
-    expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 3;');
-    expect(hero).toContain('.living-hero__art { grid-column: 1; grid-row: 3; margin-inline: 0;');
+    expect(hero).toContain('.living-hero__art { inset: 0; margin: 0;');
+    expect(hero).toContain('.living-hero__image-frame { inline-size: 100%; min-block-size: 30rem; }');
   });
 
-  test('aligns hero actions to fact tags and keeps mobile tags inset', () => {
+  test('stacks mobile hero actions and fact tags at matching widths', () => {
     const hero = source('src/components/sections/LivingHero.astro');
     expect(baseCssRule(hero, '.living-hero__actions')).toContain('grid-template-columns: repeat(2, minmax(0, 1fr))');
     expect(hero).toContain('.living-hero__actions :global(.button-link) { gap: var(--space-2); inline-size: 100%; min-inline-size: 0; padding-inline: var(--space-2); white-space: nowrap; }');
     expect(hero).toContain('@media (max-width: 36rem) { .living-hero__content');
-    expect(hero).toContain('.living-hero__actions { gap: var(--space-2); }');
+    expect(hero).toContain('.living-hero__actions { gap: var(--space-2); grid-template-columns: minmax(0, 1fr); }');
     expect(baseCssRule(hero, '.living-hero__metadata')).toContain('padding-inline-end: clamp(var(--space-6), 4vw, var(--space-8))');
     expect(hero).toContain('.living-hero__copy { padding-inline-end: var(--container-inline); }');
     expect(hero).not.toContain('padding-inline: var(--container-inline); padding-inline-end: 0;');
-    expect(hero).toContain('.living-hero__metadata { gap: var(--space-2); grid-column: 1; grid-row: 2; padding-inline: var(--container-inline);');
+    expect(hero).toContain('.living-hero__metadata { gap: var(--space-2); grid-column: 1; grid-row: 2; grid-template-columns: minmax(0, 1fr); padding-inline: var(--container-inline);');
+  });
+
+  test('keeps hero fact tags compact enough to align with buttons', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
+    expect(baseCssRule(hero, '.living-hero__fact')).toContain('gap: var(--space-2)');
+    expect(baseCssRule(hero, '.living-hero__fact')).toContain('min-block-size: 3rem');
+    expect(baseCssRule(hero, '.living-hero__fact')).toContain('padding: var(--space-2)');
+    expect(baseCssRule(hero, '.living-hero__fact-icon')).toContain('flex: 0 0 2rem');
+    expect(baseCssRule(hero, '.living-hero__fact-icon')).toContain('block-size: 2rem');
+    expect(baseCssRule(hero, '.living-hero__fact-icon')).toContain('inline-size: 2rem');
   });
 
   test('gives brand lists row gap and stretches product cards to equal grid height', () => {
