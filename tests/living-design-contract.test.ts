@@ -503,7 +503,7 @@ describe('Precision Supply System identity', () => {
     expect(image).toContain('object-position: center right');
     expect(image).not.toContain('mask-image');
     expect(cssRule(hero, '.living-hero__art::before')).toContain('linear-gradient');
-    expect(cssRule(hero, '.living-hero__art::before')).toContain('rgba(247, 244, 238, 0.72)');
+    expect(cssRule(hero, '.living-hero__art::before')).toContain('rgba(247, 244, 238, 0.9)');
     expect(cssRule(hero, '.living-hero__art::after')).toContain('linear-gradient');
     expect(cssRule(hero, '.living-hero__art::after')).toContain('rgba(247, 244, 238, 0.72)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1.2fr) minmax(8rem, 0.8fr)');
@@ -543,6 +543,16 @@ describe('Precision Supply System identity', () => {
     expect(hero).toMatch(/\.living-hero__description\s*\{[\s\S]*inline-size:\s*50%;/);
     expect(hero).toMatch(/\.living-hero__actions\s*\{[\s\S]*inline-size:\s*100%;/);
     expect(hero).toMatch(/\.living-hero__metadata\s*\{[\s\S]*background:\s*var\(--color-cold-paper\);/);
+  });
+
+  test('keeps mobile hero copy readable with a hard art-layer fade and light blur', () => {
+    const hero = source('src/components/sections/LivingHero.astro');
+    const mobileFade = cssRule(hero, '.living-hero__art::before');
+    expect(mobileFade).toContain('rgba(247, 244, 238, 0.9) 0%');
+    expect(mobileFade).toContain('rgba(247, 244, 238, 0.52) 32%');
+    expect(mobileFade).toContain('rgba(247, 244, 238, 0) 50%');
+    expect(mobileFade).toContain('-webkit-backdrop-filter: blur(2px)');
+    expect(mobileFade).toContain('backdrop-filter: blur(2px)');
   });
 
   test('stacks mobile hero actions and fact tags at matching widths', () => {
