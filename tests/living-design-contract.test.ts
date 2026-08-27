@@ -551,8 +551,8 @@ describe('Precision Supply System identity', () => {
     expect(mobileFade).toContain('rgba(247, 244, 238, 0.9) 0%');
     expect(mobileFade).toContain('rgba(247, 244, 238, 0.52) 32%');
     expect(mobileFade).toContain('rgba(247, 244, 238, 0) 50%');
-    expect(mobileFade).toContain('-webkit-backdrop-filter: blur(2px)');
-    expect(mobileFade).toContain('backdrop-filter: blur(2px)');
+    expect(mobileFade).toContain('-webkit-backdrop-filter: blur(1px)');
+    expect(mobileFade).toContain('backdrop-filter: blur(1px)');
   });
 
   test('stacks mobile hero actions and fact tags at matching widths', () => {
