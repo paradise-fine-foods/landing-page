@@ -522,7 +522,7 @@ describe('Precision Supply System identity', () => {
     expect(baseCssRule(hero, '.living-hero__art')).toContain('inset: 0');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('position: absolute');
     expect(baseCssRule(hero, '.living-hero__art')).toContain('z-index: 0');
-    expect(baseCssRule(hero, '.living-hero__image-frame')).toContain('inline-size: 55%');
+    expect(baseCssRule(hero, '.living-hero__image-frame')).toContain('inline-size: 65%');
     expect(hero).toContain('.living-hero__image-frame::before {');
     expect(hero).toContain('linear-gradient(90deg, var(--color-cold-paper)');
     expect(hero).toContain('grid-template-columns: minmax(0, 1fr);');
